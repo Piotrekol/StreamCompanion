@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{86251162-A899-4498-BF7F-6F18D6C624EA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>osu_StreamCompanion</RootNamespace>
+    <AssemblyName>osu!StreamCompanion</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\compiled.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.98.1\lib\net40\System.Data.SQLite.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.98.1\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Code\Core\DataTypes\LogLevel.cs" />
+    <Compile Include="Code\Core\DataTypes\MapSearchResult.cs" />
+    <Compile Include="Code\Core\Initializer.cs" />
+    <Compile Include="Code\Core\Loggers\FileLogger.cs" />
+    <Compile Include="Code\Core\Maps\osuFileParser.cs" />
+    <Compile Include="Code\Core\Maps\Processing\MapDataGetter.cs" />
+    <Compile Include="Code\Core\Savers\FileSaver.cs" />
+    <Compile Include="Code\Core\Savers\MainSaver.cs" />
+    <Compile Include="Code\Core\SqliteConnector.cs" />
+    <Compile Include="Code\Helpers\BeatmapHelpers.cs" />
+    <Compile Include="Code\Helpers\Helpers.cs" />
+    <Compile Include="Code\Helpers\StringCipher.cs" />
+    <Compile Include="Code\Helpers\EventClass.cs" />
+    <Compile Include="Code\Interfeaces\IMainWindowUpdater.cs" />
+    <Compile Include="Code\Interfeaces\IMapDataFinder.cs" />
+    <Compile Include="Code\Interfeaces\IMapDataParser.cs" />
+    <Compile Include="Code\Interfeaces\IMapDataReplacements.cs" />
+    <Compile Include="Code\Interfeaces\IMapDataStorer.cs" />
+    <Compile Include="Code\Interfeaces\IModParserGetter.cs" />
+    <Compile Include="Code\Interfeaces\ISaver.cs" />
+    <Compile Include="Code\Interfeaces\ISaveRequester.cs" />
+    <Compile Include="Code\Core\Loggers\ConsoleLogger.cs" />
+    <Compile Include="Code\Core\DataTypes\Beatmap.cs" />
+    <Compile Include="Code\Core\DataTypes\Enums.cs" />
+    <Compile Include="Code\Helpers\AsyncBindingHelper.cs" />
+    <Compile Include="Code\Helpers\ListExtensions.cs" />
+    <Compile Include="Code\Interfeaces\ILogger.cs" />
+    <Compile Include="Code\Interfeaces\IModParser.cs" />
+    <Compile Include="Code\Interfeaces\IModule.cs" />
+    <Compile Include="Code\Interfeaces\IMsnGetter.cs" />
+    <Compile Include="Code\Interfeaces\ISettingsProvider.cs" />
+    <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
+    <Compile Include="Code\Core\Loggers\MainLogger.cs" />
+    <Compile Include="Code\Interfeaces\ISettings.cs" />
+    <Compile Include="Code\Interfeaces\ISettingsGetter.cs" />
+    <Compile Include="Code\Interfeaces\ISqliteUser.cs" />
+    <Compile Include="Code\Modules\CommandsPreview\CommandsPreview.cs" />
+    <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.Designer.cs">
+      <DependentUpon>CommandsPreviewSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\Donation\Donation.cs" />
+    <Compile Include="Code\Modules\Donation\DonationSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\Donation\DonationSettings.Designer.cs">
+      <DependentUpon>DonationSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
+    <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
+    <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.Designer.cs">
+      <DependentUpon>FileSaveLocationSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\FirstRun.cs" />
+    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.Designer.cs">
+      <DependentUpon>FirstRunFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phase1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phase1.Designer.cs">
+      <DependentUpon>Phase1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phase2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phase2.Designer.cs">
+      <DependentUpon>Phase2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeysPerX.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeysPerX.Designer.cs">
+      <DependentUpon>KeysPerX.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\ModImageGenerator\API\ImageDeployer.cs" />
+    <Compile Include="Code\Modules\ModImageGenerator\API\ImageGenerator.cs" />
+    <Compile Include="Code\Modules\ModImageGenerator\ModImageGenerator.cs" />
+    <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.Designer.cs">
+      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\ModParser\ModParser.cs" />
+    <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
+    <Compile Include="Code\Modules\MapDataReplacements\Plays\PlaysReplacements.cs" />
+    <Compile Include="Code\Modules\ModParser\ModParserSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\ModParser\ModParserSettings.Designer.cs">
+      <DependentUpon>ModParserSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
+    <Compile Include="Code\Modules\SCGUI\MainWindow.cs" />
+    <Compile Include="Code\Modules\MapDataFinders\OsuDatabaseLoader.cs" />
+    <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
+    <Compile Include="Code\Core\Maps\MSN.cs" />
+    <Compile Include="Code\Interfeaces\MapDataGetter.cs" />
+    <Compile Include="Code\Misc\KeyboardListener.cs" />
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounter.cs" />
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterFileName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterFileName.Designer.cs">
+      <DependentUpon>KeyboardCounterFileName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterKeyClick.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterKeyClick.Designer.cs">
+      <DependentUpon>KeyboardCounterKeyClick.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterMain.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterMain.Designer.cs">
+      <DependentUpon>KeyboardCounterMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterSettings.Designer.cs">
+      <DependentUpon>KeyboardCounterSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
+    <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinder.cs" />
+    <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.Designer.cs">
+      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataFinders\NoData\NoDataFinder.cs" />
+    <Compile Include="Code\Modules\MapDataGetters\Window\WindowDataGetter.cs" />
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\FileFormating.cs" />
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParserSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParserSettings.Designer.cs">
+      <DependentUpon>MapDataParserSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\SaveEvent.cs" />
+    <Compile Include="Code\Modules\osuPathReslover\osuPathResolver.cs" />
+    <Compile Include="Code\Modules\osuPathReslover\osuPathResolverSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\osuPathReslover\osuPathResolverSettings.Designer.cs">
+      <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Core\Settings.cs" />
+    <Compile Include="Code\Core\SqliteControler.cs" />
+    <Compile Include="Code\Modules\osuPost\osuPost.cs" />
+    <Compile Include="Code\Modules\osuPost\osuPostApi.cs" />
+    <Compile Include="Code\Modules\osuPost\osuPostSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\osuPost\osuPostSettings.Designer.cs">
+      <DependentUpon>osuPostSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\SCGUI\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\SCGUI\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\Updater\Updater.cs" />
+    <Compile Include="Code\Windows\MainWindowEntities.cs" />
+    <Compile Include="Code\Modules\SCGUI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\SCGUI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\SCGUI\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\SCGUI\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Windows\ErrorFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Windows\ErrorFrm.designer.cs">
+      <DependentUpon>ErrorFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.resx">
+      <DependentUpon>CommandsPreviewSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\Donation\DonationSettings.resx">
+      <DependentUpon>DonationSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.resx">
+      <DependentUpon>FileSaveLocationSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\FirstRun\FirstRunFrm.resx">
+      <DependentUpon>FirstRunFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\FirstRun\Phase1.resx">
+      <DependentUpon>Phase1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\FirstRun\Phase2.resx">
+      <DependentUpon>Phase2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterFileName.resx">
+      <DependentUpon>KeyboardCounterFileName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterKeyClick.resx">
+      <DependentUpon>KeyboardCounterKeyClick.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterMain.resx">
+      <DependentUpon>KeyboardCounterMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterSettings.resx">
+      <DependentUpon>KeyboardCounterSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeysPerX.resx">
+      <DependentUpon>KeysPerX.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
+      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\MapDataParserSettings.resx">
+      <DependentUpon>MapDataParserSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.resx">
+      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\ModParser\ModParserSettings.resx">
+      <DependentUpon>ModParserSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
+      <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\osuPost\osuPostSettings.resx">
+      <DependentUpon>osuPostSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\SCGUI\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\SCGUI\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\SCGUI\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Windows\ErrorFrm.resx">
+      <DependentUpon>ErrorFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="buildScripts\build.cmd" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Code\Modules\ModImageGenerator\Images\DT.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\HD.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\HR.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\HT.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\K4.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\K5.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\K6.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\K7.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\K8.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\NC.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\NF.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\PF.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\RN.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\RX.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\RX2.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\SD.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\SO.png" />
+    <Content Include="Code\Modules\ModImageGenerator\Images\TP.png" />
+    <Content Include="Resources\btn_donate_92x26.png" />
+    <Content Include="Resources\compiled.ico" />
+    <None Include="Resources\logo_256x256.png" />
+    <None Include="Resources\BG.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "D:\Dropbox\pancake.io\StreamCompanion\version" 0 "v{0},https://osu.ppy.sh/forum/t/209616"
+"$(ProjectDir)\buildScripts\build.cmd" $(TargetDir)\</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" 13</PreBuildEvent>
+  </PropertyGroup>
+</Project>
