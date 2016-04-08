@@ -48,7 +48,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders
                     ReadDatabaseEntries();
                 }
                 DestoryReader();
-                loadedLog = $"Loaded {ExpectedNumOfBeatmaps} beatmaps";
+                loadedLog = $"Loaded {_numberOfLoadedBeatmaps} beatmaps";
             }
             else
             {
