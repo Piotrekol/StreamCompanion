@@ -100,6 +100,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders
             {
                 _exception = e;
                 _stopProcessing = true;
+                return;
             }
             _mapDataStorer.StoreBeatmap(_tempBeatmap);
         }
