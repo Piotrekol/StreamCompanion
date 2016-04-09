@@ -71,9 +71,16 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         #region Callable Functions
         public void Disable()
         {
+            logOut();
             _isLoginDataSet = false;
         }
-        public void NewMap(MapSearchResult map, bool isOnline=true)
+
+        private void logOut()
+        {
+            if (_isLoginDataSet)
+                SendRequestToServer(FormatRequest(new MapSearchResult(), false));
+        }
+        public void NewMap(MapSearchResult map, bool isOnline = true)
         {
             if (!_isLoginDataSet) return;
 
@@ -130,12 +137,16 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         {
             var act = map.Action;
 
-            if (act == OsuStatus.Null)
-                return "NoAction";
             if (act == OsuStatus.Playing)
                 return "Playing";
             if (act == OsuStatus.Watching)
                 return "Watching";
+            if (act == OsuStatus.Listening)
+                return "Listening";
+            if (act == OsuStatus.Editing)
+                return "Editing";
+            if (act == OsuStatus.Null)
+                return "NoAction";
 
             return "NoAction";
         }
@@ -161,7 +172,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         }
         private string GetMapName(MapSearchResult map)
         {
-            if (map.MapSearchString != "")
+            if (!string.IsNullOrWhiteSpace(map.MapSearchString))
                 return map.MapSearchString;
             else
                 return "NoMap";
@@ -195,7 +206,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
 
         public void Dispose()
         {
-            SendRequestToServer(FormatRequest(new MapSearchResult(), false));
+            logOut();
         }
 
 

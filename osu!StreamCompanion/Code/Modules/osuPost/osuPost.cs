@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
+using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfeaces;
 
 namespace osu_StreamCompanion.Code.Modules.osuPost
@@ -15,6 +16,14 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         {
             Started = true;
             SwitchApiStatus(_settings.Get("osuPostEnabled", false));
+            _settings.SettingUpdated+=SettingUpdated;
+        }
+
+        private void SettingUpdated(object sender, SettingUpdated settingUpdated)
+        {
+            if (settingUpdated.Name == "osuPostEnabled")
+                SwitchApiStatus(_settings.Get("osuPostEnabled", false));
+
         }
 
         public string SettingGroup { get; } = "osu!Post";
@@ -33,10 +42,9 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         {
             if (_frmSettings == null || _frmSettings.IsDisposed)
             {
-                _frmSettings = new osuPostSettings();
-                _frmSettings.checkBox1.CheckedChanged += CheckBox1_CheckedChanged;
+                _frmSettings = new osuPostSettings(_settings);
             }
-            _frmSettings.checkBox1.Checked = _settings.Get("osuPostEnabled", false);
+            _frmSettings.checkBox_osuPostEnabled.Checked = _settings.Get("osuPostEnabled", false);
 
             return _frmSettings;
         }
@@ -51,11 +59,6 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
             {
                 api.Disable();
             }
-        }
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            _settings.Add("osuPostEnabled",_frmSettings.checkBox1.Checked);
-            SwitchApiStatus(_frmSettings.checkBox1.Checked);
         }
 
         public void SetNewMap(MapSearchResult map)
