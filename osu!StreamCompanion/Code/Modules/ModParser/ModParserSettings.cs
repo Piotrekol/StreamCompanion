@@ -12,7 +12,7 @@ namespace osu_StreamCompanion.Code.Modules.ModParser
         public ModParserSettings(Settings settings)
         {
             _settings = settings;
-            _settings.SettingUpdated+= SettingUpdated;
+            _settings.SettingUpdated += SettingUpdated;
             this.Enabled = _settings.Get("EnableMemoryScanner", true);
             InitializeComponent();
             textBox_Mods.Text = _settings.Get("NoModsDisplayText", "None");
@@ -23,11 +23,12 @@ namespace osu_StreamCompanion.Code.Modules.ModParser
 
         private void SettingUpdated(object sender, SettingUpdated settingUpdated)
         {
-            this.BeginInvoke((MethodInvoker) (() =>
-            {
-                if (settingUpdated.Name == "EnableMemoryScanner")
-                    this.Enabled = _settings.Get("EnableMemoryScanner", true);
-            }));
+            if (this.IsHandleCreated)
+                this.BeginInvoke((MethodInvoker)(() =>
+           {
+               if (settingUpdated.Name == "EnableMemoryScanner")
+                   this.Enabled = _settings.Get("EnableMemoryScanner", true);
+           }));
         }
 
         private void textBox_Mods_TextChanged(object sender, EventArgs e)
