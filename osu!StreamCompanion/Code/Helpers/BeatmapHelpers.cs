@@ -110,7 +110,8 @@ namespace osu_StreamCompanion.Code.Helpers
                 {"!SL!", bm.StackLeniency.ToString(CultureInfo.InvariantCulture)},
                 {"!mode!", bm.Mode.ToString()},
                 {"!source!", bm.Source},
-                {"!dir!", bm.Dir}
+                {"!dir!", bm.Dir},
+                {"!lb!", Environment.NewLine}
             };
 
 
