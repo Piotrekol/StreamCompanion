@@ -32,7 +32,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
                 _mainForm.Closed += (sender, args) =>
                 {
                     _settings.Save();
-                    Program.Quit();
+                    Program.SafeQuit();
                 };
                 _mainForm.button_OpenSettings.Click += (sender, args) =>
                 {

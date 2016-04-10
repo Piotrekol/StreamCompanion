@@ -66,7 +66,20 @@ namespace osu_StreamCompanion
 
 
         }
-        public static void Quit()
+
+        public static void SafeQuit()
+        {
+            try
+            {
+                _initializer?.Exit();
+            }
+            catch
+            {
+            }
+            Quit();
+        }
+
+        private static void Quit()
         {
             if (System.Windows.Forms.Application.MessageLoop)
             {

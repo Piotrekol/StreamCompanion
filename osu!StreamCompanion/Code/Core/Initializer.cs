@@ -88,7 +88,7 @@ namespace osu_StreamCompanion.Code.Core
                 AddModule(firstRunModule);
                 StartModule(firstRunModule);
                 if (!firstRunModule.CompletedSuccesfully)
-                    Program.Quit();
+                    Program.SafeQuit();
             }
             MsnGetters.Clear();
             #endregion
@@ -142,7 +142,17 @@ namespace osu_StreamCompanion.Code.Core
                 StartModule(_modules[i]);
             }
         }
-        
+
+        public void Exit()
+        {
+            for (int i = 0; i < _modules.Count; i++)
+            {
+                if (_modules[i] is IDisposable)
+                {
+                    ((IDisposable)_modules[i]).Dispose();
+                }
+            }   
+        }
         /// <summary>
         /// Adds module to _module array while ensuring that only 1 instance of specific module exists at the time.
         /// </summary>
