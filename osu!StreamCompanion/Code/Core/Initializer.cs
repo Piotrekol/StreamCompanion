@@ -129,7 +129,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new OsuPost());
             AddModule(new Updater());
             
-            AddModule(new MemoryDataFinder());
+            //AddModule(new MemoryDataFinder());
             AddModule(new SqliteDataFinder());
             AddModule(new NoDataFinder());
             
