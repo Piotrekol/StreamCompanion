@@ -167,7 +167,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders
             beatmap.CircleSize = _binaryReader.ReadSingle();
             beatmap.HpDrainRate = _binaryReader.ReadSingle();
             beatmap.OverallDifficulty = _binaryReader.ReadSingle();
-            beatmap.SliderMultiplicer = _binaryReader.ReadDouble();
+            beatmap.SliderVelocity = _binaryReader.ReadDouble();
 
             for (int j = 0; j < 4; j++)
             {

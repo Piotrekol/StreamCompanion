@@ -35,7 +35,7 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.CircleSize = (float)reader.GetDouble(i); i++;
             beatmap.HpDrainRate = (float)reader.GetDouble(i); i++;
             beatmap.OverallDifficulty = (float)reader.GetDouble(i); i++;
-            beatmap.SliderMultiplicer = reader.GetDouble(i); i++;
+            beatmap.SliderVelocity = reader.GetDouble(i); i++;
             beatmap.DrainingTime = reader.GetInt32(i); i++;
             beatmap.TotalTime = reader.GetInt32(i); i++;
             beatmap.PreviewTime = reader.GetInt32(i); i++;
@@ -98,7 +98,7 @@ namespace osu_StreamCompanion.Code.Helpers
                 {"!cs!", bm.CircleSize.ToString(CultureInfo.InvariantCulture)},
                 {"!hp!", bm.HpDrainRate.ToString(CultureInfo.InvariantCulture)},
                 {"!od!", bm.OverallDifficulty.ToString(CultureInfo.InvariantCulture)},
-                {"!sm!", bm.SliderMultiplicer.ToString(CultureInfo.InvariantCulture)},
+                {"!sv!", bm.SliderVelocity.ToString(CultureInfo.InvariantCulture)},
 
                 {"!drainingtime!", bm.DrainingTime.ToString()},
                 {"!totaltime!", bm.TotalTime.ToString()},

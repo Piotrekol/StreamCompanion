@@ -79,7 +79,7 @@ namespace osu_StreamCompanion.Code.Core.DataTypes
         public float CircleSize { get; set; }
         public float HpDrainRate { get; set; }
         public float OverallDifficulty { get; set; }
-        public double SliderMultiplicer { get; set; }
+        public double SliderVelocity { get; set; }
         public int DrainingTime { get; set; }
         public int TotalTime { get; set; }
         public int PreviewTime { get; set; }
@@ -136,7 +136,7 @@ namespace osu_StreamCompanion.Code.Core.DataTypes
             CircleSize = b.CircleSize;
             HpDrainRate = b.HpDrainRate;
             OverallDifficulty = b.OverallDifficulty;
-            SliderMultiplicer = b.SliderMultiplicer;
+            SliderVelocity = b.SliderVelocity;
             DrainingTime = b.DrainingTime;
             TotalTime = b.TotalTime;
             PreviewTime = b.PreviewTime;
@@ -198,7 +198,7 @@ namespace osu_StreamCompanion.Code.Core.DataTypes
             CircleSize = 0;
             HpDrainRate = 0;
             OverallDifficulty = 0;
-            SliderMultiplicer = 0;
+            SliderVelocity = 0;
             DrainingTime = 0;
             TotalTime = 0;
             PreviewTime = 0;

@@ -116,7 +116,7 @@ namespace osu_StreamCompanion.Code.Core.Maps
                         map.ApproachRate = Convert.ToSingle(val.Value, CultureInfo.InvariantCulture);
                         break;
                     case "SliderMultiplier":
-                        map.SliderMultiplicer = Convert.ToDouble(val.Value, CultureInfo.InvariantCulture);
+                        map.SliderVelocity = Convert.ToDouble(val.Value, CultureInfo.InvariantCulture);
                         break;
                     case "SliderTickRate":
                         //map. = val.Value;
