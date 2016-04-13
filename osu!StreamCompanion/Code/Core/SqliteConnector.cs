@@ -12,7 +12,7 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteConnector : IDisposable, IMapDataStorer
     {
         readonly SQLiteConnection _mDbConnection;
-        private string DbFilename = "Test.db";
+        private string DbFilename = "StreamCompanionCache.db";
         private SQLiteCommand _insertSql;
         private SQLiteTransaction _transation;
         public bool MassInsertIsActive => _transation != null;
@@ -101,6 +101,10 @@ namespace osu_StreamCompanion.Code.Core
         }
         private void CreateFile(string filename)
         {
+            if (File.Exists("Test.db"))
+            {
+                File.Delete("Test.db");
+            }
             if (!File.Exists(filename))
             {
                 SQLiteConnection.CreateFile(filename);
