@@ -10,6 +10,7 @@ using osu_StreamCompanion.Code.Interfeaces;
 using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
 using osu_StreamCompanion.Code.Modules.FallbackDetector;
+using osu_StreamCompanion.Code.Modules.FileChecker;
 using osu_StreamCompanion.Code.Modules.FileSaveLocation;
 using osu_StreamCompanion.Code.Modules.FirstRun;
 using osu_StreamCompanion.Code.Modules.KeyboardCounter;
@@ -56,6 +57,7 @@ namespace osu_StreamCompanion.Code.Core
 
         public Initializer()
         {
+            new FileChecker();
             _saver = new MainSaver(_logger);
             this.Settings = new Settings(_logger);
             Settings.Load(ConfigSaveLocation);
