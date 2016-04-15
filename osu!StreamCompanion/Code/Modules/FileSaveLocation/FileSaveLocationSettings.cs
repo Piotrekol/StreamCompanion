@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Modules.osuPathReslover
+namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
 {
     public partial class FileSaveLocationSettings : UserControl
     {

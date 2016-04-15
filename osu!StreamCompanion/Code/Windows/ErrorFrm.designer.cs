@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion
+﻿namespace osu_StreamCompanion.Code.Windows
 {
     partial class Error
     {

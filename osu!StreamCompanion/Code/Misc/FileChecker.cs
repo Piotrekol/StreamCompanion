@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Modules.FileChecker
+namespace osu_StreamCompanion.Code.Misc
 {
     class FileChecker
     {

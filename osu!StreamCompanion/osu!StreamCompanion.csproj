@@ -142,6 +142,7 @@
     <Compile Include="Code\Modules\Donation\DonationSettings.Designer.cs">
       <DependentUpon>DonationSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Misc\FileChecker.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">

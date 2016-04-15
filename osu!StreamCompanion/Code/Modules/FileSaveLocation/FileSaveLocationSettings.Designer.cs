@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.osuPathReslover
+﻿namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
 {
     partial class FileSaveLocationSettings
     {

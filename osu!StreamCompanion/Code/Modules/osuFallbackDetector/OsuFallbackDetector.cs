@@ -4,7 +4,7 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
 
-namespace osu_StreamCompanion.Code.Modules.FallbackDetector
+namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
 {
     class OsuFallbackDetector : IModule, ISettings
     {

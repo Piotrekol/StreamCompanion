@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
+using osu_StreamCompanion.Code.Windows;
 
 namespace osu_StreamCompanion
 {

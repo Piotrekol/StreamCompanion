@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace osu_StreamCompanion
+namespace osu_StreamCompanion.Code.Windows
 {
     public partial class Error : Form
     {
