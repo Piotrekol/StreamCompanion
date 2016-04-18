@@ -179,6 +179,7 @@ namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
         public void Dispose()
         {
             Unhook();
+            SaveKeysToSettings();
         }
 
         public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
