@@ -153,7 +153,8 @@ namespace osu_StreamCompanion.Code.Core
                 {
                     ((IDisposable)_modules[i]).Dispose();
                 }
-            }   
+            }
+            Settings.Save();   
         }
         /// <summary>
         /// Adds module to _module array while ensuring that only 1 instance of specific module exists at the time.
