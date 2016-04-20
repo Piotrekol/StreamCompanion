@@ -12,6 +12,7 @@ using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
 using osu_StreamCompanion.Code.Modules.FileSaveLocation;
 using osu_StreamCompanion.Code.Modules.FirstRun;
+using osu_StreamCompanion.Code.Modules.IrcBot;
 using osu_StreamCompanion.Code.Modules.KeyboardCounter;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.NoData;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.osuMemoryID;
@@ -137,6 +138,7 @@ namespace osu_StreamCompanion.Code.Core
             
             AddModule(new ModParser());
             AddModule(new ModImageGenerator());
+            AddModule(new IrcBot());
             AddModule(new MainWindow());
             
             for (int i = 0; i < _modules.Count; i++)

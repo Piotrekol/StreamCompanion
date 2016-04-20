@@ -64,6 +64,10 @@
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="IrcDotNet, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IrcDotNet.0.6.1\lib\net40\IrcDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
     </Reference>
@@ -143,6 +147,8 @@
       <DependentUpon>DonationSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Misc\FileChecker.cs" />
+    <Compile Include="Code\Modules\IrcBot\Bot\IrcBot.cs" />
+    <Compile Include="Code\Modules\IrcBot\IrcBot.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
