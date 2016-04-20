@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
@@ -8,22 +9,26 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
     public class MapDataParser : IModule, IMapDataParser, ISettingsProvider
     {
-        private List<FileFormating> _patternDictionary = new List<FileFormating>();
+        private BindingList<FileFormating> _patternDictionary = new BindingList<FileFormating>();
         private Settings _settings;
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
             Started = true;
             Load();
+            _patternDictionary.ListChanged += _patternDictionary_ListChanged;
             if (_settings.Get("firstRun", true))
             {
                 _mapDataParserSettings = new MapDataParserSettings(ref _patternDictionary);
-                _mapDataParserSettings.dictionaryUpdated += _mapDataParserSettings_dictionaryUpdated;
                 _mapDataParserSettings.AddDefault();
                 Free();
             }
         }
 
+        private void _patternDictionary_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            Save();
+        }
 
         public Dictionary<string, string> GetFormatedMapStrings(Dictionary<string, string> replacements, OsuStatus status)
         {
@@ -41,9 +46,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                             res.Add(pattern.Filename, FormatMapString(pattern.Pattern, replacementDict));
                     }
                 }
-                _mapDataParserSettings?.SetTestDict(replacementDict);
+                _mapDataParserSettings?.SetPreviewDict(replacementDict);
             }
-            res.Add("np", FormatMapString("!ArtistRoman! - !TitleRoman! [!DiffName!] !Mods!", replacementDict));
+            //res.Add("np", FormatMapString("!ArtistRoman! - !TitleRoman! [!DiffName!] !Mods!", replacementDict));
 
             return res;
         }
@@ -65,7 +70,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         public void Free()
         {
-            _mapDataParserSettings.dictionaryUpdated -= _mapDataParserSettings_dictionaryUpdated;
             _mapDataParserSettings.Dispose();
         }
 
@@ -77,15 +81,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 lock (_patternDictionary)
                 {
                     _mapDataParserSettings = new MapDataParserSettings(ref _patternDictionary);
-                    _mapDataParserSettings.dictionaryUpdated += _mapDataParserSettings_dictionaryUpdated;
                 }
             }
             return _mapDataParserSettings;
-        }
-
-        private void _mapDataParserSettings_dictionaryUpdated(object sender, System.EventArgs e)
-        {
-            Save();
         }
 
         private void Save()

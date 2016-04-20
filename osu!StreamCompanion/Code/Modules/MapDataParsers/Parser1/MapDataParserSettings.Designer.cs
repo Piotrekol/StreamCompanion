@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SaveEvent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.textBox_FileName = new System.Windows.Forms.TextBox();
             this.textBox_Formating = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -45,6 +42,7 @@
             this.button_AddPattern = new System.Windows.Forms.Button();
             this.button_Reset = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.checkBox_isCommand = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,44 +52,16 @@
             this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.FileName,
-            this.Count,
-            this.SaveEvent});
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowEditingIcon = false;
             this.dataGridView.Size = new System.Drawing.Size(595, 247);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
-            // 
-            // FileName
-            // 
-            this.FileName.HeaderText = "File name";
-            this.FileName.Name = "FileName";
-            this.FileName.ReadOnly = true;
-            this.FileName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Count
-            // 
-            this.Count.HeaderText = "Formating";
-            this.Count.Name = "Count";
-            this.Count.ReadOnly = true;
-            this.Count.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Count.Width = 390;
-            // 
-            // SaveEvent
-            // 
-            this.SaveEvent.HeaderText = "Event";
-            this.SaveEvent.Name = "SaveEvent";
-            this.SaveEvent.ReadOnly = true;
-            this.SaveEvent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.SaveEvent.Width = 80;
             // 
             // textBox_FileName
             // 
@@ -106,16 +76,15 @@
             this.textBox_Formating.Name = "textBox_Formating";
             this.textBox_Formating.Size = new System.Drawing.Size(496, 20);
             this.textBox_Formating.TabIndex = 2;
-            this.textBox_Formating.TextChanged += new System.EventHandler(this.textBox_Formating_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 253);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(107, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "File name:";
+            this.label1.Text = "File/Command name:";
             // 
             // label2
             // 
@@ -130,19 +99,19 @@
             // 
             this.button_EditPattern.Location = new System.Drawing.Point(87, 377);
             this.button_EditPattern.Name = "button_EditPattern";
-            this.button_EditPattern.Size = new System.Drawing.Size(96, 23);
+            this.button_EditPattern.Size = new System.Drawing.Size(59, 23);
             this.button_EditPattern.TabIndex = 4;
-            this.button_EditPattern.Text = "Edit selected";
+            this.button_EditPattern.Text = "Save";
             this.button_EditPattern.UseVisualStyleBackColor = true;
             this.button_EditPattern.Click += new System.EventHandler(this.button_EditPattern_Click);
             // 
             // button_RemovePattern
             // 
-            this.button_RemovePattern.Location = new System.Drawing.Point(189, 377);
+            this.button_RemovePattern.Location = new System.Drawing.Point(152, 377);
             this.button_RemovePattern.Name = "button_RemovePattern";
-            this.button_RemovePattern.Size = new System.Drawing.Size(75, 23);
+            this.button_RemovePattern.Size = new System.Drawing.Size(59, 23);
             this.button_RemovePattern.TabIndex = 4;
-            this.button_RemovePattern.Text = "Remove";
+            this.button_RemovePattern.Text = "Delete";
             this.button_RemovePattern.UseVisualStyleBackColor = true;
             this.button_RemovePattern.Click += new System.EventHandler(this.button_RemovePattern_Click);
             // 
@@ -186,7 +155,7 @@
             this.button_AddPattern.Name = "button_AddPattern";
             this.button_AddPattern.Size = new System.Drawing.Size(75, 23);
             this.button_AddPattern.TabIndex = 7;
-            this.button_AddPattern.Text = "Add new";
+            this.button_AddPattern.Text = "Add as new";
             this.button_AddPattern.UseVisualStyleBackColor = true;
             this.button_AddPattern.Click += new System.EventHandler(this.button_AddPattern_Click);
             // 
@@ -211,10 +180,21 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button_OpenDirectory);
             // 
+            // checkBox_isCommand
+            // 
+            this.checkBox_isCommand.AutoSize = true;
+            this.checkBox_isCommand.Location = new System.Drawing.Point(297, 274);
+            this.checkBox_isCommand.Name = "checkBox_isCommand";
+            this.checkBox_isCommand.Size = new System.Drawing.Size(139, 17);
+            this.checkBox_isCommand.TabIndex = 8;
+            this.checkBox_isCommand.Text = "Use as twitch command";
+            this.checkBox_isCommand.UseVisualStyleBackColor = true;
+            // 
             // MapDataParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox_isCommand);
             this.Controls.Add(this.button_AddPattern);
             this.Controls.Add(this.comboBox_saveEvent);
             this.Controls.Add(this.label3);
@@ -250,11 +230,9 @@
         private System.Windows.Forms.Label label_Preview;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBox_saveEvent;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Count;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SaveEvent;
         private System.Windows.Forms.Button button_AddPattern;
         private System.Windows.Forms.Button button_Reset;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox checkBox_isCommand;
     }
 }
