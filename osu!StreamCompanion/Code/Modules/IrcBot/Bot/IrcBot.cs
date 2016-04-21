@@ -17,8 +17,8 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot.Bot
 
         private void OnCommandsChanged()
         {
-            if (_commands.ContainsKey("np"))
-                _client.LocalUser.SendMessage(_client.Channels[0], _commands["np"]);
+            if (_commands.ContainsKey("!np"))
+                _client.LocalUser.SendMessage(_client.Channels[0], _commands["!np"]);
         }
 
         private ILogger _loggger;
@@ -86,9 +86,11 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot.Bot
             {
                 // Read message.
                 Console.WriteLine("[{0}]({1}): {2}.", channel.Name, e.Source.Name, e.Text);
-                if (e.Text.StartsWith("!np") && _commands.ContainsKey("np"))
+                var splited = e.Text.Split(new[] { ' ' }, 2);
+                var command = splited[0];
+                if (_commands.ContainsKey(command))
                 {
-                    _client.LocalUser.SendMessage(channel, _commands["np"]);
+                    _client.LocalUser.SendMessage(channel, _commands[command]);
                 }
             }
             else
@@ -138,7 +140,7 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot.Bot
                 {
                     _client.Connected += (sender2, e2) => connectedEvent.Set();
                     _client.Registered += (sender2, e2) => registeredEvent.Set();
-                    _client.Connect(server, false,userInfo);
+                    _client.Connect(server, false, userInfo);
                     if (!connectedEvent.Wait(10000))
                     {
                         Error("Connection to '{0}' timed out.", server);

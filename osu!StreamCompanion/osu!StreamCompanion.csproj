@@ -109,6 +109,7 @@
     <Compile Include="Code\Helpers\Helpers.cs" />
     <Compile Include="Code\Helpers\StringCipher.cs" />
     <Compile Include="Code\Helpers\EventClass.cs" />
+    <Compile Include="Code\Interfeaces\ICommandsProvider.cs" />
     <Compile Include="Code\Interfeaces\IMainWindowUpdater.cs" />
     <Compile Include="Code\Interfeaces\IMapDataFinder.cs" />
     <Compile Include="Code\Interfeaces\IMapDataParser.cs" />

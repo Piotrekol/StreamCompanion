@@ -7,7 +7,7 @@ using osu_StreamCompanion.Code.Interfeaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
-    public class MapDataParser : IModule, IMapDataParser, ISettingsProvider
+    public class MapDataParser : IModule, IMapDataParser, ICommandsProvider, ISettingsProvider
     {
         private BindingList<FileFormating> _patternDictionary = new BindingList<FileFormating>();
         private Settings _settings;
@@ -40,6 +40,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 {
                     foreach (var pattern in _patternDictionary)
                     {
+                        if (pattern.isCommand) continue;
                         if ((pattern.SaveEvent & (int)status) == 0)
                             res.Add(pattern.Filename, "");
                         else
@@ -48,8 +49,21 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 }
                 _mapDataParserSettings?.SetPreviewDict(replacementDict);
             }
-            //res.Add("np", FormatMapString("!ArtistRoman! - !TitleRoman! [!DiffName!] !Mods!", replacementDict));
 
+            return res;
+        }
+
+        public Dictionary<string, string> GetCommands(Dictionary<string, string> replacements, OsuStatus status)
+        {
+            var res = new Dictionary<string, string>();
+            lock (_patternDictionary)
+            {
+                foreach (var pattern in _patternDictionary)
+                {
+                    if (!pattern.isCommand) continue;
+                    res.Add(pattern.Filename, FormatMapString(pattern.Pattern, replacements));
+                }
+            }
             return res;
         }
 
@@ -135,5 +149,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
 
         }
+
     }
 }

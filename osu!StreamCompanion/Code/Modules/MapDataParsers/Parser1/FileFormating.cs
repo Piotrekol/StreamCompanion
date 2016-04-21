@@ -15,6 +15,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             get
             {
+                if (this.isCommand)
+                    return "Ignored";
                 switch (SaveEvent)
                 {
                     case 1:

@@ -11,7 +11,7 @@ using osu_StreamCompanion.Code.Interfeaces;
 
 namespace osu_StreamCompanion.Code.Modules.IrcBot
 {
-    class IrcBot :IModule,ISettingsProvider,ISqliteUser, IMapDataGetter,IDisposable
+    class IrcBot : IModule, ISettingsProvider, ISqliteUser, IMapDataGetter, IDisposable
     {
         private SqliteControler _sqliteHandle;
         private Settings _settings;
@@ -22,7 +22,7 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot
         {
             var username = _settings.Get("IrcUsername", "");
             var channel = _settings.Get("IrcChannel", "");
-            var password = _settings.Get("IrcPassword","");
+            var password = _settings.Get("IrcPassword", "");
             var a = new IrcDotNet.IrcUserRegistrationInfo()
             {
                 NickName = username,
@@ -32,7 +32,7 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot
             BotThread = new Thread(() =>
             {
                 Bot = new Bot.IrcBot(logger);
-                Bot.Start(channel,a);
+                Bot.Start(channel, a);
             });
             BotThread.Start();
         }
@@ -60,7 +60,7 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot
 
         public void SetNewMap(MapSearchResult map)
         {
-            Bot.setCommands(map.FormatedStrings);
+            Bot.setCommands(map.Commands);
         }
 
         public void Dispose()
