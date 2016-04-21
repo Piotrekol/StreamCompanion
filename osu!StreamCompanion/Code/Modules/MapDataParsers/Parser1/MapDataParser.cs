@@ -93,16 +93,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 List<string> filenames = new List<string>();
                 List<string> Patterns = new List<string>();
                 List<int> saveEvents = new List<int>();
+                List<int> isCommand = new List<int>();
                 foreach (var f in _patternDictionary)
                 {
                     filenames.Add(f.Filename);
                     Patterns.Add(f.Pattern);
                     saveEvents.Add(f.SaveEvent);
+                    isCommand.Add(f.isCommand ? 1 : 0);
                 }
 
                 _settings.Add("PatternFileNames", filenames);
                 _settings.Add("Patterns", Patterns);
                 _settings.Add("saveEvents", saveEvents);
+                _settings.Add("isCommand", isCommand);
             }
             _settings.Save();
         }
@@ -112,6 +115,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             List<string> filenames = _settings.Get("PatternFileNames");
             List<string> Patterns = _settings.Get("Patterns");
             List<int> saveEvents = _settings.Geti("saveEvents");
+            List<int> isCommand = _settings.Geti("isCommand");
+
+            //Needed if user is updating from older version
+            while (saveEvents.Count > isCommand.Count) isCommand.Add(0);
+
             lock (_patternDictionary)
             {
                 for (int i = 0; i < filenames.Count; i++)
@@ -120,7 +128,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     {
                         Filename = filenames[i],
                         Pattern = Patterns[i],
-                        SaveEvent = saveEvents[i]
+                        SaveEvent = saveEvents[i],
+                        isCommand = isCommand[i] == 1
                     });
                 }
             }

@@ -35,5 +35,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         }
         [Browsable(false)]
         public int SaveEvent { get; set; }
+
+
+        [Editable(true)]
+        [DisplayName("Use as Command")]
+        public bool isCommand { get; set; }
     }
 }
