@@ -60,7 +60,7 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot
 
         public void SetNewMap(MapSearchResult map)
         {
-            Bot.setCommands(map.Commands);
+            Bot.SetLastMapResult(map);
         }
 
         public void Dispose()

@@ -13,12 +13,12 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot.Bot
 
     class IrcBot : IDisposable
     {
-        private Dictionary<string, string> _commands = new Dictionary<string, string>();
+        private MapSearchResult _mapResult = new MapSearchResult();
 
         private void OnCommandsChanged()
         {
-            if (_commands.ContainsKey("!np"))
-                _client.LocalUser.SendMessage(_client.Channels[0], _commands["!np"]);
+            if (_mapResult.Commands.ContainsKey("!np") && (_mapResult.Action & OsuStatus.Playing) != 0)
+                _client.LocalUser.SendMessage(_client.Channels[0], _mapResult.Commands["!np"]);
         }
 
         private ILogger _loggger;
@@ -29,11 +29,11 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot.Bot
 
         }
 
-        public void setCommands(Dictionary<string, string> commands)
+        public void SetLastMapResult(MapSearchResult mapResult)
         {
-            lock (commands)
+            lock (mapResult)
             {
-                _commands = commands;
+                _mapResult = mapResult;
             }
             OnCommandsChanged();
         }
@@ -88,9 +88,9 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot.Bot
                 Console.WriteLine("[{0}]({1}): {2}.", channel.Name, e.Source.Name, e.Text);
                 var splited = e.Text.Split(new[] { ' ' }, 2);
                 var command = splited[0];
-                if (_commands.ContainsKey(command))
+                if (_mapResult.Commands.ContainsKey(command))
                 {
-                    _client.LocalUser.SendMessage(channel, _commands[command]);
+                    _client.LocalUser.SendMessage(channel, _mapResult.Commands[command]);
                 }
             }
             else
