@@ -45,11 +45,23 @@ namespace osu_StreamCompanion.Code.Windows
             }
         }
 
+        private string _ircStatus;
+        [System.Reflection.Obfuscation(Feature = "renaming")]
+        public string IrcStatus
+        {
+            get { return _ircStatus; }
+            set
+            {
+                _ircStatus = value;
+                RaisePropertyChanged("IrcStatus");
+            }
+        }
         public MainWindowUpdater()
         {
             BeatmapsLoaded = "Beatmaps not loaded";
             NowPlaying = "Nothing is playing at the moment";
             UpdateText = string.Format("No updates found ({0})", "v121212.13");
+            IrcStatus = "Twitch bot not connected";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

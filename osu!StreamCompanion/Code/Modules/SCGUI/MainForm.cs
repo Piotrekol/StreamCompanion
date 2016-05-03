@@ -39,6 +39,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
             NowPlaying.DataBindings.Add(AsyncBindingHelper.GetBinding(NowPlaying, "Text", bindingSource, "NowPlaying"));
             UpdateText.DataBindings.Add(AsyncBindingHelper.GetBinding(UpdateText, "Text", bindingSource, "UpdateText"));
             BeatmapsLoaded.DataBindings.Add(AsyncBindingHelper.GetBinding(BeatmapsLoaded, "Text", bindingSource, "BeatmapsLoaded"));
+            IrcStatus.DataBindings.Add(AsyncBindingHelper.GetBinding(IrcStatus, "Text", bindingSource, "IrcStatus"));
             UpdateText.Click += bindingSource.UpdateTextClicked;
         }
         #endregion

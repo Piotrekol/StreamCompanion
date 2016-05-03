@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="Code\Misc\FileChecker.cs" />
     <Compile Include="Code\Modules\IrcBot\Bot\IrcBot.cs" />
+    <Compile Include="Code\Modules\IrcBot\Bot\IrcHandler.cs" />
     <Compile Include="Code\Modules\IrcBot\IrcBot.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
@@ -234,7 +235,6 @@
       <DependentUpon>KeyboardCounterSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
-    <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinder.cs" />
     <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>

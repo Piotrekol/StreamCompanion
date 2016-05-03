@@ -35,6 +35,7 @@
             this.BeatmapsLoaded = new System.Windows.Forms.Label();
             this.NowPlaying = new System.Windows.Forms.Label();
             this.exit_button = new System.Windows.Forms.Button();
+            this.IrcStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // UpdateText
@@ -102,6 +103,17 @@
             this.exit_button.UseVisualStyleBackColor = true;
             this.exit_button.Click += new System.EventHandler(this.exit_button_Click);
             // 
+            // IrcStatus
+            // 
+            this.IrcStatus.AutoSize = true;
+            this.IrcStatus.BackColor = System.Drawing.Color.Transparent;
+            this.IrcStatus.ForeColor = System.Drawing.Color.Beige;
+            this.IrcStatus.Location = new System.Drawing.Point(76, 43);
+            this.IrcStatus.Name = "IrcStatus";
+            this.IrcStatus.Size = new System.Drawing.Size(61, 13);
+            this.IrcStatus.TabIndex = 9;
+            this.IrcStatus.Text = "_IrcStatus_";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -110,6 +122,7 @@
             this.BackgroundImage = global::osu_StreamCompanion.Properties.Resources.main_BG;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(659, 171);
+            this.Controls.Add(this.IrcStatus);
             this.Controls.Add(this.exit_button);
             this.Controls.Add(this.NowPlaying);
             this.Controls.Add(this.BeatmapsLoaded);
@@ -137,6 +150,7 @@
         public System.Windows.Forms.Button button_OpenSettings;
         [System.Reflection.Obfuscation(Feature = "renaming")]
         public System.Windows.Forms.Label NowPlaying;
+        public System.Windows.Forms.Label IrcStatus;
     }
 }
 

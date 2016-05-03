@@ -7,16 +7,19 @@ using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Windows;
 
 
 namespace osu_StreamCompanion.Code.Modules.IrcBot
 {
-    class IrcBot : IModule, ISettingsProvider, ISqliteUser, IMapDataGetter, IDisposable
+    class IrcBot : IModule, ISettingsProvider, ISqliteUser, IMapDataGetter, IMainWindowUpdater,IDisposable
     {
         private SqliteControler _sqliteHandle;
         private Settings _settings;
         private Thread BotThread;
         private Bot.IrcBot Bot;
+        private MainWindowUpdater _mainWindowHandle;
+
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -32,6 +35,7 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot
             BotThread = new Thread(() =>
             {
                 Bot = new Bot.IrcBot(logger);
+                Bot.GetMainWindowHandle(_mainWindowHandle);
                 Bot.Start(channel, a);
             });
             BotThread.Start();
@@ -67,6 +71,11 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot
         {
             Bot.Dispose();
             BotThread.Abort();
+        }
+
+        public void GetMainWindowHandle(MainWindowUpdater mainWindowHandle)
+        {
+            _mainWindowHandle = mainWindowHandle;
         }
     }
 }
