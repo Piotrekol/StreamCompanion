@@ -21,8 +21,15 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
         {
             get
             {
-                _processes = Process.GetProcessesByName("osu!");
-                return _processes.Length > 0;
+                try
+                {
+                    _processes = Process.GetProcessesByName("osu!");
+                    return _processes.Length > 0;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
 
