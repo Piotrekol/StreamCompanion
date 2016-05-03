@@ -227,7 +227,6 @@
       <DependentUpon>KeyboardCounterSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
-    <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinder.cs" />
     <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>

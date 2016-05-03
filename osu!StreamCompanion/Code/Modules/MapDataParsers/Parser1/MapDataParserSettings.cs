@@ -106,7 +106,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     textBox_FileName.Text = _patternDictionary[idx].Filename;
                     textBox_Formating.Text = _patternDictionary[idx].Pattern;
                     comboBox_saveEvent.SelectedIndex = _statusToSelection[_patternDictionary[idx].SaveEvent == 0 ? 27 : _patternDictionary[idx].SaveEvent];
-                    checkBox_isCommand.Checked = _patternDictionary[idx].isCommand;
                     UpdatePreview(idx);
                 }
             }
@@ -153,7 +152,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 string formating = textBox_Formating.Text;
                 int Event = _selectionToStatus[comboBox_saveEvent.SelectedIndex];
                 int id = dataGridView.SelectedRows[0].Index;
-                bool isCommand = checkBox_isCommand.Checked;
 
                 if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(formating))
                     UserError("Fill all fields first.");
@@ -168,8 +166,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         {
                             Filename = fileName,
                             Pattern = formating,
-                            SaveEvent = Event,
-                            isCommand = isCommand
+                            SaveEvent = Event
                         };
                     }
                 }

@@ -42,7 +42,6 @@
             this.button_AddPattern = new System.Windows.Forms.Button();
             this.button_Reset = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.checkBox_isCommand = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -180,21 +179,10 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button_OpenDirectory);
             // 
-            // checkBox_isCommand
-            // 
-            this.checkBox_isCommand.AutoSize = true;
-            this.checkBox_isCommand.Location = new System.Drawing.Point(297, 274);
-            this.checkBox_isCommand.Name = "checkBox_isCommand";
-            this.checkBox_isCommand.Size = new System.Drawing.Size(139, 17);
-            this.checkBox_isCommand.TabIndex = 8;
-            this.checkBox_isCommand.Text = "Use as twitch command";
-            this.checkBox_isCommand.UseVisualStyleBackColor = true;
-            // 
             // MapDataParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.checkBox_isCommand);
             this.Controls.Add(this.button_AddPattern);
             this.Controls.Add(this.comboBox_saveEvent);
             this.Controls.Add(this.label3);
@@ -233,6 +221,5 @@
         private System.Windows.Forms.Button button_AddPattern;
         private System.Windows.Forms.Button button_Reset;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox checkBox_isCommand;
     }
 }
