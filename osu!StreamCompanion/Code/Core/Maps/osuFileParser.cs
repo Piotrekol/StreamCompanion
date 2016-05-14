@@ -290,11 +290,19 @@ namespace osu_StreamCompanion.Code.Core.Maps
             //Get all start indexes of all sections in file
             var sectionStarts = new List<int>();
             int LastSectionPostion = 0;
-            do
+            //TODO: proper fix for this error
+            try
             {
-                LastSectionPostion = lines.FindIndex(LastSectionPostion + 1, startsWithOpeningBracket);
-                sectionStarts.Add(LastSectionPostion);
-            } while (LastSectionPostion != -1);
+                do
+                {
+                    LastSectionPostion = lines.FindIndex(LastSectionPostion + 1, startsWithOpeningBracket);
+                    sectionStarts.Add(LastSectionPostion);
+                } while (LastSectionPostion != -1);
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine("There was a problem with processing new beatmap. | {0}", string.Join("+",lines.ToArray()));
+            }
             sectionStarts.Remove(-1);
 
             //Construct our section(s) classes
