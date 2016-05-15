@@ -58,16 +58,12 @@ namespace osu_StreamCompanion.Code.Core.Maps
                 string str = Marshal.PtrToStringUni(copydatastruct.lpData, copydatastruct.cbData / 2);
                 string[] separator = new string[] { @"\0" };
                 string[] sourceArray = str.Split(separator, StringSplitOptions.None);
-                if (sourceArray[2] == "0")
-                {
-                    //_status = null;
-                }
-                else
+                if (sourceArray.Length > 8)
                 {
                     _osuStatus["artist"] = sourceArray[5];
                     _osuStatus["title"] = sourceArray[4];
                     _osuStatus["diff"] = sourceArray[7];
-                    _osuStatus["status"] = sourceArray[3].Split(new[] {' '}, 2)[0];
+                    _osuStatus["status"] = sourceArray[3].Split(new[] { ' ' }, 2)[0];
 
                     OnMSNStringChanged();
                 }
