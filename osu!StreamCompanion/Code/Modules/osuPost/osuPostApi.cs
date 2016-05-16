@@ -125,7 +125,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         {
             var output = "key=" + _userKey;
             output += "&isOnline=" + (isOnline ? "true" : "false");
-            output += "&mapName=" + HttpUtility.UrlEncode((GetMapName(map)));
+            output += "&mapName=" + Uri.EscapeDataString((GetMapName(map)));
             output += "&mapID=" + GetMapId(map);
             output += "&mapSetID=" + GetMapSetId(map);
             output += "&userAction=" + GetMapAction(map);
