@@ -91,6 +91,7 @@
             this.NowPlaying.TabIndex = 7;
             this.NowPlaying.Text = resources.GetString("NowPlaying.Text");
             this.NowPlaying.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.NowPlaying.UseMnemonic = false;
             // 
             // exit_button
             // 
