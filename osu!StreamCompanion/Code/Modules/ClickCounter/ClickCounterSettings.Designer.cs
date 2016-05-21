@@ -36,6 +36,7 @@
             this.button_RemoveKey = new System.Windows.Forms.Button();
             this.checkBox_ResetOnRestart = new System.Windows.Forms.CheckBox();
             this.checkBox_EnableKPX = new System.Windows.Forms.CheckBox();
+            this.checkBox_enableMouseHook = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -99,28 +100,39 @@
             // checkBox_ResetOnRestart
             // 
             this.checkBox_ResetOnRestart.AutoSize = true;
-            this.checkBox_ResetOnRestart.Location = new System.Drawing.Point(4, 240);
+            this.checkBox_ResetOnRestart.Location = new System.Drawing.Point(4, 260);
             this.checkBox_ResetOnRestart.Name = "checkBox_ResetOnRestart";
-            this.checkBox_ResetOnRestart.Size = new System.Drawing.Size(245, 17);
+            this.checkBox_ResetOnRestart.Size = new System.Drawing.Size(156, 17);
             this.checkBox_ResetOnRestart.TabIndex = 3;
-            this.checkBox_ResetOnRestart.Text = "Reset key counts on StreamCompanion restart";
+            this.checkBox_ResetOnRestart.Text = "Reset key counts on restart";
             this.checkBox_ResetOnRestart.UseVisualStyleBackColor = true;
             // 
             // checkBox_EnableKPX
             // 
             this.checkBox_EnableKPX.AutoSize = true;
             this.checkBox_EnableKPX.Enabled = false;
-            this.checkBox_EnableKPX.Location = new System.Drawing.Point(4, 263);
+            this.checkBox_EnableKPX.Location = new System.Drawing.Point(4, 280);
             this.checkBox_EnableKPX.Name = "checkBox_EnableKPX";
             this.checkBox_EnableKPX.Size = new System.Drawing.Size(166, 17);
             this.checkBox_EnableKPX.TabIndex = 4;
             this.checkBox_EnableKPX.Text = "Enable averange key counter";
             this.checkBox_EnableKPX.UseVisualStyleBackColor = true;
             // 
-            // KeyboardCounterSettings
+            // checkBox_enableMouseHook
+            // 
+            this.checkBox_enableMouseHook.AutoSize = true;
+            this.checkBox_enableMouseHook.Location = new System.Drawing.Point(4, 240);
+            this.checkBox_enableMouseHook.Name = "checkBox_enableMouseHook";
+            this.checkBox_enableMouseHook.Size = new System.Drawing.Size(219, 17);
+            this.checkBox_enableMouseHook.TabIndex = 5;
+            this.checkBox_enableMouseHook.Text = "Enable tracking of Mouse button presses";
+            this.checkBox_enableMouseHook.UseVisualStyleBackColor = true;
+            // 
+            // ClickCounterSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox_enableMouseHook);
             this.Controls.Add(this.checkBox_EnableKPX);
             this.Controls.Add(this.checkBox_ResetOnRestart);
             this.Controls.Add(this.button_RemoveKey);
@@ -144,5 +156,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
         public System.Windows.Forms.CheckBox checkBox_ResetOnRestart;
         public System.Windows.Forms.CheckBox checkBox_EnableKPX;
+        public System.Windows.Forms.CheckBox checkBox_enableMouseHook;
     }
 }
