@@ -8,11 +8,11 @@ using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Interfeaces;
 using osu_StreamCompanion.Code.Misc;
+using osu_StreamCompanion.Code.Modules.ClickCounter;
 using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
 using osu_StreamCompanion.Code.Modules.FileSaveLocation;
 using osu_StreamCompanion.Code.Modules.FirstRun;
-using osu_StreamCompanion.Code.Modules.KeyboardCounter;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.NoData;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.osuMemoryID;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData;
@@ -122,7 +122,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new WindowDataGetter());
             AddModule(new PlaysReplacements());
             AddModule(new MapReplacement());
-            AddModule(new KeyboardCounter());
+            AddModule(new ClickCounter());
             AddModule(new OsuSongsFolderWatcher());
             
             AddModule(new FileSaveLocation());

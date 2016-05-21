@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
+﻿namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
     partial class KeysPerX
     {

@@ -170,10 +170,10 @@
     <Compile Include="Code\Modules\FirstRun\Phase2.Designer.cs">
       <DependentUpon>Phase2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeysPerX.cs">
+    <Compile Include="Code\Modules\ClickCounter\KeysPerX.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeysPerX.Designer.cs">
+    <Compile Include="Code\Modules\ClickCounter\KeysPerX.Designer.cs">
       <DependentUpon>KeysPerX.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\ModImageGenerator\API\ImageDeployer.cs" />
@@ -201,30 +201,30 @@
     <Compile Include="Code\Core\Maps\MSN.cs" />
     <Compile Include="Code\Interfeaces\MapDataGetter.cs" />
     <Compile Include="Code\Misc\KeyboardListener.cs" />
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounter.cs" />
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterFileName.cs">
+    <Compile Include="Code\Modules\ClickCounter\ClickCounter.cs" />
+    <Compile Include="Code\Modules\ClickCounter\ClickCounterFileName.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterFileName.Designer.cs">
-      <DependentUpon>KeyboardCounterFileName.cs</DependentUpon>
+    <Compile Include="Code\Modules\ClickCounter\ClickCounterFileName.Designer.cs">
+      <DependentUpon>ClickCounterFileName.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterKeyClick.cs">
+    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterKeyClick.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterKeyClick.Designer.cs">
+    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterKeyClick.Designer.cs">
       <DependentUpon>KeyboardCounterKeyClick.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterMain.cs">
+    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterMain.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterMain.Designer.cs">
+    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterMain.Designer.cs">
       <DependentUpon>KeyboardCounterMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterSettings.cs">
+    <Compile Include="Code\Modules\ClickCounter\ClickCounterSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\KeyboardCounter\KeyboardCounterSettings.Designer.cs">
-      <DependentUpon>KeyboardCounterSettings.cs</DependentUpon>
+    <Compile Include="Code\Modules\ClickCounter\ClickCounterSettings.Designer.cs">
+      <DependentUpon>ClickCounterSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
     <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
@@ -307,19 +307,19 @@
     <EmbeddedResource Include="Code\Modules\FirstRun\Phase2.resx">
       <DependentUpon>Phase2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterFileName.resx">
-      <DependentUpon>KeyboardCounterFileName.cs</DependentUpon>
+    <EmbeddedResource Include="Code\Modules\ClickCounter\ClickCounterFileName.resx">
+      <DependentUpon>ClickCounterFileName.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterKeyClick.resx">
+    <EmbeddedResource Include="Code\Modules\ClickCounter\KeyboardCounterKeyClick.resx">
       <DependentUpon>KeyboardCounterKeyClick.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterMain.resx">
+    <EmbeddedResource Include="Code\Modules\ClickCounter\KeyboardCounterMain.resx">
       <DependentUpon>KeyboardCounterMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterSettings.resx">
-      <DependentUpon>KeyboardCounterSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Code\Modules\ClickCounter\ClickCounterSettings.resx">
+      <DependentUpon>ClickCounterSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeysPerX.resx">
+    <EmbeddedResource Include="Code\Modules\ClickCounter\KeysPerX.resx">
       <DependentUpon>KeysPerX.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">

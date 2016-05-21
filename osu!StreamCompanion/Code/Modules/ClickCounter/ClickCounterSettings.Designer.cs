@@ -1,6 +1,6 @@
-﻿namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
+﻿namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
-    partial class KeyboardCounterSettings
+    partial class ClickCounterSettings
     {
         /// <summary> 
         /// Required designer variable.
@@ -126,7 +126,7 @@
             this.Controls.Add(this.button_RemoveKey);
             this.Controls.Add(this.button_AddKey);
             this.Controls.Add(this.dataGridView1);
-            this.Name = "KeyboardCounterSettings";
+            this.Name = "ClickCounterSettings";
             this.Size = new System.Drawing.Size(493, 324);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

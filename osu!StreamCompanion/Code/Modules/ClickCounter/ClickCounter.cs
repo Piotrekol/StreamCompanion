@@ -6,19 +6,19 @@ using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
 using osu_StreamCompanion.Code.Misc;
 
-namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
+namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
-    public class KeyboardCounter : ISettingsProvider, IModule, ISaveRequester, IDisposable, IMapDataReplacements
+    public class ClickCounter : ISettingsProvider, IModule, ISaveRequester, IDisposable, IMapDataReplacements
     {
         private Settings _settings;
-        private KeyboardCounterSettings _frmSettings;
+        private ClickCounterSettings _frmSettings;
         private KeyboardListener _keyboardListener;
         private ISaver _saver;
         private readonly Dictionary<int, bool> _keyPressed = new Dictionary<int, bool>();
         private readonly List<int> _keyList = new List<int>();
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
-        public string SettingGroup { get; } = "Keyboard";
+        public string SettingGroup { get; } = "Click counter";
         public void Hook()
         {
             if (_keyboardListener != null) return;
@@ -103,7 +103,7 @@ namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
             SaveKeysToSettings();
             if (_frmSettings == null || _frmSettings.IsDisposed)
             {
-                _frmSettings = new KeyboardCounterSettings(_settings);
+                _frmSettings = new ClickCounterSettings(_settings);
                 _frmSettings.checkBox_ResetOnRestart.CheckedChanged += CheckBox_ResetOnRestart_CheckedChanged;
                 _frmSettings.checkBox_EnableKPX.CheckedChanged += CheckBox_EnableKPX_CheckedChanged;
             }

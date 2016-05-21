@@ -23,7 +23,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
             InitializeComponent();
             //add predefined tabs
             AddTab("General");
-            AddTab("Keyboard");
+            AddTab("Click counter");
             AddTab("Map matching");
 
             //add UserControls and tabs

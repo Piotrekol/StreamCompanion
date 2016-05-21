@@ -1,6 +1,6 @@
-﻿namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
+﻿namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
-    partial class KeyboardCounterFileName
+    partial class ClickCounterFileName
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeyboardCounterFileName));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClickCounterFileName));
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_FileName = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -72,7 +72,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeyboardCounterFileName";
+            this.Name = "ClickCounterFileName";
             this.Text = "Key file name";
             this.ResumeLayout(false);
             this.PerformLayout();

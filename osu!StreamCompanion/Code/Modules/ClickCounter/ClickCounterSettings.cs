@@ -7,14 +7,14 @@ using System.Windows.Input;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
 
-namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
+namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
-    public partial class KeyboardCounterSettings : UserControl
+    public partial class ClickCounterSettings : UserControl
     {
         private Settings _settings;
         private KeyboardCounterKeyClick keyboardCounterKeyClick;
         public event EventHandler KeysChanged;
-        public KeyboardCounterSettings(Settings settings)
+        public ClickCounterSettings(Settings settings)
         {
             _settings = settings;
             InitializeComponent();
@@ -78,7 +78,7 @@ namespace osu_StreamCompanion.Code.Modules.KeyboardCounter
                if (!exists)
                {
                    //get file name to save
-                   var filenameFrm = new KeyboardCounterFileName();
+                   var filenameFrm = new ClickCounterFileName();
                    filenameFrm.ShowDialog();
                    string filename = filenameFrm.textBox_FileName.Text;
                    filenameFrm.Dispose();
