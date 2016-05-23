@@ -10,28 +10,55 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         private ISaver _saver;
         private readonly Settings _settings;
         DateTime startTime = DateTime.Today;
-        private readonly string _relativeSaveLocation = @"Logs/";
+        private string CurrentLogSaveLocation = "";
+
+
+        private readonly string _logsSaveFolderName = @"Logs\";
 
         public FileLogger(ISaver saver, Settings settings)
         {
             _saver = saver;
             _settings = settings;
-            CreateDirectory(_saver.SaveDirectory);
+            CurrentLogSaveLocation = GetRelativeSaveLocation();
+
+            CreateLogsDirectory();
         }
 
-        private void CreateDirectory(string baseFolder)
+        private void CreateLogsDirectory()
         {
-            string dir = Path.Combine(baseFolder, _relativeSaveLocation);
+            string dir = Path.Combine(_saver.SaveDirectory, _logsSaveFolderName);
+
             if (!Directory.Exists(dir))
-            {
                 Directory.CreateDirectory(dir);
-            }
+
+            CurrentLogSaveLocation = GetRelativeSaveLocation();
         }
 
+
+        private bool SaveDirectoryExists()
+        {
+            return Directory.Exists(Path.Combine(_saver.SaveDirectory, _logsSaveFolderName));
+        }
+
+        private string GetRelativeSaveLocation()
+        {
+            return Path.Combine(_logsSaveFolderName, startTime.ToString("yyyy-MM-dd") + ".txt");
+        }
         public void Log(string logMessage, LogLevel loglvevel, params string[] vals)
         {
-            if (_settings.Get("LogLevel", LogLevel.Disabled.GetHashCode()) >= loglvevel.GetHashCode())
-                _saver.append(_relativeSaveLocation + startTime.ToString("yyyy-MM-dd") + ".txt", string.Format(logMessage, vals) + Environment.NewLine);
+            try
+            {
+                if (_settings.Get("LogLevel", LogLevel.Disabled.GetHashCode()) >= loglvevel.GetHashCode())
+                    _saver.append(CurrentLogSaveLocation, string.Format(logMessage, vals) + Environment.NewLine);
+            }
+            catch
+            {
+                if (SaveDirectoryExists())
+                    throw;
+
+                CreateLogsDirectory();
+                Log(logMessage, loglvevel, vals);
+            }
         }
 
         public void SetSaveHandle(ISaver saver)

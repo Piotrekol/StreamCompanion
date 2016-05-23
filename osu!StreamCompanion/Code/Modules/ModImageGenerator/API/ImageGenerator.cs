@@ -4,19 +4,19 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using osu_StreamCompanion.Code.Core;
+using osu_StreamCompanion.Code.Interfeaces;
 using Point = System.Drawing.Point;
 
 namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
 {
-    public class ImageGenerator
+    public class ImageGenerator:ISaveRequester
     {
         private Settings _settings;
-        public string ImageDirectory { get; set; }
-        public string ImageFullPath { get; set; }
-        public ImageGenerator(Settings settings, string imageDirectory)
+        private ISaver _saver;
+        public string ImagesFolderName { get; set; }
+        public ImageGenerator(Settings settings, string imagesFolderName)
         {
-            ImageDirectory = imageDirectory;
-            ImageFullPath = Path.Combine(ImageDirectory, "modImage.png");
+            ImagesFolderName = imagesFolderName;
             _settings = settings;
         }
 
@@ -37,7 +37,7 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
 
             foreach (var mod in modsList)
             {
-                string effectiveModPath = Path.Combine(ImageDirectory, mod.ToUpper() + ".png");
+                string effectiveModPath = Path.Combine(_saver.SaveDirectory, ImagesFolderName, mod.ToUpper() + ".png");
                 if (ModImageExists(effectiveModPath))
                 {
                     validModPaths.Add(effectiveModPath);
@@ -133,6 +133,11 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
 
         private enum DrawSide { Left = 0, Right = 1 }
         private enum DrawDirection { FromLeftToRight = 0, FromRightToLeft = 1 }
+
+        public void SetSaveHandle(ISaver saver)
+        {
+            _saver = saver; 
+        }
     }
 
 }

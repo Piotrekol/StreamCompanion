@@ -17,18 +17,16 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
         public bool Started { get; set; }
         ImageDeployer _imageDeployer;
         ImageGenerator _imageGenerator;
-        private string _imagesDirectory;
-        private string _FullPathOfCreatedImage;
         private ModImageGeneratorSettings _modImageGeneratorSettings;
 
         public void Start(ILogger logger)
         {
-            _imagesDirectory = Path.Combine(_saver.SaveDirectory, @"Images" + Path.DirectorySeparatorChar);
-            _FullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
-            _imageDeployer = new ImageDeployer(_imagesDirectory);
+            var imagesFolderName = "Images";
+            _imageDeployer = new ImageDeployer(Path.Combine(_saver.SaveDirectory,imagesFolderName));
             _imageDeployer.DeployImages();
             _imageDeployer.CreateReadMe();
-            _imageGenerator = new ImageGenerator(_settings, _imagesDirectory);
+            _imageGenerator = new ImageGenerator(_settings, @"Images");
+            _imageGenerator.SetSaveHandle(_saver);
         }
 
         public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
@@ -40,9 +38,10 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
                 {
                     if (!string.IsNullOrWhiteSpace(map.Mods))
                     {
+                        var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
                         using (Bitmap img = _imageGenerator.GenerateImage(map.Mods.Split(',')))
                         {
-                            img.Save(_FullPathOfCreatedImage, ImageFormat.Png);
+                            img.Save(fullPathOfCreatedImage, ImageFormat.Png);
                         }
                     }
                 }
