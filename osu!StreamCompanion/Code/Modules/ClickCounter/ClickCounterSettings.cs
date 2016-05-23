@@ -19,6 +19,13 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             _settings = settings;
             InitializeComponent();
             RefreshDataGrid();
+            groupBox_Mouse.Visible = checkBox_enableMouseHook.Checked;
+            checkBox_enableMouseHook.CheckedChanged += CheckBox_enableMouseHook_CheckedChanged;
+        }
+
+        private void CheckBox_enableMouseHook_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBox_Mouse.Visible = checkBox_enableMouseHook.Checked;
         }
 
         public void RefreshDataGrid()
@@ -148,6 +155,15 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
                 RemoveKey(item.Index);
                 dataGridView1.Rows.RemoveAt(item.Index);
             }
+        }
+
+        public void SetRightMouseCount(long count)
+        {
+            label_MouseRight.Text = count.ToString();
+        }
+        public void SetLeftMouseCount(long count)
+        {
+            label_MouseLeft.Text = count.ToString();
         }
     }
 }

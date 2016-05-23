@@ -37,7 +37,13 @@
             this.checkBox_ResetOnRestart = new System.Windows.Forms.CheckBox();
             this.checkBox_EnableKPX = new System.Windows.Forms.CheckBox();
             this.checkBox_enableMouseHook = new System.Windows.Forms.CheckBox();
+            this.groupBox_Mouse = new System.Windows.Forms.GroupBox();
+            this.label_MouseLeft = new System.Windows.Forms.Label();
+            this.label_MouseRight = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.groupBox_Mouse.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -128,10 +134,60 @@
             this.checkBox_enableMouseHook.Text = "Enable tracking of Mouse button presses";
             this.checkBox_enableMouseHook.UseVisualStyleBackColor = true;
             // 
+            // groupBox_Mouse
+            // 
+            this.groupBox_Mouse.Controls.Add(this.label_MouseLeft);
+            this.groupBox_Mouse.Controls.Add(this.label_MouseRight);
+            this.groupBox_Mouse.Controls.Add(this.label2);
+            this.groupBox_Mouse.Controls.Add(this.label1);
+            this.groupBox_Mouse.Location = new System.Drawing.Point(230, 241);
+            this.groupBox_Mouse.Name = "groupBox_Mouse";
+            this.groupBox_Mouse.Size = new System.Drawing.Size(179, 70);
+            this.groupBox_Mouse.TabIndex = 6;
+            this.groupBox_Mouse.TabStop = false;
+            this.groupBox_Mouse.Text = "Mouse counter";
+            // 
+            // label_MouseLeft
+            // 
+            this.label_MouseLeft.AutoSize = true;
+            this.label_MouseLeft.Location = new System.Drawing.Point(41, 40);
+            this.label_MouseLeft.Name = "label_MouseLeft";
+            this.label_MouseLeft.Size = new System.Drawing.Size(13, 13);
+            this.label_MouseLeft.TabIndex = 3;
+            this.label_MouseLeft.Text = "0";
+            // 
+            // label_MouseRight
+            // 
+            this.label_MouseRight.AutoSize = true;
+            this.label_MouseRight.Location = new System.Drawing.Point(41, 19);
+            this.label_MouseRight.Name = "label_MouseRight";
+            this.label_MouseRight.Size = new System.Drawing.Size(13, 13);
+            this.label_MouseRight.TabIndex = 2;
+            this.label_MouseRight.Text = "0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(14, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(28, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Left:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Right:";
+            // 
             // ClickCounterSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox_Mouse);
             this.Controls.Add(this.checkBox_enableMouseHook);
             this.Controls.Add(this.checkBox_EnableKPX);
             this.Controls.Add(this.checkBox_ResetOnRestart);
@@ -141,6 +197,8 @@
             this.Name = "ClickCounterSettings";
             this.Size = new System.Drawing.Size(493, 324);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.groupBox_Mouse.ResumeLayout(false);
+            this.groupBox_Mouse.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,5 +215,10 @@
         public System.Windows.Forms.CheckBox checkBox_ResetOnRestart;
         public System.Windows.Forms.CheckBox checkBox_EnableKPX;
         public System.Windows.Forms.CheckBox checkBox_enableMouseHook;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox_Mouse;
+        private System.Windows.Forms.Label label_MouseLeft;
+        private System.Windows.Forms.Label label_MouseRight;
     }
 }

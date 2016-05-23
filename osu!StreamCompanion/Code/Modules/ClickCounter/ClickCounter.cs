@@ -182,6 +182,8 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             }
             _frmSettings.checkBox_ResetOnRestart.Checked = _settings.Get(CfgResetKeys, false);
             _frmSettings.checkBox_enableMouseHook.Checked = _settings.Get(CfgEnableMouseHook, false);
+            _frmSettings.SetLeftMouseCount(_leftMouseCount);
+            _frmSettings.SetRightMouseCount(_rightMouseCount);
             _frmSettings.RefreshDataGrid();
             _frmSettings.KeysChanged += _frmSettings_KeysChanged;
             return _frmSettings;
@@ -189,8 +191,8 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
 
         private void CheckBox_enableMouseHook_CheckedChanged(object sender, EventArgs e)
         {
-            var enabled = _frmSettings.checkBox_EnableKPX.Checked;
-            _settings.Add(CfgEnableKpx, enabled);
+            var enabled = _frmSettings.checkBox_enableMouseHook.Checked;
+            _settings.Add(CfgEnableMouseHook, enabled);
 
             if (enabled)
             {
