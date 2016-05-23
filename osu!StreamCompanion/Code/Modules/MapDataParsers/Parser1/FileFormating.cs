@@ -5,11 +5,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
     public class FileFormating
     {
+        [System.Reflection.Obfuscation(Feature = "renaming")]
         [DisplayName("Name")]
         public string Filename { get; set; }
+        [System.Reflection.Obfuscation(Feature = "renaming")]
         [DisplayName("Pattern")]
         public string Pattern { get; set; }
         [Editable(false)]
+        [System.Reflection.Obfuscation(Feature = "renaming")]
         [DisplayName("Event")]
         public string SaveEventStr
         {
