@@ -122,7 +122,9 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new WindowDataGetter());
             AddModule(new PlaysReplacements());
             AddModule(new MapReplacement());
+#if !DEBUG
             AddModule(new ClickCounter());
+#endif
             AddModule(new OsuSongsFolderWatcher());
             
             AddModule(new FileSaveLocation());
