@@ -108,12 +108,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     textBox_Formating.Text = _patternDictionary[idx].Pattern;
                     comboBox_saveEvent.SelectedIndex = _statusToSelection[_patternDictionary[idx].SaveEvent == 0 ? 27 : _patternDictionary[idx].SaveEvent];
                     checkBox_isCommand.Checked = _patternDictionary[idx].IsCommand;
-                    UpdatePreview(idx);
+                    UpdatePreview();
                 }
             }
         }
 
-        private void UpdatePreview(int idx)
+        private void UpdatePreview()
         {
             if (_PreviewReplacementDict != null)
                 textBox_Preview.Text = FormatMapString(textBox_Formating.Text, _PreviewReplacementDict);
@@ -232,7 +232,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 if (this.IsHandleCreated)
                     BeginInvoke((MethodInvoker)(() =>
                     {
-                        UpdatePreview(dataGridView.SelectedRows[0].Index);
+                        UpdatePreview();
                     }));
         }
 
@@ -240,6 +240,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             //AppDomain.CurrentDomain.BaseDirectory + @"/Files/"
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory + @"/Files/");
+        }
+
+        private void textBox_Formating_TextChanged(object sender, EventArgs e)
+        {
+            UpdatePreview();
         }
     }
 }

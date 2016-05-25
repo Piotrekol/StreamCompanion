@@ -76,6 +76,7 @@
             this.textBox_Formating.Name = "textBox_Formating";
             this.textBox_Formating.Size = new System.Drawing.Size(496, 20);
             this.textBox_Formating.TabIndex = 2;
+            this.textBox_Formating.TextChanged += new System.EventHandler(this.textBox_Formating_TextChanged);
             // 
             // label1
             // 
