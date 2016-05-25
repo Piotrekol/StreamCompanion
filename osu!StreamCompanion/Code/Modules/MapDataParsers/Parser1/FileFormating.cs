@@ -15,7 +15,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             get
             {
-                if (this.isCommand)
+                if (this.IsCommand)
                     return "Ignored";
                 switch (SaveEvent)
                 {
@@ -41,6 +41,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         [Editable(true)]
         [DisplayName("Use as Command")]
-        public bool isCommand { get; set; }
+        public bool IsCommand { get; set; }
     }
 }

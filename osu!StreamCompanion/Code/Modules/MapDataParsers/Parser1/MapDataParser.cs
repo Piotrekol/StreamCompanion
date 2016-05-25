@@ -40,7 +40,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 {
                     foreach (var pattern in _patternDictionary)
                     {
-                        if (pattern.isCommand) continue;
+                        if (pattern.IsCommand) continue;
                         if ((pattern.SaveEvent & (int)status) == 0)
                             res.Add(pattern.Filename, "");
                         else
@@ -60,7 +60,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 foreach (var pattern in _patternDictionary)
                 {
-                    if (!pattern.isCommand) continue;
+                    if (!pattern.IsCommand) continue;
                     res.Add(pattern.Filename, FormatMapString(pattern.Pattern, replacements));
                 }
             }
@@ -113,7 +113,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     filenames.Add(f.Filename);
                     Patterns.Add(f.Pattern);
                     saveEvents.Add(f.SaveEvent);
-                    isCommand.Add(f.isCommand ? 1 : 0);
+                    isCommand.Add(f.IsCommand ? 1 : 0);
                 }
 
                 _settings.Add("PatternFileNames", filenames);
@@ -143,7 +143,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         Filename = filenames[i],
                         Pattern = Patterns[i],
                         SaveEvent = saveEvents[i],
-                        isCommand = isCommand[i] == 1
+                        IsCommand = isCommand[i] == 1
                     });
                 }
             }

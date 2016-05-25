@@ -60,7 +60,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             MessageBox.Show(msg, "Info");
         }
-        private bool AddFormat(string fileName, string formating, int saveEvent, bool suppressErrors = false)
+        private bool AddFormat(string fileName, string formating, int saveEvent, bool isCommand, bool suppressErrors = false)
         {
             lock (_patternDictionary)
             {
@@ -75,7 +75,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     {
                         Filename = fileName,
                         Pattern = formating,
-                        SaveEvent = saveEvent
+                        SaveEvent = saveEvent,
+                        IsCommand = isCommand
                     });
                     return true;
                 }
@@ -106,7 +107,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     textBox_FileName.Text = _patternDictionary[idx].Filename;
                     textBox_Formating.Text = _patternDictionary[idx].Pattern;
                     comboBox_saveEvent.SelectedIndex = _statusToSelection[_patternDictionary[idx].SaveEvent == 0 ? 27 : _patternDictionary[idx].SaveEvent];
-                    checkBox_isCommand.Checked = _patternDictionary[idx].isCommand;
+                    checkBox_isCommand.Checked = _patternDictionary[idx].IsCommand;
                     UpdatePreview(idx);
                 }
             }
@@ -125,10 +126,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             string fileName = textBox_FileName.Text;
             string formating = textBox_Formating.Text;
             int Event = _selectionToStatus[comboBox_saveEvent.SelectedIndex];
-
+            bool isCommand = checkBox_isCommand.Checked;
             if (fileName != string.Empty && formating != string.Empty)
             {
-                AddFormat(fileName, formating, Event);
+                AddFormat(fileName, formating, Event, isCommand);
             }
             else
             {
@@ -169,7 +170,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                             Filename = fileName,
                             Pattern = formating,
                             SaveEvent = Event,
-                            isCommand = isCommand
+                            IsCommand = isCommand
                         };
                     }
                 }
@@ -196,10 +197,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         public void AddDefault()
         {
-            AddFormat("np_listening.txt", "Listening: !ArtistRoman! - !TitleRoman!", 1, true);
-            AddFormat("np_playing.txt", "Playing: !ArtistRoman! - !TitleRoman! [!DiffName!] CS:!cs! AR:!ar! OD:!od! HP:!hp!", 2, true);
-            AddFormat("np_playing_details.txt", "CS:!cs! AR:!ar! OD:!od! HP:!hp!", 2, true);
-            AddFormat("np_playing_DL.txt", "!dl!", 2, true);
+            AddFormat("np_listening.txt", "Listening: !ArtistRoman! - !TitleRoman!", 1, false, true);
+            AddFormat("np_playing.txt", "Playing: !ArtistRoman! - !TitleRoman! [!DiffName!] CS:!cs! AR:!ar! OD:!od! HP:!hp!", 2, false, true);
+            AddFormat("np_playing_details.txt", "CS:!cs! AR:!ar! OD:!od! HP:!hp!", 2, false, true);
+            AddFormat("np_playing_DL.txt", "!dl!", 2, false, true);
         }
 
         private void button_RemovePattern_Click(object sender, EventArgs e)
