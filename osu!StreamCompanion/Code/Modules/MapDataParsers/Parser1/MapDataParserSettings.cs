@@ -201,7 +201,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             AddFormat("np_playing.txt", "Playing: !ArtistRoman! - !TitleRoman! [!DiffName!] CS:!cs! AR:!ar! OD:!od! HP:!hp!", 2, false, true);
             AddFormat("np_playing_details.txt", "CS:!cs! AR:!ar! OD:!od! HP:!hp!", 2, false, true);
             AddFormat("np_playing_DL.txt", "!dl!", 2, false, true);
-            AddFormat("!np", "!ArtistRoman! - !TitleRoman! !dl!", 0, true, true);
+            AddFormat("!np", "!caller!, !ArtistRoman! - !TitleRoman! !dl!", 0, true, true);
             AddFormat("!skin", "Tell streamer to fill this.", 0, true, true);
         }
 

@@ -55,15 +55,16 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot.Bot
                 Console.WriteLine("[{0}]({1}): {2}", channel.Name, e.Source.Name, e.Text);
 
                 var splited = e.Text.Split(new[] { ' ' }, 2);
-                HandleCommand(channel, splited[0]);
+                HandleCommand(channel, e.Source.Name, splited[0]);
             }
         }
 
-        private void HandleCommand(IrcChannel source, string command)
+        private void HandleCommand(IrcChannel source, string caller, string command)
         {
             if (_mapResult.Commands.ContainsKey(command))
             {
-                SendMessage(source, _mapResult.Commands[command]);
+                var toSend = _mapResult.Commands[command].Replace("!caller!", caller);
+                SendMessage(source, toSend);
             }
         }
 
