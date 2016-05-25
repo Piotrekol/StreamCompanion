@@ -23,8 +23,8 @@ namespace osu_StreamCompanion.Code.Modules.IrcBot
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
-            var username = _settings.Get("IrcUsername", "");
-            var channel = _settings.Get("IrcChannel", "");
+            var username = _settings.Get("IrcUsername", "").ToLower();
+            var channel = _settings.Get("IrcChannel", "").ToLower().Trim('#');
             var password = _settings.Get("IrcPassword", "");
             var a = new IrcDotNet.IrcUserRegistrationInfo()
             {
