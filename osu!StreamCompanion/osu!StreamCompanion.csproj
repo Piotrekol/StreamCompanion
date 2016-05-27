@@ -423,6 +423,6 @@
 "$(ProjectDir)\buildScripts\build.cmd" $(TargetDir)\</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" 13</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" 14</PreBuildEvent>
   </PropertyGroup>
 </Project>
