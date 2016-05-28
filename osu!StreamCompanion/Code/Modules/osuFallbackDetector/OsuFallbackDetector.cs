@@ -16,7 +16,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
         public void Start(ILogger logger)
         {
             string FilePath = GetConfigFilePath();
-            if (File.Exists(FilePath))
+            if (!File.Exists(FilePath))
             {
                 logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"",LogLevel.Advanced,FilePath);
                 return;
