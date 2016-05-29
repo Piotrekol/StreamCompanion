@@ -16,16 +16,21 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
         public void Start(ILogger logger)
         {
             string FilePath = GetConfigFilePath();
+            if (!Uri.IsWellFormedUriString(FilePath, UriKind.Absolute))
+            {
+                logger.Log("WARNING: Path to osu! config location isn't valid. Tried: \"{0}\"", LogLevel.Advanced, FilePath);
+                return;
+            }
             if (!File.Exists(FilePath))
             {
-                logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"",LogLevel.Advanced,FilePath);
+                logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"", LogLevel.Advanced, FilePath);
                 return;
             }
             bool isFallback = IsFallback(FilePath);
-            
+
             _settings.Add("OsuFallback", isFallback);
-            if(isFallback)
-                logger.Log("Detected osu fallback version!",LogLevel.Basic);
+            if (isFallback)
+                logger.Log("Detected osu fallback version!", LogLevel.Basic);
         }
 
         public void SetSettingsHandle(Settings settings)
@@ -45,6 +50,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
 
         private string GetConfigFilePath()
         {
+            //TODO: Fix configuration filename being incorrect in some cases (eg. windows "email" usernames)
             string filename = string.Format("osu!.{0}.cfg", Environment.UserName);
             return Path.Combine(LoadOsuDir(), filename);
         }
