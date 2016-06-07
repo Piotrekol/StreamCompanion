@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.Core;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
@@ -37,12 +38,8 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 
         public void Start(ILogger logger)
         {
-            _logger = logger;
             Started = true;
-        }
-        public void SetSettingsHandle(Settings settings)
-        {
-            _settings = settings;
+            _logger = logger;
 
             if (LoadOsuDir() == "" || !Directory.Exists(LoadOsuDir()))
             {
@@ -50,7 +47,15 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
                 SaveOsuDir(osuRunningDir);
             }
         }
+        public void SetSettingsHandle(Settings settings)
+        {
+            _settings = settings;
+        }
 
+        private void Log(string text, params string[] vals)
+        {
+            _logger.Log(text, LogLevel.Advanced, vals);
+        }
         public void Free()
         {
             _frmSettings.Dispose();
@@ -95,7 +100,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
                 }
                 catch (Exception e) //Access denied
                 {
-                    _logger.Log("ERROR: could not get directory from running osu! | {0}",LogLevel.Advanced,e.Message);
+                    Log("ERROR: could not get directory from running osu! | {0}", e.Message);
                 }
             }
             else
@@ -115,9 +120,9 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
                 }
                 catch (Exception e)
                 {
-                    _logger.Log("ERROR: could not get directory from registry key | {0}", LogLevel.Advanced, e.Message);
+                    Log("ERROR: could not get directory from registry key | {0}", e.Message);
                 }
-                
+
             }
             return string.Empty;
         }
