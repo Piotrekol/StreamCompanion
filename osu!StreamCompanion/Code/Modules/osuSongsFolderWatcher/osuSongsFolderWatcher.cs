@@ -4,11 +4,14 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
 {
     class OsuSongsFolderWatcher : IModule, ISettings, ISqliteUser
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         private FileSystemWatcher watcher;
         private Settings _settings;
         private ILogger _logger;
@@ -18,7 +21,7 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
         {
             Started = true;
             _logger = logger;
-            var dir = _settings.Get("MainOsuDirectory", "");
+            var dir = _settings.Get<string>(_names.MainOsuDirectory);
             if (dir != "")
             {
 

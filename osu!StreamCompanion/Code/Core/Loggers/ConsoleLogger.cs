@@ -2,11 +2,14 @@
 using System.Runtime.InteropServices;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {
     class ConsoleLogger : ILogger, IDisposable
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         private readonly Settings _settings;
 
         [DllImport("kernel32")]
@@ -28,7 +31,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
 
         public void Log(string logMessage, LogLevel loglvevel, params string[] vals)
         {
-            if (_settings.Get("LogLevel", LogLevel.Basic.GetHashCode()) >= loglvevel.GetHashCode())
+            if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
             {
                 string prefix = string.Empty;
                 while (logMessage.StartsWith(">"))

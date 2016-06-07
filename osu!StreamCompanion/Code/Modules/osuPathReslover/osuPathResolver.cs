@@ -7,11 +7,14 @@ using Microsoft.Win32;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 {
     public class OsuPathResolver : ISettingsProvider, IModule
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         private Process[] _processes;
         private Settings _settings;
         private OsuPathResolverSettings _frmSettings;
@@ -149,12 +152,12 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
         private void SaveOsuDir(string dir)
         {
             if (dir != string.Empty)
-                _settings.Add("MainOsuDirectory", dir);
+                _settings.Add(_names.MainOsuDirectory.Name, dir);
         }
 
         private string LoadOsuDir()
         {
-            return _settings.Get("MainOsuDirectory", "");
+            return _settings.Get<string>(_names.MainOsuDirectory);
         }
     }
 }

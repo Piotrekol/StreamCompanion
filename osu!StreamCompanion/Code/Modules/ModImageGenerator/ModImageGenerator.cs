@@ -6,12 +6,14 @@ using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.ModImageGenerator.API;
 
 namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
 {
     class ModImageGenerator : IModule, IMapDataReplacements, ISettingsProvider, ISaveRequester
     {
+        private readonly SettingNames _names = SettingNames.Instance;
         private Settings _settings;
         private ISaver _saver;
         public bool Started { get; set; }
@@ -22,7 +24,7 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
         public void Start(ILogger logger)
         {
             var imagesFolderName = "Images";
-            _imageDeployer = new ImageDeployer(Path.Combine(_saver.SaveDirectory,imagesFolderName));
+            _imageDeployer = new ImageDeployer(Path.Combine(_saver.SaveDirectory, imagesFolderName));
             _imageDeployer.DeployImages();
             _imageDeployer.CreateReadMe();
             _imageGenerator = new ImageGenerator(_settings, @"Images");
@@ -32,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
         public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
         {
 
-            if (_settings.Get("EnableModImages", true))
+            if (_settings.Get<bool>(_names.EnableModImages))
             {
                 if (map.FoundBeatmaps)
                 {

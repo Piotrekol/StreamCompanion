@@ -3,11 +3,13 @@ using System.IO;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
 {
     class OsuFallbackDetector : IModule, ISettings
     {
+        private readonly SettingNames _names = SettingNames.Instance;
         //LastVersion = b20151228.3
         private const string LAST_FALLBACK_VERSION = "b20151228.3";
 
@@ -28,7 +30,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
             }
             bool isFallback = IsFallback(FilePath);
 
-            _settings.Add("OsuFallback", isFallback);
+            _settings.Add(_names.OsuFallback.Name, isFallback);
             if (isFallback)
                 logger.Log("Detected osu fallback version!", LogLevel.Basic);
         }
@@ -56,7 +58,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
         }
         private string LoadOsuDir()
         {
-            return _settings.Get("MainOsuDirectory", "");
+            return _settings.Get<string>(_names.MainOsuDirectory);
         }
     }
 }

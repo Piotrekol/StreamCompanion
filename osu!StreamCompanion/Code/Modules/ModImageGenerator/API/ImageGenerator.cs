@@ -5,12 +5,15 @@ using System.Drawing.Imaging;
 using System.IO;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 using Point = System.Drawing.Point;
 
 namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
 {
     public class ImageGenerator:ISaveRequester
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         private Settings _settings;
         private ISaver _saver;
         public string ImagesFolderName { get; set; }
@@ -26,13 +29,13 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
         }
         public Bitmap GenerateImage(string[] modsList)
         {
-            int imageWidth = _settings.Get("ImageWidth", 720);
-            int modHeight = _settings.Get("ModHeight", 64);
-            int modWidth = _settings.Get("ModWidth", 64);
-            int spacing = _settings.Get("ModImageSpacing", -25);
-            float opacity = (float)_settings.Get("ModImageOpacity", 85) / 100;
-            DrawSide drawSide = _settings.Get("DrawOnRightSide", false) ? DrawSide.Right : DrawSide.Left;
-            DrawDirection drawDirection = _settings.Get("DrawFromRightToLeft", false) ? DrawDirection.FromRightToLeft : DrawDirection.FromLeftToRight;
+            int imageWidth = _settings.Get<int>(_names.ImageWidth);
+            int modHeight = _settings.Get<int>(_names.ModHeight);
+            int modWidth = _settings.Get<int>(_names.ModWidth);
+            int spacing = _settings.Get<int>(_names.ModImageSpacing);
+            float opacity = (float)_settings.Get<int>(_names.ModImageOpacity) / 100;
+            DrawSide drawSide = _settings.Get<bool>(_names.DrawOnRightSide) ? DrawSide.Right : DrawSide.Left;
+            DrawDirection drawDirection = _settings.Get<bool>(_names.DrawFromRightToLeft) ? DrawDirection.FromRightToLeft : DrawDirection.FromLeftToRight;
             List<string> validModPaths = new List<string>();
 
             foreach (var mod in modsList)

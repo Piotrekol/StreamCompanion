@@ -10,16 +10,8 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
     public class ClickCounter : ISettingsProvider, IModule, ISaveRequester, IDisposable, IMapDataReplacements
     { 
-        private const string CfgEnableMouseHook = "HookMouse";
-        private const string CfgKeyList = "keyList";
-        private const string CfgKeyNames = "keyNames";
-        private const string CfgKeyCounts = "keyCounts";
-        private const string CfgRightMouse = "rightMouseCount";
-        private const string CfgLeftMouse = "leftMouseCount";
-        private const string CfgResetKeys = "ResetKeysOnRestart";
-        private const string CfgEnableKpx = "EnableKPM";
         
-
+        private readonly SettingNames _names = SettingNames.Instance;
         private Settings _settings;
         private ClickCounterSettings _frmSettings;
         private KeyboardListener _keyboardListener;
@@ -52,7 +44,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
 
         private void HookMouse()
         {
-            if (_settings.Get(CfgEnableMouseHook, false) && _mouseListener == null)
+            if (_settings.Get<bool>(_names.EnableMouseHook) && _mouseListener == null)
             {
                 _mouseListener = new MouseListener();
                 _mouseListener.OnLeftMouseDown += _mouseListener_OnLeftMouseDown;
@@ -137,12 +129,12 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
 
         private void Load()
         {
-            var keys = _settings.Geti(CfgKeyList);
-            var keyfilenames = _settings.Get(CfgKeyNames);
-            var keyCounts = _settings.Geti(CfgKeyCounts);
+            var keys = _settings.Geti(_names.KeyList.Name);
+            var keyfilenames = _settings.Get(_names.KeyNames.Name);
+            var keyCounts = _settings.Geti(_names.KeyCounts.Name);
 
-            _rightMouseCount = _settings.Get(CfgRightMouse, 0L);
-            _leftMouseCount = _settings.Get(CfgLeftMouse, 0L);
+            _rightMouseCount = _settings.Get<long>(_names.RightMouseCount);
+            _leftMouseCount = _settings.Get<long>(_names.LeftMouseCount);
             if (keys.Count > 0)
             {
                 for (int i = 0; i < keys.Count; i++)
@@ -180,8 +172,8 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
                 _frmSettings.checkBox_EnableKPX.CheckedChanged += CheckBox_EnableKPX_CheckedChanged;
                 _frmSettings.checkBox_enableMouseHook.CheckedChanged += CheckBox_enableMouseHook_CheckedChanged;
             }
-            _frmSettings.checkBox_ResetOnRestart.Checked = _settings.Get(CfgResetKeys, false);
-            _frmSettings.checkBox_enableMouseHook.Checked = _settings.Get(CfgEnableMouseHook, false);
+            _frmSettings.checkBox_ResetOnRestart.Checked = _settings.Get<bool>(_names.ResetKeysOnRestart);
+            _frmSettings.checkBox_enableMouseHook.Checked = _settings.Get<bool>(_names.EnableMouseHook);
             _frmSettings.SetLeftMouseCount(_leftMouseCount);
             _frmSettings.SetRightMouseCount(_rightMouseCount);
             _frmSettings.RefreshDataGrid();
@@ -192,7 +184,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         private void CheckBox_enableMouseHook_CheckedChanged(object sender, EventArgs e)
         {
             var enabled = _frmSettings.checkBox_enableMouseHook.Checked;
-            _settings.Add(CfgEnableMouseHook, enabled);
+            _settings.Add(_names.EnableMouseHook.Name, enabled);
 
             if (enabled)
             {
@@ -207,7 +199,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         private void CheckBox_EnableKPX_CheckedChanged(object sender, EventArgs e)
         {
             var enabled = _frmSettings.checkBox_EnableKPX.Checked;
-            _settings.Add(CfgEnableKpx, enabled);
+            _settings.Add(_names.CfgEnableKpx.Name, enabled);
 
             if (enabled)
             {
@@ -223,7 +215,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         private void CheckBox_ResetOnRestart_CheckedChanged(object sender, EventArgs e)
         {
             var enabled = _frmSettings.checkBox_ResetOnRestart.Checked;
-            _settings.Add(CfgResetKeys, enabled);
+            _settings.Add(_names.ResetKeysOnRestart.Name, enabled);
         }
 
         private void _frmSettings_KeysChanged(object sender, EventArgs e)
@@ -239,10 +231,10 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         {
             Started = true;
             _logger = logger;
-            if (_settings.Get(CfgResetKeys, false))
+            if (_settings.Get<bool>(_names.ResetKeysOnRestart))
                 ResetKeys();
             HookAll();
-            if (_settings.Get(CfgEnableKpx, false))
+            if (_settings.Get<bool>(_names.CfgEnableKpx))
             {
                 _keysPerX.Start();
             }
@@ -256,9 +248,9 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             {
                 keyCounts.Add(k.Value);
             }
-            _settings.Add(CfgKeyCounts, keyCounts);
-            _settings.Add(CfgRightMouse, _rightMouseCount);
-            _settings.Add(CfgLeftMouse, _leftMouseCount);
+            _settings.Add(_names.KeyCounts.Name, keyCounts);
+            _settings.Add(_names.RightMouseCount.Name, _rightMouseCount);
+            _settings.Add(_names.LeftMouseCount.Name, _leftMouseCount);
         }
         
         public void SetSaveHandle(ISaver saver)

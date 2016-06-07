@@ -6,6 +6,7 @@ using System.Text;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -26,6 +27,10 @@ namespace osu_StreamCompanion.Code.Core
             SettingUpdated?.Invoke(this, new SettingUpdated(settingName));
         }
 
+        public T Get<T>(ConfigEntry entry)
+        {
+            return this.Get<T>(entry.Name, entry.Default<T>());
+        }
         public void Add<T>(string key, T value, bool raiseUpdate = false)
         {
             _settingsEntries[key] = value;
@@ -60,7 +65,7 @@ namespace osu_StreamCompanion.Code.Core
 
             return ret;
         }
-        public T Get<T>(string key, T defaultValue)
+        private T Get<T>(string key, T defaultValue)
         {
             if (_settingsEntries.ContainsKey(key))
             {

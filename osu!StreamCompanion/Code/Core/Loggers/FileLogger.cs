@@ -2,11 +2,13 @@
 using System.IO;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {
     public class FileLogger : ILogger
     {
+        private readonly SettingNames _names = SettingNames.Instance;
         private ISaver _saver;
         private readonly Settings _settings;
         DateTime startTime = DateTime.Today;
@@ -48,7 +50,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             try
             {
-                if (_settings.Get("LogLevel", LogLevel.Disabled.GetHashCode()) >= loglvevel.GetHashCode())
+                if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
                     _saver.append(CurrentLogSaveLocation, string.Format(logMessage, vals) + Environment.NewLine);
             }
             catch

@@ -34,6 +34,8 @@ namespace osu_StreamCompanion.Code.Core
 {
     internal class Initializer : ApplicationContext
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         public readonly MainWindowUpdater MainWindowUpdater = new MainWindowUpdater();
         readonly MainLogger _logger = new MainLogger();
         readonly MainSaver _saver;
@@ -63,7 +65,7 @@ namespace osu_StreamCompanion.Code.Core
             Settings.Load(ConfigSaveLocation);
             Settings.SetSavePath(ConfigSaveLocation);
             
-            if (Settings.Get("console", false))
+            if (Settings.Get<bool>(_names.Console))
                 _logger.ChangeLogger(new ConsoleLogger(Settings));
             else
                 _logger.ChangeLogger(new EmptyLogger());
@@ -79,7 +81,7 @@ namespace osu_StreamCompanion.Code.Core
             _msn = new Msn(MsnGetters);
 
             #region First run
-            if (Settings.Get("firstRun", true))
+            if (Settings.Get<bool>(_names.FirstRun))
             {
                 var firstRunModule = new FirstRun(delegate()
                 {
@@ -109,7 +111,7 @@ namespace osu_StreamCompanion.Code.Core
             //TODO: plugin loading
             #endregion plugins
             
-            Settings.Add("firstRun", false);
+            Settings.Add(_names.FirstRun.Name, false);
             _started = true;
             _logger.Log("Started!", LogLevel.Basic);
         }

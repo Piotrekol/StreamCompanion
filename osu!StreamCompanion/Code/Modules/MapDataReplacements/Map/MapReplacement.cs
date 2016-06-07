@@ -3,11 +3,13 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
     class MapReplacement :IModule,IMapDataReplacements,ISettings
     {
+        private readonly SettingNames _names = SettingNames.Instance;
         private Settings _settings;
         public bool Started { get; set; }
         public void Start(ILogger logger){ Started = true; }
@@ -18,7 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             {
                 var dict = map.BeatmapsFound[0].GetDict(map.Mods);
 
-                var osuLocation = _settings.Get("MainOsuDirectory", "");
+                var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
                 if (string.IsNullOrWhiteSpace(osuLocation))
                     dict.Add("!OsuFileLocation!","");
                 else

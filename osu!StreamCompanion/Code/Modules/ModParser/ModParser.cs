@@ -1,11 +1,13 @@
 ﻿using System;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.ModParser
 {
     public class ModParser : IModule, IModParser, ISettingsProvider
     {
+        private readonly SettingNames _names = SettingNames.Instance;
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -36,13 +38,13 @@ namespace osu_StreamCompanion.Code.Modules.ModParser
 
         public string GetModsFromEnum(int modsEnum)
         {
-            string noneText = _settings.Get("NoModsDisplayText", "None");
+            string noneText = _settings.Get<string>(_names.NoModsDisplayText);
             if (noneText != _modsShort[0])
             {
                 _modsShort[0] = noneText;
                 _modsLong[0] = noneText;
             }
-            return GetModsFromEnum(modsEnum, !_settings.Get("UseLongMods", false));
+            return GetModsFromEnum(modsEnum, !_settings.Get<bool>(_names.UseLongMods));
         }
         public string GetModsFromEnum(int modsEnum, bool shortMod = false)
         {

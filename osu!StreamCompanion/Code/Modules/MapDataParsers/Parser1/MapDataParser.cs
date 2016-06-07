@@ -4,11 +4,14 @@ using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
     public class MapDataParser : IModule, IMapDataParser, ISettingsProvider
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         private BindingList<FileFormating> _patternDictionary = new BindingList<FileFormating>();
         private Settings _settings;
         public bool Started { get; set; }
@@ -17,7 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             Started = true;
             Load();
             _patternDictionary.ListChanged += _patternDictionary_ListChanged;
-            if (_settings.Get("firstRun", true))
+            if (_settings.Get<bool>(_names.FirstRun))
             {
                 _mapDataParserSettings = new MapDataParserSettings(ref _patternDictionary);
                 _mapDataParserSettings.AddDefault();
@@ -100,18 +103,18 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     saveEvents.Add(f.SaveEvent);
                 }
 
-                _settings.Add("PatternFileNames", filenames);
-                _settings.Add("Patterns", Patterns);
-                _settings.Add("saveEvents", saveEvents);
+                _settings.Add(_names.PatternFileNames.Name, filenames);
+                _settings.Add(_names.Patterns.Name, Patterns);
+                _settings.Add(_names.saveEvents.Name, saveEvents);
             }
             _settings.Save();
         }
 
         private void Load()
         {
-            List<string> filenames = _settings.Get("PatternFileNames");
-            List<string> Patterns = _settings.Get("Patterns");
-            List<int> saveEvents = _settings.Geti("saveEvents");
+            List<string> filenames = _settings.Get(_names.PatternFileNames.Name);
+            List<string> Patterns = _settings.Get(_names.Patterns.Name);
+            List<int> saveEvents = _settings.Geti(_names.saveEvents.Name);
             lock (_patternDictionary)
             {
                 for (int i = 0; i < filenames.Count; i++)

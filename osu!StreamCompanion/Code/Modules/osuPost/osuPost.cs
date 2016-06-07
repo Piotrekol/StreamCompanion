@@ -4,25 +4,28 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.osuPost
 {
     public class OsuPost :IModule,ISettingsProvider,IMapDataGetter,IDisposable
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         private Settings _settings;
         public bool Started { get; set; }
         OsuPostApi api = new OsuPostApi();
         public void Start(ILogger logger)
         {
             Started = true;
-            SwitchApiStatus(_settings.Get("osuPostEnabled", false));
+            SwitchApiStatus(_settings.Get<bool>(_names.osuPostEnabled));
             _settings.SettingUpdated+=SettingUpdated;
         }
 
         private void SettingUpdated(object sender, SettingUpdated settingUpdated)
         {
-            if (settingUpdated.Name == "osuPostEnabled")
-                SwitchApiStatus(_settings.Get("osuPostEnabled", false));
+            if (settingUpdated.Name != _names.osuPostEnabled.Name)
+                SwitchApiStatus(_settings.Get<bool>(_names.osuPostEnabled));
 
         }
 
@@ -44,7 +47,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
             {
                 _frmSettings = new osuPostSettings(_settings);
             }
-            _frmSettings.checkBox_osuPostEnabled.Checked = _settings.Get("osuPostEnabled", false);
+            _frmSettings.checkBox_osuPostEnabled.Checked = _settings.Get<bool>(_names.osuPostEnabled);
 
             return _frmSettings;
         }
@@ -53,7 +56,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         {
             if (enable)
             {
-                api.SetOsuPostLoginData(_settings.Get("osuPostLogin", ""), _settings.Get("osuPostPassword", ""));
+                api.SetOsuPostLoginData(_settings.Get<string>(_names.osuPostLogin), _settings.Get<string>(_names.osuPostPassword));
             }
             else
             {

@@ -4,12 +4,14 @@ using System.IO;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Windows;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 {
     public class SqliteDataFinder : IModule, IMapDataFinder, IMainWindowUpdater, ISqliteUser, ISettings, IModParserGetter
     {
+        private readonly SettingNames _names = SettingNames.Instance;
         public bool Started { get; set; }
         private ILogger _logger;
         private MainWindowUpdater _mainWindowHandle;
@@ -32,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             _osuDatabaseLoader = new OsuDatabaseLoader(_logger, _modParser, _sqliteControler, _mainWindowHandle);
             new System.Threading.Thread(() =>
             {
-                string osudb = Path.Combine(_settingsHandle.Get("MainOsuDirectory", ""), "osu!.db");
+                string osudb = Path.Combine(_settingsHandle.Get<string>(_names.MainOsuDirectory), "osu!.db");
                 string newOsuFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                     @"Files", "osu!.db");
 

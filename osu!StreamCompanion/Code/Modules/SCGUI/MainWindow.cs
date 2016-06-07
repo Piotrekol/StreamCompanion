@@ -2,12 +2,15 @@
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Windows;
 
 namespace osu_StreamCompanion.Code.Modules.SCGUI
 {
     class MainWindow : IModule, ISettingsProvider, IMainWindowUpdater, ISettingsGetter
     {
+        private readonly SettingNames _names = SettingNames.Instance;
+
         private Settings _settings;
         private MainForm _mainForm;
         private MainWindowUpdater _mainWindowHandle;
@@ -16,7 +19,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
         public void Start(ILogger logger)
         {
             Started = true;
-            if (!_settings.Get("StartHidden", false))
+            if (!_settings.Get<bool>(_names.StartHidden))
                 ShowWindow();
         }
 
