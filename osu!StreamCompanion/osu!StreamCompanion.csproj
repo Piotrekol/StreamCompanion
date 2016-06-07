@@ -157,6 +157,12 @@
     <Compile Include="Code\Modules\IrcBot\Bot\IrcBot.cs" />
     <Compile Include="Code\Modules\IrcBot\Bot\IrcHandler.cs" />
     <Compile Include="Code\Modules\IrcBot\IrcBot.cs" />
+    <Compile Include="Code\Modules\IrcBot\IrcBotSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\IrcBot\IrcBotSettings.Designer.cs">
+      <DependentUpon>IrcBotSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
@@ -323,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\FirstRun\Phase2.resx">
       <DependentUpon>Phase2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\IrcBot\IrcBotSettings.resx">
+      <DependentUpon>IrcBotSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\KeyboardCounter\KeyboardCounterFileName.resx">
       <DependentUpon>KeyboardCounterFileName.cs</DependentUpon>
