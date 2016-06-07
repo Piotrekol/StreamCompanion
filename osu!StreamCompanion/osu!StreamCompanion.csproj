@@ -133,6 +133,12 @@
     <Compile Include="Code\Interfeaces\ISettings.cs" />
     <Compile Include="Code\Interfeaces\ISettingsGetter.cs" />
     <Compile Include="Code\Interfeaces\ISqliteUser.cs" />
+    <Compile Include="Code\Misc\Field.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Misc\Field.Designer.cs">
+      <DependentUpon>Field.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreview.cs" />
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.cs">
       <SubType>UserControl</SubType>
@@ -297,6 +303,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Code\Misc\Field.resx">
+      <DependentUpon>Field.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.resx">
       <DependentUpon>CommandsPreviewSettings.cs</DependentUpon>
     </EmbeddedResource>
