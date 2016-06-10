@@ -131,7 +131,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders
             _binaryReader.ReadBoolean();
             beatmap.BgDim = _binaryReader.ReadInt16();
             //bytes not analysed.
-            _binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
+            if (FileDate <= 20160403)
+                _binaryReader.BaseStream.Seek(4, SeekOrigin.Current);
+            else
+                _binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
         }
         private void ReadTimingPoints(Beatmap beatmap)
         {
@@ -361,7 +364,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders
                 _binaryReader.BaseStream.Seek(1, SeekOrigin.Current);
                 Username = _binaryReader.ReadString();
                 ExpectedNumOfBeatmaps = _binaryReader.ReadInt32();
-                _binaryReader.BaseStream.Seek(4, SeekOrigin.Current);
+                if (FileDate > 20160403)
+                    _binaryReader.BaseStream.Seek(4, SeekOrigin.Current);
                 _logger.Log(string.Format("Expected number of beatmaps: {0}", ExpectedNumOfBeatmaps), LogLevel.Debug);
 
                 if (ExpectedNumOfBeatmaps < 0)
