@@ -10,22 +10,23 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
     class OsuFallbackDetector : IModule, ISettings
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        //LastVersion = b20151228.3
-        private const string LAST_FALLBACK_VERSION = "b20151228.3";
+        //LastVersion = b20160403.6
+        private const string LAST_FALLBACK_VERSION = "b20160403.6";
 
         private Settings _settings;
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
             string FilePath = GetConfigFilePath();
-            if (!Uri.IsWellFormedUriString(FilePath, UriKind.Absolute))
+            
+            if (!isValidWindowsPath(FilePath))
             {
-                logger.Log("WARNING: Path to osu! config location isn't valid. Tried: \"{0}\"", LogLevel.Advanced, FilePath);
+                logger.Log("WARNING: Path to osu! config location isn't valid. Tried: \"{0}\"", LogLevel.Basic, FilePath);
                 return;
             }
             if (!File.Exists(FilePath))
             {
-                logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"", LogLevel.Advanced, FilePath);
+                logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"", LogLevel.Basic, FilePath);
                 return;
             }
             bool isFallback = IsFallback(FilePath);
@@ -52,9 +53,30 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
 
         private string GetConfigFilePath()
         {
-            //TODO: Fix configuration filename being incorrect in some cases (eg. windows "email" usernames)
-            string filename = string.Format("osu!.{0}.cfg", Environment.UserName);
+            string filename = string.Format("osu!.{0}.cfg", StripInvalidCharacters(Environment.UserName));
             return Path.Combine(LoadOsuDir(), filename);
+        }
+
+        private string StripInvalidCharacters(string name)
+        {
+            foreach (var invalidChar in Path.GetInvalidFileNameChars())
+            {
+                name = name.Replace(invalidChar.ToString(), string.Empty);
+            }
+            return name.Replace(".", string.Empty);
+        }
+        private bool isValidWindowsPath(string path)
+        {
+            bool isValid = true;
+            try
+            {
+                Path.GetFullPath(path);
+            }
+            catch
+            {
+                isValid = false;
+            }
+            return isValid;
         }
         private string LoadOsuDir()
         {
