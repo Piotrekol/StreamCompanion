@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry KeyList = new ConfigEntry("keyList", new List<string>());
         public readonly ConfigEntry KeyNames = new ConfigEntry("keyNames", new List<string>());
         public readonly ConfigEntry KeyCounts = new ConfigEntry("keyCounts", new List<int>());
-        public readonly ConfigEntry FirstRun = new ConfigEntry("firstRun", false);
+        public readonly ConfigEntry FirstRun = new ConfigEntry("firstRun", true);
         public readonly ConfigEntry EnableMouseHook = new ConfigEntry("HookMouse", false);
         public readonly ConfigEntry CfgEnableKpx = new ConfigEntry("EnableKPM", false);
         public readonly ConfigEntry RightMouseCount = new ConfigEntry("rightMouseCount", 0L);
