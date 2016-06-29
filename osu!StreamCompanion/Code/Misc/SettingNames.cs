@@ -6,6 +6,7 @@ namespace osu_StreamCompanion.Code.Misc
     public sealed class SettingNames
     {//main
         public readonly ConfigEntry MainOsuDirectory = new ConfigEntry("MainOsuDirectory", "");
+        public readonly ConfigEntry SongsFolderLocation = new ConfigEntry("SongsFolderLocation", "Songs");
         public readonly ConfigEntry LogLevel = new ConfigEntry("LogLevel", Core.DataTypes.LogLevel.Disabled.GetHashCode());
         public readonly ConfigEntry StartHidden = new ConfigEntry("StartHidden", false);
         public readonly ConfigEntry Console = new ConfigEntry("console", false);

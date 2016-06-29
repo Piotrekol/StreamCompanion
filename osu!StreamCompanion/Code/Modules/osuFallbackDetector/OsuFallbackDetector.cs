@@ -12,7 +12,8 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
         private readonly SettingNames _names = SettingNames.Instance;
         //LastVersion = b20160403.6
         private const string LAST_FALLBACK_VERSION = "b20160403.6";
-
+        private bool _isFallback;
+        private string _customBeatmapDirectoryLocation;
         private Settings _settings;
         public bool Started { get; set; }
         public void Start(ILogger logger)
@@ -29,11 +30,15 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
                 logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"", LogLevel.Basic, FilePath);
                 return;
             }
-            bool isFallback = IsFallback(FilePath);
+            ReadSettings(FilePath);
 
-            _settings.Add(_names.OsuFallback.Name, isFallback);
-            if (isFallback)
+            _settings.Add(_names.OsuFallback.Name, _isFallback);
+            if (_isFallback)
                 logger.Log("Detected osu fallback version!", LogLevel.Basic);
+
+            _settings.Add(_names.SongsFolderLocation.Name, _customBeatmapDirectoryLocation);
+            if (_customBeatmapDirectoryLocation != _names.SongsFolderLocation.Default<string>())
+                logger.Log("Detected custom songs folder location \"{0}\"", LogLevel.Basic, _customBeatmapDirectoryLocation);
         }
 
         public void SetSettingsHandle(Settings settings)
@@ -41,14 +46,19 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
             _settings = settings;
         }
 
-        private bool IsFallback(string configPath)
+        private void ReadSettings(string configPath)
         {
             foreach (var cfgLine in File.ReadLines(configPath))
             {
+                if (cfgLine.StartsWith("BeatmapDirectory"))
+                {
+                    var splitedLines = cfgLine.Split(new[] { '=' }, 2);
+                    var songDirectory = splitedLines[1].Trim(' ');
+                    _customBeatmapDirectoryLocation = songDirectory;
+                }
                 if (cfgLine.StartsWith("LastVersion") && cfgLine.Contains(LAST_FALLBACK_VERSION))
-                    return true;
+                    _isFallback = true;
             }
-            return false;
         }
 
         private string GetConfigFilePath()

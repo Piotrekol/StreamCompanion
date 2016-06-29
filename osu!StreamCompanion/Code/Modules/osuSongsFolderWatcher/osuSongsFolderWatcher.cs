@@ -21,11 +21,15 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
         {
             Started = true;
             _logger = logger;
-            var dir = _settings.Get<string>(_names.MainOsuDirectory);
+            var dir = _settings.Get<string>(_names.SongsFolderLocation);
+            if (dir == _names.SongsFolderLocation.Default<string>())
+            {
+                dir = _settings.Get<string>(_names.MainOsuDirectory);
+                dir = Path.Combine(dir, "Songs\\");
+            }
+
             if (dir != "")
             {
-
-                dir = Path.Combine(dir, "Songs\\");
                 watcher = new FileSystemWatcher(dir, "*.osu");
                 watcher.Created += Watcher_FileCreated;
                 watcher.IncludeSubdirectories = true;
@@ -38,7 +42,7 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
         {
             _logger.Log("Detected new beatmap in songs folder", LogLevel.Debug);
             var beatmap = BeatmapHelpers.ReadBeatmap(e.FullPath);
-            
+
             _sqlite.StoreTempBeatmap(beatmap);
             _logger.Log("Added new Temporary beatmap {0} - {1}", LogLevel.Debug, beatmap.ArtistRoman, beatmap.TitleRoman);
         }
