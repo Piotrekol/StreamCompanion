@@ -154,8 +154,15 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 int id = dataGridView.SelectedRows[0].Index;
 
                 if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(formating))
+                {
                     UserError("Fill all fields first.");
-
+                    return;
+                }
+                if (FileNameAlreadyExists(fileName))
+                {
+                    UserError(_errorFilenameExists);
+                    return;
+                }
                 if (id == -1)
                     UserError(_errorHorriblyWrong);
                 else
