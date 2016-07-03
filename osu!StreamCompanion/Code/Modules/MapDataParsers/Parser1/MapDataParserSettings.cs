@@ -123,7 +123,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             string fileName = textBox_FileName.Text;
             string formating = textBox_Formating.Text;
-            int Event = _selectionToStatus[comboBox_saveEvent.SelectedIndex - 1];
+            int Event = _selectionToStatus[comboBox_saveEvent.SelectedIndex];
 
             if (fileName != string.Empty && formating != string.Empty)
             {
@@ -150,7 +150,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 string fileName = textBox_FileName.Text;
                 string formating = textBox_Formating.Text;
-                int Event = _selectionToStatus[comboBox_saveEvent.SelectedIndex - 1];
+                int Event = _selectionToStatus[comboBox_saveEvent.SelectedIndex];
                 int id = dataGridView.SelectedRows[0].Index;
 
                 if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(formating))
