@@ -35,17 +35,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _saveEvents.Add(16, "Editing");
             _saveEvents.Add(27, "All");
 
-            _statusToSelection.Add(1, 0);
-            _statusToSelection.Add(2, 1);
-            _statusToSelection.Add(8, 2);
-            _statusToSelection.Add(16, 3);
-            _statusToSelection.Add(27, 4);
+            _statusToSelection.Add(0, 0);
+            _statusToSelection.Add(1, 1);
+            _statusToSelection.Add(2, 2);
+            _statusToSelection.Add(8, 3);
+            _statusToSelection.Add(16, 4);
+            _statusToSelection.Add(27, 5);
 
-            _selectionToStatus.Add(0, 1);
-            _selectionToStatus.Add(1, 2);
-            _selectionToStatus.Add(2, 8);
-            _selectionToStatus.Add(3, 16);
-            _selectionToStatus.Add(4, 27);
+            _selectionToStatus.Add(0, 0);
+            _selectionToStatus.Add(1, 1);
+            _selectionToStatus.Add(2, 2);
+            _selectionToStatus.Add(3, 8);
+            _selectionToStatus.Add(4, 16);
+            _selectionToStatus.Add(5, 27);
 
 
 
@@ -84,13 +86,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         }
 
 
-        private bool FileNameAlreadyExists(string filename, string excl = "")
+        private bool FileNameAlreadyExists(string filename, string excl = "", int ignoreId = -1)
         {
             for (int i = 0; i < _patternDictionary.Count; i++)
             {
                 string currentFileName = _patternDictionary[i].Filename;
                 if (string.IsNullOrEmpty(currentFileName)) continue;
-                if (currentFileName != excl && currentFileName == filename)
+                if (currentFileName != excl && currentFileName == filename && i != ignoreId)
                     return true;
             }
             return false;
@@ -158,7 +160,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     UserError("Fill all fields first.");
                     return;
                 }
-                if (FileNameAlreadyExists(fileName))
+                if (FileNameAlreadyExists(fileName, "", id))
                 {
                     UserError(_errorFilenameExists);
                     return;
