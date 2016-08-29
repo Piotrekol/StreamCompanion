@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
@@ -16,11 +17,16 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
         private Settings _settings;
         private ILogger _logger;
         private SqliteControler _sqlite;
+        private int _numberOfBeatmapsCurrentlyBeingLoaded = 0;
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
             Started = true;
             _logger = logger;
+
+            if (_settings.Get<bool>(_names.LoadingRawBeatmaps))
+                _settings.Add(_names.LoadingRawBeatmaps.Name, false);
+
             var dir = _settings.Get<string>(_names.SongsFolderLocation);
             if (dir == _names.SongsFolderLocation.Default<string>())
             {
@@ -40,11 +46,17 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
 
         private void Watcher_FileCreated(object sender, FileSystemEventArgs e)
         {
+            _settings.Add("LoadingRawBeatmaps",true);
+            Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
             _logger.Log("Detected new beatmap in songs folder", LogLevel.Debug);
             var beatmap = BeatmapHelpers.ReadBeatmap(e.FullPath);
 
             _sqlite.StoreTempBeatmap(beatmap);
             _logger.Log("Added new Temporary beatmap {0} - {1}", LogLevel.Debug, beatmap.ArtistRoman, beatmap.TitleRoman);
+            if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
+            {
+                _settings.Add(_names.LoadingRawBeatmaps.Name,false);
+            }
         }
 
 

@@ -97,7 +97,9 @@ namespace osu_StreamCompanion.Code.Core
             MsnGetters.Clear();
             #endregion
 
-            MsnGetters.Add(new MapStringFormatter(_logger, new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters, _saver, _logger)));
+            var mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters,_saver, _logger));
+            StartModule(mapStringFormatter);
+            MsnGetters.Add(mapStringFormatter);
 
             _logger.Log("Starting...", LogLevel.Advanced);
             _logger.Log(">Main classes...", LogLevel.Advanced);

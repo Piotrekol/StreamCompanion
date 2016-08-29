@@ -1,20 +1,30 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Threading;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
-    public class MapStringFormatter : IMsnGetter
+    public class MapStringFormatter : IModule,IMsnGetter,ISettings
     {
-        private readonly ILogger _logger;
+        private readonly SettingNames _names = SettingNames.Instance;
+        private ILogger _logger;
         private readonly MainMapDataGetter _mainMapDataGetter;
-        private readonly Regex _catchTitleRegex = new Regex(@"(.*?)- (-)?", RegexOptions.Compiled);
+        private Settings _settings;
         private string _lastMsnString = "";
-        public MapStringFormatter(ILogger logger, MainMapDataGetter mainMapDataGetter)
+        public MapStringFormatter(MainMapDataGetter mainMapDataGetter)
+        {
+            _mainMapDataGetter = mainMapDataGetter;
+        }
+        public bool Started { get; set; }
+        public void Start(ILogger logger)
         {
             _logger = logger;
-            _mainMapDataGetter = mainMapDataGetter;
+        }
+        public void SetSettingsHandle(Settings settings)
+        {
+            _settings = settings;
         }
 
         public void SetNewMsnString(Dictionary<string, string> osuStatus)
@@ -50,6 +60,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     if (v.Key != "raw") result = result + $"{v.Key}: \"{v.Value}\" ";
                 }
                 _logger.Log(result, LogLevel.Basic);
+                int sleepCounter = 0;
+                while (_settings.Get<bool>(_names.LoadingRawBeatmaps))
+                {
+                    Thread.Sleep(200);
+                }
                 _mainMapDataGetter.FindMapData(osuStatus, status);
 
             }

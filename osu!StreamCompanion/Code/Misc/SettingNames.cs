@@ -10,6 +10,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry LogLevel = new ConfigEntry("LogLevel", Core.DataTypes.LogLevel.Disabled.GetHashCode());
         public readonly ConfigEntry StartHidden = new ConfigEntry("StartHidden", false);
         public readonly ConfigEntry Console = new ConfigEntry("console", false);
+        public readonly ConfigEntry LoadingRawBeatmaps = new ConfigEntry("LoadingRawBeatmaps", false);
         //ClickCounter 
         public readonly ConfigEntry KeyList = new ConfigEntry("keyList", new List<string>());
         public readonly ConfigEntry KeyNames = new ConfigEntry("keyNames", new List<string>());
