@@ -46,7 +46,7 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
 
         private void Watcher_FileCreated(object sender, FileSystemEventArgs e)
         {
-            _settings.Add("LoadingRawBeatmaps",true);
+            _settings.Add(_names.LoadingRawBeatmaps.Name, true);
             Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
             _logger.Log("Detected new beatmap in songs folder", LogLevel.Debug);
             var beatmap = BeatmapHelpers.ReadBeatmap(e.FullPath);

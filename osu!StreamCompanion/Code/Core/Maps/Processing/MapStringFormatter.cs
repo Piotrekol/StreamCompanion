@@ -60,7 +60,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     if (v.Key != "raw") result = result + $"{v.Key}: \"{v.Value}\" ";
                 }
                 _logger.Log(result, LogLevel.Basic);
-                int sleepCounter = 0;
                 while (_settings.Get<bool>(_names.LoadingRawBeatmaps))
                 {
                     Thread.Sleep(200);
