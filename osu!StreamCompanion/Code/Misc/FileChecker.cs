@@ -6,7 +6,7 @@ namespace osu_StreamCompanion.Code.Misc
 {
     class FileChecker
     {
-        private string[] _requiredFiles = new[] { "SQLite.Interop.dll", "System.Data.SQLite.dll" };
+        private string[] _requiredFiles = new string[0];
         private string caption = "StreamCompanion Error";
         private string errorMessage =
             "It seems that you are missing one or more of the files that are required to run this software." + Environment.NewLine +
