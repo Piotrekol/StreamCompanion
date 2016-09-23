@@ -197,6 +197,3 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
-
-#osu!StreamCompanion memory-related code
-osu!StreamCompanion/Code/Modules/MapDataFinders/osuMemoryID/
