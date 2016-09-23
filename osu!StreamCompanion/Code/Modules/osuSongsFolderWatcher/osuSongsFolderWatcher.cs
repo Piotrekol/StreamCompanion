@@ -36,10 +36,17 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
 
             if (dir != "")
             {
-                watcher = new FileSystemWatcher(dir, "*.osu");
-                watcher.Created += Watcher_FileCreated;
-                watcher.IncludeSubdirectories = true;
-                watcher.EnableRaisingEvents = true;
+                if (Directory.Exists(dir))
+                {
+                    watcher = new FileSystemWatcher(dir, "*.osu");
+                    watcher.Created += Watcher_FileCreated;
+                    watcher.IncludeSubdirectories = true;
+                    watcher.EnableRaisingEvents = true;
+                }
+                else
+                {
+                    _logger.Log("Could not find osu! songs directory", LogLevel.Error);
+                }
             }
 
         }
