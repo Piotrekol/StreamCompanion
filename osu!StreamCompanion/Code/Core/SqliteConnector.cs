@@ -101,13 +101,21 @@ namespace osu_StreamCompanion.Code.Core
         }
         private void CreateFile(string filename)
         {
-            if (File.Exists("Test.db"))
+            try
             {
-                File.Delete("Test.db");
+                if (File.Exists("Test.db"))
+                {
+                    File.Delete("Test.db");
+                }
+                if (!File.Exists(filename))
+                {
+                    SQLiteConnection.CreateFile(filename);
+                }
             }
-            if (!File.Exists(filename))
+            catch (UnauthorizedAccessException ex)
             {
-                SQLiteConnection.CreateFile(filename);
+                throw new NonLoggableException(ex,"Could not save beatmap cache file due to insuffisient premissions"+
+                    Environment.NewLine+"Please move this exectuable into a non-system folder");
             }
         }
         private void OpenConnection()
