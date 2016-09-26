@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfeaces;
 
 namespace osu_StreamCompanion.Code.Core.Savers
@@ -14,9 +15,17 @@ namespace osu_StreamCompanion.Code.Core.Savers
         }
         public FileSaver()
         {
-            if (!Directory.Exists(SaveDirectory))
+            try
             {
-                Directory.CreateDirectory(SaveDirectory);
+                if (!Directory.Exists(SaveDirectory))
+                {
+                    Directory.CreateDirectory(SaveDirectory);
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new NonLoggableException(ex, "Could not create folder due to insuffisient premissions" +
+                    Environment.NewLine + "Please move this exectuable into a non-system folder");
             }
         }
 
