@@ -84,6 +84,10 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
 
         private void textBox_TextChanged(object sender, EventArgs e)
         {
+            foreach (var invalidChar in System.IO.Path.GetInvalidFileNameChars())
+            {
+                textBox_PreviewMods.Text = textBox_PreviewMods.Text.Replace(invalidChar.ToString(), string.Empty);
+            }
             CreatePreview();
         }
     }
