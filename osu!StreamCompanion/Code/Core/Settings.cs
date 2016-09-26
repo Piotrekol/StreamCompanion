@@ -75,7 +75,8 @@ namespace osu_StreamCompanion.Code.Core
                 {
                     return (T)_settingsEntries[key];
                 }
-                else {
+                else
+                {
                     try
                     {
                         return (T)Convert.ChangeType(_settingsEntries[key], typeof(T));
@@ -103,10 +104,11 @@ namespace osu_StreamCompanion.Code.Core
         {
             if (_rawLines.Count > 0)
             {
-                for (int i = 0; i < _rawLines.Count; i++)
+                foreach (string line in _rawLines)
                 {
-                    string[] splited = _rawLines[i].Split(new[] { '=' }, 2);
-                    Add(splited[0].Trim(), Convert.ChangeType(splited[1].Trim(), typeof(string)));
+                    string[] splited = line.Split(new[] { '=' }, 2);
+                    if (splited.Length == 2)
+                        Add(splited[0].Trim(), Convert.ChangeType(splited[1].Trim(), typeof(string)));
                 }
                 _rawLines.Clear();
             }
