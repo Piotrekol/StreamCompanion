@@ -127,25 +127,29 @@ namespace osu_StreamCompanion.Code.Helpers
         }
         public static string GetDiffFromString(string msnString)
         {
-            var openBr = 0;
-            var closedBr = 0;
-            var strPos = msnString.Length - 1;
-            do
+            if (msnString.Contains("]") && msnString.Contains("["))
             {
-                var character = msnString[strPos];
-                switch (character)
+                var openBr = 0;
+                var closedBr = 0;
+                var strPos = msnString.Length - 1;
+                do
                 {
-                    case ']':
-                        closedBr++;
-                        break;
-                    case '[':
-                        openBr++;
-                        break;
-                }
-                strPos--;
-            } while (closedBr != openBr);
+                    var character = msnString[strPos];
+                    switch (character)
+                    {
+                        case ']':
+                            closedBr++;
+                            break;
+                        case '[':
+                            openBr++;
+                            break;
+                    }
+                    strPos--;
+                } while (closedBr != openBr);
 
-            return msnString.Substring(strPos + 2, msnString.Length - strPos - 3);
+                return msnString.Substring(strPos + 2, msnString.Length - strPos - 3);
+            }
+            return string.Empty;
         }
         
     }
