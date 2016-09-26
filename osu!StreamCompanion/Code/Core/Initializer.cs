@@ -43,7 +43,7 @@ namespace osu_StreamCompanion.Code.Core
         public List<IMsnGetter> MsnGetters = new List<IMsnGetter>();
         public readonly Settings Settings;
         private bool _started;
-        public readonly string ConfigSaveLocation = AppDomain.CurrentDomain.BaseDirectory + @"settings.ini";
+        public readonly string ConfigSaveLocation = AppDomain.CurrentDomain.BaseDirectory;
 
         private List<IModParser> _modParser = new List<IModParser>(1);
         private List<IModule> _modules = new List<IModule>();
@@ -62,9 +62,9 @@ namespace osu_StreamCompanion.Code.Core
             new FileChecker();
             _saver = new MainSaver(_logger);
             this.Settings = new Settings(_logger);
-            Settings.Load(ConfigSaveLocation);
             Settings.SetSavePath(ConfigSaveLocation);
-            
+            Settings.Load();
+
             if (Settings.Get<bool>(_names.Console))
                 _logger.ChangeLogger(new ConsoleLogger(Settings));
             else

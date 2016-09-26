@@ -17,6 +17,8 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<string> _rawLines = new List<string>();
         public EventHandler<SettingUpdated> SettingUpdated;
         private string saveLocation;
+        private readonly string configFileName = "settings.ini";
+        public string FullConfigFilePath { get { return Path.Combine(saveLocation, configFileName); } }
         public Settings(ILogger logger)
         {
             _logger = logger;
@@ -113,16 +115,20 @@ namespace osu_StreamCompanion.Code.Core
             {
                 stringBuilder.AppendFormat("{0} = {1}{2}", entry.Key, entry.Value, Environment.NewLine);
             }
-
-            using (var fileHandle = new StreamWriter(saveLocation))
+            if (!Directory.Exists(saveLocation))
+            {
+                Directory.CreateDirectory(saveLocation);
+            }
+            using (var fileHandle = new StreamWriter(FullConfigFilePath))
             {
                 fileHandle.Write(stringBuilder);
             }
         }
-        public void Load(string fullPath)
+        public void Load()
         {
-            if (File.Exists(fullPath))
-                using (var fileHandle = new StreamReader(fullPath, true))
+            var filePath = FullConfigFilePath;
+            if (File.Exists(filePath))
+                using (var fileHandle = new StreamReader(filePath, true))
                 {
                     while (!fileHandle.EndOfStream)
                     {
