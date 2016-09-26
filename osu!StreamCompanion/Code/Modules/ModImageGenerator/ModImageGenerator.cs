@@ -38,13 +38,10 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
             {
                 if (map.FoundBeatmaps)
                 {
-                    if (!string.IsNullOrWhiteSpace(map.Mods))
+                    var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
+                    using (Bitmap img = _imageGenerator.GenerateImage(map.Mods.Split(',')))
                     {
-                        var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
-                        using (Bitmap img = _imageGenerator.GenerateImage(map.Mods.Split(',')))
-                        {
-                            img.Save(fullPathOfCreatedImage, ImageFormat.Png);
-                        }
+                        img.Save(fullPathOfCreatedImage, ImageFormat.Png);
                     }
                 }
             }

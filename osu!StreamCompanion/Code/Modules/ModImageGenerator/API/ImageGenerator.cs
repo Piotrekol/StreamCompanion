@@ -94,7 +94,7 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
 
         private int GetWidthOfGeneratedMods(int numberOfMods, int modImgWidth, int spacing)
         {
-            if (numberOfMods == 1)
+            if (numberOfMods == 0 || numberOfMods == 1)
                 return modImgWidth;
             return numberOfMods * (modImgWidth + spacing) - spacing;
         }
