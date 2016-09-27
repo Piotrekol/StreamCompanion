@@ -103,7 +103,7 @@ namespace osu_StreamCompanion.Code.Core
         /// 
         /// </summary>
         /// <param name="mapId"></param>
-        /// <returns>Beatmap object with filled or not map data (use mapId property as check if data is set)</returns>
+        /// <returns>Beatmap object with data, or null on not found</returns>
         public Beatmap GetBeatmap(int mapId)
         {
             lock (_sqlConnector)

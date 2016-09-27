@@ -223,14 +223,14 @@ namespace osu_StreamCompanion.Code.Core
 
         }
         public Beatmap GetBeatmap(int mapId)
-        {//mapId should be >0
-
+        {
             string sql = "SELECT * FROM `withID` WHERE MapId = " + mapId;
             var reader = Query(sql);
-            var beatmap = new Beatmap();
+            Beatmap beatmap = null;
 
             if (reader.Read())
             {
+                beatmap = new Beatmap();
                 beatmap.Read(reader);
             }
             else
@@ -238,10 +238,10 @@ namespace osu_StreamCompanion.Code.Core
                 reader.Dispose();
                 sql = "SELECT * FROM `Temp` WHERE MapId = " + mapId;
                 reader = Query(sql);
-                beatmap = new Beatmap();
 
                 if (reader.Read())
                 {
+                    beatmap = new Beatmap();
                     beatmap.Read(reader);
                 }
                 reader.Dispose();
