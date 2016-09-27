@@ -4,6 +4,6 @@ namespace osu_StreamCompanion.Code.Interfeaces
 {
     public interface ILogger
     {
-        void Log(string logMessage, LogLevel loglvevel, params string[] vals);
+        void Log(object logMessage, LogLevel loglvevel, params string[] vals);
     }
 }

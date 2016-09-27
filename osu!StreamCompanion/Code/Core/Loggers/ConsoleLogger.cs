@@ -29,18 +29,19 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             FreeConsole();
         }
 
-        public void Log(string logMessage, LogLevel loglvevel, params string[] vals)
+        public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
         {
             if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
             {
+                string message = logMessage.ToString();
                 string prefix = string.Empty;
-                while (logMessage.StartsWith(">"))
+                while (message.StartsWith(">"))
                 {
                     prefix += "\t";
-                    logMessage = logMessage.Substring(1);
+                    message = message.Substring(1);
                 }
-                logMessage = prefix + logMessage;
-                Console.WriteLine(@"{0} - {1}", DateTime.Now.ToString("T"), string.Format(logMessage, vals));
+                message = prefix + message;
+                Console.WriteLine(@"{0} - {1}", DateTime.Now.ToString("T"), string.Format(message, vals));
             }
         }
     }

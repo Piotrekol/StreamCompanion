@@ -46,12 +46,13 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             return Path.Combine(_logsSaveFolderName, startTime.ToString("yyyy-MM-dd") + ".txt");
         }
-        public void Log(string logMessage, LogLevel loglvevel, params string[] vals)
+        public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
         {
             try
             {
+                string message = logMessage.ToString();
                 if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
-                    _saver.append(CurrentLogSaveLocation, string.Format(logMessage, vals) + Environment.NewLine);
+                    _saver.append(CurrentLogSaveLocation, string.Format(message, vals) + Environment.NewLine);
             }
             catch
             {

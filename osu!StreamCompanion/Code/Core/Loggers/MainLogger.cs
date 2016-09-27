@@ -22,7 +22,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             _loggers.Add(logger);
         }
-        public void Log(string logMessage,LogLevel logLevel, params string[] vals)
+        public void Log(object logMessage, LogLevel logLevel, params string[] vals)
         {
             _logger?.Log(logMessage, logLevel, vals);
             for (int i = 0; i < _loggers.Count; i++)
