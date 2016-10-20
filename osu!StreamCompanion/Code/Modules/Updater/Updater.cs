@@ -11,6 +11,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
     {
         private MainWindowUpdater _mainWindowHandle;
         private string _onlineVersion = string.Empty;
+        private const string UpdateUrl = "http://osustats.ppy.sh/api/sc/version";
         private string _downloadLink = "";
         public bool Started { get; set; }
         public void Start(ILogger logger)
@@ -58,7 +59,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             try
             {
                 using (var wc = new System.Net.WebClient())
-                    contents = wc.DownloadString("http://streamcompanion.pancakeapps.com/version");
+                    contents = wc.DownloadString(UpdateUrl);
                 var splited = contents.Split(new[] { ',' }, 2);
                 _downloadLink = splited[1];
                 _onlineVersion = splited[0];
