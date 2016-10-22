@@ -35,15 +35,22 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             new System.Threading.Thread(() =>
             {
                 string osudb = Path.Combine(_settingsHandle.Get<string>(_names.MainOsuDirectory), "osu!.db");
-                string newOsuFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                    @"Files", "osu!.db");
+                if (File.Exists(osudb))
+                {
+                    string newOsuFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                        @"Files", "osu!.db");
 
-                if (File.Exists(newOsuFile))
+                    if (File.Exists(newOsuFile))
+                        File.Delete(newOsuFile);
+
+                    File.Copy(osudb, newOsuFile);
+                    _osuDatabaseLoader.LoadDatabase(newOsuFile);
                     File.Delete(newOsuFile);
-
-                File.Copy(osudb, newOsuFile);
-                _osuDatabaseLoader.LoadDatabase(newOsuFile);
-                File.Delete(newOsuFile);
+                }
+                else
+                {
+                    _mainWindowHandle.BeatmapsLoaded = "Could not locate osu!.db";
+                }
             }).Start();
         }
 

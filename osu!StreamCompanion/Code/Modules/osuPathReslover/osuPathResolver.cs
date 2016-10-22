@@ -47,7 +47,12 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
             if (LoadOsuDir() == "" || !Directory.Exists(LoadOsuDir()))
             {
                 string osuRunningDir = GetRunningOsuDir();
-                SaveOsuDir(osuRunningDir);
+                if (Directory.Exists(osuRunningDir))
+                    SaveOsuDir(osuRunningDir);
+                else
+                {
+                    SaveOsuDir(GetManualOsuDir());
+                }
             }
         }
         public void SetSettingsHandle(Settings settings)
@@ -129,22 +134,29 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
             }
             return string.Empty;
         }
-        string GetManualOsuDir()
+        private string GetManualOsuDir()
+        {
+            var directory = SelectDirectory("Where is your osu! folder located at?");
+
+            if (directory == string.Empty || File.Exists(directory + @"\osu!.db"))
+            {
+                return directory;
+            }
+            MessageBox.Show(@"This isn't osu! folder", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return string.Empty;
+        }
+
+        private string SelectDirectory(string text)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             //set description and base folder for browsing
-            var description = "Where is your osu! folder located at?";
-            dialog.ShowNewFolderButton = false;
-            dialog.Description = description;
-            dialog.RootFolder = Environment.SpecialFolder.MyComputer;
 
-            if (dialog.ShowDialog() == DialogResult.OK)
+            dialog.ShowNewFolderButton = true;
+            dialog.Description = text;
+            dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+            if (dialog.ShowDialog() == DialogResult.OK && Directory.Exists((dialog.SelectedPath)))
             {
-                if (File.Exists(dialog.SelectedPath + @"\osu!.db"))
-                {
-                    return dialog.SelectedPath;
-                }
-                MessageBox.Show(@"This isn't osu! folder", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return dialog.SelectedPath;
             }
             return string.Empty;
         }
