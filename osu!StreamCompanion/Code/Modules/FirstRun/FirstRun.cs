@@ -31,7 +31,7 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
 
         private void _setupFrm_Closing(object sender, EventArgs e)
         {
-            CompletedSuccesfully = _setupFrm.completedSuccesfully;
+            CompletedSuccesfully = _setupFrm.CompletedSuccesfully;
         }
 
         public void SetSettingsHandle(Settings settings)

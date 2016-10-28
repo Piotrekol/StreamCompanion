@@ -166,6 +166,25 @@
       <DependentUpon>DonationSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Misc\FileChecker.cs" />
+    <Compile Include="Code\Modules\FirstRun\FirstRunControl.cs" />
+    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.Designer.cs">
+      <DependentUpon>FirstRunFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunFinish.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunFinish.Designer.cs">
+      <DependentUpon>FirstRunFinish.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunMsn.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunMsn.Designer.cs">
+      <DependentUpon>FirstRunMsn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
@@ -175,24 +194,6 @@
       <DependentUpon>FileSaveLocationSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\FirstRun\FirstRun.cs" />
-    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.Designer.cs">
-      <DependentUpon>FirstRunFrm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phase1.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phase1.Designer.cs">
-      <DependentUpon>Phase1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phase2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phase2.Designer.cs">
-      <DependentUpon>Phase2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\ClickCounter\KeysPerX.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -324,12 +325,6 @@
     <EmbeddedResource Include="Code\Modules\FirstRun\FirstRunFrm.resx">
       <DependentUpon>FirstRunFrm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\FirstRun\Phase1.resx">
-      <DependentUpon>Phase1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\FirstRun\Phase2.resx">
-      <DependentUpon>Phase2.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\ClickCounter\ClickCounterFileName.resx">
       <DependentUpon>ClickCounterFileName.cs</DependentUpon>
     </EmbeddedResource>
@@ -344,6 +339,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\ClickCounter\KeysPerX.resx">
       <DependentUpon>KeysPerX.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\FirstRun\Phases\FirstRunFinish.resx">
+      <DependentUpon>FirstRunFinish.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\FirstRun\Phases\FirstRunMsn.resx">
+      <DependentUpon>FirstRunMsn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>

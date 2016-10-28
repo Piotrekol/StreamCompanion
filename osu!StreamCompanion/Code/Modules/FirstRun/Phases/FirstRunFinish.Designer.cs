@@ -1,6 +1,6 @@
-﻿namespace osu_StreamCompanion.Code.Modules.FirstRun
+﻿namespace osu_StreamCompanion.Code.Modules.FirstRun.Phases
 {
-    partial class Phase2
+    partial class FirstRunFinish
     {
         /// <summary> 
         /// Required designer variable.
@@ -71,6 +71,7 @@
             this.button_end.TabIndex = 8;
             this.button_end.Text = "End setup";
             this.button_end.UseVisualStyleBackColor = true;
+            this.button_end.Click += new System.EventHandler(this.button_end_Click);
             // 
             // label_osuDirectory
             // 
@@ -114,12 +115,12 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // Phase2
+            // Finish
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "Phase2";
+            this.Name = "FirstRunFinish";
             this.Size = new System.Drawing.Size(399, 242);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

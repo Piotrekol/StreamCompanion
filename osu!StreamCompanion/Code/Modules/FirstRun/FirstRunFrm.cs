@@ -1,69 +1,79 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
+using osu_StreamCompanion.Code.Modules.FirstRun.Phases;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
     public partial class FirstRunFrm : Form
     {
         private readonly SettingNames _names = SettingNames.Instance;
-
-        private Phase1 _phase1;
-        private Phase2 _phase2;
+        
         private Settings _settings;
-
-        public bool completedSuccesfully
-        {
-            get { return _phase2 != null; }
-        }
+        private List<FirstRunControl> phases = new List<FirstRunControl>();
+        public bool CompletedSuccesfully { get; set; }
 
         public FirstRunFrm(Settings settings)
         {
             _settings = settings;
+            phases.Add(new FirstRunMsn());
+            phases.Add(new FirstRunFinish());
             InitializeComponent();
         }
 
+        private int _currentPhase = 0;
         public void StartSetup()
         {
-            _phase1 = new Phase1();
-            this.Controls.Add(_phase1);
-            this.ShowDialog();
-        }
-        public void GotMsn(string msnString)
-        {
-            if (_phase1 != null)
+            if (phases.Count > 0)
             {
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    this.Controls.RemoveAt(0);
-                    _phase1.Dispose();
-                    _phase1 = null;
-
-                    _phase2 = new Phase2();
-                    _phase2.button_end.Click += ButtonEndOnClick;
-                    _phase2.label_msnString.Text = msnString;
-                    _phase2.label_osuDirectory.Text = _settings.Get<string>(_names.MainOsuDirectory);
-                    this.Controls.Add(_phase2);
-                });
+                var first = phases[0];
+                first.Completed += Phase_Completed;
+                this.Controls.Add(first);
+                this.ShowDialog();
             }
-            if (_phase2 != null)
-                if (_phase2.Created)
+            else
+            {
+                CompletedSuccesfully = true;
+            }
+        }
+
+        private void Phase_Completed(object sender, CompletedEventArgs e)
+        {
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                phases[_currentPhase].Completed -= Phase_Completed;
+                this.Controls.RemoveAt(0);
+                if (phases.Count > _currentPhase+1)
                 {
-                    _phase2.BeginInvoke((MethodInvoker)delegate
+                    _currentPhase++;
+                    var current = phases[_currentPhase];
+                    current.Completed += Phase_Completed;
+                    this.Controls.Add(current);
+                }
+                else
+                {
+                    CompletedSuccesfully = true;
+                    this.BeginInvoke((MethodInvoker)delegate ()
                     {
-                        _phase2.label_msnString.Text = msnString;
+                        this.Close();
                     });
                 }
-        }
-
-        private void ButtonEndOnClick(object sender, EventArgs eventArgs)
-        {
-            this.BeginInvoke((MethodInvoker) delegate()
-            {
-                this.Close();
             });
         }
+
+        public void GotMsn(string msnString)
+        {
+            var osuDir = _settings.Get<string>(_names.MainOsuDirectory);
+
+            foreach (var phase in phases)
+            {
+                phase.GotMsn(msnString);
+                phase.GotOsuDirectory(osuDir);
+            }
+        }
+        
     }
 }
 

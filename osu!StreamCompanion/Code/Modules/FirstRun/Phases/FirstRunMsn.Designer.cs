@@ -1,6 +1,6 @@
-﻿namespace osu_StreamCompanion.Code.Modules.FirstRun
+﻿namespace osu_StreamCompanion.Code.Modules.FirstRun.Phases
 {
-    partial class Phase1
+    partial class FirstRunMsn
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Phase1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FirstRunMsn));
             this.panel1 = new System.Windows.Forms.Panel();
             this.label_Description2 = new System.Windows.Forms.Label();
             this.label_Description1 = new System.Windows.Forms.Label();
@@ -91,7 +91,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "Phase1";
+            this.Name = "FirstRunMsn";
             this.Size = new System.Drawing.Size(399, 242);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
