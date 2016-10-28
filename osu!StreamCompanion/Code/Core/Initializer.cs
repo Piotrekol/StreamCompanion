@@ -113,6 +113,7 @@ namespace osu_StreamCompanion.Code.Core
             #endregion plugins
             
             Settings.Add(_names.FirstRun.Name, false);
+            Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
             _started = true;
             _logger.Log("Started!", LogLevel.Basic);
         }
