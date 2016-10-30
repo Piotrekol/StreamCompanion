@@ -81,7 +81,31 @@ namespace osu_StreamCompanion.Code.Core
             _msn = new Msn(MsnGetters);
 
             #region First run
-            if (Settings.Get<bool>(_names.FirstRun))
+
+            bool shouldForceFirstRun=false;
+            var lastVersionStr = Settings.Get<string>(_names.LastRunVersion);
+            if (lastVersionStr == _names.LastRunVersion.Default<string>())
+            {
+                shouldForceFirstRun = true;
+            }
+            else
+            {
+                try
+                {
+                    var lastVersion = Helpers.Helpers.GetDateFromVersionString(lastVersionStr);
+                    var versionToResetOn = Helpers.Helpers.GetDateFromVersionString("v161030.20");
+                    shouldForceFirstRun = lastVersion < versionToResetOn;
+                }
+                catch (Exception e)
+                {
+                    if (e is FormatException || e is ArgumentNullException)
+                        shouldForceFirstRun = true;
+                    else
+                        throw;
+                }
+            }
+
+            if (Settings.Get<bool>(_names.FirstRun) || shouldForceFirstRun)
             {
                 var firstRunModule = new FirstRun(delegate()
                 {
@@ -117,7 +141,6 @@ namespace osu_StreamCompanion.Code.Core
             _started = true;
             _logger.Log("Started!", LogLevel.Basic);
         }
-        
         public void StartModules()
         {
             AddModule(new OsuPathResolver());
