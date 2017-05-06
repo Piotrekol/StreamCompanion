@@ -39,7 +39,8 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
                 if (map.FoundBeatmaps)
                 {
                     var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
-                    using (Bitmap img = _imageGenerator.GenerateImage(map.Mods.Split(',')))
+                    string mods = map.Mods?.Item2 ?? "";
+                    using (Bitmap img = _imageGenerator.GenerateImage(mods.Split(',')))
                     {
                         img.Save(fullPathOfCreatedImage, ImageFormat.Png);
                     }

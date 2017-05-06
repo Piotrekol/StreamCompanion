@@ -18,7 +18,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
         {
             if (map.FoundBeatmaps)
             {
-                var dict = map.BeatmapsFound[0].GetDict(map.Mods);
+                var dict = map.BeatmapsFound[0].GetDict(map.Mods?.Item2 ?? "");
 
                 var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
                 if (string.IsNullOrWhiteSpace(osuLocation))
