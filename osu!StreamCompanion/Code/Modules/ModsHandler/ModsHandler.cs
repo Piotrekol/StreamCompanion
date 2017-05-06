@@ -57,7 +57,7 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
         {
             if (map.FoundBeatmaps)
             {
-                var c = _difficultyCalculator.ApplyMods(map.BeatmapsFound[0], map.Mods.Item1);
+                var c = _difficultyCalculator.ApplyMods(map.BeatmapsFound[0], map.Mods?.Item1 ?? EMods.Omod);
                 var dict = new Dictionary<string, string>()
                 {
                     { "!mAR!", c["AR"].ToString(System.Globalization.CultureInfo.InvariantCulture)},

@@ -70,7 +70,7 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             {
                 if ((mods & key) > 0)
                 {
-                    eMods = eMods & ModsConv[key].Item1;
+                    eMods = eMods | ModsConv[key].Item1;
                 }
             }
             return eMods;

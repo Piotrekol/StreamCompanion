@@ -19,12 +19,18 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
 
         public Dictionary<string, float> ApplyMods(Beatmap map, Mods mods)
         {
-            if ((mods & Mods.MapChanging) == 0)
-                return null;
             float od = map.OverallDifficulty;
             float ar = map.ApproachRate;
             float cs = map.CircleSize;
+            var retValue = new Dictionary<string, float>();
 
+            if ((mods & Mods.MapChanging) == 0)
+            {
+                retValue.Add("AR", ar);
+                retValue.Add("CS", cs);
+                retValue.Add("OD", od);
+                return retValue;
+            }
 
             float speed = 1;
             if ((mods & Mods.Dt) != 0 || (mods & Mods.Nc) != 0)
@@ -80,7 +86,6 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             cs *= cs_multiplier;
             cs = Math.Max(0.0f, Math.Min(10.0f, cs));
 
-            var retValue = new Dictionary<string, float>();
             retValue.Add("AR", ar);
             retValue.Add("CS", cs);
             retValue.Add("OD", od);
