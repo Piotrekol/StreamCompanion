@@ -185,6 +185,7 @@
     <Compile Include="Code\Modules\FirstRun\Phases\FirstRunMsn.Designer.cs">
       <DependentUpon>FirstRunMsn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Modules\ModsHandler\EMods.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
@@ -209,13 +210,13 @@
     <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.Designer.cs">
       <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\ModParser\ModParser.cs" />
+    <Compile Include="Code\Modules\ModsHandler\ModParser.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Plays\PlaysReplacements.cs" />
-    <Compile Include="Code\Modules\ModParser\ModParserSettings.cs">
+    <Compile Include="Code\Modules\ModsHandler\ModParserSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\ModParser\ModParserSettings.Designer.cs">
+    <Compile Include="Code\Modules\ModsHandler\ModParserSettings.Designer.cs">
       <DependentUpon>ModParserSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
@@ -355,7 +356,7 @@
     <EmbeddedResource Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.resx">
       <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ModParser\ModParserSettings.resx">
+    <EmbeddedResource Include="Code\Modules\ModsHandler\ModParserSettings.resx">
       <DependentUpon>ModParserSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
