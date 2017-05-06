@@ -185,7 +185,9 @@
     <Compile Include="Code\Modules\FirstRun\Phases\FirstRunMsn.Designer.cs">
       <DependentUpon>FirstRunMsn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Modules\ModsHandler\DifficultyCalculator.cs" />
     <Compile Include="Code\Modules\ModsHandler\EMods.cs" />
+    <Compile Include="Code\Modules\ModsHandler\ModsHandler.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">

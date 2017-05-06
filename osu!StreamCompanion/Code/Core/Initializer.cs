@@ -21,7 +21,7 @@ using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays;
 using osu_StreamCompanion.Code.Modules.ModImageGenerator;
-using osu_StreamCompanion.Code.Modules.ModParser;
+using osu_StreamCompanion.Code.Modules.ModsHandler;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
 using osu_StreamCompanion.Code.Modules.osuPost;
@@ -164,7 +164,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new SqliteDataFinder());
             AddModule(new NoDataFinder());
             
-            AddModule(new ModParser());
+            AddModule(new ModsHandler());
             AddModule(new ModImageGenerator());
             AddModule(new MainWindow());
             
