@@ -5,6 +5,6 @@ namespace osu_StreamCompanion.Code.Interfeaces
 {
     public interface IDifficultyCalculator
     {
-        void ApplyMods(Beatmap map, EMods mods);
+        Beatmap ApplyMods(Beatmap map, EMods mods);
     }
 }

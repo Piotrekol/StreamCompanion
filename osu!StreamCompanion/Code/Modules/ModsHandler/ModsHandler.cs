@@ -42,12 +42,14 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             return _modParser.GetUiSettings();
         }
 
-        public void ApplyMods(Beatmap map, EMods mods)
+        public Beatmap ApplyMods(Beatmap map, EMods mods)
         {
             var c = _difficultyCalculator.ApplyMods(map, mods);
-            map.ApproachRate = c["AR"];
-            map.CircleSize = c["CS"];
-            map.OverallDifficulty = c["OD"];
+            var retMap = (Beatmap)map.Clone();
+            retMap.ApproachRate = c["AR"];
+            retMap.CircleSize = c["CS"];
+            retMap.OverallDifficulty = c["OD"];
+            return retMap;
         }
     }
 }

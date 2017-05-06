@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace osu_StreamCompanion.Code.Core.DataTypes
 {
-    public class Beatmap 
+    public class Beatmap :ICloneable
     {
         public bool Collection { get; set; }
         private string _titleUnicode;
@@ -225,6 +225,9 @@ namespace osu_StreamCompanion.Code.Core.DataTypes
             MaxBpm = 0.0f;
         }
 
-
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

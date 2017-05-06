@@ -121,6 +121,7 @@
     <Compile Include="Code\Core\Savers\FileSaver.cs" />
     <Compile Include="Code\Core\Savers\MainSaver.cs" />
     <Compile Include="Code\Helpers\Exceptions.cs" />
+    <Compile Include="Code\Interfeaces\IDifficultyCalculator.cs" />
     <Compile Include="Code\Misc\SettingNames.cs" />
     <Compile Include="Code\Core\SqliteConnector.cs" />
     <Compile Include="Code\Helpers\BeatmapHelpers.cs" />
