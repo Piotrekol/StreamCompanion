@@ -56,7 +56,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
                     var songDirectory = splitedLines[1].Trim(' ');
                     _customBeatmapDirectoryLocation = songDirectory;
                 }
-                if (cfgLine.StartsWith("LastVersion") && cfgLine.Contains(LAST_FALLBACK_VERSION))
+                if (cfgLine.StartsWith("LastVersion =") && cfgLine.Contains(LAST_FALLBACK_VERSION))
                     _isFallback = true;
             }
         }
