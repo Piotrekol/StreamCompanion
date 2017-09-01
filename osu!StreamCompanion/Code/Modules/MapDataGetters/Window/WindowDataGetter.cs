@@ -11,7 +11,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
         public void Start(ILogger logger)
         {
             Started = true;
-            //throw new System.NotImplementedException();
         }
 
         public void SetNewMap(MapSearchResult map)
@@ -19,7 +18,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
             if (map.FoundBeatmaps)
             {
                 var nowPlaying = string.Format("{0} - {1}", map.BeatmapsFound[0].ArtistRoman,map.BeatmapsFound[0].TitleRoman);
-                if (map.Action == OsuStatus.Playing) nowPlaying += string.Format(" [{0}] {1}", map.BeatmapsFound[0].DiffName,map.Mods?.Item2 ?? "");
+                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
+                    nowPlaying += string.Format(" [{0}] {1}", map.BeatmapsFound[0].DiffName,map.Mods?.Item2 ?? "");
                 _mainwindowHandle.NowPlaying = nowPlaying;
             }
             else
