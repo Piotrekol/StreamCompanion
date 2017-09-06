@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.SCGUI
 {

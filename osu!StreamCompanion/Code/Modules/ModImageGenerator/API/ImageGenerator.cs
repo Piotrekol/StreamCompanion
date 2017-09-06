@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using Point = System.Drawing.Point;
 

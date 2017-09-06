@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Windows;
 
 namespace osu_StreamCompanion.Code.Modules.Updater

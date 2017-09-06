@@ -1,5 +1,5 @@
 ﻿using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Windows;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window

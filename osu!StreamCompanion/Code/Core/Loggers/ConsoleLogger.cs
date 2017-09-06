@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Core.Loggers

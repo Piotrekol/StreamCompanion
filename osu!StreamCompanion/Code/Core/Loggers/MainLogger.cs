@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {

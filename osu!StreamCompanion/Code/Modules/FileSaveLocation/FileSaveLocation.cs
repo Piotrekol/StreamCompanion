@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
 
 namespace osu_StreamCompanion.Code.Modules.FileSaveLocation

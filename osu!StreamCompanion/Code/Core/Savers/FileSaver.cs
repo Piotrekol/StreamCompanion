@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Savers
 {

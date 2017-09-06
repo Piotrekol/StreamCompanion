@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Interfeaces
+namespace osu_StreamCompanion.Code.Interfaces
 {
     public interface ISettingsProvider : ISettings
     {

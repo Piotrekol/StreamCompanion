@@ -5,8 +5,9 @@ using System.Data.SQLite;
 using System.IO;
 using System.Text;
 using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfeaces;
 using osu_StreamCompanion.Code.Helpers;
+using osu_StreamCompanion.Code.Interfaces;
+
 namespace osu_StreamCompanion.Code.Core
 {
     public class SqliteConnector : IDisposable, IMapDataStorer

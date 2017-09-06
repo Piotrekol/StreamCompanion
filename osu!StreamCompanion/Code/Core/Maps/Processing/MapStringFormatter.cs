@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfeaces;
+using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
