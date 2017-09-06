@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
+using System.IO;
 using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core.DataTypes;
 
@@ -61,7 +62,63 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.DisableSb = reader.GetBoolean(i); i++;
             beatmap.BgDim = reader.GetInt16(i); i++;
             beatmap.Somestuff = reader.GetInt16(i); i++;
-            beatmap.VideoDir = reader.GetString(i);
+            beatmap.VideoDir = reader.GetString(i);i++;
+            beatmap.DeSerializeStars((byte[])reader.GetValue(i));
+        }
+
+        private static void WriteAll(this MemoryStream ms, int value)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+            ms.Write(bytes, 0, bytes.Length);
+        }
+        private static void WriteAll(this MemoryStream ms, double value)
+        {
+            byte[] bytes = BitConverter.GetBytes(value);
+            ms.Write(bytes, 0, bytes.Length);
+        }
+        private static BinaryReader _binaryReader;
+
+        public static byte[] SerializeStars(this Beatmap bm)
+        {
+            using (MemoryStream mStream = new MemoryStream())
+            {
+                mStream.WriteAll(bm.ModPpStars.Count);
+                foreach (var stars in bm.ModPpStars)
+                {
+                    var vals = bm.ModPpStars[stars.Key];
+                    mStream.WriteAll((byte)stars.Key);
+                    mStream.WriteAll(vals.Count);
+
+                    foreach (var val in vals)
+                    {
+                        mStream.WriteAll(val.Key);
+                        mStream.WriteAll(val.Value);
+                    }
+                }
+                return mStream.ToArray();
+            }
+        }
+        public static void DeSerializeStars(this Beatmap bm,byte[] starsData)
+        {
+            using (MemoryStream mStream = new MemoryStream())
+            {
+                mStream.Write(starsData, 0, starsData.Length);
+                mStream.Position = 0;
+                _binaryReader = new BinaryReader(mStream);
+                int modesCount = _binaryReader.ReadInt32();
+                for (int i = 0; i < modesCount; i++)
+                {
+                    var key = (PlayMode)_binaryReader.ReadInt32();
+                    if(!bm.ModPpStars.ContainsKey(key))
+                        bm.ModPpStars.Add(key,new Dictionary<int, double>());
+                    var dict = bm.ModPpStars[key];
+                    var starsCount = _binaryReader.ReadInt32();
+                    for (int j = 0; j < starsCount; j++)
+                    {
+                        dict.Add(_binaryReader.ReadInt32(),_binaryReader.ReadDouble());
+                    }
+                }
+            }
         }
 
         public static Dictionary<string, string> GetDict(this Beatmap bm, string mods)

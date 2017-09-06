@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteConnector : IDisposable, IMapDataStorer
     {
         readonly SQLiteConnection _mDbConnection;
-        private string DbFilename = "StreamCompanionCache.db";
+        private string DbFilename = "StreamCompanionCacheV2.db";
         private SQLiteCommand _insertSql;
         private SQLiteTransaction _transation;
         public bool MassInsertIsActive => _transation != null;
@@ -59,9 +59,9 @@ namespace osu_StreamCompanion.Code.Core
 
         private void CreateTables()
         {
-            _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "VideoDir" });
-            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "VARCHAR" });
-            _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL UNIQUE", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL" });
+            _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "VideoDir", "StarsOsu" });
+            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "VARCHAR", "BLOB" });
+            _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL UNIQUE", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL","NOT NULL" });
             string sql = "CREATE  TABLE IF NOT EXISTS withID " + _tableStruct.GetTableDef();
             NonQuery(sql);
             sql = "CREATE  TABLE IF NOT EXISTS withoutID " + _tableStruct.GetTableDef();
@@ -107,6 +107,10 @@ namespace osu_StreamCompanion.Code.Core
                 if (File.Exists("Test.db"))
                 {
                     File.Delete("Test.db");
+                }
+                if (File.Exists("StreamCompanionCache.db"))
+                {
+                    File.Delete("StreamCompanionCache.db");
                 }
                 if (!File.Exists(filename))
                 {
@@ -221,7 +225,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@BgDim", DbType.Int16).Value = beatmap.BgDim;
             _insertSql.Parameters.Add("@Somestuff", DbType.Int16).Value = beatmap.Somestuff;
             _insertSql.Parameters.Add("@VideoDir", DbType.String).Value = beatmap.VideoDir ?? " ";
-
+            _insertSql.Parameters.Add("@StarsOsu", DbType.Binary).Value = beatmap.SerializeStars();
         }
         public Beatmap GetBeatmap(int mapId)
         {

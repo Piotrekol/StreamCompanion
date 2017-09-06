@@ -19,7 +19,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
             {
                 var nowPlaying = string.Format("{0} - {1}", map.BeatmapsFound[0].ArtistRoman,map.BeatmapsFound[0].TitleRoman);
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
-                    nowPlaying += string.Format(" [{0}] {1}", map.BeatmapsFound[0].DiffName,map.Mods?.Item2 ?? "");
+                {
+                    nowPlaying += string.Format(" [{0}] {1}", map.BeatmapsFound[0].DiffName, map.Mods?.Item2 ?? "");
+                    nowPlaying += string.Format("{0:##.###}", map.BeatmapsFound[0].StarsNomod);
+                }
                 _mainwindowHandle.NowPlaying = nowPlaying;
             }
             else
