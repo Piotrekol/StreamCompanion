@@ -76,6 +76,9 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CollectionManager">
+      <HintPath>..\dlls\CollectionManager.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -112,6 +115,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Core\DataTypes\Beatmap.cs" />
     <Compile Include="Code\Core\DataTypes\LogLevel.cs" />
     <Compile Include="Code\Core\DataTypes\MapSearchResult.cs" />
     <Compile Include="Code\Core\Initializer.cs" />
@@ -137,7 +141,6 @@
     <Compile Include="Code\Interfeaces\ISaver.cs" />
     <Compile Include="Code\Interfeaces\ISaveRequester.cs" />
     <Compile Include="Code\Core\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Code\Core\DataTypes\Beatmap.cs" />
     <Compile Include="Code\Core\DataTypes\Enums.cs" />
     <Compile Include="Code\Helpers\AsyncBindingHelper.cs" />
     <Compile Include="Code\Helpers\ListExtensions.cs" />
@@ -224,7 +227,6 @@
     </Compile>
     <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
     <Compile Include="Code\Modules\SCGUI\MainWindow.cs" />
-    <Compile Include="Code\Modules\MapDataFinders\OsuDatabaseLoader.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
     <Compile Include="Code\Core\Maps\MSN.cs" />
     <Compile Include="Code\Interfeaces\MapDataGetter.cs" />

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
+using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core.DataTypes;
+
 using osu_StreamCompanion.Code.Core.Maps;
 
 namespace osu_StreamCompanion.Code.Helpers
@@ -45,7 +47,7 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.MapRating = reader.GetInt32(i); i++;
             beatmap.Offset = (short)reader.GetInt32(i); i++;
             beatmap.StackLeniency = (float)reader.GetDouble(i); i++;
-            beatmap.Mode = reader.GetByte(i); i++;
+            beatmap.PlayMode = (PlayMode)reader.GetByte(i); i++;
             beatmap.Source = reader.GetString(i); i++;
             beatmap.AudioOffset = (short)reader.GetInt32(i); i++;
             beatmap.LetterBox = reader.GetString(i); i++;
@@ -104,11 +106,11 @@ namespace osu_StreamCompanion.Code.Helpers
                 {"!totaltime!", bm.TotalTime.ToString()},
                 {"!previewtime!", bm.PreviewTime.ToString()},
                 {"!mapid!", bm.MapId.ToString()},
-                {"!dl!", bm.DlLink},
+                {"!dl!", bm.MapLink},
                 {"!mapsetid!", bm.MapSetId.ToString()},
                 {"!threadid!", bm.ThreadId.ToString()},
                 {"!SL!", bm.StackLeniency.ToString(CultureInfo.InvariantCulture)},
-                {"!mode!", bm.Mode.ToString()},
+                {"!mode!", bm.PlayMode.GetHashCode().ToString()},
                 {"!source!", bm.Source},
                 {"!dir!", bm.Dir},
                 {"!lb!", Environment.NewLine}

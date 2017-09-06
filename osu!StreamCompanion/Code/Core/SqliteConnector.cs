@@ -205,7 +205,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@MapRating", DbType.Int32).Value = beatmap.MapRating;
             _insertSql.Parameters.Add("@Offset", DbType.Int32).Value = beatmap.Offset;
             _insertSql.Parameters.Add("@StackLeniency", DbType.Double).Value = beatmap.StackLeniency;
-            _insertSql.Parameters.Add("@Mode", DbType.Int16).Value = beatmap.Mode;
+            _insertSql.Parameters.Add("@Mode", DbType.Int16).Value = (byte)beatmap.PlayMode;
             _insertSql.Parameters.Add("@Source", DbType.String).Value = beatmap.Source;
             _insertSql.Parameters.Add("@AudioOffset", DbType.Int32).Value = beatmap.AudioOffset;
             _insertSql.Parameters.Add("@LetterBox", DbType.String).Value = beatmap.LetterBox;

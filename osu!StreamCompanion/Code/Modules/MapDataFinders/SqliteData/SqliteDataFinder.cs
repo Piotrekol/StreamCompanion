@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CollectionManager.Modules.FileIO.OsuDb;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfeaces;
@@ -27,11 +28,26 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
         public string SearcherName { get; } = "rawString";
 
+        class BeatmapLoaderLogger : CollectionManager.Interfaces.ILogger
+        {
+            private readonly MainWindowUpdater _handle;
+
+            public BeatmapLoaderLogger(MainWindowUpdater handle)
+            {
+                _handle = handle;
+            }
+            public void Log(string logMessage, params string[] vals)
+            {
+                _handle.BeatmapsLoaded = string.Format(logMessage,vals);
+            }
+        }
         public void Start(ILogger logger)
         {
             Started = true;
             _logger = logger;
-            _osuDatabaseLoader = new OsuDatabaseLoader(_logger, _modParser, _sqliteControler, _mainWindowHandle);
+            _osuDatabaseLoader = new LOsuDatabaseLoader(new BeatmapLoaderLogger(_mainWindowHandle), _sqliteControler, new Beatmap());
+
+            //_osuDatabaseLoader = new OsuDatabaseLoader(_logger, _modParser, _sqliteControler, _mainWindowHandle);
             new System.Threading.Thread(() =>
             {
                 string osudb = Path.Combine(_settingsHandle.Get<string>(_names.MainOsuDirectory), "osu!.db");
@@ -45,6 +61,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
                     File.Copy(osudb, newOsuFile);
                     _osuDatabaseLoader.LoadDatabase(newOsuFile);
+
                     File.Delete(newOsuFile);
                 }
                 else

@@ -7,7 +7,7 @@ using osu_StreamCompanion.Code.Interfeaces;
 
 namespace osu_StreamCompanion.Code.Core
 {
-    public class SqliteControler : IDisposable, IMapDataStorer
+    public class SqliteControler : IDisposable, IMapDataStorer, CollectionManager.Interfaces.IMapDataManager
     {
         private readonly SqliteConnector _sqlConnector;
         private HashSet<string> _md5List;
@@ -130,6 +130,22 @@ namespace osu_StreamCompanion.Code.Core
             _sqlConnector.Dispose();
         }
 
+        public void StoreBeatmap(CollectionManager.DataTypes.Beatmap beatmap)
+        {
+            StoreBeatmap((Beatmap)beatmap);
+        }
 
+        public CollectionManager.DataTypes.Beatmap GetByHash(string hash)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CollectionManager.DataTypes.Beatmap GetByMapId(int mapId)
+        {
+            lock (_sqlConnector)
+            {
+                return _sqlConnector.GetBeatmap(mapId);
+            }
+        }
     }
 }

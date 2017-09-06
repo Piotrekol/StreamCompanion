@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
 
@@ -170,7 +171,7 @@ namespace osu_StreamCompanion.Code.Core.Maps
                         map.StackLeniency = Convert.ToSingle(val.Value, CultureInfo.InvariantCulture);
                         break;
                     case "Mode":
-                        map.Mode = Convert.ToByte(val.Value, CultureInfo.InvariantCulture);
+                        map.PlayMode = (PlayMode)Convert.ToByte(val.Value, CultureInfo.InvariantCulture);
                         break;
                     case "LetterboxInBreaks":
                         //map. = value;
