@@ -1,4 +1,7 @@
-﻿using osu_StreamCompanion.Code.Core.DataTypes;
+﻿using System;
+using CollectionManager.DataTypes;
+using CollectionManager.Enums;
+using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Windows;
 
@@ -17,11 +20,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
         {
             if (map.FoundBeatmaps)
             {
-                var nowPlaying = string.Format("{0} - {1}", map.BeatmapsFound[0].ArtistRoman,map.BeatmapsFound[0].TitleRoman);
+                var foundMap = map.BeatmapsFound[0];
+                var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
                 {
-                    nowPlaying += string.Format(" [{0}] {1}", map.BeatmapsFound[0].DiffName, map.Mods?.Item2 ?? "");
-                    nowPlaying += string.Format("{0:##.###}", map.BeatmapsFound[0].StarsNomod);
+                    nowPlaying += string.Format(" [{0}] {1}", foundMap.DiffName, map.Mods?.Item2 ?? "");
+                    nowPlaying += string.Format(Environment.NewLine+"NoMod:{0:##.###}", foundMap.StarsNomod);
+                    var mods = map.Mods?.Item1 ?? Mods.Omod;
+                    nowPlaying += string.Format(" Modded: {0:##.###}", foundMap.Stars(PlayMode.Osu, mods));
                 }
                 _mainwindowHandle.NowPlaying = nowPlaying;
             }
