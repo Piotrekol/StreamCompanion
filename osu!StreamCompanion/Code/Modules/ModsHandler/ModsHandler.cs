@@ -66,7 +66,9 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
                 {
                     { "!mAR!", c["AR"].ToString(System.Globalization.CultureInfo.InvariantCulture)},
                     { "!mCS!", c["CS"].ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    { "!mOD!", c["OD"].ToString(System.Globalization.CultureInfo.InvariantCulture)}
+                    { "!mOD!", c["OD"].ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    { "!mStars!", map.BeatmapsFound[0].Stars(PlayMode.Osu,mods)
+                    .ToString(System.Globalization.CultureInfo.InvariantCulture)}
                 };
                 return dict;
             }

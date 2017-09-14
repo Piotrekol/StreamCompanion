@@ -159,6 +159,7 @@ namespace osu_StreamCompanion.Code.Helpers
                 {"!od!", bm.OverallDifficulty.ToString(CultureInfo.InvariantCulture)},
                 {"!sv!", bm.SliderVelocity.ToString(CultureInfo.InvariantCulture)},
 
+                {"!starsNomod!", bm.StarsNomod.ToString("##.###",CultureInfo.InvariantCulture)},
                 {"!drainingtime!", bm.DrainingTime.ToString()},
                 {"!totaltime!", bm.TotalTime.ToString()},
                 {"!previewtime!", bm.PreviewTime.ToString()},
