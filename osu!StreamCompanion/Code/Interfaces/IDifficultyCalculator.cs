@@ -1,10 +1,10 @@
-﻿using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Modules.ModsHandler;
+﻿using CollectionManager.DataTypes;
+using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Interfaces
 {
     public interface IDifficultyCalculator
     {
-        Beatmap ApplyMods(Beatmap map, EMods mods);
+        Beatmap ApplyMods(Beatmap map, Mods mods);
     }
 }

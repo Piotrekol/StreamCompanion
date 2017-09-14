@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using CollectionManager.DataTypes;
+using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfaces;
+using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.ModsHandler
 {
@@ -16,10 +19,10 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             Started = true;
         }
 
-        public EMods GetMods(int modsEnum)
+        public Mods GetMods(int modsEnum)
         {
             _modParser.Start(null);
-            return (EMods)modsEnum;
+            return (Mods)modsEnum;
         }
         public string GetModsFromEnum(int modsEnum)
         {
@@ -43,7 +46,7 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             return _modParser.GetUiSettings();
         }
 
-        public Beatmap ApplyMods(Beatmap map, EMods mods)
+        public Beatmap ApplyMods(Beatmap map, Mods mods)
         {
             var c = _difficultyCalculator.ApplyMods(map, mods);
             var retMap = (Beatmap)map.Clone();
@@ -57,7 +60,8 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
         {
             if (map.FoundBeatmaps)
             {
-                var c = _difficultyCalculator.ApplyMods(map.BeatmapsFound[0], map.Mods?.Item1 ?? EMods.Omod);
+                var mods = map.Mods?.Item1 ?? Mods.Omod;
+                var c = _difficultyCalculator.ApplyMods(map.BeatmapsFound[0], mods);
                 var dict = new Dictionary<string, string>()
                 {
                     { "!mAR!", c["AR"].ToString(System.Globalization.CultureInfo.InvariantCulture)},

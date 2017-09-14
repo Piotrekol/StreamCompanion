@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Modules.ModsHandler;
 
 namespace osu_StreamCompanion.Code.Core.DataTypes
@@ -11,7 +12,7 @@ namespace osu_StreamCompanion.Code.Core.DataTypes
         public Dictionary<string,string> FormatedStrings = new Dictionary<string, string>(); 
         public bool FoundBeatmaps => _beatmapsFound.Count > 0;
         public string MapSearchString;
-        public Tuple<EMods,string> Mods = null;
+        public Tuple<Mods,string> Mods = null;
         public OsuStatus Action=OsuStatus.Null;
         
         public MapSearchResult(List<Beatmap> beatmaps)
