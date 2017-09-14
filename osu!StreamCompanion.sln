@@ -9,6 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{E96C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionControler", "VersionControler\VersionControler.csproj", "{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dlls", "dlls", "{19596E3E-39B4-44AE-B545-57B77388D1C8}"
+	ProjectSection(SolutionItems) = preProject
+		dlls\CollectionManager.dll = dlls\CollectionManager.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
