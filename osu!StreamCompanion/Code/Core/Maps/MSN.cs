@@ -68,10 +68,20 @@ namespace osu_StreamCompanion.Code.Core.Maps
                     OnMSNStringChanged();
                 }
             }
+
+            IntPtr ptr = FindWindowEx(IntPtr.Zero, m_hwnd, lpClassName, null);
+
+            if (ptr.ToInt32() > 0)
+                SendMessage(ptr, msg, IntPtr.Zero, lParam);
+
             return DefWindowProcW(hWnd, msg, wParam, lParam);
 
         }
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SendMessage(IntPtr hwnd, uint wMsg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll", EntryPoint = "FindWindowExA")]
+        private static extern IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2);
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr DefWindowProcW(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32.dll", SetLastError = true)]
