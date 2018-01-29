@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
@@ -64,10 +65,10 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
                 var c = _difficultyCalculator.ApplyMods(map.BeatmapsFound[0], mods);
                 var dict = new Dictionary<string, string>()
                 {
-                    { "!mAR!", c["AR"].ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    { "!mCS!", c["CS"].ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    { "!mOD!", c["OD"].ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    { "!mStars!", map.BeatmapsFound[0].Stars(PlayMode.Osu,mods)
+                    { "!mAR!", Math.Round(c["AR"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    { "!mCS!", Math.Round(c["CS"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    { "!mOD!", Math.Round(c["OD"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    { "!mStars!", Math.Round(map.BeatmapsFound[0].Stars(PlayMode.Osu,mods) ,2)
                     .ToString(System.Globalization.CultureInfo.InvariantCulture)}
                 };
                 return dict;
