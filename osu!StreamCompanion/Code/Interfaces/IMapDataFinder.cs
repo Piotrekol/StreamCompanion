@@ -5,7 +5,7 @@ namespace osu_StreamCompanion.Code.Interfaces
 {
     public interface IMapDataFinder
     {
-        MapSearchResult FindBeatmap(Dictionary<string,string> mapDictionary);
+        MapSearchResult FindBeatmap(MapSearchArgs searchArgs);
         OsuStatus SearchModes { get; }
         string SearcherName { get; }
     }

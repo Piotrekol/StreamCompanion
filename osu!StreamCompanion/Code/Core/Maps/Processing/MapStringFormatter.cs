@@ -64,7 +64,17 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 {
                     Thread.Sleep(200);
                 }
-                _mainMapDataGetter.FindMapData(osuStatus, status);
+                var searchArgs = new MapSearchArgs()
+                {
+                    Artist = osuStatus["artist"]??"",
+                    Title = osuStatus["title"]??"",
+                    Diff = osuStatus["diff"]??"",
+                    Raw = osuStatus["raw"]??""
+                };
+
+
+                var searchResult = _mainMapDataGetter.FindMapData(searchArgs, status);
+                _mainMapDataGetter.ProcessMapResult(searchResult);
 
             }
         }

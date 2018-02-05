@@ -13,7 +13,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private List<IMapDataReplacements> _mapDataReplacementsGetters;
 
         private readonly MainSaver _saver;
-        private MapSearchResult _mapSearchResult;
         private ILogger _logger;
 
         public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataGetter> mapDataGetters, List<IMapDataParser> mapDataParsers, List<IMapDataReplacements> mapDataReplacementsGetters, MainSaver saver,ILogger logger)
@@ -26,29 +25,33 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _logger = logger;
         }
 
-        public void FindMapData(Dictionary<string,string> mapDict, OsuStatus status)
+        public MapSearchResult FindMapData(MapSearchArgs searchArgs, OsuStatus status)
         {
+            MapSearchResult mapSearchResult=null;
             for (int i = 0; i < _mapDataFinders.Count; i++)
             {
                 if ((_mapDataFinders[i].SearchModes & status) == 0)
                     continue;
 
-                _mapSearchResult = _mapDataFinders[i].FindBeatmap(mapDict);
-                if (_mapSearchResult.FoundBeatmaps)
+                mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs);
+                if (mapSearchResult.FoundBeatmaps)
                 {
-                    _logger.Log(string.Format(">Found data using \"{0}\" ID: {1}", _mapDataFinders[i].SearcherName,_mapSearchResult.BeatmapsFound[0]?.MapId),LogLevel.Advanced);
+                    _logger.Log(string.Format(">Found data using \"{0}\" ID: {1}", _mapDataFinders[i].SearcherName,mapSearchResult.BeatmapsFound[0]?.MapId),LogLevel.Advanced);
                     break;
                 }
             }
-            if(_mapSearchResult==null)
-                _mapSearchResult = new MapSearchResult();
-            _mapSearchResult.Action = status;
+            if(mapSearchResult==null)
+                mapSearchResult = new MapSearchResult();
+            mapSearchResult.Action = status;
+            return mapSearchResult;
+        }
 
-
-            var mapReplacements = GetMapReplacements(_mapSearchResult);
-            _mapSearchResult.FormatedStrings = GetMapFormatedStrings(mapReplacements,_mapSearchResult.Action);
-            SaveMapStrings(_mapSearchResult.FormatedStrings);
-            SetNewMap(_mapSearchResult);
+        public void ProcessMapResult(MapSearchResult mapSearchResult)
+        {
+            var mapReplacements = GetMapReplacements(mapSearchResult);
+            mapSearchResult.FormatedStrings = GetMapFormatedStrings(mapReplacements, mapSearchResult.Action);
+            SaveMapStrings(mapSearchResult.FormatedStrings);
+            SetNewMap(mapSearchResult);
         }
 
         private Dictionary<string,string> GetMapReplacements(MapSearchResult mapSearchResult)

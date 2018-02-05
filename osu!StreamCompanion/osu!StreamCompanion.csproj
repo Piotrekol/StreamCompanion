@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Code\Core\DataTypes\Beatmap.cs" />
     <Compile Include="Code\Core\DataTypes\LogLevel.cs" />
+    <Compile Include="Code\Core\DataTypes\MapSearchArgs.cs" />
     <Compile Include="Code\Core\DataTypes\MapSearchResult.cs" />
     <Compile Include="Code\Core\Initializer.cs" />
     <Compile Include="Code\Core\Loggers\FileLogger.cs" />

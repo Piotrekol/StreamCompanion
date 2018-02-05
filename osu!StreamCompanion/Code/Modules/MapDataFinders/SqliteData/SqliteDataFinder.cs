@@ -38,7 +38,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             }
             public void Log(string logMessage, params string[] vals)
             {
-                _handle.BeatmapsLoaded = string.Format(logMessage,vals);
+                _handle.BeatmapsLoaded = string.Format(logMessage, vals);
             }
         }
         public void Start(ILogger logger)
@@ -72,15 +72,25 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         }
 
 
-        public MapSearchResult FindBeatmap(Dictionary<string, string> mapDictionary)
+        public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
             var result = new MapSearchResult();
-            var b = _sqliteControler.GetBeatmap(mapDictionary["artist"], mapDictionary["title"], mapDictionary["diff"], mapDictionary["raw"]);
-            if (b?.MapId > -1 && !(string.IsNullOrWhiteSpace(b.ArtistRoman) || string.IsNullOrWhiteSpace(b.TitleRoman)))
+            Beatmap beatmap = null;
+            if (searchArgs.MapId > 0)
+                beatmap = _sqliteControler.GetBeatmap(searchArgs.MapId);
+            if (beatmap == null || (beatmap.MapId <= 0))
             {
-                result.BeatmapsFound.Add(b);
+                if (!(string.IsNullOrEmpty(searchArgs.Artist) && string.IsNullOrEmpty(searchArgs.Title)) || !string.IsNullOrEmpty(searchArgs.Raw))
+                {
+                    beatmap = _sqliteControler.GetBeatmap(searchArgs.Artist, searchArgs.Title, searchArgs.Diff, searchArgs.Raw);
+                }
             }
-            result.MapSearchString = mapDictionary["raw"];
+
+            if (beatmap?.MapId > -1 && !(string.IsNullOrWhiteSpace(beatmap.ArtistRoman) || string.IsNullOrWhiteSpace(beatmap.TitleRoman)))
+            {
+                result.BeatmapsFound.Add(beatmap);
+            }
+            result.MapSearchString = searchArgs.Raw;
             return result;
         }
 
