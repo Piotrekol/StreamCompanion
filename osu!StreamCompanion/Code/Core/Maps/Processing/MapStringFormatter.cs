@@ -69,11 +69,13 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     Artist = osuStatus["artist"]??"",
                     Title = osuStatus["title"]??"",
                     Diff = osuStatus["diff"]??"",
-                    Raw = osuStatus["raw"]??""
+                    Raw = osuStatus["raw"]??"",
+                    Status = status,
+
                 };
 
 
-                var searchResult = _mainMapDataGetter.FindMapData(searchArgs, status);
+                var searchResult = _mainMapDataGetter.FindMapData(searchArgs);
                 _mainMapDataGetter.ProcessMapResult(searchResult);
 
             }

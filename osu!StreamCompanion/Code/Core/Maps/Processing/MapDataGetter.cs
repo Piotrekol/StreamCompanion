@@ -25,12 +25,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _logger = logger;
         }
 
-        public MapSearchResult FindMapData(MapSearchArgs searchArgs, OsuStatus status)
+        public MapSearchResult FindMapData(MapSearchArgs searchArgs)
         {
             MapSearchResult mapSearchResult=null;
             for (int i = 0; i < _mapDataFinders.Count; i++)
             {
-                if ((_mapDataFinders[i].SearchModes & status) == 0)
+                if ((_mapDataFinders[i].SearchModes & searchArgs.Status) == 0)
                     continue;
 
                 mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs);
@@ -42,7 +42,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }
             if(mapSearchResult==null)
                 mapSearchResult = new MapSearchResult();
-            mapSearchResult.Action = status;
+            mapSearchResult.Action = searchArgs.Status;
             return mapSearchResult;
         }
 

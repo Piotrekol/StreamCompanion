@@ -7,7 +7,7 @@
         public string Diff { get; set; } = "";
         public string Raw { get; set; } = "";
         public int MapId { get; set; } = 0;
-
+        public OsuStatus Status { get; set; } = OsuStatus.Null;
 
     }
 }
