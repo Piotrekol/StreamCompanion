@@ -297,12 +297,16 @@ namespace osu_StreamCompanion.Code.Core
             pars.Add("@title", title);
             pars.Add("@diff", diff);
             pars.Add("@Raw", raw);
-            var beatmap = GetBeatmapUsingReplacements("withID", false, pars);
-            if (beatmap != null) return beatmap;
-            beatmap = GetBeatmapUsingReplacements("withoutID", false, pars);
-            if (beatmap != null) return beatmap;
-            beatmap = GetBeatmapUsingReplacements("Temp", false, pars);
-            if (beatmap != null) return beatmap;
+            Beatmap beatmap;
+            if (!(string.IsNullOrEmpty(artist) || string.IsNullOrEmpty(title)))
+            {
+                beatmap = GetBeatmapUsingReplacements("withID", false, pars);
+                if (beatmap != null) return beatmap;
+                beatmap = GetBeatmapUsingReplacements("withoutID", false, pars);
+                if (beatmap != null) return beatmap;
+                beatmap = GetBeatmapUsingReplacements("Temp", false, pars);
+                if (beatmap != null) return beatmap;
+            }
 
             beatmap = GetBeatmapUsingReplacements("withID", true, pars);
             if (beatmap != null) return beatmap;
