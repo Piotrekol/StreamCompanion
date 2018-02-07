@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfaces;
@@ -6,16 +8,21 @@ using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
-    public class MapStringFormatter : IModule,IMsnGetter,ISettings
+    public class MapStringFormatter : IModule, IMsnGetter, ISettings,IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ILogger _logger;
         private readonly MainMapDataGetter _mainMapDataGetter;
         private Settings _settings;
         private string _lastMsnString = "";
+        private Thread ConsumerThread;
+        private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
+
         public MapStringFormatter(MainMapDataGetter mainMapDataGetter)
         {
             _mainMapDataGetter = mainMapDataGetter;
+            ConsumerThread = new Thread(ConsumerTask);
+            ConsumerThread.Start();
         }
         public bool Started { get; set; }
         public void Start(ILogger logger)
@@ -66,21 +73,44 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 }
                 var searchArgs = new MapSearchArgs()
                 {
-                    Artist = osuStatus["artist"]??"",
-                    Title = osuStatus["title"]??"",
-                    Diff = osuStatus["diff"]??"",
-                    Raw = osuStatus["raw"]??"",
+                    Artist = osuStatus["artist"] ?? "",
+                    Title = osuStatus["title"] ?? "",
+                    Diff = osuStatus["diff"] ?? "",
+                    Raw = osuStatus["raw"] ?? "",
                     Status = status,
 
                 };
 
-
-                var searchResult = _mainMapDataGetter.FindMapData(searchArgs);
-                _mainMapDataGetter.ProcessMapResult(searchResult);
+                //Throw away any unprocessed tasks- I'm only intrested in processing current one.
+                TasksMsn.Clear();
+                TasksMsn.Push(searchArgs);
 
             }
         }
-
+        public void ConsumerTask()
+        {
+            try
+            {
+                MapSearchArgs searchArgs;
+                MapSearchResult searchResult;
+                while (true)
+                {
+                    if (TasksMsn.TryPop(out searchArgs))
+                    {
+                        searchResult = _mainMapDataGetter.FindMapData(searchArgs);
+                        _mainMapDataGetter.ProcessMapResult(searchResult);
+                    }
+                    Thread.Sleep(5);
+                }
+            }
+            catch (ThreadAbortException ex)
+            {
+                //Console.WriteLine("Consumer thread aborted");
+            }
+            finally
+            {
+            }
+        }
         #region MSN double-send fix
         public class MapArgs
         {
@@ -120,5 +150,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         }
 
         #endregion //MSN FIX
+
+        public void Dispose()
+        {
+            ConsumerThread?.Abort();
+        }
     }
 }
