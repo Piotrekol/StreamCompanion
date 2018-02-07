@@ -53,7 +53,6 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<IMapDataGetter> _mapDataGetters = new List<IMapDataGetter>();
         private readonly List<IMapDataReplacements> _mapDataReplacementSetters = new List<IMapDataReplacements>();
         private Msn _msn;
-        private MapStringFormatter _mapStringFormatter;
 
 
 
@@ -122,9 +121,9 @@ namespace osu_StreamCompanion.Code.Core
             MsnGetters.Clear();
             #endregion
 
-            _mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters,_saver, _logger));
-            StartModule(_mapStringFormatter);
-
+            var mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters,_saver, _logger));
+            AddModule(mapStringFormatter);
+            
             _logger.Log("Starting...", LogLevel.Advanced);
             _logger.Log(">Main classes...", LogLevel.Advanced);
             _sqliteControler = new SqliteControler(new SqliteConnector());
@@ -184,7 +183,6 @@ namespace osu_StreamCompanion.Code.Core
                     ((IDisposable)_modules[i]).Dispose();
                 }
             }
-            _mapStringFormatter?.Dispose();
             Settings.Save();   
         }
         /// <summary>
