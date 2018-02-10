@@ -27,6 +27,7 @@ OutputBaseFilename=StreamCompanion Setup
 SetupIconFile=D:\Kod\osu-related\Tools\StreamCompanion\osu!StreamCompanion\Resources\compiled.ico
 Compression=lzma
 SolidCompression=yes
+AppMutex=Global\{{2c6fc9bd-4e26-42d3-acfa-0a4d846d7e9e}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -40,7 +41,10 @@ Source: "D:\Kod\osu-related\Tools\StreamCompanion\osu!StreamCompanion\bin\x86\Re
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
-Name: {app}; Permissions: users-full
+Name: {app}; Permissions: users-modify
+Name: "{app}\Files"; Permissions: users-modify
+Name: "{app}\Files\Images"; Permissions: users-modify
+Name: "{app}\Files\Logs"; Permissions: users-modify
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -53,3 +57,18 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 
 [UninstallDelete]
 Type: files; Name: "{app}\StreamCompanionCache.db"
+Type: files; Name: "{app}\StreamCompanionCacheV2.db"
+Type: filesandordirs; Name: "{app}\Files"
+Type: files; Name: "{app}\SQLite.Interop.dll"
+
+[Code]
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usUninstall then begin
+    if MsgBox('Do you want to delete configuration file?', mbConfirmation,
+        MB_YESNO) = IDYES 
+    then begin
+      DeleteFile(ExpandConstant('{app}')+'\settings.ini');
+    end;
+  end;
+end;
