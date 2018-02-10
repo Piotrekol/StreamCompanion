@@ -34,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             var keys = _settings.Get("keyList");
             var keysSaves = _settings.Get("keyNames");
             var keysCounts = _settings.Geti("keyCounts");
-            
+
             for (int i = 0; i < keys.Count; i++)
             {
                 if (keys[i] == string.Empty) continue;
@@ -104,28 +104,35 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
                        if (!filename.EndsWith(".txt"))
                            filename += ".txt";
 
-                       AddKey(args.VKCode, filename.Trim());
-                       this.dataGridView1.Rows.Add(args.Key, "0", filename.Trim());
+                       if (AddKey(args.VKCode, filename.Trim()))
+                           this.dataGridView1.Rows.Add(args.Key, "0", filename.Trim());
+                       else
+                       {
+                           MessageBox.Show("This filename has been already used!", "Error", MessageBoxButtons.OK,
+                               MessageBoxIcon.Exclamation);
+                       }
                    }
                }
            }));
         }
 
-        private void AddKey(int key, string filename)
+        private bool AddKey(int key, string filename)
         {
             var currentKeys = _settings.Get("keyList");
             var currentKeysSaves = _settings.Get("keyNames");
             var currentKeyCounts = _settings.Geti("keyCounts");
-
+            if (currentKeysSaves.Any(f => f.ToLower().Equals(filename.ToLower())))
+                return false;
             currentKeys.Add(key.ToString());
             currentKeysSaves.Add(filename);
             currentKeyCounts.Add(0);
 
-            _settings.Add("keyList",currentKeys,true);
-            _settings.Add("keyNames", currentKeysSaves,true);
-            _settings.Add("keyCounts", currentKeyCounts,true);
-            
+            _settings.Add("keyList", currentKeys, true);
+            _settings.Add("keyNames", currentKeysSaves, true);
+            _settings.Add("keyCounts", currentKeyCounts, true);
+
             OnKeysChanged();
+            return true;
         }
 
         private void RemoveKey(int keyIndex)
@@ -140,8 +147,8 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             keysCounts.RemoveAt(keyIndex);
 
             _settings.Add("keyList", keys, true);
-            _settings.Add("keyNames",keysSaves, true);
-            _settings.Add("keyCounts",keysCounts, true);
+            _settings.Add("keyNames", keysSaves, true);
+            _settings.Add("keyCounts", keysCounts, true);
         }
         private void OnKeysChanged()
         {
