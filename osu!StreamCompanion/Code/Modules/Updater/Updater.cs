@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Interfaces;
+using osu_StreamCompanion.Code.Misc.CollectionManagerExtensionsDll.Utils;
 using osu_StreamCompanion.Code.Windows;
 
 namespace osu_StreamCompanion.Code.Modules.Updater
@@ -58,7 +59,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             string contents = string.Empty;
             try
             {
-                using (var wc = new System.Net.WebClient())
+                using (var wc = new ImpatientWebClient())
                     contents = wc.DownloadString(UpdateUrl);
                 var splited = contents.Split(new[] { ',' }, 2);
                 _downloadLink = splited[1];
