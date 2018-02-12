@@ -13,7 +13,13 @@ StreamCompanion is written by Piotrekol
 https://github.com/Piotrekol
 https://osu.ppy.sh/u/Piotrekol
 https://twitch.tv/Piotrekol
-            ";
+Libraries used:
+CollectionManager by Piotrekol
+OppaiSharp by HoLLy-HaCKeR
+oppai-ng by Francesco149
+SQLite
+Newtonsoft.Json by JamesNK";
+            richTextBox1.ReadOnly = true;
         }
 
         private void richTextBox1_LinkClicked(object sender, LinkClickedEventArgs e)
