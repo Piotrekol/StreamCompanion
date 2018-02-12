@@ -1,0 +1,3 @@
+[submodule "submodules/OppaiSharp"]
+	path = submodules/OppaiSharp
+	url = https://github.com/HoLLy-HaCKeR/OppaiSharp
