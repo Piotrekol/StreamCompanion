@@ -4,9 +4,10 @@ using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 using CollectionManager.Enums;
+using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
-
 using osu_StreamCompanion.Code.Core.Maps;
+using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -211,7 +212,27 @@ namespace osu_StreamCompanion.Code.Helpers
             }
             return string.Empty;
         }
-        
+
+        public static string BeatmapDirectory(this Beatmap beatmap, string songsDirectory)
+        {
+            return Path.Combine(songsDirectory, beatmap.Dir);
+        }
+        public static string FullOsuFileLocation(this Beatmap beatmap, string songsDirectory)
+        {
+            return Path.Combine(beatmap.BeatmapDirectory(songsDirectory), beatmap.OsuFileName);
+        }
+        private static readonly SettingNames _names = SettingNames.Instance;
+
+        public static string GetFullSongsLocation(Settings settings)
+        {
+            var dir = settings.Get<string>(_names.SongsFolderLocation);
+            if (dir == _names.SongsFolderLocation.Default<string>())
+            {
+                dir = settings.Get<string>(_names.MainOsuDirectory);
+                dir = Path.Combine(dir, "Songs\\");
+            }
+            return dir;
+        }
     }
 
 }

@@ -20,6 +20,7 @@ using osu_StreamCompanion.Code.Modules.MapDataGetters.Window;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays;
+using osu_StreamCompanion.Code.Modules.MapDataReplacements.PP;
 using osu_StreamCompanion.Code.Modules.ModImageGenerator;
 using osu_StreamCompanion.Code.Modules.ModsHandler;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
@@ -149,6 +150,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new WindowDataGetter());
             AddModule(new PlaysReplacements());
             AddModule(new MapReplacement());
+            AddModule(new PpReplacements());
 #if !DEBUG
             AddModule(new ClickCounter());
 #endif
