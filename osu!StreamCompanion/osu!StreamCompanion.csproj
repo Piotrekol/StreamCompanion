@@ -434,7 +434,12 @@
     <None Include="Resources\logo_256x256.png" />
     <None Include="Resources\BG.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\submodules\OppaiSharp\OppaiSharp\OppaiSharp.csproj">
+      <Project>{ad29051a-0960-4e92-baa9-7ac50827f823}</Project>
+      <Name>OppaiSharp</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
