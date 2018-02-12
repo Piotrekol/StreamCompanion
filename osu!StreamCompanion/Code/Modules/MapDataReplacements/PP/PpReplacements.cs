@@ -32,10 +32,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
         {
             var ret = new Dictionary<string, string>
             {
-                {"!FcPP!", "-1"},
-                {"!99PP!", "-1"},
-                {"!98PP!", "-1"},
-                {"!95PP!", "-1"},
+                {"!SSPP!", ""},
+                {"!99.9PP!", ""},
+                {"!99PP!", ""},
+                {"!98PP!", ""},
+                {"!95PP!", ""},
+                {"!90PP!", ""},
             };
             if (!map.FoundBeatmaps) return ret;
 
@@ -55,7 +57,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
 
                     var beatmapCalc = diffCalculator.Calc(beatmap, Mods.NoMod);
 
-                    ret["!FcPP!"] = Math.Round((new PPv2(beatmapCalc.Aim, beatmapCalc.Speed, beatmap)).Total, 2).ToString(CultureInfo.InvariantCulture);
+                    ret["!SSPP!"] = Math.Round((new PPv2(beatmapCalc.Aim, beatmapCalc.Speed, beatmap)).Total, 2).ToString(CultureInfo.InvariantCulture);
                     ret["!99.9PP!"] = GetPp(beatmap, 99.9d).ToString(CultureInfo.InvariantCulture);
                     ret["!99PP!"] = GetPp(beatmap, 99d).ToString(CultureInfo.InvariantCulture);
                     ret["!98PP!"] = GetPp(beatmap, 98d).ToString(CultureInfo.InvariantCulture);
