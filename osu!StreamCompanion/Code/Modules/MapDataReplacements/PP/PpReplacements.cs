@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
@@ -40,8 +41,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
                 {"!90PP!", ""},
             };
             if (!map.FoundBeatmaps) return ret;
-
+            if (map.BeatmapsFound[0].PlayMode != PlayMode.Osu) return ret;
             var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(BeatmapHelpers.GetFullSongsLocation(_settings));
+            
             if (!File.Exists(mapLocation)) return ret;
             FileInfo file = new FileInfo(mapLocation);
             while (FileIsLocked(file))
