@@ -14,6 +14,7 @@ namespace osu_StreamCompanion.Code.Core
     {
         readonly SQLiteConnection _mDbConnection;
         private string DbFilename = "StreamCompanionCacheV2.db";
+        private int _schemaVersion = 1;
         private SQLiteCommand _insertSql;
         private SQLiteTransaction _transation;
         public bool MassInsertIsActive => _transation != null;
@@ -51,6 +52,10 @@ namespace osu_StreamCompanion.Code.Core
         }
         public SqliteConnector()
         {
+            _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "VideoDir", "StarsOsu" });
+            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "VARCHAR", "BLOB" });
+            _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL UNIQUE", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL" });
+
             CreateFile(DbFilename);
             _mDbConnection = new SQLiteConnection("Data Source=" + DbFilename + ";Version=3;New=False;Compress=True;");
             OpenConnection();
@@ -59,21 +64,65 @@ namespace osu_StreamCompanion.Code.Core
 
         private void CreateTables()
         {
-            _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "VideoDir", "StarsOsu" });
-            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "VARCHAR", "BLOB" });
-            _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL UNIQUE", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL","NOT NULL" });
-            string sql = "CREATE  TABLE IF NOT EXISTS withID " + _tableStruct.GetTableDef();
-            NonQuery(sql);
-            sql = "CREATE  TABLE IF NOT EXISTS withoutID " + _tableStruct.GetTableDef();
-            NonQuery(sql);
+            bool recteate = false;
+            var result = Query("SELECT name FROM sqlite_master WHERE type='table' AND name='cfg';");
+            if (result.HasRows)
+            {
+                result.Dispose();
+                //Check for old table struct with never got used(No data inside)
+                result = Query("SELECT * from cfg");
+                if (!result.HasRows)
+                {
+                    //Old struct - drop everything 
+                    recteate = true;
+                }
+                else
+                {
+                    //new struct - check schema version
+                    result.Dispose();
+                    result = Query("SELECT * from `cfg` where `Key` = 'SchemaVersion' ");
+                    if (!result.HasRows || !result.Read())
+                        recteate = true;
+                    else
+                    {
+                        var version = Int32.Parse(result.GetString(1));
+                        if (version != _schemaVersion)
+                            recteate = true;
+                    }
+                    result.Dispose();
 
-            sql = "DROP TABLE IF EXISTS Temp";
-            NonQuery(sql);
-            sql = "CREATE TABLE IF NOT EXISTS Temp " + _tableStruct.GetTableDef();
-            NonQuery(sql);
 
-            sql = "CREATE TABLE IF NOT EXISTS `cfg` (`LastUpdateDate` TEXT)";
-            NonQuery(sql);
+                }
+            }
+            else
+                recteate = true;
+
+            if (recteate)
+            {
+                NonQuery("DROP TABLE IF EXISTS `cfg`;");
+                NonQuery("DROP TABLE IF EXISTS `Temp`;");
+                NonQuery("DROP TABLE IF EXISTS `withoutID`;");
+                NonQuery("DROP TABLE IF EXISTS `withID`;");
+
+
+                string sql = "CREATE  TABLE IF NOT EXISTS withoutID " + _tableStruct.GetTableDef();
+                NonQuery(sql);
+
+                sql = "DROP TABLE IF EXISTS Temp";
+                NonQuery(sql);
+                sql = "CREATE TABLE IF NOT EXISTS Temp " + _tableStruct.GetTableDef();
+                NonQuery(sql);
+
+                var findIndex = _tableStruct.Fieldnames.FindIndex(s => s.Equals("MapId"));
+                _tableStruct.TypeModifiers[findIndex] = "NOT NULL UNIQUE";
+                sql = "CREATE  TABLE IF NOT EXISTS withID " + _tableStruct.GetTableDef();
+                NonQuery(sql);
+
+                sql = "CREATE TABLE IF NOT EXISTS `cfg` (`Key` TEXT, `Value` TEXT)";
+                NonQuery(sql);
+                NonQuery($"insert into `cfg` values ('SchemaVersion','{_schemaVersion}')");
+            }
+            
         }
 
 
@@ -119,8 +168,8 @@ namespace osu_StreamCompanion.Code.Core
             }
             catch (UnauthorizedAccessException ex)
             {
-                throw new NonLoggableException(ex,"Could not save beatmap cache file due to insuffisient premissions"+
-                    Environment.NewLine+"Please move this exectuable into a non-system folder");
+                throw new NonLoggableException(ex, "Could not save beatmap cache file due to insuffisient premissions" +
+                    Environment.NewLine + "Please move this exectuable into a non-system folder");
             }
         }
         private void OpenConnection()

@@ -10,7 +10,7 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteControler : IDisposable, IMapDataStorer, CollectionManager.Interfaces.IMapDataManager
     {
         private readonly SqliteConnector _sqlConnector;
-        private HashSet<string> _md5List;
+        private Dictionary<string,int> _md5List;
         public SqliteControler()
         {
             _sqlConnector = new SqliteConnector();
@@ -45,12 +45,12 @@ namespace osu_StreamCompanion.Code.Core
         {
             lock (_sqlConnector)
             {
-                string sql = "SELECT Md5 FROM (SELECT Md5 FROM `withID` UNION SELECT Md5 FROM `withoutID`)";
+                string sql = "SELECT Md5, MapId FROM (SELECT Md5, MapId FROM `withID` UNION SELECT Md5, MapId FROM `withoutID`)";
                 var reader = _sqlConnector.Query(sql);
-                _md5List = new HashSet<string>();
+                _md5List = new Dictionary<string, int>();
                 while (reader.Read())
                 {
-                    _md5List.Add(reader.GetString(0));
+                    _md5List.Add(reader.GetString(0), reader.GetInt32(1));
                 }
                 reader.Dispose();
                 _sqlConnector.StartMassStoring();
@@ -78,8 +78,10 @@ namespace osu_StreamCompanion.Code.Core
             {
                 if (_sqlConnector.MassInsertIsActive)
                 {
-                    if (_md5List.Contains(beatmap.Md5))
-                        return;//no need to save same data.
+                    var hash = beatmap.Md5;
+                    if (_md5List.ContainsKey(hash))
+                        if(_md5List[hash] == beatmap.MapId )
+                            return;//no need to save same data.
                 }
                 _sqlConnector.StoreBeatmap(beatmap);
             }
