@@ -43,31 +43,40 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
             if (!map.FoundBeatmaps) return ret;
             if (map.BeatmapsFound[0].PlayMode != PlayMode.Osu) return ret;
             var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(BeatmapHelpers.GetFullSongsLocation(_settings));
-            
+
             if (!File.Exists(mapLocation)) return ret;
             FileInfo file = new FileInfo(mapLocation);
+
             while (FileIsLocked(file))
             {
                 Thread.Sleep(1);
             }
-
-            using (var stream = new FileStream(mapLocation, FileMode.Open))
+            if (file.Length == 0) return ret;
+            try
             {
-                using (var reader = new StreamReader(stream))
+                using (var stream = new FileStream(mapLocation, FileMode.Open))
                 {
-                    var beatmap = Beatmap.Read(reader);
+                    using (var reader = new StreamReader(stream))
+                    {
+                        var beatmap = Beatmap.Read(reader);
 
-                    var beatmapCalc = diffCalculator.Calc(beatmap, Mods.NoMod);
+                        var beatmapCalc = diffCalculator.Calc(beatmap, Mods.NoMod);
 
-                    ret["!SSPP!"] = Math.Round((new PPv2(beatmapCalc.Aim, beatmapCalc.Speed, beatmap)).Total, 2).ToString(CultureInfo.InvariantCulture);
-                    ret["!99.9PP!"] = GetPp(beatmap, 99.9d).ToString(CultureInfo.InvariantCulture);
-                    ret["!99PP!"] = GetPp(beatmap, 99d).ToString(CultureInfo.InvariantCulture);
-                    ret["!98PP!"] = GetPp(beatmap, 98d).ToString(CultureInfo.InvariantCulture);
-                    ret["!95PP!"] = GetPp(beatmap, 95d).ToString(CultureInfo.InvariantCulture);
-                    ret["!90PP!"] = GetPp(beatmap, 90d).ToString(CultureInfo.InvariantCulture);
+                        ret["!SSPP!"] = Math.Round((new PPv2(beatmapCalc.Aim, beatmapCalc.Speed, beatmap)).Total, 2)
+                            .ToString(CultureInfo.InvariantCulture);
+                        ret["!99.9PP!"] = GetPp(beatmap, 99.9d).ToString(CultureInfo.InvariantCulture);
+                        ret["!99PP!"] = GetPp(beatmap, 99d).ToString(CultureInfo.InvariantCulture);
+                        ret["!98PP!"] = GetPp(beatmap, 98d).ToString(CultureInfo.InvariantCulture);
+                        ret["!95PP!"] = GetPp(beatmap, 95d).ToString(CultureInfo.InvariantCulture);
+                        ret["!90PP!"] = GetPp(beatmap, 90d).ToString(CultureInfo.InvariantCulture);
+                    }
                 }
+                return ret;
             }
-            return ret;
+            catch
+            {
+                return ret;
+            }
         }
 
         private double GetPp(Beatmap beatmap, double acc)
