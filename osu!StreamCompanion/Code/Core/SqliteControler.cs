@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Threading;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfaces;
 
@@ -10,7 +11,7 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteControler : IDisposable, IMapDataStorer, CollectionManager.Interfaces.IMapDataManager
     {
         private readonly SqliteConnector _sqlConnector;
-        private Dictionary<string,int> _md5List;
+        private Dictionary<string, int> _md5List;
         public SqliteControler()
         {
             _sqlConnector = new SqliteConnector();
@@ -50,7 +51,9 @@ namespace osu_StreamCompanion.Code.Core
                 _md5List = new Dictionary<string, int>();
                 while (reader.Read())
                 {
-                    _md5List.Add(reader.GetString(0), reader.GetInt32(1));
+                    var hash = reader.GetString(0);
+                    var mapId = reader.GetInt32(1);
+                    _md5List.Add(hash, mapId);
                 }
                 reader.Dispose();
                 _sqlConnector.StartMassStoring();
@@ -80,8 +83,14 @@ namespace osu_StreamCompanion.Code.Core
                 {
                     var hash = beatmap.Md5;
                     if (_md5List.ContainsKey(hash))
-                        if(_md5List[hash] == beatmap.MapId )
-                            return;//no need to save same data.
+                    {
+                        if (_md5List[hash] == beatmap.MapId)
+                            return; //no need to save same data.
+                        else
+                        {//We need to first remove old entry
+                            _sqlConnector.RemoveBeatmap(beatmap.Md5);
+                        }
+                    }
                 }
                 _sqlConnector.StoreBeatmap(beatmap);
             }
@@ -129,6 +138,10 @@ namespace osu_StreamCompanion.Code.Core
         }
         public void Dispose()
         {
+            while (_sqlConnector.MassInsertIsActive)
+            {
+                Thread.Sleep(1);
+            }
             _sqlConnector.Dispose();
         }
 

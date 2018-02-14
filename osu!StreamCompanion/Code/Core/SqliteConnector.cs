@@ -14,7 +14,12 @@ namespace osu_StreamCompanion.Code.Core
     {
         readonly SQLiteConnection _mDbConnection;
         private string DbFilename = "StreamCompanionCacheV2.db";
-        private int _schemaVersion = 1;
+        private int _schemaVersion = 2;
+        /*
+         * v1 - caching improvments, cfg table struct change
+         * v2 - forcing db reload due to possibility of malformed data saved from v1(duplicated maps across tables)
+         * 
+             */
         private SQLiteCommand _insertSql;
         private SQLiteTransaction _transation;
         public bool MassInsertIsActive => _transation != null;
@@ -122,7 +127,7 @@ namespace osu_StreamCompanion.Code.Core
                 NonQuery(sql);
                 NonQuery($"insert into `cfg` values ('SchemaVersion','{_schemaVersion}')");
             }
-            
+
         }
 
 
@@ -198,6 +203,13 @@ namespace osu_StreamCompanion.Code.Core
             _transation = null;
         }
 
+        public void RemoveBeatmap(string hash)
+        {
+            var sql = string.Format("DELETE FROM withID WHERE Md5 = '{0}'", hash);
+            NonQuery(sql);
+            sql = string.Format("DELETE FROM withoutID WHERE Md5 = '{0}'", hash);
+            NonQuery(sql);
+        }
         public void StoreBeatmap(Beatmap beatmap)
         {
             string sql;
