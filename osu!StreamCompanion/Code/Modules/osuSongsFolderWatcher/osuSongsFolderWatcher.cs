@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
@@ -9,16 +12,18 @@ using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
 {
-    class OsuSongsFolderWatcher : IModule, ISettings, ISqliteUser
+    class OsuSongsFolderWatcher : IModule, ISettings, ISqliteUser, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private FileSystemWatcher watcher;
+        private FileSystemWatcher _watcher;
         private Settings _settings;
         private ILogger _logger;
         private SqliteControler _sqlite;
         private int _numberOfBeatmapsCurrentlyBeingLoaded = 0;
         public bool Started { get; set; }
+        private Thread _consumerThread;
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -38,32 +43,56 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
             {
                 if (Directory.Exists(dir))
                 {
-                    watcher = new FileSystemWatcher(dir, "*.osu");
-                    watcher.Created += Watcher_FileCreated;
-                    watcher.IncludeSubdirectories = true;
-                    watcher.EnableRaisingEvents = true;
+                    _watcher = new FileSystemWatcher(dir, "*.osu");
+                    _watcher.Created += Watcher_FileCreated;
+                    _watcher.IncludeSubdirectories = true;
+                    _watcher.EnableRaisingEvents = true;
+                    _consumerThread = new Thread(ConsumerTask);
+                    _consumerThread.Start();
                 }
                 else
                 {
                     _logger.Log("Could not find osu! songs directory", LogLevel.Error);
                 }
             }
-
         }
 
+        private void ConsumerTask()
+        {
+            try
+            {
+                while (true)
+                {
+                    string fileFullPath;
+                    if (_filesChanged.TryDequeue(out fileFullPath))
+                    {
+                        Beatmap beatmap = null;
+                        _settings.Add(_names.LoadingRawBeatmaps.Name, true);
+                        Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
+                        _logger.Log("Processing new beatmap", LogLevel.Debug);
+                        beatmap = BeatmapHelpers.ReadBeatmap(fileFullPath);
+
+                        _sqlite.StoreTempBeatmap(beatmap);
+                        _logger.Log("Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Debug, beatmap.ArtistRoman,
+                            beatmap.TitleRoman, beatmap.DiffName);
+                        if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
+                        {
+                            _settings.Add(_names.LoadingRawBeatmaps.Name, false);
+                        }
+                    }
+                    Thread.Sleep(5);
+                }
+            }
+            catch (ThreadAbortException ex)
+            {
+                return;
+            }
+        }
+        private readonly ConcurrentQueue<string> _filesChanged = new ConcurrentQueue<string>();
         private void Watcher_FileCreated(object sender, FileSystemEventArgs e)
         {
-            _settings.Add(_names.LoadingRawBeatmaps.Name, true);
-            Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
-            _logger.Log("Detected new beatmap in songs folder", LogLevel.Debug);
-            var beatmap = BeatmapHelpers.ReadBeatmap(e.FullPath);
-
-            _sqlite.StoreTempBeatmap(beatmap);
-            _logger.Log("Added new Temporary beatmap {0} - {1}", LogLevel.Debug, beatmap.ArtistRoman, beatmap.TitleRoman);
-            if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
-            {
-                _settings.Add(_names.LoadingRawBeatmaps.Name,false);
-            }
+            _filesChanged.Enqueue(e.FullPath);
+            _logger.Log("New osu file: "+e.FullPath, LogLevel.Debug);
         }
 
 
@@ -88,5 +117,10 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
             _sqlite = sqLiteControler;
         }
 
+        public void Dispose()
+        {
+            _watcher?.Dispose();
+            _consumerThread?.Abort();
+        }
     }
 }
