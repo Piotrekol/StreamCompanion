@@ -7,29 +7,36 @@ using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
-    class MapReplacement :IModule,IMapDataReplacements,ISettings
+    class MapReplacement : IModule, IMapDataReplacements, ISettings
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private Settings _settings;
         public bool Started { get; set; }
-        public void Start(ILogger logger){ Started = true; }
+        public void Start(ILogger logger) { Started = true; }
 
         public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
         {
+            Dictionary<string, string> dict;
             if (map.FoundBeatmaps)
             {
-                var dict = map.BeatmapsFound[0].GetDict(map.Mods?.Item2 ?? "");
+                dict = map.BeatmapsFound[0].GetDict(map.Mods?.Item2 ?? "");
 
                 var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
                 if (string.IsNullOrWhiteSpace(osuLocation))
-                    dict.Add("!OsuFileLocation!","");
+                    dict.Add("!OsuFileLocation!", "");
                 else
-                    dict.Add("!OsuFileLocation!",System.IO.Path.Combine(osuLocation, "Songs", map.BeatmapsFound[0].Dir, map.BeatmapsFound[0].OsuFileName));
+                    dict.Add("!OsuFileLocation!",
+                        System.IO.Path.Combine(osuLocation, "Songs", map.BeatmapsFound[0].Dir,
+                            map.BeatmapsFound[0].OsuFileName));
 
-                return dict;
+            }
+            else
+            {
+                dict = (new Beatmap()).GetDict("", true);
+                dict.Add("!OsuFileLocation!", "");
             }
 
-            return new Dictionary<string, string>();
+            return dict;
         }
 
         public void SetSettingsHandle(Settings settings)

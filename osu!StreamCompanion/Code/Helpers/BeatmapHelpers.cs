@@ -122,16 +122,16 @@ namespace osu_StreamCompanion.Code.Helpers
             }
         }
 
-        public static Dictionary<string, string> GetDict(this Beatmap bm, string mods)
+        public static Dictionary<string, string> GetDict(this Beatmap bm, string mods, bool empty = false)
         {
             var dict = bm.GetDict();
             dict.Add("!mods!", mods);
             return dict;
         }
-        public static Dictionary<string, string> GetDict(this Beatmap bm)
+        public static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
         {
             Dictionary<string, string> dict;
-            if (bm == null)
+            if (bm == null || empty)
             {
                 dict = new Dictionary<string, string>
                 {
