@@ -130,51 +130,96 @@ namespace osu_StreamCompanion.Code.Helpers
         }
         public static Dictionary<string, string> GetDict(this Beatmap bm)
         {
-            var dict = new Dictionary<string, string>
+            Dictionary<string, string> dict;
+            if (bm == null)
             {
-                {"!TitleRoman!", bm.TitleRoman},
-                {"!ArtistRoman!", bm.ArtistRoman},
-                {"!TitleUnicode!", bm.TitleUnicode},
-                {"!ArtistUnicode!", bm.ArtistUnicode},
-                {"!Creator!", bm.Creator},
-                {"!DiffName!", bm.DiffName},
-                {"!Mp3Name!", bm.Mp3Name},
-                {"!Md5!", bm.Md5},
-                {"!OsuFileName!", bm.OsuFileName},
-                {"!MaxBpm!", Math.Round(bm.MaxBpm, 2).ToString(CultureInfo.InvariantCulture)},
-                {"!MinBpm!", Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture)},
+                dict = new Dictionary<string, string>
                 {
-                    "!Bpm!", bm.MinBpm == bm.MaxBpm
-                        ? Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture)
-                        : string.Format("{0} - {1}", Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture),
-                            Math.Round(bm.MaxBpm, 2).ToString(CultureInfo.InvariantCulture))
-                },
-                {"!tags!", bm.Tags},
-                {"!state!", bm.StateStr},
-                {"!circles!", bm.Circles.ToString()},
-                {"!sliders!", bm.Sliders.ToString()},
-                {"!spinners!", bm.Spinners.ToString()},
-                {"!ar!", bm.ApproachRate.ToString(CultureInfo.InvariantCulture)},
-                {"!cs!", bm.CircleSize.ToString(CultureInfo.InvariantCulture)},
-                {"!hp!", bm.HpDrainRate.ToString(CultureInfo.InvariantCulture)},
-                {"!od!", bm.OverallDifficulty.ToString(CultureInfo.InvariantCulture)},
-                {"!sv!", bm.SliderVelocity.ToString(CultureInfo.InvariantCulture)},
+                    {"!TitleRoman!", string.Empty},
+                    {"!ArtistRoman!", string.Empty},
+                    {"!TitleUnicode!", string.Empty},
+                    {"!ArtistUnicode!", string.Empty},
+                    {"!Creator!", string.Empty},
+                    {"!DiffName!", string.Empty},
+                    {"!Mp3Name!", string.Empty},
+                    {"!Md5!", string.Empty},
+                    {"!OsuFileName!", string.Empty},
+                    {"!MaxBpm!", string.Empty},
+                    {"!MinBpm!", string.Empty},
+                    {"!Bpm!", string.Empty},
+                    {"!tags!", string.Empty},
+                    {"!state!", string.Empty},
+                    {"!circles!", string.Empty},
+                    {"!sliders!", string.Empty},
+                    {"!spinners!", string.Empty},
+                    {"!ar!", string.Empty},
+                    {"!cs!", string.Empty},
+                    {"!hp!", string.Empty},
+                    {"!od!", string.Empty},
+                    {"!sv!", string.Empty},
+                    {"!starsNomod!", string.Empty},
+                    {"!drainingtime!", string.Empty},
+                    {"!totaltime!", string.Empty},
+                    {"!previewtime!", string.Empty},
+                    {"!mapid!", string.Empty},
+                    {"!dl!", string.Empty},
+                    {"!mapsetid!", string.Empty},
+                    {"!threadid!", string.Empty},
+                    {"!SL!", string.Empty},
+                    {"!mode!", string.Empty},
+                    {"!source!", string.Empty},
+                    {"!dir!", string.Empty},
+                    {"!lb!", string.Empty},
+                };
+            }
+            else
+            {
+                dict = new Dictionary<string, string>
+                {
+                    {"!TitleRoman!", bm.TitleRoman},
+                    {"!ArtistRoman!", bm.ArtistRoman},
+                    {"!TitleUnicode!", bm.TitleUnicode},
+                    {"!ArtistUnicode!", bm.ArtistUnicode},
+                    {"!Creator!", bm.Creator},
+                    {"!DiffName!", bm.DiffName},
+                    {"!Mp3Name!", bm.Mp3Name},
+                    {"!Md5!", bm.Md5},
+                    {"!OsuFileName!", bm.OsuFileName},
+                    {"!MaxBpm!", Math.Round(bm.MaxBpm, 2).ToString(CultureInfo.InvariantCulture)},
+                    {"!MinBpm!", Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture)},
+                    {
+                        "!Bpm!", bm.MinBpm == bm.MaxBpm
+                            ? Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture)
+                            : string.Format("{0} - {1}",
+                                Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture),
+                                Math.Round(bm.MaxBpm, 2).ToString(CultureInfo.InvariantCulture))
+                    },
+                    {"!tags!", bm.Tags},
+                    {"!state!", bm.StateStr},
+                    {"!circles!", bm.Circles.ToString()},
+                    {"!sliders!", bm.Sliders.ToString()},
+                    {"!spinners!", bm.Spinners.ToString()},
+                    {"!ar!", bm.ApproachRate.ToString(CultureInfo.InvariantCulture)},
+                    {"!cs!", bm.CircleSize.ToString(CultureInfo.InvariantCulture)},
+                    {"!hp!", bm.HpDrainRate.ToString(CultureInfo.InvariantCulture)},
+                    {"!od!", bm.OverallDifficulty.ToString(CultureInfo.InvariantCulture)},
+                    {"!sv!", bm.SliderVelocity.ToString(CultureInfo.InvariantCulture)},
 
-                {"!starsNomod!", bm.StarsNomod.ToString("##.###",CultureInfo.InvariantCulture)},
-                {"!drainingtime!", bm.DrainingTime.ToString()},
-                {"!totaltime!", bm.TotalTime.ToString()},
-                {"!previewtime!", bm.PreviewTime.ToString()},
-                {"!mapid!", bm.MapId.ToString()},
-                {"!dl!", bm.MapLink},
-                {"!mapsetid!", bm.MapSetId.ToString()},
-                {"!threadid!", bm.ThreadId.ToString()},
-                {"!SL!", bm.StackLeniency.ToString(CultureInfo.InvariantCulture)},
-                {"!mode!", bm.PlayMode.GetHashCode().ToString()},
-                {"!source!", bm.Source},
-                {"!dir!", bm.Dir},
-                {"!lb!", Environment.NewLine}
-            };
-
+                    {"!starsNomod!", bm.StarsNomod.ToString("##.###", CultureInfo.InvariantCulture)},
+                    {"!drainingtime!", bm.DrainingTime.ToString()},
+                    {"!totaltime!", bm.TotalTime.ToString()},
+                    {"!previewtime!", bm.PreviewTime.ToString()},
+                    {"!mapid!", bm.MapId.ToString()},
+                    {"!dl!", bm.MapLink},
+                    {"!mapsetid!", bm.MapSetId.ToString()},
+                    {"!threadid!", bm.ThreadId.ToString()},
+                    {"!SL!", bm.StackLeniency.ToString(CultureInfo.InvariantCulture)},
+                    {"!mode!", bm.PlayMode.GetHashCode().ToString()},
+                    {"!source!", bm.Source},
+                    {"!dir!", bm.Dir},
+                    {"!lb!", Environment.NewLine}
+                };
+            }
 
             return dict;
         }

@@ -59,22 +59,33 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
 
         public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
         {
+            Dictionary<string, string> dict;
             if (map.FoundBeatmaps)
             {
                 var mods = map.Mods?.Item1 ?? Mods.Omod;
                 var c = _difficultyCalculator.ApplyMods(map.BeatmapsFound[0], mods);
-                var dict = new Dictionary<string, string>()
+                dict = new Dictionary<string, string>()
                 {
-                    { "!mAR!", Math.Round(c["AR"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    { "!mCS!", Math.Round(c["CS"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    { "!mOD!", Math.Round(c["OD"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    { "!mStars!", Math.Round(map.BeatmapsFound[0].Stars(PlayMode.Osu,mods) ,2)
-                    .ToString(System.Globalization.CultureInfo.InvariantCulture)}
+                    {"!mAR!", Math.Round(c["AR"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    {"!mCS!", Math.Round(c["CS"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    {"!mOD!", Math.Round(c["OD"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    {
+                        "!mStars!", Math.Round(map.BeatmapsFound[0].Stars(PlayMode.Osu, mods), 2)
+                            .ToString(System.Globalization.CultureInfo.InvariantCulture)
+                    }
                 };
-                return dict;
             }
-
-            return new Dictionary<string, string>();
+            else
+            {
+                dict = new Dictionary<string, string>()
+                {
+                    {"!mAR!", string.Empty},
+                    {"!mCS!", string.Empty},
+                    {"!mOD!", string.Empty},
+                    {"!mStars!", string.Empty}
+                };
+            }
+            return dict;
         }
     }
 }
