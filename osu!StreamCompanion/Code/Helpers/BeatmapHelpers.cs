@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
+using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Misc;
+using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -63,7 +64,7 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.DisableSb = reader.GetBoolean(i); i++;
             beatmap.BgDim = reader.GetInt16(i); i++;
             beatmap.Somestuff = reader.GetInt16(i); i++;
-            beatmap.VideoDir = reader.GetString(i);i++;
+            beatmap.VideoDir = reader.GetString(i); i++;
             beatmap.DeSerializeStars((byte[])reader.GetValue(i));
         }
 
@@ -99,7 +100,7 @@ namespace osu_StreamCompanion.Code.Helpers
                 return mStream.ToArray();
             }
         }
-        public static void DeSerializeStars(this Beatmap bm,byte[] starsData)
+        public static void DeSerializeStars(this Beatmap bm, byte[] starsData)
         {
             using (MemoryStream mStream = new MemoryStream())
             {
@@ -110,25 +111,52 @@ namespace osu_StreamCompanion.Code.Helpers
                 for (int i = 0; i < modesCount; i++)
                 {
                     var key = (PlayMode)_binaryReader.ReadInt32();
-                    if(!bm.ModPpStars.ContainsKey(key))
-                        bm.ModPpStars.Add(key,new Dictionary<int, double>());
+                    if (!bm.ModPpStars.ContainsKey(key))
+                        bm.ModPpStars.Add(key, new Dictionary<int, double>());
                     var dict = bm.ModPpStars[key];
                     var starsCount = _binaryReader.ReadInt32();
                     for (int j = 0; j < starsCount; j++)
                     {
-                        dict.Add(_binaryReader.ReadInt32(),_binaryReader.ReadDouble());
+                        dict.Add(_binaryReader.ReadInt32(), _binaryReader.ReadDouble());
                     }
                 }
             }
         }
 
-        public static Dictionary<string, string> GetDict(this Beatmap bm, string mods, bool empty = false)
+        public static Dictionary<string, string> GetDict(this Beatmap bm, Tuple<Mods, string> mods, bool empty = false)
         {
             var dict = bm.GetDict();
-            dict.Add("!mods!", mods);
+            dict.Add("!mods!", mods?.Item2 ?? "");
+            if (mods != null)
+            {
+                double modifier = 1;
+                if ((mods.Item1 & Mods.Dt) != 0)
+                {
+                    modifier *= 1.5;
+                }
+                else if ((mods.Item1 & Mods.Ht) != 0)
+                {
+                    modifier *= 0.75;
+                }
+
+                var minBpm = bm.MinBpm * modifier;
+                var maxBpm = bm.MaxBpm * modifier;
+                var bpm = Math.Abs(minBpm - maxBpm) < 0.95 ? minBpm.ToString("0") : string.Format("{0:0}-{1:0}", minBpm, maxBpm);
+
+                dict.Add("!mMaxBpm!", string.Format("{0:0}", minBpm));
+                dict.Add("!mMinBpm!", string.Format("{0:0}", maxBpm));
+                dict.Add("!mBpm!", bpm);
+            }
+            else
+            {
+                dict.Add("!mMaxBpm!", dict["!MaxBpm!"]);
+                dict.Add("!mMinBpm!", dict["!MinBpm!"]);
+                dict.Add("!mBpm!", dict["!Bpm!"]);
+            }
+
             return dict;
         }
-        public static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
+        private static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
         {
             Dictionary<string, string> dict;
             if (bm == null || empty)

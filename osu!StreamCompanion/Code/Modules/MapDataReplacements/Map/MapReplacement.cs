@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
@@ -19,7 +21,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             Dictionary<string, string> dict;
             if (map.FoundBeatmaps)
             {
-                dict = map.BeatmapsFound[0].GetDict(map.Mods?.Item2 ?? "");
+                dict = map.BeatmapsFound[0].GetDict(map.Mods);
 
                 var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
                 if (string.IsNullOrWhiteSpace(osuLocation))
@@ -32,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             }
             else
             {
-                dict = (new Beatmap()).GetDict("", true);
+                dict = ((Beatmap)null).GetDict(map.Mods, true);
                 dict.Add("!OsuFileLocation!", "");
             }
 
