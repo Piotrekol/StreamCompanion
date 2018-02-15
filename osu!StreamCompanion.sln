@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!StreamCompanion", "osu!StreamCompanion\osu!StreamCompanion.csproj", "{86251162-A899-4498-BF7F-6F18D6C624EA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{E96C15E8-51CE-4648-8738-CBF30690CBF2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionControler", "VersionControler\VersionControler.csproj", "{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dlls", "dlls", "{19596E3E-39B4-44AE-B545-57B77388D1C8}"
