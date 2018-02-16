@@ -53,7 +53,17 @@ namespace osu_StreamCompanion.Code.Core
                 {
                     var hash = reader.GetString(0);
                     var mapId = reader.GetInt32(1);
-                    _md5List.Add(hash, mapId);
+                    if (_md5List.ContainsKey(hash))
+                    {
+                        var oldId = _md5List[hash];
+                        if (oldId > mapId)
+                            mapId = oldId;
+                        else
+                            mapId = oldId;
+                        _md5List[hash] = mapId;
+                    }
+                    else
+                        _md5List.Add(hash, mapId);
                 }
                 reader.Dispose();
                 _sqlConnector.StartMassStoring();
