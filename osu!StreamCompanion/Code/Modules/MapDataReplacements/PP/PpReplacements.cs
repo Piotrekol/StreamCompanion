@@ -46,11 +46,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
 
             if (!File.Exists(mapLocation)) return ret;
             FileInfo file = new FileInfo(mapLocation);
-
+            Thread.Sleep(50);//If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
             while (FileIsLocked(file))
             {
                 Thread.Sleep(1);
             }
+
             if (file.Length == 0) return ret;
             try
             {
