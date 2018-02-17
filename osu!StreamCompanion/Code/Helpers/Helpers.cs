@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -13,7 +14,25 @@ namespace osu_StreamCompanion.Code.Helpers
 
         public static DateTime GetDateFromVersionString(string version)
         {
-            return DateTime.ParseExact(version.TrimStart('v'), "yyMMdd.HH", System.Globalization.CultureInfo.InvariantCulture);
+            try
+            {
+                return DateTime.ParseExact(version.TrimStart('v'), "yyMMdd.HH",
+                    System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                return DateTime.ParseExact(version.TrimStart('v'), "yyMMdd",
+                    System.Globalization.CultureInfo.InvariantCulture);
+            }
+        }
+
+        public static T ExecWithTimeout<T>(Func<T> function, int timeout = 10000)
+        {
+            var task = Task<T>.Factory.StartNew(function);
+            if (task.Wait(TimeSpan.FromMilliseconds(timeout)))
+                return task.Result;
+            else
+                return default(T);
         }
     }
 }
