@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
@@ -16,7 +14,6 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private const string baseGithubUrl = "https://api.github.com/repos/Piotrekol/StreamCompanion";
         private const string githubUpdateUrl = baseGithubUrl + "/releases/latest";
         private const string githubChangelogUrl = baseGithubUrl + "/releases";
-        private string _downloadLink = "";
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -28,11 +25,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         {
             var rawData = GetStringData(githubChangelogUrl);
             var json = JArray.Parse(rawData);
-            var DUMMY_VERSION = "v180213.16";
-            var currentVersionDate = Helpers.Helpers.GetDateFromVersionString(DUMMY_VERSION); //Program.ScVersion);
-                                                                                              //Find 
-            var nearestVersionBefore = json.First();
-            var currentVersionIndex = json.IndexOf(nearestVersionBefore);
+            var currentVersionDate = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
             var log = json.Where(j =>
                     Helpers.Helpers.GetDateFromVersionString(j["tag_name"].ToString()) > currentVersionDate)
                 .ToDictionary(j => j["tag_name"].ToString(), j => j["body"].ToString());
@@ -51,7 +44,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 var newestReleaseVersion = json["tag_name"].ToString();
                 if (string.IsNullOrWhiteSpace(newestReleaseVersion))
                 {
-                    setStatus(string.Format("Could not get update information."));
+                    setStatus("Could not get update information.");
                 }
                 else if (newestReleaseVersion != Program.ScVersion)
                 {

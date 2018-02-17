@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Principal;
-using System.Text;
 using System.Windows.Forms;
 
 namespace osu_StreamCompanion.Code.Modules.Updater
@@ -48,17 +43,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 wc.DownloadFileAsync(new System.Uri(UpdateContainer.ExeDownloadUrl), fullTempSavePath);
             }
         }
-
-        private bool isAdmin()
-        {
-            bool isElevated;
-            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
-            {
-                WindowsPrincipal principal = new WindowsPrincipal(identity);
-                isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
-            return isElevated;
-        }
+        
         private void WcOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs asyncCompletedEventArgs)
         {
             var fullTempSavePath = saveDirectory + tempFileName;
