@@ -55,12 +55,8 @@ namespace osu_StreamCompanion.Code.Core
                     var mapId = reader.GetInt32(1);
                     if (_md5List.ContainsKey(hash))
                     {
-                        var oldId = _md5List[hash];
-                        if (oldId > mapId)
-                            mapId = oldId;
-                        else
-                            mapId = oldId;
-                        _md5List[hash] = mapId;
+                        //On collision delete both entrys.
+                        _sqlConnector.RemoveBeatmap(hash);
                     }
                     else
                         _md5List.Add(hash, mapId);
