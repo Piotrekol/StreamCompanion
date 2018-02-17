@@ -22,9 +22,9 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=D:\Kod\osu-related\Tools\StreamCompanion\innoSetup\license.txt
+LicenseFile=license.txt
 OutputBaseFilename=StreamCompanion Setup
-SetupIconFile=D:\Kod\osu-related\Tools\StreamCompanion\osu!StreamCompanion\Resources\compiled.ico
+SetupIconFile=..\osu!StreamCompanion\Resources\compiled.ico
 Compression=lzma
 SolidCompression=yes
 AppMutex=Global\{{2c6fc9bd-4e26-42d3-acfa-0a4d846d7e9e}
@@ -37,7 +37,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "D:\Kod\osu-related\Tools\StreamCompanion\osu!StreamCompanion\bin\x86\Release\osu!StreamCompanion.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\build\Release\osu!StreamCompanion.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\build\Release\StreamCompanion Updater.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]

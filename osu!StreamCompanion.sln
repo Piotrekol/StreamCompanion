@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!StreamCompanion", "osu!StreamCompanion\osu!StreamCompanion.csproj", "{86251162-A899-4498-BF7F-6F18D6C624EA}"
 EndProject
@@ -17,6 +17,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OppaiSharp", "submodules\OppaiSharp\OppaiSharp\OppaiSharp.csproj", "{AD29051A-0960-4E92-BAA9-7AC50827F823}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "submodules\OppaiSharp\UnitTests\UnitTests.csproj", "{794039F3-D719-42BB-AACF-A4C12104222C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{09464784-372D-495F-9FF3-351DA55B4FD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +76,18 @@ Global
 		{794039F3-D719-42BB-AACF-A4C12104222C}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{794039F3-D719-42BB-AACF-A4C12104222C}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{794039F3-D719-42BB-AACF-A4C12104222C}.Remote debug|x86.Build.0 = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Debug|x86.Build.0 = Debug|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Release|x86.ActiveCfg = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Release|x86.Build.0 = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{09464784-372D-495F-9FF3-351DA55B4FD9}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
