@@ -13,15 +13,23 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 
         public string GetChangelog(bool rtf)
         {
-            if (Changelog == null) return "There was a problem while retrieving changelog";
+            if (Changelog == null)
+            {
+                if (rtf)
+                {
+                    return @"{\rtf1\ansi There was a problem while retrieving changelog }";
+                }
+                return "There was a problem while retrieving changelog";
+            }
             var ret = string.Empty;
             if (rtf)
             {
+                ret += @"{\rtf1\ansi";
                 foreach (var e in Changelog)
                 {
                     var version = e.Key;
                     var changelog = e.Value;
-                    ret += @"{\rtf1\ansi";
+                    
                     ret += string.Format(@"\b Version: {0}\b0 \line ",version);
                     ret += changelog.Replace("\n",@" \line ").Replace("\t",@"\tab")+ @" \line \line ";
                 }

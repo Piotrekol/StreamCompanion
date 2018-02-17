@@ -14,6 +14,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private const string baseGithubUrl = "https://api.github.com/repos/Piotrekol/StreamCompanion";
         private const string githubUpdateUrl = baseGithubUrl + "/releases/latest";
         private const string githubChangelogUrl = baseGithubUrl + "/releases";
+        DateTime _currentVersion = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -25,9 +26,8 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         {
             var rawData = GetStringData(githubChangelogUrl);
             var json = JArray.Parse(rawData);
-            var currentVersionDate = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
             var log = json.Where(j =>
-                    Helpers.Helpers.GetDateFromVersionString(j["tag_name"].ToString()) > currentVersionDate)
+                    Helpers.Helpers.GetDateFromVersionString(j["tag_name"].ToString()) > _currentVersion)
                 .ToDictionary(j => j["tag_name"].ToString(), j => j["body"].ToString());
 
             return log;
@@ -46,7 +46,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 {
                     setStatus("Could not get update information.");
                 }
-                else if (newestReleaseVersion != Program.ScVersion)
+                else if (Helpers.Helpers.GetDateFromVersionString(newestReleaseVersion) > _currentVersion)
                 {
                     try
                     {
