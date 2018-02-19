@@ -147,6 +147,7 @@ namespace osu_StreamCompanion.Code.Core
         {
             AddModule(new OsuPathResolver());
             AddModule(new OsuFallbackDetector());
+            //AddModule(new MapDataParser());
             AddModule(new MapDataParser());
             AddModule(new WindowDataGetter());
             AddModule(new PlaysReplacements());

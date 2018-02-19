@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
@@ -12,50 +13,74 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private BindingList<FileFormating> _patternDictionary = new BindingList<FileFormating>();
+        private readonly BindingList<OutputPattern> _patterns = new BindingList<OutputPattern>();
         private Settings _settings;
+        private readonly object _lockingObject = new object();
+        private ParserSettings _parserSettings = null;
+
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
             Started = true;
             Load();
-            _patternDictionary.ListChanged += _patternDictionary_ListChanged;
             if (_settings.Get<bool>(_names.FirstRun))
             {
-                _mapDataParserSettings = new MapDataParserSettings(ref _patternDictionary);
-                _mapDataParserSettings.AddDefault();
-                Free();
+                if (_patterns.Count == 0)
+                {
+                    _patterns.Add(new OutputPattern()
+                    {
+                        Name="np_listening",
+                        Pattern = "Listening: !ArtistRoman! - !TitleRoman!",
+                        SaveEvent = OsuStatus.Listening
+                    });
+                    _patterns.Add(new OutputPattern()
+                    {
+                        Name = "np_playing",
+                        Pattern = "Playing: !ArtistRoman! - !TitleRoman! [!DiffName!] CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                        SaveEvent = OsuStatus.Playing
+                    });
+                    _patterns.Add(new OutputPattern()
+                    {
+                        Name = "np_playing_details",
+                        Pattern = "CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                        SaveEvent = OsuStatus.Playing
+                    });
+                    _patterns.Add(new OutputPattern()
+                    {
+                        Name = "np_playing_DL",
+                        Pattern = "!dl!",
+                        SaveEvent = OsuStatus.Playing
+                    });
+                    //TODO: add default patterns
+                }
             }
+            _patterns.ListChanged += PatternsOnListChanged;
+
         }
 
-        private void _patternDictionary_ListChanged(object sender, ListChangedEventArgs e)
+        private void PatternsOnListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
         {
             Save();
         }
 
-        public Dictionary<string, string> GetFormatedMapStrings(Dictionary<string, string> replacements, OsuStatus status)
+        public List<OutputPattern> GetFormatedPatterns(Dictionary<string, string> replacements, OsuStatus status)
         {
-            var replacementDict = replacements;
-            var res = new Dictionary<string, string>();
-            if (replacementDict != null)
+            List<OutputPattern> ret = null;
+
+            if (replacements != null)
             {
-                lock (_patternDictionary)
+                ret = new List<OutputPattern>();
+                foreach (var p in _patterns)
                 {
-                    foreach (var pattern in _patternDictionary)
-                    {
-                        if ((pattern.SaveEvent & (int)status) == 0)
-                            res.Add(pattern.Filename, "");
-                        else
-                            res.Add(pattern.Filename, FormatMapString(pattern.Pattern, replacementDict));
-                    }
+                    var newPattern = (OutputPattern) p.Clone();
+                    newPattern.Replacements = replacements;
+                    ret.Add(newPattern);
                 }
-                _mapDataParserSettings?.SetPreviewDict(replacementDict);
+                if (_parserSettings != null && !_parserSettings.IsDisposed)
+                    _parserSettings.SetPreview(replacements);
             }
-            //res.Add("np", FormatMapString("!ArtistRoman! - !TitleRoman! [!DiffName!] !Mods!", replacementDict));
-
-            return res;
+            return ret;
         }
-
         public string FormatMapString(string toFormat, Dictionary<string, string> replacements)
         {
             foreach (var r in replacements)
@@ -64,66 +89,81 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             return toFormat;
         }
-
-        public string SettingGroup { get; } = "Map formating";
         public void SetSettingsHandle(Settings settings)
         {
             _settings = settings;
         }
 
+        public string SettingGroup { get; } = "Map formating";
         public void Free()
         {
-            _mapDataParserSettings.Dispose();
+            _parserSettings.Dispose();
         }
 
-        private MapDataParserSettings _mapDataParserSettings;
         public UserControl GetUiSettings()
         {
-            if (_mapDataParserSettings == null || _mapDataParserSettings.IsDisposed)
+            if (_parserSettings == null || _parserSettings.IsDisposed)
             {
-                lock (_patternDictionary)
-                {
-                    _mapDataParserSettings = new MapDataParserSettings(ref _patternDictionary);
-                }
+                _parserSettings = new ParserSettings();
+                _parserSettings.SetPatterns(_patterns);
             }
-            return _mapDataParserSettings;
+            return _parserSettings;
         }
+
 
         private void Save()
         {
-            lock (_patternDictionary)
+            lock (_lockingObject)
             {//do saving...
                 List<string> filenames = new List<string>();
                 List<string> Patterns = new List<string>();
                 List<int> saveEvents = new List<int>();
-                foreach (var f in _patternDictionary)
+                List<int> IsPatternMemory = new List<int>();
+                foreach (var f in _patterns)
                 {
-                    filenames.Add(f.Filename);
+                    filenames.Add(f.Name);
                     Patterns.Add(f.Pattern);
-                    saveEvents.Add(f.SaveEvent);
+                    saveEvents.Add((int)f.SaveEvent);
+                    IsPatternMemory.Add(f.IsMemoryFormat ? 1 : 0);
                 }
 
                 _settings.Add(_names.PatternFileNames.Name, filenames);
                 _settings.Add(_names.Patterns.Name, Patterns);
                 _settings.Add(_names.saveEvents.Name, saveEvents);
+                _settings.Add(_names.PatternIsMemory.Name, IsPatternMemory);
             }
             _settings.Save();
         }
-
         private void Load()
         {
             List<string> filenames = _settings.Get(_names.PatternFileNames.Name);
             List<string> Patterns = _settings.Get(_names.Patterns.Name);
             List<int> saveEvents = _settings.Geti(_names.saveEvents.Name);
-            lock (_patternDictionary)
+            List<int> IsPatternMemory = _settings.Geti(_names.PatternIsMemory.Name);
+            lock (_lockingObject)
             {
+                _patterns.Clear();
                 for (int i = 0; i < filenames.Count; i++)
                 {
-                    _patternDictionary.Add(new FileFormating()
+                    //Converting from ealier versions
+                    bool isMemory = false;
+                    if (IsPatternMemory.Count > i)
                     {
-                        Filename = filenames[i],
+                        isMemory = IsPatternMemory[i] == 1;
+                    }
+                    if (saveEvents[i] == 27)
+                        saveEvents[i] = (int)OsuStatus.All;
+                    if (filenames[i].EndsWith(".txt"))
+                        filenames[i] = filenames[i].Substring(0, filenames[i].LastIndexOf(".txt", StringComparison.Ordinal));
+
+
+
+                    _patterns.Add(new OutputPattern()
+                    {
+                        Name = filenames[i],
                         Pattern = Patterns[i],
-                        SaveEvent = saveEvents[i]
+                        SaveEvent = (OsuStatus)saveEvents[i],
+                        IsMemoryFormat = isMemory
                     });
                 }
             }

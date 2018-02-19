@@ -2,6 +2,7 @@
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Interfaces;
+using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
@@ -15,7 +16,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly MainSaver _saver;
         private ILogger _logger;
 
-        public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataGetter> mapDataGetters, List<IMapDataParser> mapDataParsers, List<IMapDataReplacements> mapDataReplacementsGetters, MainSaver saver,ILogger logger)
+        public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataGetter> mapDataGetters, List<IMapDataParser> mapDataParsers, List<IMapDataReplacements> mapDataReplacementsGetters, MainSaver saver, ILogger logger)
         {
             _mapDataFinders = mapDataFinders;
             _mapDataParsers = mapDataParsers;
@@ -27,7 +28,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         public MapSearchResult FindMapData(MapSearchArgs searchArgs)
         {
-            MapSearchResult mapSearchResult=null;
+            MapSearchResult mapSearchResult = null;
             for (int i = 0; i < _mapDataFinders.Count; i++)
             {
                 if ((_mapDataFinders[i].SearchModes & searchArgs.Status) == 0)
@@ -36,11 +37,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs);
                 if (mapSearchResult.FoundBeatmaps)
                 {
-                    _logger.Log(string.Format(">Found data using \"{0}\" ID: {1}", _mapDataFinders[i].SearcherName,mapSearchResult.BeatmapsFound[0]?.MapId),LogLevel.Advanced);
+                    _logger.Log(string.Format(">Found data using \"{0}\" ID: {1}", _mapDataFinders[i].SearcherName, mapSearchResult.BeatmapsFound[0]?.MapId), LogLevel.Advanced);
                     break;
                 }
             }
-            if(mapSearchResult==null)
+            if (mapSearchResult == null)
                 mapSearchResult = new MapSearchResult();
             mapSearchResult.Action = searchArgs.Status;
             return mapSearchResult;
@@ -49,14 +50,14 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         public void ProcessMapResult(MapSearchResult mapSearchResult)
         {
             var mapReplacements = GetMapReplacements(mapSearchResult);
-            mapSearchResult.FormatedStrings = GetMapFormatedStrings(mapReplacements, mapSearchResult.Action);
+            mapSearchResult.FormatedStrings = GetMapPatterns(mapReplacements, mapSearchResult.Action);
             SaveMapStrings(mapSearchResult.FormatedStrings);
             SetNewMap(mapSearchResult);
         }
 
-        private Dictionary<string,string> GetMapReplacements(MapSearchResult mapSearchResult)
+        private Dictionary<string, string> GetMapReplacements(MapSearchResult mapSearchResult)
         {
-            var ret = new Dictionary<string,string>();
+            var ret = new Dictionary<string, string>();
             foreach (var mapDataReplacementsGetter in _mapDataReplacementsGetters)
             {
                 var temp = mapDataReplacementsGetter.GetMapReplacements(mapSearchResult);
@@ -69,34 +70,31 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         ret.Add(t.Key, t.Value);
                     }
                 }
-
             }
             return ret;
         }
 
-        private void SaveMapStrings(Dictionary<string, string> formatedStrings)
+        private void SaveMapStrings(List<OutputPattern> patterns)
         {
-            foreach (var formatedString in formatedStrings)
+            foreach (var p in patterns)
             {
-                _saver.Save(formatedString.Key,formatedString.Value);
+                if (!p.IsMemoryFormat)
+                {
+                    _saver.Save(p.Name + ".txt", p.GetFormatedPattern());
+                }
             }
         }
 
 
-        private Dictionary<string, string> GetMapFormatedStrings(Dictionary<string,string> replacements,OsuStatus status)
+        private List<OutputPattern> GetMapPatterns(Dictionary<string, string> replacements, OsuStatus status)
         {
-            var ret = new Dictionary<string, string>();
+            var ret = new List<OutputPattern>();
             foreach (var dataGetter in _mapDataParsers)
             {
-                var temp  = dataGetter.GetFormatedMapStrings(replacements,status);
+                var temp = dataGetter.GetFormatedPatterns(replacements, status);
                 if (temp?.Count > 0)
                 {
-                    foreach (var t in temp)
-                    {
-                        if(ret.ContainsKey(t.Key))
-                            continue;
-                        ret.Add(t.Key,t.Value);
-                    }
+                    ret.AddRange(temp);
                 }
             }
             return ret;

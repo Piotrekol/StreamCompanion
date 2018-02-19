@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfaces;
+using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 
 namespace osu_StreamCompanion.Code.Modules.CommandsPreview
 {
@@ -12,12 +13,12 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         public void Start(ILogger logger)
         { Started = true; }
 
-        public Dictionary<string, string> GetFormatedMapStrings(Dictionary<string, string> replacements, OsuStatus status)
+        public List<OutputPattern> GetFormatedPatterns(Dictionary<string, string> replacements, OsuStatus status)
         {
             if (_commandsPreviewSettings != null && !_commandsPreviewSettings.IsDisposed)
                 _commandsPreviewSettings.Add(replacements);
 
-            return new Dictionary<string, string>();
+            return null;
         }
 
         public string SettingGroup { get; } = "Commands Preview";

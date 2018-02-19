@@ -200,3 +200,4 @@ FakesAssemblies/
 
 #innoSetup compilation results
 innoSetup/Output/
+osu!StreamCompanion/Properties/Annotations\.cs

@@ -27,6 +27,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry PatternFileNames = new ConfigEntry("PatternFileNames", new List<string>());
         public readonly ConfigEntry Patterns = new ConfigEntry("Patterns", new List<string>());
         public readonly ConfigEntry saveEvents = new ConfigEntry("saveEvents", new List<int>());
+        public readonly ConfigEntry PatternIsMemory = new ConfigEntry("PatternIsMemory", new List<int>());
         //memory scanner
         public readonly ConfigEntry EnableMemoryScanner = new ConfigEntry("EnableMemoryScanner", true);
         //mod images

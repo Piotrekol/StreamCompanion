@@ -198,6 +198,26 @@
     </Compile>
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapManager.cs" />
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapDataGetter.cs" />
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\OutputPattern.cs" />
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.Designer.cs">
+      <DependentUpon>ParserSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternEdit.Designer.cs">
+      <DependentUpon>PatternEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternList.Designer.cs">
+      <DependentUpon>PatternList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\MapDataReplacements\PP\PpReplacements.cs" />
     <Compile Include="Code\Modules\ModsHandler\DifficultyCalculator.cs" />
     <Compile Include="Code\Modules\ModsHandler\ModsHandler.cs" />
@@ -274,15 +294,6 @@
     </Compile>
     <Compile Include="Code\Modules\MapDataFinders\NoData\NoDataFinder.cs" />
     <Compile Include="Code\Modules\MapDataGetters\Window\WindowDataGetter.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\FileFormating.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParserSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParserSettings.Designer.cs">
-      <DependentUpon>MapDataParserSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\SaveEvent.cs" />
     <Compile Include="Code\Modules\osuPathReslover\osuPathResolver.cs" />
     <Compile Include="Code\Modules\osuPathReslover\osuPathResolverSettings.cs">
       <SubType>UserControl</SubType>
@@ -371,8 +382,14 @@
     <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\MapDataParserSettings.resx">
-      <DependentUpon>MapDataParserSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.resx">
+      <DependentUpon>ParserSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternEdit.resx">
+      <DependentUpon>PatternEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternList.resx">
+      <DependentUpon>PatternList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.resx">
       <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
