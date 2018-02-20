@@ -38,13 +38,15 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             {
                 setStatus("Checking for updates...");
                 string rawData = GetStringData(githubUpdateUrl);
-                if (rawData.Trim(' ') == string.Empty)
-                    return;
+                if (string.IsNullOrWhiteSpace(rawData))
+                {
+                    setStatus("Could not get update information. - rawData");
+                }
                 var json = JObject.Parse(rawData);
                 var newestReleaseVersion = json["tag_name"].ToString();
                 if (string.IsNullOrWhiteSpace(newestReleaseVersion))
                 {
-                    setStatus("Could not get update information.");
+                    setStatus("Could not get update information. - newestRelease");
                 }
                 else if (Helpers.Helpers.GetDateFromVersionString(newestReleaseVersion) > _currentVersion)
                 {
@@ -92,7 +94,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         }
         private string GetStringData(string url)
         {
-            return Helpers.Helpers.ExecWithTimeout(() =>
+            var ret = Helpers.Helpers.ExecWithTimeout(() =>
             {
                 string contents = string.Empty;
                 try
@@ -108,6 +110,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 }
                 return contents;
             });
+            return ret ?? string.Empty;
         }
 
         private void setStatus(string status)
