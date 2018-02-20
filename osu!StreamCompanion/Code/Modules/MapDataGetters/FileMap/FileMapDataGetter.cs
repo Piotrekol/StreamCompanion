@@ -16,6 +16,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
         {
             foreach (var s in map.FormatedStrings)
             {
+                if(s.IsMemoryFormat) continue;//memory pattern saving is handled elsewhere, not in this codebase.
                 var name = s.Name;
 
                 if ((s.SaveEvent & map.Action) != 0)
