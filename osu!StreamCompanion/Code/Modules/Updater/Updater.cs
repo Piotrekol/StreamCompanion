@@ -70,9 +70,9 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 
                         var container = new UpdateContainer()
                         {
-                            ExeDownloadUrl = json["assets"][0]["browser_download_url"].ToString(),
+                            ExeDownloadUrl = asset["browser_download_url"].ToString(),
                             Version = newestReleaseVersion,
-                            ExpectedExeSizeInBytes = json["assets"][0]["size"].ToObject<int>(),
+                            ExpectedExeSizeInBytes = asset["size"].ToObject<int>(),
                             DownloadPageUrl = json["html_url"].ToString(),
                             Changelog = GetChangelog()
                         };
