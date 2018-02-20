@@ -39,6 +39,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
                 {"!98PP!", ""},
                 {"!95PP!", ""},
                 {"!90PP!", ""},
+                {"!mSSPP!", ""},
+                {"!m99.9PP!", ""},
+                {"!m99PP!", ""},
+                {"!m98PP!", ""},
+                {"!m95PP!", ""},
+                {"!m90PP!", ""},
             };
             if (!map.FoundBeatmaps) return ret;
             if (map.BeatmapsFound[0].PlayMode != PlayMode.Osu) return ret;
@@ -63,13 +69,20 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
 
                         var beatmapCalc = diffCalculator.Calc(beatmap, Mods.NoMod);
 
-                        ret["!SSPP!"] = Math.Round((new PPv2(beatmapCalc.Aim, beatmapCalc.Speed, beatmap)).Total, 2)
-                            .ToString(CultureInfo.InvariantCulture);
+                        ret["!SSPP!"] = GetPp(beatmap, 100d).ToString(CultureInfo.InvariantCulture);
                         ret["!99.9PP!"] = GetPp(beatmap, 99.9d).ToString(CultureInfo.InvariantCulture);
                         ret["!99PP!"] = GetPp(beatmap, 99d).ToString(CultureInfo.InvariantCulture);
                         ret["!98PP!"] = GetPp(beatmap, 98d).ToString(CultureInfo.InvariantCulture);
                         ret["!95PP!"] = GetPp(beatmap, 95d).ToString(CultureInfo.InvariantCulture);
                         ret["!90PP!"] = GetPp(beatmap, 90d).ToString(CultureInfo.InvariantCulture);
+
+                        var mods = (map.Mods?.Item1 ?? CollectionManager.DataTypes.Mods.Omod).Convert();
+                        ret["!mSSPP!"] = GetPp(beatmap, 100d, mods).ToString(CultureInfo.InvariantCulture);
+                        ret["!m99.9PP!"] = GetPp(beatmap, 99.9d, mods).ToString(CultureInfo.InvariantCulture);
+                        ret["!m99PP!"] = GetPp(beatmap, 99d, mods).ToString(CultureInfo.InvariantCulture);
+                        ret["!m98PP!"] = GetPp(beatmap, 98d, mods).ToString(CultureInfo.InvariantCulture);
+                        ret["!m95PP!"] = GetPp(beatmap, 95d, mods).ToString(CultureInfo.InvariantCulture);
+                        ret["!m90PP!"] = GetPp(beatmap, 90d, mods).ToString(CultureInfo.InvariantCulture);
                     }
                 }
                 return ret;
@@ -80,10 +93,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
             }
         }
 
-        private double GetPp(Beatmap beatmap, double acc)
+        private double GetPp(Beatmap beatmap, double acc,Mods mods = Mods.NoMod)
         {
             _accCalculator = new Accuracy(acc, beatmap.Objects.Count, 0);
-            _ppCalculator = new PPv2(new PPv2Parameters(beatmap, _accCalculator.Count100, _accCalculator.Count50, _accCalculator.CountMiss, -1, _accCalculator.Count300));
+            _ppCalculator = new PPv2(new PPv2Parameters(beatmap, _accCalculator.Count100, _accCalculator.Count50, _accCalculator.CountMiss, -1, _accCalculator.Count300, mods));
             return Math.Round(_ppCalculator.Total, 2);
         }
         protected bool FileIsLocked(FileInfo file)
