@@ -88,9 +88,13 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
             foreach (var p in patterns)
             {
-                if (!p.IsMemoryFormat && (p.SaveEvent & status) != 0)
+                if (!p.IsMemoryFormat)
                 {
-                    _saver.Save(p.Name + ".txt", p.GetFormatedPattern());
+                    if ((p.SaveEvent & status) != 0)
+                        _saver.Save(p.Name + ".txt", p.GetFormatedPattern());
+                    else
+                        _saver.Save(p.Name + ".txt", "");
+
                 }
             }
         }

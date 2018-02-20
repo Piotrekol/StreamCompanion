@@ -16,11 +16,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
         {
             foreach (var s in map.FormatedStrings)
             {
+                var name = s.Name;
+
                 if ((s.SaveEvent & map.Action) != 0)
-                {
-                    var name = s.Name;
                     _fileMapManager.Write("SC-" + name, s.GetFormatedPattern());
-                }
+                else
+                    _fileMapManager.Write("SC-" + name, "    ");//spaces so object rect displays on obs preview window.
+
             }
         }
     }
