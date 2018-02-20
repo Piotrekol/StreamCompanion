@@ -104,7 +104,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (_parserSettings == null || _parserSettings.IsDisposed)
             {
-                _parserSettings = new ParserSettings();
+                _parserSettings = new ParserSettings(_settings);
                 _parserSettings.SetPatterns(_patterns);
             }
             return _parserSettings;

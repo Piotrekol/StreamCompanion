@@ -2,6 +2,7 @@
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Interfaces;
+using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
@@ -15,8 +16,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private readonly MainSaver _saver;
         private ILogger _logger;
+        private readonly Settings _settings;
+        private readonly SettingNames _names = SettingNames.Instance;
 
-        public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataGetter> mapDataGetters, List<IMapDataParser> mapDataParsers, List<IMapDataReplacements> mapDataReplacementsGetters, MainSaver saver, ILogger logger)
+        public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataGetter> mapDataGetters,
+            List<IMapDataParser> mapDataParsers, List<IMapDataReplacements> mapDataReplacementsGetters,
+            MainSaver saver, ILogger logger, Settings settings)
         {
             _mapDataFinders = mapDataFinders;
             _mapDataParsers = mapDataParsers;
@@ -24,6 +29,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _mapDataReplacementsGetters = mapDataReplacementsGetters;
             _saver = saver;
             _logger = logger;
+            _settings = settings;
         }
 
         public MapSearchResult FindMapData(MapSearchArgs searchArgs)
@@ -51,7 +57,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             var mapReplacements = GetMapReplacements(mapSearchResult);
             mapSearchResult.FormatedStrings = GetMapPatterns(mapReplacements, mapSearchResult.Action);
-            SaveMapStrings(mapSearchResult.FormatedStrings);
+
+
+            if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
+                SaveMapStrings(mapSearchResult.FormatedStrings);
             SetNewMap(mapSearchResult);
         }
 
@@ -76,6 +85,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private void SaveMapStrings(List<OutputPattern> patterns)
         {
+
             foreach (var p in patterns)
             {
                 if (!p.IsMemoryFormat)

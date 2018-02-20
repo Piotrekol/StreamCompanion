@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.patternList = new PatternList();
-            this.patternEdit = new PatternEdit();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.patternList = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternList();
+            this.patternEdit = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternEdit();
+            this.checkBox_disableDiskSaving = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // patternList
@@ -48,21 +48,21 @@
             this.patternEdit.Size = new System.Drawing.Size(601, 107);
             this.patternEdit.TabIndex = 1;
             // 
-            // checkBox1
+            // checkBox_disableDiskSaving
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(247, 343);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(153, 17);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "Disable saving files on disk";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox_disableDiskSaving.AutoSize = true;
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(247, 343);
+            this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
+            this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(153, 17);
+            this.checkBox_disableDiskSaving.TabIndex = 2;
+            this.checkBox_disableDiskSaving.Text = "Disable saving files on disk";
+            this.checkBox_disableDiskSaving.UseVisualStyleBackColor = true;
             // 
-            // Parser2Settings
+            // ParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.checkBox_disableDiskSaving);
             this.Controls.Add(this.patternEdit);
             this.Controls.Add(this.patternList);
             this.Name = "ParserSettings";
@@ -76,6 +76,6 @@
 
         private PatternList patternList;
         private PatternEdit patternEdit;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBox_disableDiskSaving;
     }
 }

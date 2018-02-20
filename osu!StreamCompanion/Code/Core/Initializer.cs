@@ -123,7 +123,7 @@ namespace osu_StreamCompanion.Code.Core
             MsnGetters.Clear();
             #endregion
 
-            var mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters,_saver, _logger));
+            var mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters, _saver, _logger, Settings));
             AddModule(mapStringFormatter);
             
             _logger.Log("Starting...", LogLevel.Advanced);
