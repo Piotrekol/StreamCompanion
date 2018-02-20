@@ -16,8 +16,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
         {
             foreach (var s in map.FormatedStrings)
             {
-                var name = s.Name;
-                _fileMapManager.Write("SC-"+name, s.GetFormatedPattern());
+                if ((s.SaveEvent & map.Action) != 0)
+                {
+                    var name = s.Name;
+                    _fileMapManager.Write("SC-" + name, s.GetFormatedPattern());
+                }
             }
         }
     }

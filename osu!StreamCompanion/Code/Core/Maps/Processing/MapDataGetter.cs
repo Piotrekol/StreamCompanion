@@ -60,7 +60,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
 
             if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
-                SaveMapStrings(mapSearchResult.FormatedStrings);
+                SaveMapStrings(mapSearchResult.FormatedStrings, mapSearchResult.Action);
             SetNewMap(mapSearchResult);
         }
 
@@ -83,12 +83,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             return ret;
         }
 
-        private void SaveMapStrings(List<OutputPattern> patterns)
+        private void SaveMapStrings(List<OutputPattern> patterns, OsuStatus status)
         {
 
             foreach (var p in patterns)
             {
-                if (!p.IsMemoryFormat)
+                if (!p.IsMemoryFormat && (p.SaveEvent & status) != 0)
                 {
                     _saver.Save(p.Name + ".txt", p.GetFormatedPattern());
                 }
