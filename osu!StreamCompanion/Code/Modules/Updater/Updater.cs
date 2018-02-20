@@ -14,7 +14,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private const string baseGithubUrl = "https://api.github.com/repos/Piotrekol/StreamCompanion";
         private const string githubUpdateUrl = baseGithubUrl + "/releases/latest";
         private const string githubChangelogUrl = baseGithubUrl + "/releases";
-        DateTime _currentVersion = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
+        private DateTime _currentVersion = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -52,6 +52,22 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 {
                     try
                     {
+                        JToken asset = null;
+                        foreach (var a in json["assets"])
+                        {
+                            if (a["name"].ToString() == "StreamCompanion.Setup.exe")
+                            {
+                                asset = a;
+                                break;
+                            }
+
+                        }
+                        if (asset == null)
+                        {
+                            setStatus("Could not find file to download!");
+                            return;
+                        }
+
                         var container = new UpdateContainer()
                         {
                             ExeDownloadUrl = json["assets"][0]["browser_download_url"].ToString(),

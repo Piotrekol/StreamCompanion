@@ -44,16 +44,44 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             }
         }
         
-        private void WcOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs asyncCompletedEventArgs)
+        private void WcOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs args)
         {
             var fullTempSavePath = saveDirectory + tempFileName;
             var fullSavePath = saveDirectory + setupFileName;
+
+            if (args.Error != null)
+            {
+                MessageBox.Show("There was a problem with download. \n " + args.Error.Message);
+                if(File.Exists(fullTempSavePath))
+                    File.Delete(fullTempSavePath);
+                return;
+            }
+            if (args.Cancelled)
+            {
+                return;
+            }
+            FileInfo file = new FileInfo(fullTempSavePath);
+            var downloadedSize = file.Length;
+            var expectedSize = UpdateContainer.ExpectedExeSizeInBytes;
+
+            if (downloadedSize != expectedSize)
+            {
+                MessageBox.Show("Downloaded file was corrupt, either try again or try updating manually :(",
+                    "Download error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+
+
+
+
 
             if (File.Exists(fullSavePath))
                 File.Delete(fullSavePath);
             if (File.Exists(fullTempSavePath))
             {
                 File.Move(fullTempSavePath, fullSavePath);
+
                 Process.Start(UpdaterExeName, string.Format("\"{0}\" \"{1}\"", fullSavePath, " /VERYSILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS"));
                 Program.SafeQuit();
             }
