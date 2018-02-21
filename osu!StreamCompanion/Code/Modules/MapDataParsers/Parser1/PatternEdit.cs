@@ -19,16 +19,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {"Editing",OsuStatus.Editing },
             {"Never",OsuStatus.Null }
         };
-
-
-
-        public PatternEdit()
-        {
-            InitializeComponent();
-            comboBox_saveEvent.DataSource = SaveEvents.Select(v => v.Key).ToList();
-
-        }
-
         public OutputPattern Current
         {
             get { return _current; }
@@ -50,6 +40,27 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         public EventHandler<OutputPattern> DeletePattern;
         public EventHandler AddPattern;
         private Dictionary<string, string> _replacements;
+        private Dictionary<string, string> _liveReplacements = new Dictionary<string, string>
+        {
+            { "!acc!", "98,05%" },
+            { "!300!", "301" },
+            { "!100!", "101" },
+            { "!50!", "51" },
+            { "!miss!", "15" },
+            { "!time!", "116,5" },
+            { "!combo!", "124" },
+            { "!comboMax!", "1000" },
+            { "!PpIfMapEndsNow!", "99,52pp" },
+            { "!PpIfRestFced!", "257,27pp" },
+            { "!AccIfRestFced!", "99,54%" }
+        };
+
+        public PatternEdit()
+        {
+            InitializeComponent();
+            comboBox_saveEvent.DataSource = SaveEvents.Select(v => v.Key).ToList();
+
+        }
 
         private void Save()
         {
@@ -60,8 +71,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Current.SaveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
             }
         }
-
-
+        
         private void button_Click(object sender, EventArgs e)
         {
             if (sender == button_save)
@@ -106,6 +116,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 var toFormat = textBox_formating.Text;
                 foreach (var r in _replacements)
+                {
+                    toFormat = toFormat.Replace(r.Key, r.Value);
+                }
+                foreach (var r in _liveReplacements)
                 {
                     toFormat = toFormat.Replace(r.Key, r.Value);
                 }
