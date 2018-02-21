@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,12 +9,14 @@ using osu_StreamCompanion.Code.Core.DataTypes;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
-    public class OutputPattern : EventArgs, INotifyPropertyChanged,ICloneable
+    public class OutputPattern : EventArgs, INotifyPropertyChanged, ICloneable
     {
-        private static readonly List<string> MemoryFormatTokens= new List<string>
+        private static readonly List<string> _memoryFormatTokens = new List<string>
         {
             "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!comboMax!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!"
         };
+
+        public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
         private bool _isMemoryFormat;
         private OsuStatus _saveEvent;
         private string _pattern;

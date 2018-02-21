@@ -92,6 +92,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         }
         private void textBox_formating_TextChanged(object sender, EventArgs e)
         {
+            if (!this.IsHandleCreated || this.IsDisposed || Current == null)
+                return;
+            var isMemoryPattern = Current.MemoryFormatTokens.Any(textBox_formating.Text.Contains);
+            label_warning.Visible = isMemoryPattern;
+            comboBox_saveEvent.SelectedItem = isMemoryPattern? "Playing" : comboBox_saveEvent.SelectedItem;
+            comboBox_saveEvent.Enabled = !isMemoryPattern;
+
+
             if (_replacements == null)
                 textBox_preview.Text = "Change map in osu! to see preview";
             else

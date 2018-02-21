@@ -45,13 +45,13 @@
             this.patternEdit.Current = null;
             this.patternEdit.Location = new System.Drawing.Point(0, 259);
             this.patternEdit.Name = "patternEdit";
-            this.patternEdit.Size = new System.Drawing.Size(601, 107);
+            this.patternEdit.Size = new System.Drawing.Size(601, 125);
             this.patternEdit.TabIndex = 1;
             // 
             // checkBox_disableDiskSaving
             // 
             this.checkBox_disableDiskSaving.AutoSize = true;
-            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(247, 343);
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(247, 361);
             this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
             this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(153, 17);
             this.checkBox_disableDiskSaving.TabIndex = 2;

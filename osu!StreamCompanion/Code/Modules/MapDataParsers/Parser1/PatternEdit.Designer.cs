@@ -38,6 +38,7 @@
             this.button_addNew = new System.Windows.Forms.Button();
             this.button_delete = new System.Windows.Forms.Button();
             this.comboBox_saveEvent = new System.Windows.Forms.ComboBox();
+            this.label_warning = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label_commandName
@@ -60,7 +61,7 @@
             // button_save
             // 
             this.button_save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_save.Location = new System.Drawing.Point(6, 81);
+            this.button_save.Location = new System.Drawing.Point(6, 101);
             this.button_save.Name = "button_save";
             this.button_save.Size = new System.Drawing.Size(75, 23);
             this.button_save.TabIndex = 6;
@@ -104,7 +105,7 @@
             // button_addNew
             // 
             this.button_addNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_addNew.Location = new System.Drawing.Point(87, 81);
+            this.button_addNew.Location = new System.Drawing.Point(87, 101);
             this.button_addNew.Name = "button_addNew";
             this.button_addNew.Size = new System.Drawing.Size(75, 23);
             this.button_addNew.TabIndex = 11;
@@ -115,7 +116,7 @@
             // button_delete
             // 
             this.button_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_delete.Location = new System.Drawing.Point(168, 81);
+            this.button_delete.Location = new System.Drawing.Point(168, 101);
             this.button_delete.Name = "button_delete";
             this.button_delete.Size = new System.Drawing.Size(75, 23);
             this.button_delete.TabIndex = 12;
@@ -132,10 +133,23 @@
             this.comboBox_saveEvent.Size = new System.Drawing.Size(121, 21);
             this.comboBox_saveEvent.TabIndex = 14;
             // 
+            // label_warning
+            // 
+            this.label_warning.AutoSize = true;
+            this.label_warning.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_warning.ForeColor = System.Drawing.Color.Crimson;
+            this.label_warning.Location = new System.Drawing.Point(3, 81);
+            this.label_warning.Name = "label_warning";
+            this.label_warning.Size = new System.Drawing.Size(300, 13);
+            this.label_warning.TabIndex = 15;
+            this.label_warning.Text = "Detected live tokens. This pattern will save only when playing!";
+            this.label_warning.Visible = false;
+            // 
             // PatternEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label_warning);
             this.Controls.Add(this.comboBox_saveEvent);
             this.Controls.Add(this.button_delete);
             this.Controls.Add(this.button_addNew);
@@ -147,7 +161,7 @@
             this.Controls.Add(this.label_commandName);
             this.Controls.Add(this.textBox_FileName);
             this.Name = "PatternEdit";
-            this.Size = new System.Drawing.Size(585, 107);
+            this.Size = new System.Drawing.Size(585, 127);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,5 +179,6 @@
         private System.Windows.Forms.Button button_addNew;
         private System.Windows.Forms.Button button_delete;
         private System.Windows.Forms.ComboBox comboBox_saveEvent;
+        private System.Windows.Forms.Label label_warning;
     }
 }
