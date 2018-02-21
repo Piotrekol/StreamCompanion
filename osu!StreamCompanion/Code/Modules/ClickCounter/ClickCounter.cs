@@ -269,10 +269,10 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             var ret = new Dictionary<string, string>();
             for (int i = 0; i < _keyList.Count; i++)
             {
-                ret.Add($"!{_filenames[_keyList[i]]}!", _keyCount[_keyList[i]].ToString());
+                ret[$"!{_filenames[_keyList[i]]}!"] = _keyCount[_keyList[i]].ToString();
             }
-            ret.Add("!M1!", _rightMouseCount.ToString());
-            ret.Add("!M2!", _leftMouseCount.ToString());
+            ret["!M1!"] = _rightMouseCount.ToString();
+            ret["!M2!"] = _leftMouseCount.ToString();
             return ret;
         }
     }
