@@ -51,7 +51,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         [DisplayName("Event")]
         public string SaveEventStr
         {
-            get {
+            get
+            {
                 switch (SaveEvent)
                 {
                     case OsuStatus.All: return "All";
@@ -61,7 +62,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     case OsuStatus.Watching: return "Watching";
                     case OsuStatus.Null: return "Never";
                     default: return "Unknown";
-                } 
+                }
             }
         }
 
@@ -74,6 +75,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 if (value == _saveEvent) return;
                 _saveEvent = value;
                 OnPropertyChanged(nameof(SaveEvent));
+                OnPropertyChanged(nameof(SaveEventStr));
             }
         }
         [Browsable(false)]
