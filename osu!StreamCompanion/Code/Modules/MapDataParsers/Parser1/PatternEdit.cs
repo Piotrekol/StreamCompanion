@@ -29,10 +29,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 this.BeginInvoke((MethodInvoker)(() =>
                 {
                     _current = value;
-                    textBox_formating.Text = value?.Pattern ?? "";
-                    textBox_FileName.Text = value?.Name ?? "";
                     if (value != null)
                         comboBox_saveEvent.SelectedItem = SaveEvents.First(s => s.Value == value.SaveEvent).Key;
+                    textBox_formating.Text = value?.Pattern ?? "";
+                    textBox_FileName.Text = value?.Name ?? "";
+                    
                 }));
             }
         }
