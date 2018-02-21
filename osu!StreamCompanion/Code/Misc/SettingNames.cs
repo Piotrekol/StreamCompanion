@@ -49,6 +49,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry osuPostLogin = new ConfigEntry("osuPostLogin", "");
         public readonly ConfigEntry osuPostPassword = new ConfigEntry("osuPostPassword", "");
         public readonly ConfigEntry osuPostEnabled = new ConfigEntry("osuPostEnabled", false);
+        public readonly ConfigEntry osuPostEndpoint = new ConfigEntry("osuPostEndpoint", @"http://osupost.givenameplz.de/input.php?u=");
         
 
 

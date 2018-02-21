@@ -14,19 +14,21 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
 
         private Settings _settings;
         public bool Started { get; set; }
-        OsuPostApi api = new OsuPostApi();
+        private OsuPostApi api = new OsuPostApi();
         public void Start(ILogger logger)
         {
             Started = true;
+            api.EndpointUrl = _settings.Get<string>(_names.osuPostEndpoint);
             SwitchApiStatus(_settings.Get<bool>(_names.osuPostEnabled));
             _settings.SettingUpdated+=SettingUpdated;
         }
 
         private void SettingUpdated(object sender, SettingUpdated settingUpdated)
         {
-            if (settingUpdated.Name != _names.osuPostEnabled.Name)
+            if (settingUpdated.Name == _names.osuPostEnabled.Name)
                 SwitchApiStatus(_settings.Get<bool>(_names.osuPostEnabled));
-
+            else if (settingUpdated.Name == _names.osuPostEndpoint.Name)
+                api.EndpointUrl = _settings.Get<string>(_names.osuPostEndpoint);
         }
 
         public string SettingGroup { get; } = "osu!Post";

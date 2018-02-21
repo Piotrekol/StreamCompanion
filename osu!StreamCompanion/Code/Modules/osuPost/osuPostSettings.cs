@@ -17,6 +17,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
             InitializeComponent();
             textBox_userId.Text = _settings.Get<string>(_names.osuPostLogin);
             textBox_userPassword.Text = _settings.Get<string>(_names.osuPostPassword);
+            textBox_endpointUrl.Text = _settings.Get<string>(_names.osuPostEndpoint);
             panel_settings.Enabled = _settings.Get<bool>(_names.osuPostEnabled);
             init = false;
         }
@@ -46,6 +47,29 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
             if (init) return;
             _settings.Add(_names.osuPostEnabled.Name, checkBox_osuPostEnabled.Checked, true);
             panel_settings.Enabled = checkBox_osuPostEnabled.Checked;
+        }
+
+
+        private void checkBox_advanced_CheckedChanged(object sender, EventArgs e)
+        {
+            panel_advanced.Visible = checkBox_advanced.Checked;
+        }
+
+        private void textBox_endpointUrl_TextChanged(object sender, EventArgs e)
+        {
+            if (init) return;
+            Uri uriResult;
+            bool valid = Uri.TryCreate(textBox_endpointUrl.Text, UriKind.Absolute, out uriResult)
+                          && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            if (valid)
+                _settings.Add(_names.osuPostEndpoint.Name, textBox_endpointUrl.Text, true);
+            else
+                MessageBox.Show("Invalid url - I recommend copy-pasting it if you have one", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void button_resetEndpoint_Click(object sender, EventArgs e)
+        {
+            textBox_endpointUrl.Text = _names.osuPostEndpoint.Default<string>();
         }
     }
 }

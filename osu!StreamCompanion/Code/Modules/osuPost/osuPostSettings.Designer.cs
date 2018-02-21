@@ -39,7 +39,13 @@
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
             this.panel_settings = new System.Windows.Forms.Panel();
+            this.panel_advanced = new System.Windows.Forms.Panel();
+            this.textBox_endpointUrl = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.checkBox_advanced = new System.Windows.Forms.CheckBox();
+            this.button_resetEndpoint = new System.Windows.Forms.Button();
             this.panel_settings.SuspendLayout();
+            this.panel_advanced.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkBox_osuPostEnabled
@@ -140,6 +146,8 @@
             // 
             // panel_settings
             // 
+            this.panel_settings.Controls.Add(this.panel_advanced);
+            this.panel_settings.Controls.Add(this.checkBox_advanced);
             this.panel_settings.Controls.Add(this.label2);
             this.panel_settings.Controls.Add(this.label5);
             this.panel_settings.Controls.Add(this.label1);
@@ -151,8 +159,57 @@
             this.panel_settings.Controls.Add(this.label3);
             this.panel_settings.Location = new System.Drawing.Point(4, 27);
             this.panel_settings.Name = "panel_settings";
-            this.panel_settings.Size = new System.Drawing.Size(244, 105);
+            this.panel_settings.Size = new System.Drawing.Size(482, 138);
             this.panel_settings.TabIndex = 11;
+            // 
+            // panel_advanced
+            // 
+            this.panel_advanced.Controls.Add(this.button_resetEndpoint);
+            this.panel_advanced.Controls.Add(this.textBox_endpointUrl);
+            this.panel_advanced.Controls.Add(this.label6);
+            this.panel_advanced.Location = new System.Drawing.Point(238, 31);
+            this.panel_advanced.Name = "panel_advanced";
+            this.panel_advanced.Size = new System.Drawing.Size(241, 100);
+            this.panel_advanced.TabIndex = 13;
+            this.panel_advanced.Visible = false;
+            // 
+            // textBox_endpointUrl
+            // 
+            this.textBox_endpointUrl.Location = new System.Drawing.Point(6, 28);
+            this.textBox_endpointUrl.Name = "textBox_endpointUrl";
+            this.textBox_endpointUrl.Size = new System.Drawing.Size(232, 20);
+            this.textBox_endpointUrl.TabIndex = 1;
+            this.textBox_endpointUrl.TextChanged += new System.EventHandler(this.textBox_endpointUrl_TextChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(3, 7);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(66, 13);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Endpoint url:";
+            // 
+            // checkBox_advanced
+            // 
+            this.checkBox_advanced.AutoSize = true;
+            this.checkBox_advanced.Location = new System.Drawing.Point(238, 8);
+            this.checkBox_advanced.Name = "checkBox_advanced";
+            this.checkBox_advanced.Size = new System.Drawing.Size(75, 17);
+            this.checkBox_advanced.TabIndex = 12;
+            this.checkBox_advanced.Text = "Advanced";
+            this.checkBox_advanced.UseVisualStyleBackColor = true;
+            this.checkBox_advanced.CheckedChanged += new System.EventHandler(this.checkBox_advanced_CheckedChanged);
+            // 
+            // button_resetEndpoint
+            // 
+            this.button_resetEndpoint.Location = new System.Drawing.Point(6, 52);
+            this.button_resetEndpoint.Name = "button_resetEndpoint";
+            this.button_resetEndpoint.Size = new System.Drawing.Size(75, 23);
+            this.button_resetEndpoint.TabIndex = 2;
+            this.button_resetEndpoint.Text = "Reset";
+            this.button_resetEndpoint.UseVisualStyleBackColor = true;
+            this.button_resetEndpoint.Click += new System.EventHandler(this.button_resetEndpoint_Click);
             // 
             // osuPostSettings
             // 
@@ -164,6 +221,8 @@
             this.Size = new System.Drawing.Size(489, 168);
             this.panel_settings.ResumeLayout(false);
             this.panel_settings.PerformLayout();
+            this.panel_advanced.ResumeLayout(false);
+            this.panel_advanced.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -181,5 +240,10 @@
         private System.Windows.Forms.Label label5;
         public System.Windows.Forms.CheckBox checkBox_osuPostEnabled;
         private System.Windows.Forms.Panel panel_settings;
+        public System.Windows.Forms.CheckBox checkBox_advanced;
+        private System.Windows.Forms.Panel panel_advanced;
+        private System.Windows.Forms.TextBox textBox_endpointUrl;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button_resetEndpoint;
     }
 }

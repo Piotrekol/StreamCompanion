@@ -10,6 +10,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         string _userId = "-1";
         string _userKey = "";
         bool _isLoginDataSet;
+        public string EndpointUrl = @"http://osupost.givenameplz.de/input.php?u=";
         public bool IsEnabled => _isLoginDataSet;
 
         public class ErrorReport : EventArgs
@@ -184,7 +185,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         #region Server Requests
         private string SendRequestToServer(string dataToSend)
         {
-            var uri = @"http://osupost.givenameplz.de/input.php?u=" + _userId;
+            var uri = EndpointUrl + _userId;
             var postParams = dataToSend;
 
             string htmlResult;
