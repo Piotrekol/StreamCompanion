@@ -21,15 +21,18 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             Started = true;
             CheckForUpdates();
         }
-
+        
         private Dictionary<string, string> GetChangelog()
         {
+            Dictionary<string, string> log = null;
             var rawData = GetStringData(githubChangelogUrl);
-            var json = JArray.Parse(rawData);
-            var log = json.Where(j =>
-                    Helpers.Helpers.GetDateFromVersionString(j["tag_name"].ToString()) > _currentVersion)
-                .ToDictionary(j => j["tag_name"].ToString(), j => j["body"].ToString());
-
+            if (!string.IsNullOrWhiteSpace(rawData))
+            {
+                var json = JArray.Parse(rawData);
+                log = json.Where(j =>
+                        Helpers.Helpers.GetDateFromVersionString(j["tag_name"].ToString()) > _currentVersion)
+                    .ToDictionary(j => j["tag_name"].ToString(), j => j["body"].ToString());
+            }
             return log;
         }
         private void CheckForUpdates()
@@ -41,6 +44,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 if (string.IsNullOrWhiteSpace(rawData))
                 {
                     setStatus("Could not get update information. - rawData");
+                    return;
                 }
                 var json = JObject.Parse(rawData);
                 var newestReleaseVersion = json["tag_name"].ToString();

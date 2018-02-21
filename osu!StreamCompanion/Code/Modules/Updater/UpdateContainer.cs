@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 
         public string GetChangelog(bool rtf)
         {
-            if (Changelog == null)
+            if (Changelog == null || Changelog.Count == 0)
             {
                 if (rtf)
                 {
@@ -29,16 +29,16 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 {
                     var version = e.Key;
                     var changelog = e.Value;
-                    
-                    ret += string.Format(@"\b Version: {0}\b0 \line ",version);
-                    ret += changelog.Replace("\n",@" \line ").Replace("\t",@"\tab")+ @" \line \line ";
+
+                    ret += string.Format(@"\b Version: {0}\b0 \line ", version);
+                    ret += changelog.Replace("\n", @" \line ").Replace("\t", @"\tab") + @" \line \line ";
                 }
                 ret += "}";
 
             }
             else
             {
-             
+
                 foreach (var e in Changelog)
                 {
                     var version = e.Key;
