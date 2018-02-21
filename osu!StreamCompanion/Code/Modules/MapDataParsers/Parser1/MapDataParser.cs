@@ -17,43 +17,43 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private Settings _settings;
         private readonly object _lockingObject = new object();
         private ParserSettings _parserSettings = null;
+        private ILogger _logger;
 
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
             Started = true;
+            _logger = logger;
             Load();
-            if (_settings.Get<bool>(_names.FirstRun))
+            if (_patterns.Count == 0)
             {
-                if (_patterns.Count == 0)
+                _patterns.Add(new OutputPattern()
                 {
-                    _patterns.Add(new OutputPattern()
-                    {
-                        Name="np_listening",
-                        Pattern = "Listening: !ArtistRoman! - !TitleRoman!",
-                        SaveEvent = OsuStatus.Listening
-                    });
-                    _patterns.Add(new OutputPattern()
-                    {
-                        Name = "np_playing",
-                        Pattern = "Playing: !ArtistRoman! - !TitleRoman! [!DiffName!] CS:!cs! AR:!ar! OD:!od! HP:!hp!",
-                        SaveEvent = OsuStatus.Playing
-                    });
-                    _patterns.Add(new OutputPattern()
-                    {
-                        Name = "np_playing_details",
-                        Pattern = "CS:!cs! AR:!ar! OD:!od! HP:!hp!",
-                        SaveEvent = OsuStatus.Playing
-                    });
-                    _patterns.Add(new OutputPattern()
-                    {
-                        Name = "np_playing_DL",
-                        Pattern = "!dl!",
-                        SaveEvent = OsuStatus.Playing
-                    });
-                    //TODO: add default patterns
-                }
+                    Name = "np_listening",
+                    Pattern = "Listening: !ArtistRoman! - !TitleRoman!",
+                    SaveEvent = OsuStatus.Listening
+                });
+                _patterns.Add(new OutputPattern()
+                {
+                    Name = "np_playing",
+                    Pattern = "Playing: !ArtistRoman! - !TitleRoman! [!DiffName!] CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                    SaveEvent = OsuStatus.Playing
+                });
+                _patterns.Add(new OutputPattern()
+                {
+                    Name = "np_playing_details",
+                    Pattern = "CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                    SaveEvent = OsuStatus.Playing
+                });
+                _patterns.Add(new OutputPattern()
+                {
+                    Name = "np_playing_DL",
+                    Pattern = "!dl!",
+                    SaveEvent = OsuStatus.Playing
+                });
+                //TODO: add default patterns
             }
+
             _patterns.ListChanged += PatternsOnListChanged;
 
         }
@@ -72,7 +72,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 ret = new List<OutputPattern>();
                 foreach (var p in _patterns)
                 {
-                    var newPattern = (OutputPattern) p.Clone();
+                    var newPattern = (OutputPattern)p.Clone();
                     newPattern.Replacements = replacements;
                     ret.Add(newPattern);
                 }
@@ -134,8 +134,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private void Load()
         {
             List<string> filenames = _settings.Get(_names.PatternFileNames.Name);
-            List<string> Patterns = _settings.Get(_names.Patterns.Name);
+            List<string> patterns = _settings.Get(_names.Patterns.Name);
             List<int> saveEvents = _settings.Geti(_names.saveEvents.Name);
+            if (filenames.Count != patterns.Count || filenames.Count != saveEvents.Count)
+            {
+                _logger?.Log("Your patterns seem to be broken, reseting. {0} {1} {2}", LogLevel.Error,
+                    filenames.Count.ToString(), patterns.Count.ToString(), saveEvents.Count.ToString());
+                return;
+            }
             lock (_lockingObject)
             {
                 _patterns.Clear();
@@ -152,7 +158,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     _patterns.Add(new OutputPattern()
                     {
                         Name = filenames[i],
-                        Pattern = Patterns[i],
+                        Pattern = patterns[i],
                         SaveEvent = (OsuStatus)saveEvents[i],
                     });
                 }
