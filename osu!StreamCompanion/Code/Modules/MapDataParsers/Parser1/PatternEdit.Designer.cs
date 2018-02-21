@@ -37,7 +37,6 @@
             this.textBox_preview = new System.Windows.Forms.TextBox();
             this.button_addNew = new System.Windows.Forms.Button();
             this.button_delete = new System.Windows.Forms.Button();
-            this.checkBox_memoryPattern = new System.Windows.Forms.CheckBox();
             this.comboBox_saveEvent = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
@@ -124,16 +123,6 @@
             this.button_delete.UseVisualStyleBackColor = true;
             this.button_delete.Click += new System.EventHandler(this.button_Click);
             // 
-            // checkBox_memoryPattern
-            // 
-            this.checkBox_memoryPattern.AutoSize = true;
-            this.checkBox_memoryPattern.Location = new System.Drawing.Point(473, 8);
-            this.checkBox_memoryPattern.Name = "checkBox_memoryPattern";
-            this.checkBox_memoryPattern.Size = new System.Drawing.Size(109, 17);
-            this.checkBox_memoryPattern.TabIndex = 13;
-            this.checkBox_memoryPattern.Text = "Is memory pattern";
-            this.checkBox_memoryPattern.UseVisualStyleBackColor = true;
-            // 
             // comboBox_saveEvent
             // 
             this.comboBox_saveEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -148,7 +137,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.comboBox_saveEvent);
-            this.Controls.Add(this.checkBox_memoryPattern);
             this.Controls.Add(this.button_delete);
             this.Controls.Add(this.button_addNew);
             this.Controls.Add(this.label2);
@@ -176,7 +164,6 @@
         private System.Windows.Forms.TextBox textBox_preview;
         private System.Windows.Forms.Button button_addNew;
         private System.Windows.Forms.Button button_delete;
-        private System.Windows.Forms.CheckBox checkBox_memoryPattern;
         private System.Windows.Forms.ComboBox comboBox_saveEvent;
     }
 }

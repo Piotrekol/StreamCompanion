@@ -41,7 +41,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     _current = value;
                     textBox_formating.Text = value?.Pattern ?? "";
                     textBox_FileName.Text = value?.Name ?? "";
-                    checkBox_memoryPattern.Checked = value?.IsMemoryFormat ?? false;
                     if (value != null)
                         comboBox_saveEvent.SelectedItem = SaveEvents.First(s => s.Value == value.SaveEvent).Key;
                 }));
@@ -58,7 +57,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 Current.Name = textBox_FileName.Text;
                 Current.Pattern = textBox_formating.Text;
-                Current.IsMemoryFormat = checkBox_memoryPattern.Checked;
                 Current.SaveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
             }
         }

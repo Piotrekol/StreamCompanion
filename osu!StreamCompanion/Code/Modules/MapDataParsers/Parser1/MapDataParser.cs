@@ -118,19 +118,16 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 List<string> filenames = new List<string>();
                 List<string> Patterns = new List<string>();
                 List<int> saveEvents = new List<int>();
-                List<int> IsPatternMemory = new List<int>();
                 foreach (var f in _patterns)
                 {
                     filenames.Add(f.Name);
                     Patterns.Add(f.Pattern);
                     saveEvents.Add((int)f.SaveEvent);
-                    IsPatternMemory.Add(f.IsMemoryFormat ? 1 : 0);
                 }
 
                 _settings.Add(_names.PatternFileNames.Name, filenames);
                 _settings.Add(_names.Patterns.Name, Patterns);
                 _settings.Add(_names.saveEvents.Name, saveEvents);
-                _settings.Add(_names.PatternIsMemory.Name, IsPatternMemory);
             }
             _settings.Save();
         }
@@ -139,18 +136,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             List<string> filenames = _settings.Get(_names.PatternFileNames.Name);
             List<string> Patterns = _settings.Get(_names.Patterns.Name);
             List<int> saveEvents = _settings.Geti(_names.saveEvents.Name);
-            List<int> IsPatternMemory = _settings.Geti(_names.PatternIsMemory.Name);
             lock (_lockingObject)
             {
                 _patterns.Clear();
                 for (int i = 0; i < filenames.Count; i++)
                 {
-                    //Converting from ealier versions
-                    bool isMemory = false;
-                    if (IsPatternMemory.Count > i)
-                    {
-                        isMemory = IsPatternMemory[i] == 1;
-                    }
+                    //Converting from ealier versions                    
                     if (saveEvents[i] == 27)
                         saveEvents[i] = (int)OsuStatus.All;
                     if (filenames[i].EndsWith(".txt"))
@@ -163,7 +154,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         Name = filenames[i],
                         Pattern = Patterns[i],
                         SaveEvent = (OsuStatus)saveEvents[i],
-                        IsMemoryFormat = isMemory
                     });
                 }
             }

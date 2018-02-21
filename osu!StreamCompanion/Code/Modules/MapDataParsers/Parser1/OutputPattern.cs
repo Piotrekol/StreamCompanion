@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using CollectionManager.Annotations;
 using osu_StreamCompanion.Code.Core.DataTypes;
 
@@ -9,6 +10,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
     public class OutputPattern : EventArgs, INotifyPropertyChanged,ICloneable
     {
+        private static readonly List<string> MemoryFormatTokens= new List<string>
+        {
+            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!comboMax!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!"
+        };
         private bool _isMemoryFormat;
         private OsuStatus _saveEvent;
         private string _pattern;
@@ -34,6 +39,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 if (value == _pattern) return;
                 _pattern = value;
+                IsMemoryFormat = MemoryFormatTokens.Any(value.Contains);
                 OnPropertyChanged(nameof(Pattern));
             }
         }
@@ -67,17 +73,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 OnPropertyChanged(nameof(SaveEvent));
             }
         }
+        [Browsable(false)]
         [DisplayName("Memory format")]
-        public bool IsMemoryFormat
-        {
-            get { return _isMemoryFormat; }
-            set
-            {
-                if (value == _isMemoryFormat) return;
-                _isMemoryFormat = value;
-                OnPropertyChanged(nameof(IsMemoryFormat));
-            }
-        }
+        public bool IsMemoryFormat { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
