@@ -15,6 +15,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private const string githubUpdateUrl = baseGithubUrl + "/releases/latest";
         private const string githubChangelogUrl = baseGithubUrl + "/releases";
         private DateTime _currentVersion = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
+        private Exception exception = null;
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -35,6 +36,14 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             }
             return log;
         }
+
+        private void SetErrorMessage(string baseMsg)
+        {
+            string ret = baseMsg+" ";
+            if (exception != null)
+                ret += exception.Message;
+            setStatus(ret);
+        }
         private void CheckForUpdates()
         {
             new Thread(() =>
@@ -43,14 +52,14 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 string rawData = GetStringData(githubUpdateUrl);
                 if (string.IsNullOrWhiteSpace(rawData))
                 {
-                    setStatus("Could not get update information. - rawData");
+                    SetErrorMessage("Could not get update information. - rawData");
                     return;
                 }
                 var json = JObject.Parse(rawData);
                 var newestReleaseVersion = json["tag_name"].ToString();
                 if (string.IsNullOrWhiteSpace(newestReleaseVersion))
                 {
-                    setStatus("Could not get update information. - newestRelease");
+                    SetErrorMessage("Could not get update information. - newestRelease");
                 }
                 else if (Helpers.Helpers.GetDateFromVersionString(newestReleaseVersion) > _currentVersion)
                 {
@@ -68,7 +77,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                         }
                         if (asset == null)
                         {
-                            setStatus("Could not find file to download!");
+                            SetErrorMessage("Could not find file to download!");
                             return;
                         }
 
@@ -85,9 +94,10 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 
                         ShowUpdateWindow(container);
                     }
-                    catch
+                    catch(Exception e)
                     {
-                        setStatus("There was a problem with update information.");
+                        exception = e;
+                        SetErrorMessage("There was a problem with update information.");
                     }
                 }
                 else
@@ -125,14 +135,15 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                         contents = wc.DownloadString(url);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
+                    exception = e;
                 }
                 return contents;
             });
             return ret ?? string.Empty;
         }
-
+        
         private void setStatus(string status)
         {
             _mainWindowHandle.UpdateText = status;
