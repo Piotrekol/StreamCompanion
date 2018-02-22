@@ -5,12 +5,13 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap;
 
 namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
     public class ClickCounter : ISettingsProvider, IModule, ISaveRequester, IDisposable, IMapDataReplacements
-    { 
-        
+    {
+        private FileMapManager _fileMapManager = new FileMapManager();
         private readonly SettingNames _names = SettingNames.Instance;
         private Settings _settings;
         private ClickCounterSettings _frmSettings;
@@ -19,6 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         private ISaver _saver;
         private long _rightMouseCount;
         private long _leftMouseCount;
+        private bool disableSavingToDisk = false;
         private readonly Dictionary<int, bool> _keyPressed = new Dictionary<int, bool>();
         private readonly List<int> _keyList = new List<int>();
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
@@ -57,13 +59,18 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         private void MouseListener_OnRightMouseDown(object sender, EventArgs e)
         {
             _rightMouseCount++;
-            _saver.Save("M1.txt", _rightMouseCount.ToString());
+            if (!disableSavingToDisk)
+                _saver.Save("M1.txt", _rightMouseCount.ToString());
+            _fileMapManager.Write("SC-M1", _rightMouseCount.ToString());
         }
 
         private void _mouseListener_OnLeftMouseDown(object sender, EventArgs e)
         {
             _leftMouseCount++;
-            _saver.Save("M2.txt", _leftMouseCount.ToString());
+            if (!disableSavingToDisk)
+                _saver.Save("M2.txt", _leftMouseCount.ToString());
+            _fileMapManager.Write("SC-M2", _leftMouseCount.ToString());
+
         }
 
         private void UnHookAll()
@@ -96,7 +103,9 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
                 if (_keyPressed[args.VKCode])
                 {
                     _keyCount[args.VKCode]++;
-                    _saver.Save(_filenames[args.VKCode], _keyCount[args.VKCode].ToString());
+                    if (!disableSavingToDisk)
+                        _saver.Save(_filenames[args.VKCode], _keyCount[args.VKCode].ToString());
+                    _fileMapManager.Write("SC-" + _filenames[args.VKCode].Replace(".txt", ""), _keyCount[args.VKCode].ToString());
                     _keyPressed[args.VKCode] = false;
                     _keysPerX?.AddToKeys();
                 }
@@ -114,7 +123,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         public void SetSettingsHandle(Settings settings)
         {
             _settings = settings;
-
+            disableSavingToDisk = _settings.Get<bool>(_names.DisableClickCounterWrite);
             Load();
         }
 
@@ -252,7 +261,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             _settings.Add(_names.RightMouseCount.Name, _rightMouseCount);
             _settings.Add(_names.LeftMouseCount.Name, _leftMouseCount);
         }
-        
+
         public void SetSaveHandle(ISaver saver)
         {
             _saver = saver;

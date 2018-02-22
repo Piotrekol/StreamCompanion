@@ -23,6 +23,8 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry RightMouseCount = new ConfigEntry("rightMouseCount", 0L);
         public readonly ConfigEntry LeftMouseCount = new ConfigEntry("leftMouseCount", 0L);
         public readonly ConfigEntry ResetKeysOnRestart = new ConfigEntry("ResetKeysOnRestart", false);
+        public readonly ConfigEntry DisableClickCounterWrite = new ConfigEntry("DisableClickCounterWrite", false);
+
         //Data parser
         public readonly ConfigEntry PatternFileNames = new ConfigEntry("PatternFileNames", new List<string>());
         public readonly ConfigEntry Patterns = new ConfigEntry("Patterns", new List<string>());

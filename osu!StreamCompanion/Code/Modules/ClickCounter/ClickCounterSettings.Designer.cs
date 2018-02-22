@@ -42,6 +42,7 @@
             this.label_MouseRight = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkBox_disableDiskSaving = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox_Mouse.SuspendLayout();
             this.SuspendLayout();
@@ -140,7 +141,7 @@
             this.groupBox_Mouse.Controls.Add(this.label_MouseRight);
             this.groupBox_Mouse.Controls.Add(this.label2);
             this.groupBox_Mouse.Controls.Add(this.label1);
-            this.groupBox_Mouse.Location = new System.Drawing.Point(230, 241);
+            this.groupBox_Mouse.Location = new System.Drawing.Point(246, 240);
             this.groupBox_Mouse.Name = "groupBox_Mouse";
             this.groupBox_Mouse.Size = new System.Drawing.Size(179, 70);
             this.groupBox_Mouse.TabIndex = 6;
@@ -183,10 +184,22 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Right:";
             // 
+            // checkBox_disableDiskSaving
+            // 
+            this.checkBox_disableDiskSaving.AutoSize = true;
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(4, 299);
+            this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
+            this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(236, 17);
+            this.checkBox_disableDiskSaving.TabIndex = 7;
+            this.checkBox_disableDiskSaving.Text = "Disable saving files on disk (Requires restart)";
+            this.checkBox_disableDiskSaving.UseVisualStyleBackColor = true;
+            this.checkBox_disableDiskSaving.CheckedChanged += new System.EventHandler(this.checkBox_disableDiskSaving_CheckedChanged);
+            // 
             // ClickCounterSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox_disableDiskSaving);
             this.Controls.Add(this.groupBox_Mouse);
             this.Controls.Add(this.checkBox_enableMouseHook);
             this.Controls.Add(this.checkBox_EnableKPX);
@@ -220,5 +233,6 @@
         private System.Windows.Forms.GroupBox groupBox_Mouse;
         private System.Windows.Forms.Label label_MouseLeft;
         private System.Windows.Forms.Label label_MouseRight;
+        private System.Windows.Forms.CheckBox checkBox_disableDiskSaving;
     }
 }

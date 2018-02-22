@@ -11,6 +11,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
     public partial class ClickCounterSettings : UserControl
     {
+        private readonly SettingNames _names = SettingNames.Instance;
         private Settings _settings;
         private KeyboardCounterKeyClick keyboardCounterKeyClick;
         public event EventHandler KeysChanged;
@@ -171,6 +172,11 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         public void SetLeftMouseCount(long count)
         {
             label_MouseLeft.Text = count.ToString();
+        }
+
+        private void checkBox_disableDiskSaving_CheckedChanged(object sender, EventArgs e)
+        {
+            _settings.Add(_names.DisableClickCounterWrite.Name, checkBox_disableDiskSaving.Checked);
         }
     }
 }
