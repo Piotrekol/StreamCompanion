@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using osu_StreamCompanion.Code.Interfaces;
@@ -19,6 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; //Force usage of TLS1.2 when possible.
             Started = true;
             CheckForUpdates();
         }
@@ -131,7 +133,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 {
                     using (var wc = new ImpatientWebClient())
                     {
-                        wc.Headers.Add("user-agent", "StreamCompanion_Updater");
+                        wc.Headers.Add("user-agent", "StreamCompanion_Updater_" + Program.ScVersion);
                         contents = wc.DownloadString(url);
                     }
                 }
