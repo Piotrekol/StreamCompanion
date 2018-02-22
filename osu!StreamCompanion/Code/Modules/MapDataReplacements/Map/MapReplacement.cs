@@ -21,7 +21,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             Dictionary<string, string> dict;
             if (map.FoundBeatmaps)
             {
-                dict = map.BeatmapsFound[0].GetDict(map.Mods);
+                dict = map.BeatmapsFound[0].GetDict();
 
                 var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
                 if (string.IsNullOrWhiteSpace(osuLocation))
@@ -34,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             }
             else
             {
-                dict = ((Beatmap)null).GetDict(map.Mods, true);
+                dict = ((Beatmap)null).GetDict(true);
                 dict.Add("!OsuFileLocation!", "");
             }
 

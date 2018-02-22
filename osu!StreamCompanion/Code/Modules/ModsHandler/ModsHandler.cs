@@ -62,27 +62,38 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             Dictionary<string, string> dict;
             if (map.FoundBeatmaps)
             {
+                var foundMap = map.BeatmapsFound[0];
                 var mods = map.Mods?.Item1 ?? Mods.Omod;
-                var c = _difficultyCalculator.ApplyMods(map.BeatmapsFound[0], mods);
+                var c = _difficultyCalculator.ApplyMods(foundMap, mods);
+
+                var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
                 dict = new Dictionary<string, string>()
                 {
+                    {"!mods!", map.Mods?.Item2 ?? string.Empty },
                     {"!mAR!", Math.Round(c["AR"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
                     {"!mCS!", Math.Round(c["CS"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
                     {"!mOD!", Math.Round(c["OD"], 1).ToString(System.Globalization.CultureInfo.InvariantCulture)},
-                    {
-                        "!mStars!", Math.Round(map.BeatmapsFound[0].Stars(PlayMode.Osu, mods), 2)
-                            .ToString(System.Globalization.CultureInfo.InvariantCulture)
-                    }
+                    {"!mHP!",string.Format("{0:0.##}", c["HP"]) },
+                    { "!mStars!", Math.Round(foundMap.Stars(PlayMode.Osu, mods), 2).ToString(System.Globalization.CultureInfo.InvariantCulture)},
+                    {"!mBpm!",bpm },
+                    {"!mMaxBpm!",string.Format("{0:0}", c["MaxBpm"]) },
+                    {"!mMinBpm!",string.Format("{0:0}", c["MinBpm"]) },
                 };
             }
             else
             {
                 dict = new Dictionary<string, string>()
                 {
+                    {"!mods!", string.Empty },
                     {"!mAR!", string.Empty},
                     {"!mCS!", string.Empty},
                     {"!mOD!", string.Empty},
-                    {"!mStars!", string.Empty}
+                    {"!mHP!", string.Empty},
+                    {"!mStars!", string.Empty},
+                    {"!mBpm!", string.Empty},
+                    {"!mMaxBpm!", string.Empty},
+                    {"!mMinBpm!", string.Empty}
+
                 };
             }
             return dict;

@@ -122,41 +122,8 @@ namespace osu_StreamCompanion.Code.Helpers
                 }
             }
         }
-
-        public static Dictionary<string, string> GetDict(this Beatmap bm, Tuple<Mods, string> mods, bool empty = false)
-        {
-            var dict = bm.GetDict();
-            dict.Add("!mods!", mods?.Item2 ?? "");
-            if (mods != null)
-            {
-                double modifier = 1;
-                if ((mods.Item1 & Mods.Dt) != 0)
-                {
-                    modifier *= 1.5;
-                }
-                else if ((mods.Item1 & Mods.Ht) != 0)
-                {
-                    modifier *= 0.75;
-                }
-
-                var minBpm = bm.MinBpm * modifier;
-                var maxBpm = bm.MaxBpm * modifier;
-                var bpm = Math.Abs(minBpm - maxBpm) < 0.95 ? minBpm.ToString("0") : string.Format("{0:0}-{1:0}", minBpm, maxBpm);
-
-                dict.Add("!mMaxBpm!", string.Format("{0:0}", minBpm));
-                dict.Add("!mMinBpm!", string.Format("{0:0}", maxBpm));
-                dict.Add("!mBpm!", bpm);
-            }
-            else
-            {
-                dict.Add("!mMaxBpm!", dict["!MaxBpm!"]);
-                dict.Add("!mMinBpm!", dict["!MinBpm!"]);
-                dict.Add("!mBpm!", dict["!Bpm!"]);
-            }
-
-            return dict;
-        }
-        private static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
+        
+        public static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
         {
             Dictionary<string, string> dict;
             if (bm == null || empty)

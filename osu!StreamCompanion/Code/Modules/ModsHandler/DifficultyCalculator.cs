@@ -22,6 +22,9 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             float od = map.OverallDifficulty;
             float ar = map.ApproachRate;
             float cs = map.CircleSize;
+            float hp = map.HpDrainRate;
+            double minBpm = map.MinBpm;
+            double maxBpm = map.MaxBpm;
             var retValue = new Dictionary<string, float>();
 
             if ((mods & Mods.MapChanging) == 0)
@@ -29,6 +32,9 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
                 retValue.Add("AR", ar);
                 retValue.Add("CS", cs);
                 retValue.Add("OD", od);
+                retValue.Add("HP", hp);
+                retValue.Add("MinBpm", (float)minBpm);
+                retValue.Add("MaxBpm", (float)maxBpm);
                 return retValue;
             }
 
@@ -46,7 +52,26 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
 
             od *= od_multiplier;
             float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);
+            //hp
+            if ((mods & Mods.Ez) != 0)
+                hp *= 0.5f;
+            else if ((mods & Mods.Hr) != 0)
+                hp *= 1.4f;
 
+            //bpm
+            double modifier = 1;
+            if ((mods & Mods.Dt) != 0)
+            {
+                modifier *= 1.5;
+            }
+            else if ((mods & Mods.Ht) != 0)
+            {
+                modifier *= 0.75;
+            }
+
+            minBpm *= modifier;
+            maxBpm *= modifier;
+            
             //ar 
             float ar_multiplier = 1;
 
@@ -89,7 +114,9 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             retValue.Add("AR", ar);
             retValue.Add("CS", cs);
             retValue.Add("OD", od);
-
+            retValue.Add("HP", hp);
+            retValue.Add("MinBpm", (float)minBpm);
+            retValue.Add("MaxBpm", (float)maxBpm);
             if ((mods & Mods.SpeedChanging) == 0)
                 return retValue;
 
