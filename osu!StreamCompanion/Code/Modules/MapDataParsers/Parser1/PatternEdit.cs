@@ -50,7 +50,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             { "!miss!", "15" },
             { "!time!", "116,5" },
             { "!combo!", "124" },
-            { "!comboMax!", "1000" },
+            { "!CurrentMaxCombo!", "1000" },
             { "!PpIfMapEndsNow!", "99,52pp" },
             { "!PpIfRestFced!", "257,27pp" },
             { "!AccIfRestFced!", "99,54%" }

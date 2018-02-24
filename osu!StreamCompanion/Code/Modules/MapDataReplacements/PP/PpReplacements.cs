@@ -33,6 +33,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
         {
             var ret = new Dictionary<string, string>
             {
+                {"!MaxCombo!", ""},
                 {"!SSPP!", ""},
                 {"!99.9PP!", ""},
                 {"!99PP!", ""},
@@ -66,6 +67,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
                     using (var reader = new StreamReader(stream))
                     {
                         var beatmap = Beatmap.Read(reader);
+
+                        ret["!MaxCombo!"] = beatmap.GetMaxCombo().ToString(CultureInfo.InvariantCulture);
 
                         var beatmapCalc = diffCalculator.Calc(beatmap, Mods.NoMod);
 

@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
     {
         private static readonly List<string> _memoryFormatTokens = new List<string>
         {
-            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!comboMax!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!"
+            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!CurrentMaxCombo!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!"
         };
 
         public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
