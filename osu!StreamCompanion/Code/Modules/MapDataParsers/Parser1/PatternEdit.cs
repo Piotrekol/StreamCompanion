@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core.DataTypes;
+using osu_StreamCompanion.Code.Helpers;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -33,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         comboBox_saveEvent.SelectedItem = SaveEvents.First(s => s.Value == value.SaveEvent).Key;
                     textBox_formating.Text = value?.Pattern ?? "";
                     textBox_FileName.Text = value?.Name ?? "";
-                    
+
                 }));
             }
         }
@@ -72,7 +73,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Current.SaveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
             }
         }
-        
+
         private void button_Click(object sender, EventArgs e)
         {
             if (sender == button_save)
@@ -107,7 +108,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 return;
             var isMemoryPattern = Current.MemoryFormatTokens.Any(textBox_formating.Text.Contains);
             label_warning.Visible = isMemoryPattern;
-            comboBox_saveEvent.SelectedItem = isMemoryPattern? "Playing" : comboBox_saveEvent.SelectedItem;
+            comboBox_saveEvent.SelectedItem = isMemoryPattern ? "Playing" : comboBox_saveEvent.SelectedItem;
             comboBox_saveEvent.Enabled = !isMemoryPattern;
 
 
@@ -118,11 +119,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 var toFormat = textBox_formating.Text;
                 foreach (var r in _replacements)
                 {
-                    toFormat = toFormat.Replace(r.Key, r.Value);
+                    toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
                 }
                 foreach (var r in _liveReplacements)
                 {
-                    toFormat = toFormat.Replace(r.Key, r.Value);
+                    toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
                 }
                 textBox_preview.Text = toFormat;
             }

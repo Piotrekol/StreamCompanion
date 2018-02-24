@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using CollectionManager.Annotations;
 using osu_StreamCompanion.Code.Core.DataTypes;
+using osu_StreamCompanion.Code.Helpers;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -97,7 +98,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 string toFormat = this.Pattern;
                 foreach (var r in Replacements)
                 {
-                    toFormat = toFormat.Replace(r.Key, r.Value);
+                    toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
                 }
                 return toFormat;
             }
