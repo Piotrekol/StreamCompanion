@@ -140,9 +140,10 @@
             this.label_warning.ForeColor = System.Drawing.Color.Crimson;
             this.label_warning.Location = new System.Drawing.Point(3, 81);
             this.label_warning.Name = "label_warning";
-            this.label_warning.Size = new System.Drawing.Size(300, 13);
+            this.label_warning.Size = new System.Drawing.Size(497, 13);
             this.label_warning.TabIndex = 15;
-            this.label_warning.Text = "Detected live tokens. This pattern will save only when playing!";
+            this.label_warning.Text = "Detected live tokens. This pattern will save only as memory file when playing! - " +
+    "Use OBS plugin to read it";
             this.label_warning.Visible = false;
             // 
             // PatternEdit
