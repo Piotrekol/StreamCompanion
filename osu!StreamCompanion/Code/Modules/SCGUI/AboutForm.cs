@@ -7,7 +7,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
         public AboutForm()
         {
             InitializeComponent();
-            richTextBox1.Text = @"This software is licensed under GNU GPL version 3. You can find the full text of the license inside this link:
+            richTextBox1.Text = @"This software is licensed under MIT. You can find the full text of the license inside this link:
 https://github.com/Piotrekol/StreamCompanion/blob/master/LICENSE
 StreamCompanion is written by Piotrekol
 https://github.com/Piotrekol
