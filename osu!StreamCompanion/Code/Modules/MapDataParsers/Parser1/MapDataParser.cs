@@ -30,13 +30,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 _patterns.Add(new OutputPattern()
                 {
                     Name = "np_listening",
-                    Pattern = "Listening: !ArtistRoman! - !TitleRoman!",
+                    Pattern = "Listening: !MapArtistTitle!",
                     SaveEvent = OsuStatus.Listening
                 });
                 _patterns.Add(new OutputPattern()
                 {
                     Name = "np_playing",
-                    Pattern = "Playing: !ArtistRoman! - !TitleRoman! [!DiffName!] CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                    Pattern = "Playing: !MapArtistTitle! !MapDiff! CS:!cs! AR:!ar! OD:!od! HP:!hp!",
                     SaveEvent = OsuStatus.Playing
                 });
                 _patterns.Add(new OutputPattern()
@@ -51,11 +51,27 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     Pattern = "!dl!",
                     SaveEvent = OsuStatus.Playing
                 });
-                //TODO: add default patterns
+                _patterns.Add(new OutputPattern()
+                {
+                    Name = "livepp_hits",
+                    Pattern = "!100!x100 !50!x50 !miss!xMiss",
+                    SaveEvent = OsuStatus.Playing
+                });
+                _patterns.Add(new OutputPattern()
+                {
+                    Name = "livepp_current_pp",
+                    Pattern = "!PpIfMapEndsNow!",
+                    SaveEvent = OsuStatus.Playing
+                });
+                _patterns.Add(new OutputPattern()
+                {
+                    Name = "current_mods",
+                    Pattern = "!mods!",
+                    SaveEvent = OsuStatus.Playing
+                });
             }
 
             _patterns.ListChanged += PatternsOnListChanged;
-
         }
 
         private void PatternsOnListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
