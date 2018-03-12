@@ -122,7 +122,7 @@ namespace osu_StreamCompanion.Code.Helpers
                 }
             }
         }
-        
+
         public static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
         {
             Dictionary<string, string> dict;
@@ -134,6 +134,8 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"!ArtistRoman!", string.Empty},
                     {"!TitleUnicode!", string.Empty},
                     {"!ArtistUnicode!", string.Empty},
+                    {"!MapArtistTitle!", string.Empty},
+                    {"!MapDiff!", string.Empty},
                     {"!Creator!", string.Empty},
                     {"!DiffName!", string.Empty},
                     {"!Mp3Name!", string.Empty},
@@ -175,6 +177,8 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"!ArtistRoman!", bm.ArtistRoman},
                     {"!TitleUnicode!", bm.TitleUnicode},
                     {"!ArtistUnicode!", bm.ArtistUnicode},
+                    {"!MapArtistTitle!", string.Format("{0} - {1}", bm.ArtistRoman, bm.TitleRoman) },
+                    {"!MapDiff!", string.IsNullOrWhiteSpace(bm.DiffName)? "" : "[" + bm.DiffName + "]" },
                     {"!Creator!", bm.Creator},
                     {"!DiffName!", bm.DiffName},
                     {"!Mp3Name!", bm.Mp3Name},
