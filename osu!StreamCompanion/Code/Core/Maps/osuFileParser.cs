@@ -188,7 +188,8 @@ namespace osu_StreamCompanion.Code.Core.Maps
         public Beatmap ReadBeatmapData(string fullFileDir)
         {
             var map = new Beatmap();
-            map.Dir = Path.GetFullPath(fullFileDir);
+            var directoryInfo = new DirectoryInfo(fullFileDir).Parent;
+            map.Dir = directoryInfo?.Name ?? "";
             map.OsuFileName = Path.GetFileName(fullFileDir);
 
             var filename = Path.GetFileNameWithoutExtension(map.OsuFileName);
