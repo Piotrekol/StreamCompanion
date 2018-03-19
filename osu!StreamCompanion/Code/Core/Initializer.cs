@@ -17,6 +17,7 @@ using osu_StreamCompanion.Code.Modules.MapDataFinders.NoData;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.osuMemoryID;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData;
 using osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap;
+using osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket;
 using osu_StreamCompanion.Code.Modules.MapDataGetters.Window;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
@@ -172,6 +173,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new ModImageGenerator());
             AddModule(new MainWindow());
             AddModule(new FileMapDataGetter());
+            AddModule(new TcpSocketDataGetter());
 
             for (int i = 0; i < _modules.Count; i++)
             {

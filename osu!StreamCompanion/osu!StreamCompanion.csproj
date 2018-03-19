@@ -198,6 +198,8 @@
     </Compile>
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapManager.cs" />
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapDataGetter.cs" />
+    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketDataGetter.cs" />
+    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketManager.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\OutputPattern.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
