@@ -29,15 +29,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 _patterns.Add(new OutputPattern()
                 {
-                    Name = "np_listening",
-                    Pattern = "Listening: !MapArtistTitle!",
-                    SaveEvent = OsuStatus.Listening
-                });
-                _patterns.Add(new OutputPattern()
-                {
-                    Name = "np_playing",
-                    Pattern = "Playing: !MapArtistTitle! !MapDiff! CS:!cs! AR:!ar! OD:!od! HP:!hp!",
-                    SaveEvent = OsuStatus.Playing
+                    Name = "np_all",
+                    Pattern = "!MapArtistTitle! !MapDiff! CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                    SaveEvent = OsuStatus.All
                 });
                 _patterns.Add(new OutputPattern()
                 {
