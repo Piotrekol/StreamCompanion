@@ -200,6 +200,12 @@
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapDataGetter.cs" />
     <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketDataGetter.cs" />
     <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketManager.cs" />
+    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.Designer.cs">
+      <DependentUpon>TcpSocketSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\OutputPattern.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
@@ -383,6 +389,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.resx">
+      <DependentUpon>TcpSocketSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.resx">
       <DependentUpon>ParserSettings.cs</DependentUpon>

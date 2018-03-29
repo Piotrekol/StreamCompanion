@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
@@ -8,7 +9,7 @@ using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 {
-    public class TcpSocketDataGetter : IModule, IMapDataGetter, ISettings, IDisposable
+    public class TcpSocketDataGetter : IModule, IMapDataGetter, ISettingsProvider, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -49,6 +50,22 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
         public void SetSettingsHandle(Settings settings)
         {
             _settings = settings;
+        }
+
+        public string SettingGroup { get; } = "Output patterns";
+        private TcpSocketSettings settingsUserControl = null;
+        public void Free()
+        {
+            settingsUserControl?.Dispose();
+        }
+
+        public UserControl GetUiSettings()
+        {
+            if (settingsUserControl == null || settingsUserControl.IsDisposed)
+            {
+                settingsUserControl = new TcpSocketSettings(_settings);
+            }
+            return settingsUserControl;
         }
     }
 }
