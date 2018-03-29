@@ -51,7 +51,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             }
             if (!written && AutoReconnect)
             {
-                Connect();
+                if(Connect())
+                    Write(data);
             }
         }
 
