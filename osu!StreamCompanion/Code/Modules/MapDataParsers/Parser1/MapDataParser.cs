@@ -104,7 +104,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _settings = settings;
         }
 
-        public string SettingGroup { get; } = "Map formating";
+        public string SettingGroup { get; } = "Output patterns";
         public void Free()
         {
             _parserSettings.Dispose();
