@@ -20,7 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             _tcpClient = new TcpClient();
             try
             {
-                _tcpClient.Connect(IPAddress.Parse("127.0.0.1"), ServerPort);
+                _tcpClient.Connect(IPAddress.Parse(ServerIp), ServerPort);
                 _writer = new BinaryWriter(_tcpClient.GetStream());
             }
             catch (SocketException)
