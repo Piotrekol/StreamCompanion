@@ -43,7 +43,7 @@
             // patternEdit
             // 
             this.patternEdit.Current = null;
-            this.patternEdit.Location = new System.Drawing.Point(0, 259);
+            this.patternEdit.Location = new System.Drawing.Point(0, 257);
             this.patternEdit.Name = "patternEdit";
             this.patternEdit.Size = new System.Drawing.Size(601, 125);
             this.patternEdit.TabIndex = 1;
@@ -51,7 +51,7 @@
             // checkBox_disableDiskSaving
             // 
             this.checkBox_disableDiskSaving.AutoSize = true;
-            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(247, 361);
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(247, 359);
             this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
             this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(153, 17);
             this.checkBox_disableDiskSaving.TabIndex = 2;
@@ -66,7 +66,7 @@
             this.Controls.Add(this.patternEdit);
             this.Controls.Add(this.patternList);
             this.Name = "ParserSettings";
-            this.Size = new System.Drawing.Size(601, 409);
+            this.Size = new System.Drawing.Size(601, 383);
             this.ResumeLayout(false);
             this.PerformLayout();
 
