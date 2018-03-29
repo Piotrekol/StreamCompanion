@@ -51,7 +51,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
                 foreach (var s in map.FormatedStrings)
                 {
                     if (!s.IsMemoryFormat) //memory pattern is handled elsewhere
-                        output.Add(s.Name, s.GetFormatedPattern());
+                        output[s.Name] = s.GetFormatedPattern();
                 }
                 var json = JsonConvert.SerializeObject(output);
                 _tcpSocketManager.Write(json);
