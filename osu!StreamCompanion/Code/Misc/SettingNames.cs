@@ -54,6 +54,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry osuPostEndpoint = new ConfigEntry("osuPostEndpoint", @"http://osupost.givenameplz.de/input.php?u=");
 
         //TcpSocket
+        public readonly ConfigEntry tcpSocketEnabled = new ConfigEntry("tcpSocketEnabled", false);
         public readonly ConfigEntry tcpSocketIp = new ConfigEntry("tcpSocketIp", "127.0.0.1");
         public readonly ConfigEntry tcpSocketPort = new ConfigEntry("tcpSocketPort", 7839);
         public readonly ConfigEntry tcpSocketLiveMapDataPort = new ConfigEntry("tcpSocketLiveMapDataPort", 7840);

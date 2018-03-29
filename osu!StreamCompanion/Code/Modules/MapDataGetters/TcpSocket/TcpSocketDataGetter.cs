@@ -21,20 +21,24 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             _tcpSocketManager = new TcpSocketManager();
             _tcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _tcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketPort);
-            _tcpSocketManager.Connect();
+            if (_settings.Get<bool>(_names.tcpSocketEnabled))
+                _tcpSocketManager.Connect();
             Started = true;
         }
 
         public void SetNewMap(MapSearchResult map)
         {
-            Dictionary<string, string> output = new Dictionary<string, string>();
-            foreach (var s in map.FormatedStrings)
+            if (_settings.Get<bool>(_names.tcpSocketEnabled))
             {
-                if (!s.IsMemoryFormat)//memory pattern is handled elsewhere
-                    output.Add(s.Name, s.GetFormatedPattern());
+                Dictionary<string, string> output = new Dictionary<string, string>();
+                foreach (var s in map.FormatedStrings)
+                {
+                    if (!s.IsMemoryFormat) //memory pattern is handled elsewhere
+                        output.Add(s.Name, s.GetFormatedPattern());
+                }
+                var json = JsonConvert.SerializeObject(output);
+                _tcpSocketManager.Write(json);
             }
-            var json = JsonConvert.SerializeObject(output);
-            _tcpSocketManager.Write(json);
         }
 
         public void Dispose()
