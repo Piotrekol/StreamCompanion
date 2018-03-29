@@ -20,6 +20,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
         {
             _settings = settings;
             InitializeComponent();
+            checkBox_EnableTcpOutput.Checked = _settings.Get<bool>(_names.tcpSocketEnabled);
+
+
+            checkBox_EnableTcpOutput.CheckedChanged += checkBox_EnableTcpOutput_CheckedChanged;
+
         }
 
         private void checkBox_EnableTcpOutput_CheckedChanged(object sender, EventArgs e)

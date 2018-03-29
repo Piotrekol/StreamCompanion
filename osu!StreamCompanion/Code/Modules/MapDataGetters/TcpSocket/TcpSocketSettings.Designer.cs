@@ -40,7 +40,6 @@
             this.checkBox_EnableTcpOutput.TabIndex = 0;
             this.checkBox_EnableTcpOutput.Text = "Enable TCP output of patterns";
             this.checkBox_EnableTcpOutput.UseVisualStyleBackColor = true;
-            this.checkBox_EnableTcpOutput.CheckedChanged += new System.EventHandler(this.checkBox_EnableTcpOutput_CheckedChanged);
             // 
             // TcpSocketSettings
             // 
