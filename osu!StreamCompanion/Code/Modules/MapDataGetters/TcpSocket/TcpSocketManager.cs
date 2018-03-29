@@ -36,7 +36,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             bool written = false;
             try
             {
-                if (_tcpClient.Connected)
+                if (_tcpClient?.Connected ?? false)
                 {
                     _writer?.Write(data);
                     written = true;
