@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
+using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 
@@ -24,7 +25,16 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             _tcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketPort);
             if (_settings.Get<bool>(_names.tcpSocketEnabled))
                 _tcpSocketManager.Connect();
+            _settings.SettingUpdated+=SettingUpdated;
             Started = true;
+        }
+
+        private void SettingUpdated(object sender, SettingUpdated settingUpdated)
+        {
+            if (settingUpdated.Name == _names.tcpSocketEnabled.Name)
+            {
+                _tcpSocketManager.Connect();
+            }
         }
 
         public void SetNewMap(MapSearchResult map)
@@ -42,10 +52,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             }
         }
 
-        public void Dispose()
-        {
-            _tcpSocketManager?.Dispose();
-        }
+       
 
         public void SetSettingsHandle(Settings settings)
         {
@@ -66,6 +73,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
                 settingsUserControl = new TcpSocketSettings(_settings);
             }
             return settingsUserControl;
+        }
+
+        public void Dispose()
+        {
+            _settings.SettingUpdated -= SettingUpdated;
+            _tcpSocketManager?.Dispose();
+            settingsUserControl?.Dispose();
         }
     }
 }
