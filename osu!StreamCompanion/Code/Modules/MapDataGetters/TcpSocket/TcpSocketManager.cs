@@ -12,7 +12,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 
         public int ServerPort = 7839;
         public string ServerIp = "127.0.0.1";
-
+        public bool AutoReconnect = false;
         public bool Connect()
         {
             if (_writer != null)
@@ -33,10 +33,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 
         public void Write(string data)
         {
+            bool written = false;
             try
             {
                 if (_tcpClient.Connected)
+                {
                     _writer?.Write(data);
+                    written = true;
+                }
             }
             catch (IOException)
             {
@@ -44,6 +48,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
                 _writer?.Dispose();
                 _writer = null;
                 ((IDisposable)_tcpClient)?.Dispose();
+            }
+            if (!written && AutoReconnect)
+            {
+                Connect();
             }
         }
 

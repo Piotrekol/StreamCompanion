@@ -24,8 +24,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             _tcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _tcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketPort);
             if (_settings.Get<bool>(_names.tcpSocketEnabled))
+            {
+                _tcpSocketManager.AutoReconnect = true;
                 _tcpSocketManager.Connect();
-            _settings.SettingUpdated+=SettingUpdated;
+            }
+            _settings.SettingUpdated += SettingUpdated;
             Started = true;
         }
 
@@ -33,7 +36,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
         {
             if (settingUpdated.Name == _names.tcpSocketEnabled.Name)
             {
-                _tcpSocketManager.Connect();
+                var enabled = _settings.Get<bool>(_names.tcpSocketEnabled);
+                _tcpSocketManager.AutoReconnect = enabled;
+                if (enabled)
+                    _tcpSocketManager.Connect();
             }
         }
 
@@ -52,7 +58,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
             }
         }
 
-       
+
 
         public void SetSettingsHandle(Settings settings)
         {
