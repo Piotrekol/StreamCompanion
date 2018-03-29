@@ -29,7 +29,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 
         private void checkBox_EnableTcpOutput_CheckedChanged(object sender, EventArgs e)
         {
-            _settings.Add(_names.tcpSocketEnabled.Name, checkBox_EnableTcpOutput.Checked);
+            _settings.Add(_names.tcpSocketEnabled.Name, checkBox_EnableTcpOutput.Checked, true);
         }
     }
 }
