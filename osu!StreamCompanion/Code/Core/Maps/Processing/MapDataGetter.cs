@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Interfaces;
@@ -35,6 +37,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         public MapSearchResult FindMapData(MapSearchArgs searchArgs)
         {
             MapSearchResult mapSearchResult = null;
+            Tuple<Mods, string> foundMods = null;
             for (int i = 0; i < _mapDataFinders.Count; i++)
             {
                 if ((_mapDataFinders[i].SearchModes & searchArgs.Status) == 0)
@@ -43,9 +46,13 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs);
                 if (mapSearchResult.FoundBeatmaps)
                 {
+                    if (mapSearchResult.Mods == null && foundMods != null)
+                        mapSearchResult.Mods = foundMods;
                     _logger.Log(string.Format(">Found data using \"{0}\" ID: {1}", _mapDataFinders[i].SearcherName, mapSearchResult.BeatmapsFound[0]?.MapId), LogLevel.Advanced);
                     break;
                 }
+                if (mapSearchResult.Mods != null)
+                    foundMods = mapSearchResult.Mods;
             }
             if (mapSearchResult == null)
                 mapSearchResult = new MapSearchResult();
