@@ -22,7 +22,17 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private OsuStatus _saveEvent;
         private string _pattern;
         private string _name;
-        public Dictionary<string, string> Replacements;
+        private Dictionary<string, string> _replacements;
+
+        public Dictionary<string, string> Replacements
+        {
+            get => _replacements;
+            set
+            {
+                lock (_lockingObject) _replacements = value; 
+            }
+        }
+        private readonly object _lockingObject = new Object();
         [DisplayName("Name")]
         public string Name
         {
@@ -95,12 +105,15 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (Replacements != null)
             {
-                string toFormat = this.Pattern ?? "";
-                foreach (var r in Replacements)
+                lock (_lockingObject)
                 {
-                    toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
+                    string toFormat = this.Pattern ?? "";
+                    foreach (var r in Replacements)
+                    {
+                        toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
+                    }
+                    return toFormat;
                 }
-                return toFormat;
             }
             return string.Empty;
         }
