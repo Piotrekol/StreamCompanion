@@ -116,7 +116,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 textBox_preview.Text = "Change map in osu! to see preview";
             else
             {
-                var toFormat = textBox_formating.Text;
+                var toFormat = textBox_formating.Text ?? "";
                 foreach (var r in _replacements)
                 {
                     toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);

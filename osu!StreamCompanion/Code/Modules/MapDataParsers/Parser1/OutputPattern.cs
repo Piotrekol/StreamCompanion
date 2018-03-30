@@ -95,7 +95,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (Replacements != null)
             {
-                string toFormat = this.Pattern;
+                string toFormat = this.Pattern ?? "";
                 foreach (var r in Replacements)
                 {
                     toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
