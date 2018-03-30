@@ -23,7 +23,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private string _pattern;
         private string _name;
         private Dictionary<string, string> _replacements;
-
+        [Browsable(false)]
         public Dictionary<string, string> Replacements
         {
             get => _replacements;
