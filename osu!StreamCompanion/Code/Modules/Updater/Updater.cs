@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
@@ -57,7 +58,16 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                     SetErrorMessage("Could not get update information. - rawData");
                     return;
                 }
-                var json = JObject.Parse(rawData);
+                JObject json;
+                try
+                {
+                    json = JObject.Parse(rawData);
+                }
+                catch (JsonReaderException)
+                {
+                    SetErrorMessage("Could not get update information. - invalidJson");
+                    return;
+                }
                 var newestReleaseVersion = json["tag_name"].ToString();
                 if (string.IsNullOrWhiteSpace(newestReleaseVersion))
                 {
