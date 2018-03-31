@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
@@ -20,9 +21,11 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
         ImageDeployer _imageDeployer;
         ImageGenerator _imageGenerator;
         private ModImageGeneratorSettings _modImageGeneratorSettings;
+        private ILogger _logger;
 
         public void Start(ILogger logger)
         {
+            _logger = logger;
             var imagesFolderName = "Images";
             _imageDeployer = new ImageDeployer(Path.Combine(_saver.SaveDirectory, imagesFolderName));
             _imageDeployer.DeployImages();
@@ -42,7 +45,14 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
                     string mods = map.Mods?.Item2 ?? "";
                     using (Bitmap img = _imageGenerator.GenerateImage(mods.Split(',')))
                     {
-                        img.Save(fullPathOfCreatedImage, ImageFormat.Png);
+                        try
+                        {
+                            img.Save(fullPathOfCreatedImage, ImageFormat.Png);
+                        }
+                        catch (ExternalException e)
+                        {
+                            _logger.Log("Image file save fail: {0} {1}",LogLevel.Error,e.ErrorCode.ToString(),e.Message?? "null");     
+                        }
                     }
                 }
             }
