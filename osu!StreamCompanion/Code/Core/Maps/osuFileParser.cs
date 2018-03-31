@@ -138,8 +138,9 @@ namespace osu_StreamCompanion.Code.Core.Maps
         private static KeyValuePair<string, string> SplitParam(string line)
         {
             var splited = line.Split(new[] { ':' }, 2);
-
-            return new KeyValuePair<string, string>(splited[0], splited[1].Trim());
+            if (splited.Length == 2)
+                return new KeyValuePair<string, string>(splited[0], splited[1].Trim());
+            return new KeyValuePair<string, string>(splited[0], "");
         }
         private static void ParseGeneral(List<string> lines, Beatmap map)
         {
