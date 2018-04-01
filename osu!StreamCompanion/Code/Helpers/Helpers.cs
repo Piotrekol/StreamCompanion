@@ -116,5 +116,14 @@ namespace osu_StreamCompanion.Code.Helpers
 
             return str;
         }
+
+        public static float Lerp(float firstValue, float secondValue, float by)
+        {
+            return firstValue * by + secondValue * (1 - by);
+        }
+        public static double Lerp(double firstValue, float secondValue, float by)
+        {
+            return firstValue * by + secondValue * (1 - by);
+        }
     }
 }
