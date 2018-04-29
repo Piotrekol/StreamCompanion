@@ -30,15 +30,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _settings.Add(_names.DisableDiskPatternWrite.Name, checkBox_disableDiskSaving.Checked);
         }
 
-        private void AddPattern(object sender, EventArgs eventArgs)
+        public static string GenerateFileName(IList<string> currentFileNames, string baseName = "name_")
         {
-            var baseName = "name_";
             string name;
             int i = 0;
             do
             {
                 name = baseName + i++;
-            } while (_patterns.Any(p => p.Name == name));
+            } while (currentFileNames.Any(fileName => fileName == name));
+            return name;
+        }
+        private void AddPattern(object sender, EventArgs eventArgs)
+        {
+            var name = GenerateFileName(_patterns.Select(p => p.Name).ToList());
             _patterns.Add(new OutputPattern()
             {
                 Name = name

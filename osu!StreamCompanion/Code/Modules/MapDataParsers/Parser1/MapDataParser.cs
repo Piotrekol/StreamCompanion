@@ -149,13 +149,30 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             List<int> saveEvents = _settings.Geti(_names.saveEvents.Name);
             if (filenames.Count != patterns.Count || filenames.Count != saveEvents.Count)
             {
-                string _filenames = _settings.Get<string>(_names.PatternFileNames);
-                string _patterns = _settings.Get<string>(_names.Patterns);
-                string _saveEvents = _settings.Get<string>(_names.saveEvents);
-                _logger?.Log("Your patterns seem to be broken, reseting. {0} {1} {2} \n{3}\n{4}\n{5}", LogLevel.Error,
+                string _filenames = _settings.GetRaw(_names.PatternFileNames.Name);
+                string _patterns = _settings.GetRaw(_names.Patterns.Name);
+                string _saveEvents = _settings.GetRaw(_names.saveEvents.Name);
+                _logger?.Log("User patterns are broken: {0} {1} {2} \n{3}\n{4}\n{5}", LogLevel.Error,
                     filenames.Count.ToString(), patterns.Count.ToString(), saveEvents.Count.ToString(),
                     _filenames, _patterns, _saveEvents);
-                return;
+                var userResponse = MessageBox.Show("Your output patterns are broken and could not be loaded successfully" + Environment.NewLine +
+                    "I can load them with missing data or just reset to default patterns." + Environment.NewLine +
+                    "Do you want to try to load them?"
+                    , "osu!StreamCompanion - User action required!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+                if (userResponse == DialogResult.No)
+                    return;
+
+                var requiredCount = Math.Max(filenames.Count, Math.Max(patterns.Count, saveEvents.Count));
+                var toFixCount = requiredCount * 3 - (filenames.Count + patterns.Count + saveEvents.Count);
+                while (filenames.Count < requiredCount)
+                    filenames.Add(ParserSettings.GenerateFileName(filenames, "Recovered_"));
+                while (patterns.Count < requiredCount)
+                    patterns.Add("Recovered");
+                while (saveEvents.Count < requiredCount)
+                    saveEvents.Add((int)OsuStatus.All);
+                MessageBox.Show("Finished recovering patterns" + Environment.NewLine +
+                                toFixCount + " entrys were missing" + Environment.NewLine +
+                                "Go to settings and check your patterns!!!", "osu!StreamCompanion - Done", MessageBoxButtons.OK);
             }
             lock (_lockingObject)
             {
@@ -167,7 +184,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         saveEvents[i] = (int)OsuStatus.All;
                     if (filenames[i].EndsWith(".txt"))
                         filenames[i] = filenames[i].Substring(0, filenames[i].LastIndexOf(".txt", StringComparison.Ordinal));
-                    
+
                     _patterns.Add(new OutputPattern()
                     {
                         Name = filenames[i],

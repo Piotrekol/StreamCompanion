@@ -15,6 +15,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly Dictionary<string, object> _settingsEntries = new Dictionary<string, object>();
         private ILogger _logger;
         private readonly List<string> _rawLines = new List<string>();
+        private readonly List<string> _backupRawLines = new List<string>();
         public EventHandler<SettingUpdated> SettingUpdated;
         private string saveLocation;
         private readonly string configFileName = "settings.ini";
@@ -55,6 +56,17 @@ namespace osu_StreamCompanion.Code.Core
             }
         }
 
+        public string GetRaw(string key, string defaultValue="")
+        {
+            int idx = _backupRawLines.AnyStartsWith(key);
+            if (idx > -1)
+            {
+                string[] splited = _backupRawLines[idx].Split(new[] { '=' }, 2);
+                return splited[1].Trim();
+            }
+            return defaultValue;
+
+        }
         public List<string> Get(string key)
         {
             lock (_lockingObject)
@@ -157,7 +169,9 @@ namespace osu_StreamCompanion.Code.Core
                     {
                         while (!fileHandle.EndOfStream)
                         {
-                            _rawLines.Add(fileHandle.ReadLine());
+                            string line = fileHandle.ReadLine();
+                            _rawLines.Add(line);
+                            _backupRawLines.Add(line);
                         }
                     }
             }
