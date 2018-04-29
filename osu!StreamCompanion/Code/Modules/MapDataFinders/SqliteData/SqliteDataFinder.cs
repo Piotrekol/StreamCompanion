@@ -10,17 +10,14 @@ using osu_StreamCompanion.Code.Windows;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 {
-    public class SqliteDataFinder : IModule, IMapDataFinder, IMainWindowUpdater, ISqliteUser, ISettings, IModParserGetter
+    public class SqliteDataFinder : IModule, IMapDataFinder, IMainWindowUpdater, ISqliteUser, ISettings
     {
-        private readonly SettingNames _names = SettingNames.Instance;
         public bool Started { get; set; }
         private ILogger _logger;
         private MainWindowUpdater _mainWindowHandle;
-        private OsuDatabaseLoader _osuDatabaseLoader;
 
         private SqliteControler _sqliteControler;
         private Settings _settingsHandle;
-        private List<IModParser> _modParser;
 
 
         public OsuStatus SearchModes { get; } = OsuStatus.Listening | OsuStatus.Null | OsuStatus.Playing |
@@ -28,47 +25,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
         public string SearcherName { get; } = "rawString";
 
-        class BeatmapLoaderLogger : CollectionManager.Interfaces.ILogger
-        {
-            private readonly MainWindowUpdater _handle;
-
-            public BeatmapLoaderLogger(MainWindowUpdater handle)
-            {
-                _handle = handle;
-            }
-            public void Log(string logMessage, params string[] vals)
-            {
-                _handle.BeatmapsLoaded = string.Format(logMessage, vals);
-            }
-        }
+        
         public void Start(ILogger logger)
         {
             Started = true;
             _logger = logger;
-            _osuDatabaseLoader = new LOsuDatabaseLoader(new BeatmapLoaderLogger(_mainWindowHandle), _sqliteControler, new Beatmap());
-
-            //_osuDatabaseLoader = new OsuDatabaseLoader(_logger, _modParser, _sqliteControler, _mainWindowHandle);
-            new System.Threading.Thread(() =>
-            {
-                string osudb = Path.Combine(_settingsHandle.Get<string>(_names.MainOsuDirectory), "osu!.db");
-                if (File.Exists(osudb))
-                {
-                    string newOsuFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                        @"Files", "osu!.db");
-
-                    if (File.Exists(newOsuFile))
-                        File.Delete(newOsuFile);
-
-                    File.Copy(osudb, newOsuFile);
-                    _osuDatabaseLoader.LoadDatabase(newOsuFile);
-
-                    File.Delete(newOsuFile);
-                }
-                else
-                {
-                    _mainWindowHandle.BeatmapsLoaded = "Could not locate osu!.db";
-                }
-            }).Start();
+            var cacheInitalizer = new CacheInitalizer(_mainWindowHandle, _sqliteControler, _settingsHandle,_logger);
+            cacheInitalizer.Initalize();
+            
         }
 
 
@@ -107,11 +71,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         public void SetSettingsHandle(Settings settings)
         {
             _settingsHandle = settings;
-        }
-
-        public void SetModParserHandle(List<IModParser> modParser)
-        {
-            _modParser = modParser;
         }
     }
 }
