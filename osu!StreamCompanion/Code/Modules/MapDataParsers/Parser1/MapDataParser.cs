@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
@@ -148,8 +149,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             List<int> saveEvents = _settings.Geti(_names.saveEvents.Name);
             if (filenames.Count != patterns.Count || filenames.Count != saveEvents.Count)
             {
-                _logger?.Log("Your patterns seem to be broken, reseting. {0} {1} {2}", LogLevel.Error,
-                    filenames.Count.ToString(), patterns.Count.ToString(), saveEvents.Count.ToString());
+                string _filenames = _settings.Get<string>(_names.PatternFileNames);
+                string _patterns = _settings.Get<string>(_names.Patterns);
+                string _saveEvents = _settings.Get<string>(_names.saveEvents);
+                _logger?.Log("Your patterns seem to be broken, reseting. {0} {1} {2} \n{3}\n{4}\n{5}", LogLevel.Error,
+                    filenames.Count.ToString(), patterns.Count.ToString(), saveEvents.Count.ToString(),
+                    _filenames, _patterns, _saveEvents);
                 return;
             }
             lock (_lockingObject)
@@ -162,9 +167,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         saveEvents[i] = (int)OsuStatus.All;
                     if (filenames[i].EndsWith(".txt"))
                         filenames[i] = filenames[i].Substring(0, filenames[i].LastIndexOf(".txt", StringComparison.Ordinal));
-
-
-
+                    
                     _patterns.Add(new OutputPattern()
                     {
                         Name = filenames[i],
