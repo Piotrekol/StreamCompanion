@@ -256,7 +256,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@Circles", DbType.Int32).Value = beatmap.Circles;
             _insertSql.Parameters.Add("@Sliders", DbType.Int32).Value = beatmap.Sliders;
             _insertSql.Parameters.Add("@Spinners", DbType.Int32).Value = beatmap.Spinners;
-            _insertSql.Parameters.Add("@EditDate", DbType.DateTime).Value = beatmap.EditDate;
+            _insertSql.Parameters.Add("@EditDate", DbType.DateTime).Value = beatmap.EditDate ?? DateTime.Now;
             _insertSql.Parameters.Add("@ApproachRate", DbType.Double).Value = beatmap.ApproachRate;
             _insertSql.Parameters.Add("@CircleSize", DbType.Double).Value = beatmap.CircleSize;
             _insertSql.Parameters.Add("@HpDrainRate", DbType.Double).Value = beatmap.HpDrainRate;
