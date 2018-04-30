@@ -263,7 +263,10 @@ namespace osu_StreamCompanion.Code.Helpers
         }
         public static string FullOsuFileLocation(this Beatmap beatmap, string songsDirectory)
         {
-            return Path.Combine(beatmap.BeatmapDirectory(songsDirectory), beatmap.OsuFileName);
+            var beatmapDirectory = beatmap.BeatmapDirectory(songsDirectory);
+            if (string.IsNullOrEmpty(beatmapDirectory) || string.IsNullOrEmpty(beatmap.OsuFileName))
+                return "";
+            return Path.Combine(beatmapDirectory, beatmap.OsuFileName);
         }
         private static readonly SettingNames _names = SettingNames.Instance;
 
