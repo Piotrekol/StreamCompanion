@@ -12,7 +12,7 @@ namespace osu_StreamCompanion.Code.Core
 {
     public class SqliteConnector : IDisposable, IMapDataStorer
     {
-        readonly SQLiteConnection _mDbConnection;
+        private SQLiteConnection _mDbConnection;
         private string DbFilename = "StreamCompanionCacheV2.db";
         private int _schemaVersion = 2;
         /*
@@ -57,12 +57,25 @@ namespace osu_StreamCompanion.Code.Core
         }
         public SqliteConnector()
         {
+
             _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "VideoDir", "StarsOsu" });
             _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "VARCHAR", "BLOB" });
             _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL UNIQUE", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL" });
+            try
+            {
+                Init();
+            }
+            catch (SQLiteException)
+            {
+                Init(true);
+            }
+        }
 
-            CreateFile(DbFilename);
-            _mDbConnection = new SQLiteConnection("Data Source=" + DbFilename + ";Version=3;New=False;Compress=True;");
+        private void Init(bool reset = false)
+        {
+            CreateFile(DbFilename, reset);
+            _mDbConnection =
+                new SQLiteConnection("Data Source=" + DbFilename + ";Version=3;New=False;Compress=True;");
             OpenConnection();
             CreateTables();
         }
@@ -154,7 +167,7 @@ namespace osu_StreamCompanion.Code.Core
             SQLiteCommand cmd = new SQLiteCommand(query, _mDbConnection);
             return cmd.ExecuteReader();
         }
-        private void CreateFile(string filename)
+        private void CreateFile(string filename, bool reset = false)
         {
             try
             {
@@ -165,6 +178,10 @@ namespace osu_StreamCompanion.Code.Core
                 if (File.Exists("StreamCompanionCache.db"))
                 {
                     File.Delete("StreamCompanionCache.db");
+                }
+                if (reset && File.Exists(filename))
+                {
+                    File.Delete(filename);
                 }
                 if (!File.Exists(filename))
                 {
