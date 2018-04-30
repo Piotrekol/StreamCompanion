@@ -202,8 +202,12 @@ namespace osu_StreamCompanion.Code.Core.Maps
             map.DiffName = BeatmapHelpers.GetDiffFromString(filename);
 
             List<string> lines = new List<string>();
-
-            //dirty & temporary file in use problem fix
+            Thread.Sleep(50);
+            FileInfo fileInfo = new FileInfo(fullFileDir);
+            while (Helpers.Helpers.FileIsLocked(fileInfo))
+            {
+                Thread.Sleep(1);
+            }
             int tryCount = 0;
             do
             {
@@ -217,6 +221,13 @@ namespace osu_StreamCompanion.Code.Core.Maps
                             lines.Add(fileHandle.ReadLine());
                         }
                     }
+                    using (var md5 = System.Security.Cryptography.MD5.Create())
+                    {
+                        using (var stream = System.IO.File.OpenRead(fullFileDir))
+                        {
+                            map.Md5 = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                        }
+                    }
                     tryCount = 5;
                 }
                 catch (IOException e)
@@ -227,14 +238,7 @@ namespace osu_StreamCompanion.Code.Core.Maps
             } while (tryCount < 2);
             if (tryCount != 5)
                 return map;
-
-            using (var md5 = System.Security.Cryptography.MD5.Create())
-            {
-                using (var stream = System.IO.File.OpenRead(fullFileDir))
-                {
-                    map.Md5 = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
-                }
-            }
+           
 
 
             if (string.IsNullOrEmpty(map.TitleUnicode))
