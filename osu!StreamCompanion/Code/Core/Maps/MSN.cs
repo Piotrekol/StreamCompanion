@@ -55,17 +55,22 @@ namespace osu_StreamCompanion.Code.Core.Maps
             {
                 COPYDATASTRUCT copydatastruct =
                     (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
-                string str = Marshal.PtrToStringUni(copydatastruct.lpData, copydatastruct.cbData / 2);
-                string[] separator = new string[] { @"\0" };
-                string[] sourceArray = str.Split(separator, StringSplitOptions.None);
-                if (sourceArray.Length > 8)
-                {
-                    _osuStatus["artist"] = sourceArray[5];
-                    _osuStatus["title"] = sourceArray[4];
-                    _osuStatus["diff"] = sourceArray[7];
-                    _osuStatus["status"] = sourceArray[3].Split(new[] { ' ' }, 2)[0];
 
-                    OnMSNStringChanged();
+                var ptr = copydatastruct.lpData;
+                if (ptr != IntPtr.Zero)
+                {
+                    string str = Marshal.PtrToStringUni(ptr, copydatastruct.cbData / 2);
+                    string[] separator = new string[] { @"\0" };
+                    string[] sourceArray = str.Split(separator, StringSplitOptions.None);
+                    if (sourceArray.Length > 8)
+                    {
+                        _osuStatus["artist"] = sourceArray[5];
+                        _osuStatus["title"] = sourceArray[4];
+                        _osuStatus["diff"] = sourceArray[7];
+                        _osuStatus["status"] = sourceArray[3].Split(new[] { ' ' }, 2)[0];
+
+                        OnMSNStringChanged();
+                    }
                 }
             }
             return DefWindowProcW(hWnd, msg, wParam, lParam);
