@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -34,7 +36,16 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         comboBox_saveEvent.SelectedItem = SaveEvents.First(s => s.Value == value.SaveEvent).Key;
                     textBox_formating.Text = value?.Pattern ?? "";
                     textBox_FileName.Text = value?.Name ?? "";
-
+                    checkBox_ShowIngame.Checked = value?.ShowInOsu ?? false;
+                    if (value?.Color != null)
+                    {
+                        panel_ColorPreview.BackColor = value.Color;
+                        label_TestText.ForeColor = value.Color;
+                    }
+                    numericUpDown_XPosition.Value = value?.XPosition ?? 200;
+                    numericUpDown_YPosition.Value = value?.YPosition ?? 200;
+                    if (value?.FontName != null)
+                        comboBox_font.SelectedItem = value.FontName;
                 }));
             }
         }
@@ -62,6 +73,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             InitializeComponent();
             comboBox_saveEvent.DataSource = SaveEvents.Select(v => v.Key).ToList();
 
+            using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
+            {
+                var fontNames = fontsCollection.Families.Select(f => f.Name).ToList();
+                comboBox_font.DataSource = fontNames;
+                comboBox_font.SelectedItem = fontNames.First(f => f == "Arial");
+            }
+
+
         }
 
         private void Save()
@@ -71,6 +90,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Current.Name = textBox_FileName.Text;
                 Current.Pattern = textBox_formating.Text;
                 Current.SaveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
+                Current.ShowInOsu = checkBox_ShowIngame.Checked;
+                Current.XPosition = Convert.ToInt32(numericUpDown_XPosition.Value);
+                Current.YPosition = Convert.ToInt32(numericUpDown_YPosition.Value);
+                Current.Color = panel_ColorPreview.BackColor;
+                Current.FontName = (string)comboBox_font.SelectedItem;
             }
         }
 
@@ -127,6 +151,40 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 }
                 textBox_preview.Text = toFormat;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.AllowFullOpen = true;
+            colorDialog.ShowHelp = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                panel_ColorPreview.BackColor = colorDialog.Color;
+                label_TestText.ForeColor = colorDialog.Color;
+            }
+
+        }
+
+        private void checkBox_ShowIngame_CheckedChanged(object sender, EventArgs e)
+        {
+            panel_showInOsu.Visible = checkBox_ShowIngame.Checked;
+        }
+
+        private void panel_ColorPreview_Click(object sender, EventArgs e)
+        {
+            button1_Click(sender, null);
+        }
+
+        private void comboBox_font_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var font = (string)comboBox_font.SelectedItem;
+            try
+            {
+                label_TestText.Font = new Font(font, 10);
+            }
+            catch (ArgumentException)
+            {}
         }
     }
 }

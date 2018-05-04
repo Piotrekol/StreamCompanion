@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Linq;
+using System.Windows;
 using CollectionManager.Annotations;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
@@ -66,7 +68,17 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 }
             }
         }
-
+        [Editable(false)]
+        [DisplayName("Ingame")]
+        public bool ShowInOsu { get; set; }
+        [Browsable(false)]
+        public int XPosition { get; set; }
+        [Browsable(false)]
+        public int YPosition { get; set; }
+        [Browsable(false)]
+        public Color Color { get; set; }
+        [Browsable(false)]
+        public string FontName { get; set; }
         [Browsable(false)]
         public OsuStatus SaveEvent
         {
