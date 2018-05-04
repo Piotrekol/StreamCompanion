@@ -40,7 +40,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
                 if (_files.ContainsKey(pipeName))
                     return _files[pipeName];
                 MapContainer f = new MapContainer() { File = MemoryMappedFile.CreateOrOpen(pipeName, 16 * 1024) };
-
+                if (pipeName == "Sc-ingamePatterns" || pipeName.StartsWith("conf-") || pipeName.StartsWith("value-"))
+                    f.ASCIIonly = true;
                 _files.Add(pipeName, f);
                 return f;
             }
