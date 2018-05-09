@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using CollectionManager.DataTypes;
 
@@ -124,6 +126,57 @@ namespace osu_StreamCompanion.Code.Helpers
         public static double Lerp(double firstValue, float secondValue, float by)
         {
             return firstValue * by + secondValue * (1 - by);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="file">File to check</param>
+        /// <param name="timeout">Timeout, in ms</param>
+        /// <returns></returns>
+        public static bool FileIsLocked(FileInfo file, int timeout)
+        {
+            var result = ExecWithTimeout(() =>
+            {
+                try
+                {
+                    while (FileIsLocked(file))
+                    {
+                        Thread.Sleep(1);
+                    }
+                }
+                catch (DirectoryNotFoundException)
+                { return true; }
+                catch (FileNotFoundException)
+                { return true; }
+                return false;
+            }, timeout);
+            return result;
+
+        }
+        public static bool FileIsLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
         }
     }
 }
