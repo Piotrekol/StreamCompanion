@@ -186,5 +186,17 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             catch (ArgumentException)
             {}
         }
+
+        private void button_changePatternPosition_Click(object sender, EventArgs e)
+        {
+            var dialog = new PatternPositionForm();
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                numericUpDown_XPosition.Value = dialog.X;
+                numericUpDown_XPosition.Value = dialog.Y;
+            }
+        }
+
     }
 }

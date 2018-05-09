@@ -227,6 +227,18 @@
     <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternList.Designer.cs">
       <DependentUpon>PatternList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPosition.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPosition.Designer.cs">
+      <DependentUpon>PatternPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.Designer.cs">
+      <DependentUpon>PatternPositionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\MapDataReplacements\PP\PpReplacements.cs" />
     <Compile Include="Code\Modules\ModsHandler\DifficultyCalculator.cs" />
     <Compile Include="Code\Modules\ModsHandler\ModsHandler.cs" />
@@ -402,6 +414,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternList.resx">
       <DependentUpon>PatternList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternPosition.resx">
+      <DependentUpon>PatternPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.resx">
+      <DependentUpon>PatternPositionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.resx">
       <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
