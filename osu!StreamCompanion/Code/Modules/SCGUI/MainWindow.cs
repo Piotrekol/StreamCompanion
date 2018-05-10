@@ -74,7 +74,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
 
         public UserControl GetUiSettings()
         {
-            return new UserControl();
+            return null;
         }
 
         public void GetMainWindowHandle(MainWindowUpdater mainWindowHandle)

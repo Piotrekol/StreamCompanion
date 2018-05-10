@@ -30,6 +30,9 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
             foreach (var setting in _settingsList)
             {
                 int tabNumber;
+                var control = setting.GetUiSettings();
+                if(control==null)
+                    continue;
                 //If group tab doesn't exist - create it
                 if (!_groupControlPostions.ContainsKey(setting.SettingGroup))
                 {
@@ -39,7 +42,6 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
                     tabNumber = _groupControlPostions[setting.SettingGroup].TabNumber;
 
                 //get control to add
-                var control = setting.GetUiSettings();
                 //set proper control postion
                 control.Location = new Point(_groupControlPostions[setting.SettingGroup].StartWidth, _groupControlPostions[setting.SettingGroup].StartHeight);
                 //add control

@@ -161,7 +161,6 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new OsuSongsFolderWatcher());
             
             AddModule(new FileSaveLocation());
-            AddModule(new Donation());
             AddModule(new CommandsPreview());
             AddModule(new OsuPost());
             AddModule(new Updater());
@@ -176,6 +175,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new MainWindow());
             AddModule(new FileMapDataGetter());
             AddModule(new TcpSocketDataGetter());
+            AddModule(new Donation());
 
             for (int i = 0; i < _modules.Count; i++)
             {

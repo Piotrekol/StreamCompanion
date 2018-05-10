@@ -38,6 +38,10 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry DisableDiskPatternWrite = new ConfigEntry("DisableDiskPatternWrite", false);
         //memory scanner
         public readonly ConfigEntry EnableMemoryScanner = new ConfigEntry("EnableMemoryScanner", true);
+
+        //ingame overlay
+        public readonly ConfigEntry EnableIngameOverlay = new ConfigEntry("EnableIngameOverlay", false);
+
         //mod images
         public readonly ConfigEntry EnableModImages = new ConfigEntry("EnableModImages", true);
         public readonly ConfigEntry ImageWidth = new ConfigEntry("ImageWidth", 720);

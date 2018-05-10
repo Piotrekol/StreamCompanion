@@ -22,8 +22,11 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
         public void Start(ILogger logger)
         {
             Started = true;
-            CopyFreeType();
-            Inject();
+            if (_settings.Get<bool>(_names.EnableIngameOverlay))
+            {
+                CopyFreeType();
+                Inject();
+            }
         }
 
         private void CopyFreeType()
@@ -85,12 +88,17 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
 
         public void Free()
         {
-            return;
+            _overlaySettings?.Dispose();
         }
 
+        private IngameOverlaySettings _overlaySettings;
         public UserControl GetUiSettings()
         {
-            return new UserControl();
+            if (_overlaySettings == null || _overlaySettings.IsDisposed)
+            {
+                _overlaySettings = new IngameOverlaySettings(_settings);
+            }
+            return _overlaySettings;
         }
     }
 }

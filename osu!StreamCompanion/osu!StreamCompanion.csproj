@@ -198,6 +198,12 @@
     </Compile>
     <Compile Include="Code\Modules\IngameOverlay\IngameOverlay.cs" />
     <Compile Include="Code\Modules\IngameOverlay\DllInjector.cs" />
+    <Compile Include="Code\Modules\IngameOverlay\IngameOverlaySettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\IngameOverlay\IngameOverlaySettings.Designer.cs">
+      <DependentUpon>IngameOverlaySettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\CacheInitalizer.cs" />
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapManager.cs" />
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapDataGetter.cs" />
@@ -401,6 +407,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\FirstRun\Phases\FirstRunMsn.resx">
       <DependentUpon>FirstRunMsn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Code\Modules\IngameOverlay\IngameOverlaySettings.resx">
+      <DependentUpon>IngameOverlaySettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
