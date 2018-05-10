@@ -56,11 +56,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
 
             if (!File.Exists(mapLocation)) return ret;
             FileInfo file = new FileInfo(mapLocation);
-            Thread.Sleep(50);//If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
-            while (FileIsLocked(file))
-            {
-                Thread.Sleep(1);
-            }
+            WaitForOsuFileLock(file);
 
             if (file.Length == 0) return ret;
             try
@@ -117,32 +113,27 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
             _ppCalculator = new PPv2(new PPv2Parameters(beatmap, _accCalculator.Count100, _accCalculator.Count50, _accCalculator.CountMiss, -1, _accCalculator.Count300, mods));
             return Math.Round(_ppCalculator.Total, 2);
         }
-        protected bool FileIsLocked(FileInfo file)
+
+        private void WaitForOsuFileLock(FileInfo file)
         {
-            FileStream stream = null;
+            //If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
+            var isLocked = Helpers.Helpers.ExecWithTimeout(() =>
+            {
+                while (!Helpers.Helpers.FileIsLocked(file))
+                {
+                    Thread.Sleep(1);
+                }
 
-            try
-            {
-                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
-            }
-            catch (IOException)
-            {
-                //the file is unavailable because it is:
-                //still being written to
-                //or being processed by another thread
-                //or does not exist (has already been processed)
                 return true;
-            }
-            finally
+            }, 200);
+            if (isLocked)
             {
-                if (stream != null)
-                    stream.Close();
+                while (Helpers.Helpers.FileIsLocked(file))
+                {
+                    Thread.Sleep(1);
+                }
             }
-
-            //file is not locked
-            return false;
         }
-
         private string GetOsuDir()
         {
             return _settings.Get<string>(_names.MainOsuDirectory);
