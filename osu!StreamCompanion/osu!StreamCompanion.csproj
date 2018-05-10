@@ -196,6 +196,8 @@
     <Compile Include="Code\Modules\FirstRun\Phases\FirstRunMsn.Designer.cs">
       <DependentUpon>FirstRunMsn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Modules\IngameOverlay\IngameOverlay.cs" />
+    <Compile Include="Code\Modules\IngameOverlay\DllInjector.cs" />
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\CacheInitalizer.cs" />
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapManager.cs" />
     <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapDataGetter.cs" />

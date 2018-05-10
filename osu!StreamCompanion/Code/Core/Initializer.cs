@@ -13,6 +13,7 @@ using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
 using osu_StreamCompanion.Code.Modules.FileSaveLocation;
 using osu_StreamCompanion.Code.Modules.FirstRun;
+using osu_StreamCompanion.Code.Modules.IngameOverlay;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.NoData;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.osuMemoryID;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData;
@@ -168,7 +169,8 @@ namespace osu_StreamCompanion.Code.Core
             //AddModule(new MemoryDataFinder());
             AddModule(new SqliteDataFinder());
             AddModule(new NoDataFinder());
-            
+
+            AddModule(new IngameOverlay());
             AddModule(new ModsHandler());
             AddModule(new ModImageGenerator());
             AddModule(new MainWindow());
