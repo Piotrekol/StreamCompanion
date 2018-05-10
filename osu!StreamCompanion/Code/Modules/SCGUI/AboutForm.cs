@@ -18,7 +18,10 @@ CollectionManager by Piotrekol
 OppaiSharp by HoLLy-HaCKeR
 oppai-ng by Francesco149
 SQLite
-Newtonsoft.Json by JamesNK";
+Newtonsoft.Json by JamesNK
+
+FreeType by David Turner, Robert Wilhelm, and Werner Lemberg
+FreeType license is avaliable at http://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT";
             richTextBox1.ReadOnly = true;
         }
 
