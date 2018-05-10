@@ -33,7 +33,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
                 {
                     var configName = "conf-" + name;
                     var valueName = "value-" + name;
-                    var config = $"{s.XPosition} {s.YPosition} {s.Color.R} {s.Color.G} {s.Color.B} {s.FontName}";
+                    var config = $"{s.XPosition} {s.YPosition} {s.Color.R} {s.Color.G} {s.Color.B} {s.FontName.Replace(' ','/')} {s.FontSize}";
                     _fileMapManager.Write(configName, config);
                     if (!s.IsMemoryFormat)
                         _fileMapManager.Write(valueName, valueToWrite);

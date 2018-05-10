@@ -36,7 +36,7 @@
             // checkBox_disableDiskSaving
             // 
             this.checkBox_disableDiskSaving.AutoSize = true;
-            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(247, 380);
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(246, 380);
             this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
             this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(153, 17);
             this.checkBox_disableDiskSaving.TabIndex = 2;
@@ -46,27 +46,27 @@
             // patternEdit
             // 
             this.patternEdit.Current = null;
-            this.patternEdit.Location = new System.Drawing.Point(0, 257);
+            this.patternEdit.Location = new System.Drawing.Point(0, 223);
             this.patternEdit.Name = "patternEdit";
-            this.patternEdit.Size = new System.Drawing.Size(601, 144);
+            this.patternEdit.Size = new System.Drawing.Size(601, 180);
             this.patternEdit.TabIndex = 1;
             // 
             // patternList
             // 
             this.patternList.Location = new System.Drawing.Point(0, 0);
             this.patternList.Name = "patternList";
-            this.patternList.Size = new System.Drawing.Size(601, 253);
+            this.patternList.Size = new System.Drawing.Size(640, 226);
             this.patternList.TabIndex = 0;
             // 
             // ParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.patternList);
             this.Controls.Add(this.checkBox_disableDiskSaving);
             this.Controls.Add(this.patternEdit);
-            this.Controls.Add(this.patternList);
             this.Name = "ParserSettings";
-            this.Size = new System.Drawing.Size(601, 404);
+            this.Size = new System.Drawing.Size(640, 403);
             this.ResumeLayout(false);
             this.PerformLayout();
 

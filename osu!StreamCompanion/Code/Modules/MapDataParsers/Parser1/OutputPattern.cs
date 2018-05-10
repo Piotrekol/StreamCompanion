@@ -80,6 +80,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         [Browsable(false)]
         public string FontName { get; set; }
         [Browsable(false)]
+        public int FontSize { get; set; }
+        [Browsable(false)]
         public OsuStatus SaveEvent
         {
             get { return _saveEvent; }

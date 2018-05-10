@@ -34,6 +34,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry PatternY = new ConfigEntry("PatternY", new List<int>());
         public readonly ConfigEntry PatternColor = new ConfigEntry("PatternColor", new List<string>());
         public readonly ConfigEntry PatternFontName = new ConfigEntry("PatternFontName", new List<string>());
+        public readonly ConfigEntry PatternFontSize = new ConfigEntry("PatternFontSize", new List<int>());
         public readonly ConfigEntry PatternIsMemory = new ConfigEntry("PatternIsMemory", new List<int>());
         public readonly ConfigEntry DisableDiskPatternWrite = new ConfigEntry("DisableDiskPatternWrite", false);
         //memory scanner

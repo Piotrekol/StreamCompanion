@@ -46,6 +46,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     numericUpDown_YPosition.Value = value?.YPosition ?? 200;
                     if (value?.FontName != null)
                         comboBox_font.SelectedItem = value.FontName;
+                    numericUpDown_fontSize.Value = value?.FontSize ?? 12;
                 }));
             }
         }
@@ -95,6 +96,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Current.YPosition = Convert.ToInt32(numericUpDown_YPosition.Value);
                 Current.Color = panel_ColorPreview.BackColor;
                 Current.FontName = (string)comboBox_font.SelectedItem;
+                Current.FontSize = Convert.ToInt32(numericUpDown_fontSize.Value);
             }
         }
 
