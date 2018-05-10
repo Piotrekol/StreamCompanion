@@ -39,6 +39,8 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "..\build\Release\osu!StreamCompanion.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\build\Release\StreamCompanion Updater.exe"; DestDir: "{app}"; Flags: onlyifdoesntexist
+Source: "..\dlls\freetype.dll"; DestDir: "{app}\Files\Dlls\"; Flags: ignoreversion
+Source: "..\dlls\osuOverlay.dll"; DestDir: "{app}\Files\Dlls\"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
@@ -46,6 +48,7 @@ Name: {app}; Permissions: users-modify
 Name: "{app}\Files"; Permissions: users-modify
 Name: "{app}\Files\Images"; Permissions: users-modify
 Name: "{app}\Files\Logs"; Permissions: users-modify
+Name: "{app}\Files\Dlls"; Permissions: users-modify
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
