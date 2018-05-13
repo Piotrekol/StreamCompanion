@@ -178,5 +178,25 @@ namespace osu_StreamCompanion.Code.Helpers
             //file is not locked
             return false;
         }
+        public static void WaitForOsuFileLock(FileInfo file)
+        {
+            //If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
+            var isLocked = ExecWithTimeout(() =>
+            {
+                while (!FileIsLocked(file))
+                {
+                    Thread.Sleep(1);
+                }
+                return true;
+            }, 50);
+
+            if (isLocked)
+            {
+                while (FileIsLocked(file))
+                {
+                    Thread.Sleep(1);
+                }
+            }
+        }
     }
 }
