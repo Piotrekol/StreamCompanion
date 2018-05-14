@@ -18,6 +18,8 @@ namespace osu_StreamCompanion.Code.Helpers
         [DebuggerStepThrough()]
         public static DateTime GetDateFromVersionString(string version)
         {
+            if(version=="N/A")
+                return DateTime.MinValue;
             try
             {
                 return DateTime.ParseExact(version.TrimStart('v'), "yyMMdd.HH",
