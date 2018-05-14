@@ -22,7 +22,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
         private bool _isMemoryFormat;
         private OsuStatus _saveEvent;
-        private string _pattern;
+        private string _pattern="Your pattern text";
         private string _name;
         public Dictionary<string, string> Replacements;
         [DisplayName("Name")]
@@ -71,16 +71,21 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         [Editable(false)]
         [DisplayName("Ingame")]
         public bool ShowInOsu { get; set; }
+
         [Browsable(false)]
-        public int XPosition { get; set; }
+        public int XPosition { get; set; } = 200;
+
         [Browsable(false)]
-        public int YPosition { get; set; }
+        public int YPosition { get; set; } = 200;
+
         [Browsable(false)]
-        public Color Color { get; set; }
+        public Color Color { get; set; } = Color.Red;
+
         [Browsable(false)]
-        public string FontName { get; set; }
+        public string FontName { get; set; } = "Arial";
+
         [Browsable(false)]
-        public int FontSize { get; set; }
+        public int FontSize { get; set; } = 12;
         [Browsable(false)]
         public OsuStatus SaveEvent
         {
