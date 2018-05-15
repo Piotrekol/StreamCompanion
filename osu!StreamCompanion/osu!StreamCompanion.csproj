@@ -531,8 +531,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "D:\Dropbox\pancake.io\StreamCompanion\version" 0 "v{0},https://osu.ppy.sh/forum/t/209616"
-"$(ProjectDir)\buildScripts\build.cmd" $(TargetDir)\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" 14</PreBuildEvent>
