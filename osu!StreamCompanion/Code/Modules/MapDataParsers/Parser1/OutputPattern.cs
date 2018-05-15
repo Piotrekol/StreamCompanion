@@ -5,8 +5,10 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows;
 using CollectionManager.Annotations;
+using Newtonsoft.Json;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
 
@@ -18,14 +20,16 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!CurrentMaxCombo!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!"
         };
-
+        [IgnoreDataMember]
         public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
         private bool _isMemoryFormat;
         private OsuStatus _saveEvent;
         private string _pattern="Your pattern text";
         private string _name;
+        [IgnoreDataMember]
         public Dictionary<string, string> Replacements;
         [DisplayName("Name")]
+        [JsonProperty(PropertyName = "FooBar")]
         public string Name
         {
             get { return _name; }
@@ -36,7 +40,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 OnPropertyChanged(nameof(Name));
             }
         }
-
+        [JsonProperty(PropertyName = "Pattern")]
         [DisplayName("Pattern")]
         public string Pattern
         {
@@ -52,6 +56,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         [Editable(false)]
         [DisplayName("Event")]
+        [IgnoreDataMember]
         public string SaveEventStr
         {
             get
@@ -68,24 +73,32 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 }
             }
         }
+        [JsonProperty(PropertyName = "ShowInOsu")]
         [Editable(false)]
         [DisplayName("Ingame")]
         public bool ShowInOsu { get; set; }
 
+        [JsonProperty(PropertyName = "XPosition")]
         [Browsable(false)]
         public int XPosition { get; set; } = 200;
 
+        [JsonProperty(PropertyName = "YPosition")]
         [Browsable(false)]
         public int YPosition { get; set; } = 200;
 
+        [JsonProperty(PropertyName = "Color")]
         [Browsable(false)]
         public Color Color { get; set; } = Color.Red;
 
+        [JsonProperty(PropertyName = "FontName")]
         [Browsable(false)]
         public string FontName { get; set; } = "Arial";
 
+        [JsonProperty(PropertyName = "FontSize")]
         [Browsable(false)]
         public int FontSize { get; set; } = 12;
+
+        [JsonProperty(PropertyName = "SaveEvent")]
         [Browsable(false)]
         public OsuStatus SaveEvent
         {
@@ -99,6 +112,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
         }
         [Browsable(false)]
+        [IgnoreDataMember]
         [DisplayName("Memory format")]
         public bool IsMemoryFormat { get; private set; }
 
