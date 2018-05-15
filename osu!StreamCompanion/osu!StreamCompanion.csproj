@@ -76,8 +76,9 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CollectionManager">
-      <HintPath>..\dlls\CollectionManager.dll</HintPath>
+    <Reference Include="CollectionManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\CollectionManager.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
@@ -504,6 +505,7 @@
     <Content Include="Code\Modules\ModImageGenerator\Images\SO.png" />
     <Content Include="Code\Modules\ModImageGenerator\Images\TP.png" />
     <Content Include="Resources\btn_donate_92x26.png" />
+    <Content Include="Resources\CollectionManager.dll" />
     <Content Include="Resources\compiled.ico" />
     <None Include="Resources\logo_256x256.png" />
     <None Include="Resources\BG.png" />
