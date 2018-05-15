@@ -20,6 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {"Playing",OsuStatus.Playing },
             {"Watching",OsuStatus.Watching },
             {"Editing",OsuStatus.Editing },
+            {"Results screen",OsuStatus.ResultsScreen },
             {"Never",OsuStatus.Null }
         };
         public OutputPattern Current
