@@ -7,11 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!StreamCompanion", "osu!
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionControler", "VersionControler\VersionControler.csproj", "{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dlls", "dlls", "{19596E3E-39B4-44AE-B545-57B77388D1C8}"
-	ProjectSection(SolutionItems) = preProject
-		dlls\CollectionManager.dll = dlls\CollectionManager.dll
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{B0951F6C-E0DC-4242-A32E-0B48711AF12D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OppaiSharp", "submodules\OppaiSharp\OppaiSharp\OppaiSharp.csproj", "{AD29051A-0960-4E92-BAA9-7AC50827F823}"
