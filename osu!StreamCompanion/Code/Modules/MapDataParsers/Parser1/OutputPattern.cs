@@ -29,7 +29,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         [IgnoreDataMember]
         public Dictionary<string, string> Replacements;
         [DisplayName("Name")]
-        [JsonProperty(PropertyName = "FooBar")]
+        [JsonProperty(PropertyName = "Name")]
         public string Name
         {
             get { return _name; }
