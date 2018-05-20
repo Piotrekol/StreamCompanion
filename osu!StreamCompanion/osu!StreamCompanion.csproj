@@ -536,6 +536,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" 14</PreBuildEvent>
+    <PreBuildEvent>msbuild "$(SolutionDir)VersionControler\VersionControler.csproj" /p:Configuration=Debug
+"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" 14</PreBuildEvent>
   </PropertyGroup>
 </Project>

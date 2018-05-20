@@ -73,8 +73,7 @@ namespace osu_StreamCompanion.Code.Core
             {
                 string savedValue = Get<string>(key, "");
                 var ret = savedValue.Split(new[] { "|,~" }, StringSplitOptions.None).ToList();
-                if (ret[0] == string.Empty)
-                    ret.RemoveAt(0);
+
                 return ret;
             }
         }
