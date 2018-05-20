@@ -136,7 +136,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         }
         private string GetStringData(string url)
         {
-            var ret = Helpers.Helpers.ExecWithTimeout(() =>
+            var ret = Helpers.Helpers.ExecWithTimeout(token =>
             {
                 string contents = string.Empty;
                 try

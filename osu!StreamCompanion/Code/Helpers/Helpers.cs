@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CollectionManager.DataTypes;
+using osu_StreamCompanion.Code.Core.DataTypes;
+using osu_StreamCompanion.Code.Interfaces;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -18,7 +21,7 @@ namespace osu_StreamCompanion.Code.Helpers
         [DebuggerStepThrough()]
         public static DateTime GetDateFromVersionString(string version)
         {
-            if(version=="N/A")
+            if (version == "N/A")
                 return DateTime.MinValue;
             try
             {
@@ -31,14 +34,50 @@ namespace osu_StreamCompanion.Code.Helpers
                     System.Globalization.CultureInfo.InvariantCulture);
             }
         }
-        [DebuggerStepThrough()]
-        public static T ExecWithTimeout<T>(Func<T> function, int timeout = 10000)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="file">File to check</param>
+        /// <param name="timeout">Timeout, in ms</param>
+        /// <returns></returns>
+        public static bool FileIsLocked(FileInfo file, int timeout)
         {
-            var task = Task<T>.Factory.StartNew(function);
+            var result = ExecWithTimeout(token =>
+            {
+                try
+                {
+                    while (FileIsLocked(file))
+                    {
+                        if (token.IsCancellationRequested)
+                            return true;
+                        Thread.Sleep(1);
+                    }
+                }
+                catch (DirectoryNotFoundException)
+                { return true; }
+                catch (FileNotFoundException)
+                { return true; }
+                return false;
+            }, timeout);
+            return result;
+
+        }
+        [DebuggerStepThrough()]
+        public static T ExecWithTimeout<T>(Func<CancellationToken,T> function, int timeout = 10000, ILogger logger = null)
+        {
+            var cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
+            var task = new Task<T>(() => function(token));
+            task.Start();
             if (task.Wait(TimeSpan.FromMilliseconds(timeout)))
+            {
+                logger?.Log("task finished",LogLevel.Debug);
                 return task.Result;
-            else
-                return default(T);
+            }
+            cancellationTokenSource.Cancel();
+            logger?.Log("task aborted", LogLevel.Debug);
+            return default(T);
         }
         [DebuggerStepThrough()]
         public static OppaiSharp.Mods Convert(this Mods mods)
@@ -100,9 +139,9 @@ namespace osu_StreamCompanion.Code.Helpers
             {
                 throw new ArgumentException("String cannot be of zero length.");
             }
-            
+
             @newValue = @newValue ?? string.Empty;
-            
+
             const int valueNotFound = -1;
             int foundAt, startSearchFromIndex = 0;
             while ((foundAt = str.IndexOf(oldValue, startSearchFromIndex, comparisonType)) != valueNotFound)
@@ -110,7 +149,7 @@ namespace osu_StreamCompanion.Code.Helpers
 
                 str = str.Remove(foundAt, oldValue.Length)
                     .Insert(foundAt, @newValue);
-                
+
                 startSearchFromIndex = foundAt + @newValue.Length;
                 if (startSearchFromIndex == str.Length)
                 {
@@ -129,32 +168,7 @@ namespace osu_StreamCompanion.Code.Helpers
         {
             return firstValue * by + secondValue * (1 - by);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="file">File to check</param>
-        /// <param name="timeout">Timeout, in ms</param>
-        /// <returns></returns>
-        public static bool FileIsLocked(FileInfo file, int timeout)
-        {
-            var result = ExecWithTimeout(() =>
-            {
-                try
-                {
-                    while (FileIsLocked(file))
-                    {
-                        Thread.Sleep(1);
-                    }
-                }
-                catch (DirectoryNotFoundException)
-                { return true; }
-                catch (FileNotFoundException)
-                { return true; }
-                return false;
-            }, timeout);
-            return result;
-
-        }
+        
         public static bool FileIsLocked(FileInfo file)
         {
             FileStream stream = null;
@@ -180,24 +194,39 @@ namespace osu_StreamCompanion.Code.Helpers
             //file is not locked
             return false;
         }
-        public static void WaitForOsuFileLock(FileInfo file)
+
+        public static void WaitForOsuFileLock(FileInfo file, ILogger logger = null, int Id = 0)
         {
             //If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
-            var isLocked = ExecWithTimeout(() =>
+            logger?.Log($"{Id}: osu release: wait start", LogLevel.Debug);
+            var startTime = DateTime.Now;
+            var isLocked = ExecWithTimeout(token =>
             {
                 while (!FileIsLocked(file))
                 {
+                    if (token.IsCancellationRequested)
+                        return false;
                     Thread.Sleep(1);
                 }
                 return true;
-            }, 50);
+            }, 500, logger);
+            var diff = (DateTime.Now - startTime).TotalMilliseconds;
+            logger?.Log($"{Id}: osu release: wait end - {diff}ms", LogLevel.Debug);
+
+            logger?.Log($"{Id}: isLocked:{isLocked}", LogLevel.Debug);
 
             if (isLocked)
             {
+                startTime = DateTime.Now;
+                int cycles = 0;
                 while (FileIsLocked(file))
                 {
+                    cycles++;
                     Thread.Sleep(1);
                 }
+                diff = (DateTime.Now - startTime).TotalMilliseconds;
+                logger?.Log($"{Id}: osu lock: released after {diff}ms, {cycles}loops", LogLevel.Debug);
+
             }
         }
     }
