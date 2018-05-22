@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CollectionManager.DataTypes;
+using System.IO;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
@@ -24,12 +24,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
                 dict = map.BeatmapsFound[0].GetDict();
 
                 var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
+                var customSongsLocation = _settings.Get<string>(_names.SongsFolderLocation);
                 if (string.IsNullOrWhiteSpace(osuLocation))
                     dict.Add("!OsuFileLocation!", "");
                 else
-                    dict.Add("!OsuFileLocation!",
-                        System.IO.Path.Combine(osuLocation, "Songs", map.BeatmapsFound[0].Dir,
-                            map.BeatmapsFound[0].OsuFileName));
+                {
+                    string baseDirectory = customSongsLocation == _names.SongsFolderLocation.Default<string>() 
+                        ? Path.Combine(osuLocation, "Songs") 
+                        : customSongsLocation;
+
+                        dict.Add("!OsuFileLocation!",
+                            Path.Combine(baseDirectory, map.BeatmapsFound[0].Dir,
+                                map.BeatmapsFound[0].OsuFileName));
+                }
 
             }
             else
