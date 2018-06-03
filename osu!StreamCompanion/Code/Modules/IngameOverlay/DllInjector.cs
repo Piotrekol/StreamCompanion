@@ -16,9 +16,16 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
         InjectionFailed,
         Success
     }
+    
 
     public sealed class DllInjector
     {
+        private enum LoadedResult
+        {
+            Loaded,
+            NotLoaded,
+            Error
+        }
         static readonly IntPtr INTPTR_ZERO = (IntPtr)0;
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -82,8 +89,14 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
             {
                 return DllInjectionResult.GameProcessNotFound;
             }
-            if (isAlreadyLoaded(sProcName, Path.GetFileName(sDllPath)))
+
+            var loadedResult = isAlreadyLoaded(sProcName, Path.GetFileName(sDllPath));
+
+            if (loadedResult == LoadedResult.Loaded)
                 return DllInjectionResult.Success;
+
+            if (loadedResult == LoadedResult.Error)
+                return DllInjectionResult.InjectionFailed;
 
             if (!bInject(_procId, sDllPath))
             {
@@ -92,28 +105,35 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
 
             return DllInjectionResult.Success;
         }
-        private bool isAlreadyLoaded(string procName, string dllName)
+        private LoadedResult isAlreadyLoaded(string procName, string dllName)
         {
-            var processes = Process.GetProcessesByName(procName);
-            Process osuProcess = null;
-            foreach (var p in processes)
+            try
             {
-                if (p.ProcessName == procName)
+                var processes = Process.GetProcessesByName(procName);
+                Process osuProcess = null;
+                foreach (var p in processes)
                 {
-                    osuProcess = p;
-                    break;
+                    if (p.ProcessName == procName)
+                    {
+                        osuProcess = p;
+                        break;
+                    }
                 }
-            }
 
-            if (osuProcess != null)
-            {
-                foreach (ProcessModule pm in osuProcess.Modules)
+                if (osuProcess != null)
                 {
-                    if (pm.ModuleName == dllName)
-                        return true;
+                    foreach (ProcessModule pm in osuProcess.Modules)
+                    {
+                        if (pm.ModuleName == dllName)
+                            return LoadedResult.Loaded;
+                    }
                 }
             }
-            return false;
+            catch
+            {
+                return LoadedResult.Error;
+            }
+            return LoadedResult.NotLoaded;
 
         }
         bool bInject(uint pToBeInjected, string sDllPath)
