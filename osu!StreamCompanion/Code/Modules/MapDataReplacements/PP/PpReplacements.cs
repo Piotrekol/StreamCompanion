@@ -23,7 +23,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
         Accuracy _accCalculator = new Accuracy();
         private Settings _settings;
         private Mods _lastMods = Mods.NoMod;
-        private string _lastModsStr = "NM";
+        private string _lastModsStr = "None";
         public bool Started { get; set; }
 
         public void Start(ILogger logger)
