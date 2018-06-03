@@ -56,19 +56,31 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
 
             if (!File.Exists(mapLocation)) return ret;
             FileInfo file = new FileInfo(mapLocation);
-            Helpers.Helpers.WaitForOsuFileLock(file);
 
             if (file.Length == 0) return ret;
-            Beatmap beatmap;
+            Beatmap beatmap = null;
             try
             {
-                using (var stream = new FileStream(mapLocation, FileMode.Open))
+                bool retry = true;
+                do
                 {
-                    using (var reader = new StreamReader(stream))
+                    try
                     {
-                        beatmap = Beatmap.Read(reader);
+                        using (var stream = new FileStream(mapLocation, FileMode.Open, FileAccess.Read))
+                        {
+                            using (var reader = new StreamReader(stream))
+                            {
+                                beatmap = Beatmap.Read(reader);
+                                retry = false;
+                            }
+                        }
                     }
-                }
+                    catch
+                    {
+                        if (!File.Exists(mapLocation))
+                            return ret;
+                    }
+                } while (retry);
                 ret["!MaxCombo!"] = beatmap.GetMaxCombo().ToString(CultureInfo.InvariantCulture);
 
                 ret["!SSPP!"] = GetPp(beatmap, 100d).ToString(CultureInfo.InvariantCulture);
