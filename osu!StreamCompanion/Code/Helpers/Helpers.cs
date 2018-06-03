@@ -222,6 +222,20 @@ namespace osu_StreamCompanion.Code.Helpers
 
             return beatmap;
         }
+
+        public static bool SafeHasExited(this Process process)
+        {
+
+            try
+            {
+                return process.HasExited;
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
         public static void WaitForOsuFileLock(FileInfo file, ILogger logger = null, int Id = 0)
         {
             //If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
