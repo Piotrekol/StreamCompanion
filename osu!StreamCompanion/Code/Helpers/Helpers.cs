@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Interfaces;
+using Beatmap = OppaiSharp.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -64,7 +65,7 @@ namespace osu_StreamCompanion.Code.Helpers
 
         }
         [DebuggerStepThrough()]
-        public static T ExecWithTimeout<T>(Func<CancellationToken,T> function, int timeout = 10000, ILogger logger = null)
+        public static T ExecWithTimeout<T>(Func<CancellationToken, T> function, int timeout = 10000, ILogger logger = null)
         {
             var cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
@@ -72,7 +73,7 @@ namespace osu_StreamCompanion.Code.Helpers
             task.Start();
             if (task.Wait(TimeSpan.FromMilliseconds(timeout)))
             {
-                logger?.Log("task finished",LogLevel.Debug);
+                logger?.Log("task finished", LogLevel.Debug);
                 return task.Result;
             }
             cancellationTokenSource.Cancel();
@@ -195,6 +196,32 @@ namespace osu_StreamCompanion.Code.Helpers
             return false;
         }
 
+        public static Beatmap GetOppaiSharpBeatmap(string mapLocation)
+        {
+            bool retry = true;
+            Beatmap beatmap = null;
+            do
+            {
+                try
+                {
+                    using (var stream = new FileStream(mapLocation, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            beatmap = Beatmap.Read(reader);
+                            retry = false;
+                        }
+                    }
+                }
+                catch
+                {
+                    if (!File.Exists(mapLocation))
+                        return null;
+                }
+            } while (retry);
+
+            return beatmap;
+        }
         public static void WaitForOsuFileLock(FileInfo file, ILogger logger = null, int Id = 0)
         {
             //If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
