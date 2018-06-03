@@ -1,31 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
+using osu_StreamCompanion.Code.Core.DataTypes;
+using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 
 namespace osu_StreamCompanion.Code.Modules.IngameOverlay
 {
-    class IngameOverlay : IModule, ISettingsProvider, ISaveRequester
+    class IngameOverlay : IModule, ISettingsProvider, ISaveRequester, IMapDataGetter, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private Settings _settings;
         private ISaver _saver;
         public bool Started { get; set; }
         public string SettingGroup { get; } = "General";
-
         private const string FilesFolder = "Dlls";
+        private IngameOverlaySettings _overlaySettings;
+        private ILogger _logger;
+
+        private Thread _workerThread;
+        private Process _currentOsuProcess;
+        private bool _pauseProcessTracking;
+
         public void Start(ILogger logger)
         {
             Started = true;
+            _logger = logger;
+
             if (_settings.Get<bool>(_names.EnableIngameOverlay))
             {
                 CopyFreeType();
-                Inject();
+            }
+            _workerThread = new Thread(WatchForProcessStart);
+            _workerThread.Start();
+        }
+        
+        public void WatchForProcessStart()
+        {
+            try
+            {
+                while (true)
+                {
+                    if (_currentOsuProcess == null || _currentOsuProcess.SafeHasExited())
+                    {
+                        _currentOsuProcess = null;
+                        foreach (var process in Process.GetProcesses())
+                        {
+                            if (process.ProcessName == "osu!")
+                            {
+                                _currentOsuProcess = process;
+                                break;
+                            }
+                        }
+                        if (_currentOsuProcess != null)
+                            Inject();
+                    }
+
+                    while (_pauseProcessTracking)
+                    {
+                        Thread.Sleep(1000);
+                    }
+                    Thread.Sleep(2000);
+                }
+            }
+            catch (ThreadAbortException ex)
+            {
             }
         }
 
@@ -42,7 +88,7 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
             }
         }
 
-        private void Inject()
+        private void Inject(bool showErrors = false)
         {
             DllInjector dllInjector = DllInjector.GetInstance;
             var result = dllInjector.Inject("osu!", GetFullDllLocation());
@@ -63,8 +109,10 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
                             "Could not add overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
                         break;
                 }
-                MessageBox.Show(message, "StreamCompanion - ingameOverlay Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                if (showErrors)
+                    MessageBox.Show(message, "StreamCompanion - ingameOverlay Error!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                _logger?.Log(message, LogLevel.Basic);
             }
         }
 
@@ -73,7 +121,6 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
         private string GetFullDllLocation() => Path.Combine(GetFilesFolder(), "osuOverlay.dll");
 
         private string GetFullFreeTypeLocation() => Path.Combine(GetFilesFolder(), "FreeType.dll");
-
 
         public void SetSettingsHandle(Settings settings)
         {
@@ -85,13 +132,11 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
             _saver = saver;
         }
 
-
         public void Free()
         {
             _overlaySettings?.Dispose();
         }
 
-        private IngameOverlaySettings _overlaySettings;
         public UserControl GetUiSettings()
         {
             if (_overlaySettings == null || _overlaySettings.IsDisposed)
@@ -99,6 +144,25 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
                 _overlaySettings = new IngameOverlaySettings(_settings);
             }
             return _overlaySettings;
+        }
+
+        public void SetNewMap(MapSearchResult map)
+        {
+            try
+            {
+                _pauseProcessTracking = map.Action == OsuStatus.Playing;
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        public void Dispose()
+        {
+            _currentOsuProcess?.Dispose();
+            _overlaySettings?.Dispose();
+            _workerThread?.Abort();
         }
     }
 }
