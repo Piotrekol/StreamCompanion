@@ -31,6 +31,7 @@
             this.checkBox_disableDiskSaving = new System.Windows.Forms.CheckBox();
             this.patternEdit = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternEdit();
             this.patternList = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternList();
+            this.button_reset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkBox_disableDiskSaving
@@ -58,10 +59,21 @@
             this.patternList.Size = new System.Drawing.Size(640, 226);
             this.patternList.TabIndex = 0;
             // 
+            // button_reset
+            // 
+            this.button_reset.Location = new System.Drawing.Point(534, 374);
+            this.button_reset.Name = "button_reset";
+            this.button_reset.Size = new System.Drawing.Size(93, 23);
+            this.button_reset.TabIndex = 3;
+            this.button_reset.Text = "Reset patterns";
+            this.button_reset.UseVisualStyleBackColor = true;
+            this.button_reset.Click += new System.EventHandler(this.button_reset_Click);
+            // 
             // ParserSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button_reset);
             this.Controls.Add(this.patternList);
             this.Controls.Add(this.checkBox_disableDiskSaving);
             this.Controls.Add(this.patternEdit);
@@ -77,5 +89,6 @@
         private PatternList patternList;
         private PatternEdit patternEdit;
         private System.Windows.Forms.CheckBox checkBox_disableDiskSaving;
+        private System.Windows.Forms.Button button_reset;
     }
 }

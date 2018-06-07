@@ -31,47 +31,53 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             Load();
             if (_patterns.Count == 0)
             {
-                _patterns.Add(new OutputPattern()
-                {
-                    Name = "np_all",
-                    Pattern = "!MapArtistTitle! !MapDiff! CS:!cs! AR:!ar! OD:!od! HP:!hp!",
-                    SaveEvent = OsuStatus.All
-                });
-                _patterns.Add(new OutputPattern()
-                {
-                    Name = "np_playing_details",
-                    Pattern = "CS:!cs! AR:!ar! OD:!od! HP:!hp!",
-                    SaveEvent = OsuStatus.Playing
-                });
-                _patterns.Add(new OutputPattern()
-                {
-                    Name = "np_playing_DL",
-                    Pattern = "!dl!",
-                    SaveEvent = OsuStatus.Playing
-                });
-                _patterns.Add(new OutputPattern()
-                {
-                    Name = "livepp_hits",
-                    Pattern = "!100!x100 !50!x50 !miss!xMiss",
-                    SaveEvent = OsuStatus.Playing
-                });
-                _patterns.Add(new OutputPattern()
-                {
-                    Name = "livepp_current_pp",
-                    Pattern = "!PpIfMapEndsNow!",
-                    SaveEvent = OsuStatus.Playing
-                });
-                _patterns.Add(new OutputPattern()
-                {
-                    Name = "current_mods",
-                    Pattern = "!mods!",
-                    SaveEvent = OsuStatus.Playing
-                });
+                ResetPatterns();
             }
 
             _patterns.ListChanged += PatternsOnListChanged;
         }
 
+        public void ResetPatterns()
+        {
+            _patterns.Clear();
+
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "np_all",
+                Pattern = "!MapArtistTitle! !MapDiff! CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                SaveEvent = OsuStatus.All
+            });
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "np_playing_details",
+                Pattern = "CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                SaveEvent = OsuStatus.Playing
+            });
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "np_playing_DL",
+                Pattern = "!dl!",
+                SaveEvent = OsuStatus.Playing
+            });
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "livepp_hits",
+                Pattern = "!100!x100 !50!x50 !miss!xMiss",
+                SaveEvent = OsuStatus.Playing
+            });
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "livepp_current_pp",
+                Pattern = "!PpIfMapEndsNow!",
+                SaveEvent = OsuStatus.Playing
+            });
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "current_mods",
+                Pattern = "!mods!",
+                SaveEvent = OsuStatus.Playing
+            });
+        }
         private void PatternsOnListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
         {
             Save();
@@ -118,7 +124,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (_parserSettings == null || _parserSettings.IsDisposed)
             {
-                _parserSettings = new ParserSettings(_settings);
+                _parserSettings = new ParserSettings(_settings, ResetPatterns);
                 _parserSettings.SetPatterns(_patterns);
             }
             return _parserSettings;
