@@ -36,7 +36,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
                     var config = $"{s.XPosition} {s.YPosition} {s.Color.R} {s.Color.G} {s.Color.B} {s.FontName.Replace(' ','/')} {s.FontSize}";
                     _fileMapManager.Write(configName, config);
                     if (!s.IsMemoryFormat)
-                        _fileMapManager.Write(valueName, valueToWrite);
+                        _fileMapManager.Write(valueName, valueToWrite.Replace("\r", ""));
                 }
 
                 if (!s.IsMemoryFormat)
