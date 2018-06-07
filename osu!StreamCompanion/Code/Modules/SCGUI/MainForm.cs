@@ -29,17 +29,28 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
+
+        private void label_MouseDown(object sender, MouseEventArgs e)
+        {
+            MainForm_MouseDown(sender, e);
+            if (((Label) sender).Tag != null)
+            {
+                OnUpdateTextClicked?.Invoke(sender, e);
+            }
+        }
         #endregion
-       
+
 
         #region startup Code
+        public event EventHandler OnUpdateTextClicked;
 
         public void SetDataBindings(MainWindowUpdater bindingSource)
         {
             NowPlaying.DataBindings.Add(AsyncBindingHelper.GetBinding(NowPlaying, "Text", bindingSource, "NowPlaying"));
             UpdateText.DataBindings.Add(AsyncBindingHelper.GetBinding(UpdateText, "Text", bindingSource, "UpdateText"));
             BeatmapsLoaded.DataBindings.Add(AsyncBindingHelper.GetBinding(BeatmapsLoaded, "Text", bindingSource, "BeatmapsLoaded"));
-            UpdateText.Click += bindingSource.UpdateTextClicked;
+
+            OnUpdateTextClicked += bindingSource.UpdateTextClicked;
         }
         #endregion
 

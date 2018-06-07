@@ -56,7 +56,9 @@
             this.UpdateText.Name = "UpdateText";
             this.UpdateText.Size = new System.Drawing.Size(345, 60);
             this.UpdateText.TabIndex = 1;
+            this.UpdateText.Tag = "Update";
             this.UpdateText.Text = "_UpdateText_";
+            this.UpdateText.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_MouseDown);
             // 
             // button_OpenSettings
             // 
@@ -87,6 +89,7 @@
             this.BeatmapsLoaded.Size = new System.Drawing.Size(102, 13);
             this.BeatmapsLoaded.TabIndex = 4;
             this.BeatmapsLoaded.Text = "_BeatmapsLoaded_";
+            this.BeatmapsLoaded.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_MouseDown);
             // 
             // NowPlaying
             // 
@@ -102,6 +105,7 @@
             this.NowPlaying.Text = resources.GetString("NowPlaying.Text");
             this.NowPlaying.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.NowPlaying.UseMnemonic = false;
+            this.NowPlaying.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_MouseDown);
             // 
             // exit_button
             // 
