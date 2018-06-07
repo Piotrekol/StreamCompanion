@@ -138,13 +138,28 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             lock (_lockingObject)
             {
-                string rawPatterns = _settings.Get<string>(_names.ActualPatterns);
-                var deserializedPatterns = JsonConvert.DeserializeObject<List<OutputPattern>>(rawPatterns);
-                if (deserializedPatterns != null)
-                    foreach (var p in deserializedPatterns)
+                var legacyConfig = new LegacyParserConfigConverter();
+                var oldPatterns = legacyConfig.Convert(_settings);
+                if (oldPatterns.Count > 0)
+                {
+                    foreach (var p in oldPatterns)
                     {
                         _patterns.Add(p);
                     }
+                    MessageBox.Show("There was a big change in how patterns are stored and they needed to be converted." + Environment.NewLine +
+                                    "Go to your pattern settings and make sure that everything is still correct(Especialy save events)", "osu!StreamCompanion - Update message", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    string rawPatterns = _settings.Get<string>(_names.ActualPatterns);
+                    var deserializedPatterns = JsonConvert.DeserializeObject<List<OutputPattern>>(rawPatterns);
+                    if (deserializedPatterns != null)
+                        foreach (var p in deserializedPatterns)
+                        {
+                            _patterns.Add(p);
+                        }
+                }
+
             }
         }
 

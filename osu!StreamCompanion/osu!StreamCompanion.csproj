@@ -217,6 +217,7 @@
     <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.Designer.cs">
       <DependentUpon>TcpSocketSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Modules\MapDataParsers\Parser1\LegacyParserConfigConverter.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\OutputPattern.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">

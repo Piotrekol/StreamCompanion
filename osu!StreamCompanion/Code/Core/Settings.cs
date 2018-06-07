@@ -129,6 +129,18 @@ namespace osu_StreamCompanion.Code.Core
                 return Get(key, defaultValue);
             }
         }
+
+        public bool Delete(ConfigEntry entry) => Delete(entry.Name);
+
+        public bool Delete(string key)
+        {
+            if (_settingsEntries.ContainsKey(key))
+            {
+                _settingsEntries.Remove(key);
+                return true;
+            }
+            return false;
+        }
         public void Save()
         {
             lock (_lockingObject)
