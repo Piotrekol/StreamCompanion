@@ -60,35 +60,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             List<string> patterns = settings.Get(names.Patterns.Name);
             List<int> saveEvents = settings.Geti(names.SaveEvents.Name);
 
-            List<int> patternShowInOsu = settings.Geti(names.PatternShowInOsu.Name);
-            List<int> patternX = settings.Geti(names.PatternX.Name);
-            List<int> patternY = settings.Geti(names.PatternY.Name);
-            List<string> patternColor = settings.Get(names.PatternColor.Name);
-            List<string> patternFontName = settings.Get(names.PatternFontName.Name);
-            List<int> patternFontSize = settings.Geti(names.PatternFontSize.Name);
 
-            var requiredCount = Math.Max(filenames.Count, Math.Max(patterns.Count, Math.Max(patternShowInOsu.Count, saveEvents.Count)));
-            requiredCount = Math.Max(requiredCount, Math.Max(patternX.Count, Math.Max(patternY.Count, Math.Max(patternColor.Count, patternFontName.Count))));
-            requiredCount = Math.Max(requiredCount, patternFontSize.Count);
-            if (Helpers.Helpers.GetDateFromVersionString(lastRanVersion) <
-                Helpers.Helpers.GetDateFromVersionString("v180501.16") && patternShowInOsu.Count == 0)
-            {//New setting entrys added - fill with defaults.
-                while (patternShowInOsu.Count < requiredCount)
-                {
-                    patternShowInOsu.Add(0);
-                    patternX.Add(200);
-                    patternY.Add(200);
-                    patternColor.Add("255;0;0");
-                    patternFontName.Add("Arial");
-                    patternFontSize.Add(12);
-                }
-            }
-
-
-            if (filenames.Count != requiredCount || filenames.Count != requiredCount ||
-                patternShowInOsu.Count != requiredCount || patternX.Count != requiredCount ||
-                patternY.Count != requiredCount || patternColor.Count != requiredCount ||
-                patternFontName.Count != requiredCount || patternFontSize.Count != requiredCount)
+            var requiredCount = Math.Max(filenames.Count, Math.Max(patterns.Count, saveEvents.Count));
+            
+            if (filenames.Count != requiredCount || patterns.Count != requiredCount || saveEvents.Count!=requiredCount)
             {
 
                 var userResponse = MessageBox.Show("Your output patterns are broken and could not be loaded successfully" + Environment.NewLine +
@@ -99,25 +74,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 if (userResponse == DialogResult.No)
                     return new List<OutputPattern>();
 
-                var toFixCount = requiredCount * 9 - (filenames.Count + patterns.Count + saveEvents.Count + patternShowInOsu.Count + patternX.Count + patternY.Count + patternColor.Count + patternFontName.Count + patternFontSize.Count);
+                var toFixCount = requiredCount * 3 - (filenames.Count + patterns.Count + saveEvents.Count);
                 while (filenames.Count < requiredCount)
                     filenames.Add(ParserSettings.GenerateFileName(filenames, "Recovered_"));
                 while (patterns.Count < requiredCount)
                     patterns.Add("Recovered");
                 while (saveEvents.Count < requiredCount)
                     saveEvents.Add((int)OsuStatus.All);
-                while (patternShowInOsu.Count < requiredCount)
-                    patternShowInOsu.Add(0);
-                while (patternX.Count < requiredCount)
-                    patternX.Add(200);
-                while (patternY.Count < requiredCount)
-                    patternY.Add(200);
-                while (patternColor.Count < requiredCount)
-                    patternColor.Add("255;0;0");
-                while (patternFontName.Count < requiredCount)
-                    patternFontName.Add("Arial");
-                while (patternFontSize.Count < requiredCount)
-                    patternFontSize.Add(12);
 
                 MessageBox.Show("Finished recovering patterns" + Environment.NewLine +
                                 toFixCount + " entrys were missing" + Environment.NewLine +
@@ -128,12 +91,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             for (int i = 0; i < filenames.Count; i++)
             {
                 //Converting from ealier versions                    
-                if (saveEvents[i] == 27)
+                if (saveEvents[i] == 27 || saveEvents[i] == 31)
                     saveEvents[i] = (int)OsuStatus.All;
                 if (filenames[i].EndsWith(".txt"))
                     filenames[i] = filenames[i].Substring(0, filenames[i].LastIndexOf(".txt", StringComparison.Ordinal));
 
-                var c = patternColor[i].Split(';').Select(Int32.Parse).ToList();
+                var c = Color.FromArgb(255, 0, 0);
                 OsuStatus saveEvent;
                 try
                 {
@@ -148,12 +111,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     Name = filenames[i],
                     Pattern = patterns[i],
                     SaveEvent = saveEvent,
-                    ShowInOsu = patternShowInOsu[i] == 1,
-                    XPosition = patternX[i],
-                    YPosition = patternY[i],
-                    Color = Color.FromArgb(c[0], c[1], c[2]),
-                    FontName = patternFontName[i],
-                    FontSize = patternFontSize[i]
+                    ShowInOsu = false,
+                    XPosition = 200,
+                    YPosition = 200,
+                    Color = c,
+                    FontName = "Arial",
+                    FontSize = 12
                 });
             }
 
