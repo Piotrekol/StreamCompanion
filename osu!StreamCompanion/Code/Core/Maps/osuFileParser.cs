@@ -214,16 +214,19 @@ namespace osu_StreamCompanion.Code.Core.Maps
                 try
                 {
                     tryCount++;
-                    using (var fileHandle = new StreamReader(fullFileDir, true))
+                    using (var stream = File.OpenRead(fullFileDir))
                     {
-                        while (!fileHandle.EndOfStream)
+                        using (var fileHandle = new StreamReader(stream, true))
                         {
-                            lines.Add(fileHandle.ReadLine());
+                            while (!fileHandle.EndOfStream)
+                            {
+                                lines.Add(fileHandle.ReadLine());
+                            }
                         }
                     }
                     using (var md5 = System.Security.Cryptography.MD5.Create())
                     {
-                        using (var stream = System.IO.File.OpenRead(fullFileDir))
+                        using (var stream = File.OpenRead(fullFileDir))
                         {
                             map.Md5 = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
                         }
