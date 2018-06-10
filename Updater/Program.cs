@@ -29,10 +29,6 @@ namespace Updater
             //Console.WriteLine("Updating...");
 
             var p = Process.Start(setupExe, setupExeArgs);
-            if (p.WaitForExit(10000))
-            {
-                TryStartSc();
-            }
         }
 
         public static bool TryStartSc()
