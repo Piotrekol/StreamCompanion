@@ -37,11 +37,11 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
             if (_settings.Get<bool>(_names.EnableIngameOverlay))
             {
                 CopyFreeType();
+                _workerThread = new Thread(WatchForProcessStart);
+                _workerThread.Start();
             }
-            _workerThread = new Thread(WatchForProcessStart);
-            _workerThread.Start();
         }
-        
+
         public void WatchForProcessStart()
         {
             try
