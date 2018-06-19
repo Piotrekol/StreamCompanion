@@ -28,6 +28,7 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
         private Thread _workerThread;
         private Process _currentOsuProcess;
         private bool _pauseProcessTracking;
+        private bool _injectedAtleastOnce = false;
 
         public void Start(ILogger logger)
         {
@@ -60,7 +61,10 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
                             }
                         }
                         if (_currentOsuProcess != null)
-                            Inject();
+                        {
+                            if (Inject(!_injectedAtleastOnce))
+                                _injectedAtleastOnce = true;
+                        }
                     }
 
                     while (_pauseProcessTracking)
@@ -88,7 +92,7 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
             }
         }
 
-        private void Inject(bool showErrors = false)
+        private bool Inject(bool showErrors = false)
         {
             DllInjector dllInjector = DllInjector.GetInstance;
             var result = dllInjector.Inject("osu!", GetFullDllLocation());
@@ -109,11 +113,14 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
                             "Could not add overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
                         break;
                 }
-                if (showErrors)
+                if (showErrors && result != DllInjectionResult.GameProcessNotFound)
                     MessageBox.Show(message, "StreamCompanion - ingameOverlay Error!", MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 _logger?.Log(message, LogLevel.Basic);
+                return false;
             }
+
+            return true;
         }
 
         private string GetFilesFolder() => Path.Combine(_saver.SaveDirectory, FilesFolder);
