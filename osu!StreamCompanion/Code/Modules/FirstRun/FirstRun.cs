@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfaces;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
     public class FirstRun : IModule, ISettings, IMsnGetter
     {
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private FirstRunFrm _setupFrm;
         private Action _getOsuDirectory;
 
@@ -34,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
             CompletedSuccesfully = _setupFrm.CompletedSuccesfully;
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

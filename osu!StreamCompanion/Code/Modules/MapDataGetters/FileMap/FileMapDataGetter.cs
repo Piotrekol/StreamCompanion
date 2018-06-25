@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
 {

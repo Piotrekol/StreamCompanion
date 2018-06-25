@@ -1,15 +1,15 @@
 ﻿using System;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
 {
     public class WindowDataGetter :IModule,IMapDataGetter,IMainWindowUpdater
     {
-        private MainWindowUpdater _mainwindowHandle;
+        private IMainWindowModel _mainwindowHandle;
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -37,7 +37,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
             }
         }
 
-        public void GetMainWindowHandle(MainWindowUpdater mainWindowHandle)
+        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
         {
             _mainwindowHandle = mainWindowHandle;
         }

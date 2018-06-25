@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using osu_StreamCompanion.Code.Core.DataTypes;
+﻿using StreamCompanionTypes.DataTypes;
 
-namespace osu_StreamCompanion.Code.Interfaces
+namespace StreamCompanionTypes.Interfaces
 {
     public interface IMapDataFinder
     {

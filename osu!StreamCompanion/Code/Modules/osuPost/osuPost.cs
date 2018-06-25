@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.osuPost
 {
@@ -12,7 +10,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private Settings _settings;
+        private ISettingsHandler _settings;
         public bool Started { get; set; }
         private OsuPostApi api = new OsuPostApi();
         public void Start(ILogger logger)
@@ -32,7 +30,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         }
 
         public string SettingGroup { get; } = "osu!Post";
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

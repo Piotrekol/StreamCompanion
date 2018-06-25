@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Interfaces
+﻿namespace StreamCompanionTypes.Interfaces
 {
     //IModule instances are required to have parameter-less constructor to be loaded.
     public interface IModule

@@ -4,18 +4,17 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.ModImageGenerator.API;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
 {
     class ModImageGenerator : IModule, IMapDataReplacements, ISettingsProvider, ISaveRequester
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private ISaver _saver;
         public bool Started { get; set; }
         ImageDeployer _imageDeployer;
@@ -61,7 +60,7 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
 
         public string SettingGroup { get; } = "Mod Image";
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

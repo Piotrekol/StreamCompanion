@@ -4,8 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -30,7 +31,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public List<OutputPattern> Convert(Settings settings, bool removeLegacyEntries = true)
+        public List<OutputPattern> Convert(ISettingsHandler settings, bool removeLegacyEntries = true)
         {
             var patterns = Load(settings, settings.Get<string>(_names.LastRunVersion));
             if (removeLegacyEntries)
@@ -50,7 +51,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             return patterns;
         }
-        private List<OutputPattern> Load(Settings settings, string lastRanVersion)
+        private List<OutputPattern> Load(ISettingsHandler settings, string lastRanVersion)
         {
             var names = LegacyConfigEntries.Instance;
 

@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.SCGUI
 {
@@ -44,7 +45,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
         #region startup Code
         public event EventHandler OnUpdateTextClicked;
 
-        public void SetDataBindings(MainWindowUpdater bindingSource)
+        public void SetDataBindings(IMainWindowModel bindingSource)
         {
             NowPlaying.DataBindings.Add(AsyncBindingHelper.GetBinding(NowPlaying, "Text", bindingSource, "NowPlaying"));
             UpdateText.DataBindings.Add(AsyncBindingHelper.GetBinding(UpdateText, "Text", bindingSource, "UpdateText"));

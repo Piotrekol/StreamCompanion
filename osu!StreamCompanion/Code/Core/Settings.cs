@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfaces;
-using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core
 {
-    public class Settings
+    
+    public class Settings : ISettingsHandler
     {
         private readonly Dictionary<string, object> _settingsEntries = new Dictionary<string, object>();
         private ILogger _logger;
         private readonly List<string> _rawLines = new List<string>();
         private readonly List<string> _backupRawLines = new List<string>();
-        public EventHandler<SettingUpdated> SettingUpdated;
+        public EventHandler<SettingUpdated> SettingUpdated { get; set; }
         private string saveLocation;
         private readonly string configFileName = "settings.ini";
         public string FullConfigFilePath { get { return Path.Combine(saveLocation, configFileName); } }

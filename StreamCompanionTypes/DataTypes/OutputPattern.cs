@@ -6,13 +6,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Windows;
 using CollectionManager.Annotations;
 using Newtonsoft.Json;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Helpers;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
+namespace StreamCompanionTypes.DataTypes
 {
     public class OutputPattern : EventArgs, INotifyPropertyChanged, ICloneable
     {
@@ -24,7 +21,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
         private bool _isMemoryFormat;
         private OsuStatus _saveEvent = OsuStatus.All;
-        private string _pattern="Your pattern text";
+        private string _pattern = "Your pattern text";
         private string _name;
         [IgnoreDataMember]
         public Dictionary<string, string> Replacements;

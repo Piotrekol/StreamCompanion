@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly SettingNames _names = SettingNames.Instance;
         private ILogger _logger;
         private readonly MainMapDataGetter _mainMapDataGetter;
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private string _lastMsnString = "";
         private Thread ConsumerThread;
         private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
@@ -29,7 +29,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             _logger = logger;
         }
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

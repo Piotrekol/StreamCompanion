@@ -4,9 +4,9 @@ using System.Windows.Forms;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
-using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
+using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.ModsHandler
 {
@@ -30,7 +30,7 @@ namespace osu_StreamCompanion.Code.Modules.ModsHandler
             return _modParser.GetModsFromEnum(modsEnum);
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _modParser.SetSettingsHandle(settings);
         }

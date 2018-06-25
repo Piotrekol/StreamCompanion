@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CollectionManager.DataTypes;
-using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
+using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.ModsHandler
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using osu_StreamCompanion.Code.Core.DataTypes;
+using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Modules.osuPost
 {

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
+using StreamCompanionTypes.DataTypes;
 
-namespace osu_StreamCompanion.Code.Interfaces
+namespace StreamCompanionTypes.Interfaces
 {
     public interface IMapDataParser
     {

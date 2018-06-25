@@ -120,10 +120,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\Core\DataTypes\Beatmap.cs" />
-    <Compile Include="Code\Core\DataTypes\LogLevel.cs" />
-    <Compile Include="Code\Core\DataTypes\MapSearchArgs.cs" />
-    <Compile Include="Code\Core\DataTypes\MapSearchResult.cs" />
     <Compile Include="Code\Core\Initializer.cs" />
     <Compile Include="Code\Core\Loggers\FileLogger.cs" />
     <Compile Include="Code\Core\Maps\osuFileParser.cs" />
@@ -131,7 +127,6 @@
     <Compile Include="Code\Core\Savers\FileSaver.cs" />
     <Compile Include="Code\Core\Savers\MainSaver.cs" />
     <Compile Include="Code\Helpers\Exceptions.cs" />
-    <Compile Include="Code\Interfaces\IDifficultyCalculator.cs" />
     <Compile Include="Code\Misc\ImpatientWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -140,29 +135,11 @@
     <Compile Include="Code\Helpers\BeatmapHelpers.cs" />
     <Compile Include="Code\Helpers\Helpers.cs" />
     <Compile Include="Code\Helpers\StringCipher.cs" />
-    <Compile Include="Code\Helpers\EventClass.cs" />
-    <Compile Include="Code\Interfaces\IMainWindowUpdater.cs" />
-    <Compile Include="Code\Interfaces\IMapDataFinder.cs" />
-    <Compile Include="Code\Interfaces\IMapDataParser.cs" />
-    <Compile Include="Code\Interfaces\IMapDataReplacements.cs" />
-    <Compile Include="Code\Interfaces\IMapDataStorer.cs" />
-    <Compile Include="Code\Interfaces\IModParserGetter.cs" />
-    <Compile Include="Code\Interfaces\ISaver.cs" />
-    <Compile Include="Code\Interfaces\ISaveRequester.cs" />
     <Compile Include="Code\Core\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Code\Core\DataTypes\Enums.cs" />
     <Compile Include="Code\Helpers\AsyncBindingHelper.cs" />
     <Compile Include="Code\Helpers\ListExtensions.cs" />
-    <Compile Include="Code\Interfaces\ILogger.cs" />
-    <Compile Include="Code\Interfaces\IModParser.cs" />
-    <Compile Include="Code\Interfaces\IModule.cs" />
-    <Compile Include="Code\Interfaces\IMsnGetter.cs" />
-    <Compile Include="Code\Interfaces\ISettingsProvider.cs" />
     <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
     <Compile Include="Code\Core\Loggers\MainLogger.cs" />
-    <Compile Include="Code\Interfaces\ISettings.cs" />
-    <Compile Include="Code\Interfaces\ISettingsGetter.cs" />
-    <Compile Include="Code\Interfaces\ISqliteUser.cs" />
     <Compile Include="Code\Misc\MouseListener.cs" />
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreview.cs" />
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.cs">
@@ -219,7 +196,6 @@
     </Compile>
     <Compile Include="Code\Modules\MapDataParsers\Parser1\LegacyParserConfigConverter.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\OutputPattern.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -290,7 +266,6 @@
     <Compile Include="Code\Modules\SCGUI\MainWindow.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
     <Compile Include="Code\Core\Maps\MSN.cs" />
-    <Compile Include="Code\Interfaces\MapDataGetter.cs" />
     <Compile Include="Code\Misc\KeyboardListener.cs" />
     <Compile Include="Code\Modules\ClickCounter\ClickCounter.cs" />
     <Compile Include="Code\Modules\ClickCounter\ClickCounterFileName.cs">
@@ -512,6 +487,10 @@
     <None Include="Resources\BG.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StreamCompanionTypes\StreamCompanionTypes.csproj">
+      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
+      <Name>StreamCompanionTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\submodules\OppaiSharp\OppaiSharp\OppaiSharp.csproj">
       <Project>{ad29051a-0960-4e92-baa9-7ac50827f823}</Project>
       <Name>OppaiSharp</Name>

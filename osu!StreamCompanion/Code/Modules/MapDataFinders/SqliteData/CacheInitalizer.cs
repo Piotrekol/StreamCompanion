@@ -2,23 +2,23 @@
 using System.IO;
 using CollectionManager.Modules.FileIO.OsuDb;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 {
     public class CacheInitalizer
     {
-        private readonly MainWindowUpdater _mainWindowHandle;
-        private readonly SqliteControler _sqliteControler;
-        private readonly Settings _settings;
+        private readonly IMainWindowModel _mainWindowHandle;
+        private readonly ISqliteControler _sqliteControler;
+        private readonly ISettingsHandler _settings;
         private readonly ILogger _logger;
         private readonly SettingNames _names = SettingNames.Instance;
         private OsuDatabaseLoader _osuDatabaseLoader;
 
-        public CacheInitalizer(MainWindowUpdater mainWindowHandle, SqliteControler sqliteControler, Settings settings, ILogger logger)
+        public CacheInitalizer(IMainWindowModel mainWindowHandle, ISqliteControler sqliteControler, ISettingsHandler settings, ILogger logger)
         {
             _mainWindowHandle = mainWindowHandle;
             _sqliteControler = sqliteControler;
@@ -66,10 +66,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         
         class BeatmapLoaderLogger : CollectionManager.Interfaces.ILogger
         {
-            private readonly MainWindowUpdater _handle;
+            private readonly IMainWindowModel _handle;
             private object _mainWindowHandle;
 
-            public BeatmapLoaderLogger(MainWindowUpdater handle)
+            public BeatmapLoaderLogger(IMainWindowModel handle)
             {
                 _handle = handle;
             }

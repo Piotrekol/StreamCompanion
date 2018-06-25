@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "submodules\Opp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{09464784-372D-495F-9FF3-351DA55B4FD9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamCompanionTypes", "StreamCompanionTypes\StreamCompanionTypes.csproj", "{2B90289D-8C11-4D91-8A41-C5C99620E537}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{09464784-372D-495F-9FF3-351DA55B4FD9}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{09464784-372D-495F-9FF3-351DA55B4FD9}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{09464784-372D-495F-9FF3-351DA55B4FD9}.Remote debug|x86.Build.0 = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Release|x86.Build.0 = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{2B90289D-8C11-4D91-8A41-C5C99620E537}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using CollectionManager.Modules.FileIO.OsuDb;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 {
@@ -14,10 +14,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
     {
         public bool Started { get; set; }
         private ILogger _logger;
-        private MainWindowUpdater _mainWindowHandle;
+        private IMainWindowModel _mainWindowHandle;
 
-        private SqliteControler _sqliteControler;
-        private Settings _settingsHandle;
+        private ISqliteControler _sqliteControler;
+        private ISettingsHandler _settingsHandle;
 
 
         public OsuStatus SearchModes { get; } = OsuStatus.Listening | OsuStatus.Null | OsuStatus.Playing |
@@ -58,17 +58,17 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             return result;
         }
 
-        public void GetMainWindowHandle(MainWindowUpdater mainWindowHandle)
+        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
         {
             _mainWindowHandle = mainWindowHandle;
         }
 
-        public void SetSqliteControlerHandle(SqliteControler sqLiteControler)
+        public void SetSqliteControlerHandle(ISqliteControler sqLiteControler)
         {
             _sqliteControler = sqLiteControler;
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settingsHandle = settings;
         }

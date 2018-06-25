@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.ClickCounter
 {
@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
     {
         private FileMapManager _fileMapManager = new FileMapManager();
         private readonly SettingNames _names = SettingNames.Instance;
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private ClickCounterSettings _frmSettings;
         private KeyboardListener _keyboardListener;
         private MouseListener _mouseListener;
@@ -120,7 +120,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             }
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
             disableSavingToDisk = _settings.Get<bool>(_names.DisableClickCounterWrite);

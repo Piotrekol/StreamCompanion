@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {

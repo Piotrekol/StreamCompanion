@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.SCGUI
 {
@@ -11,9 +9,9 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private MainForm _mainForm;
-        private MainWindowUpdater _mainWindowHandle;
+        private IMainWindowModel _mainWindowHandle;
         private List<ISettingsProvider> _settingsList;
         public bool Started { get; set; }
         public void Start(ILogger logger)
@@ -62,7 +60,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
 
 
         public string SettingGroup { get; } = "General";
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }
@@ -77,7 +75,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
             return null;
         }
 
-        public void GetMainWindowHandle(MainWindowUpdater mainWindowHandle)
+        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
         {
             _mainWindowHandle = mainWindowHandle;
         }

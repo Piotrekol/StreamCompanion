@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfaces;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.Donation
 {
@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Modules.Donation
         }
 
         public string SettingGroup { get; } = "General";
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
         }
 

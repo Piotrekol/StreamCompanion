@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.FirstRun.Phases;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
@@ -11,11 +11,11 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
     {
         private readonly SettingNames _names = SettingNames.Instance;
         
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private List<FirstRunControl> phases = new List<FirstRunControl>();
         public bool CompletedSuccesfully { get; set; }
 
-        public FirstRunFrm(Settings settings)
+        public FirstRunFrm(ISettingsHandler settings)
         {
             _settings = settings;
             phases.Add(new FirstRunMsn());

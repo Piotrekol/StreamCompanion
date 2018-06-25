@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CollectionManager.DataTypes;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {

@@ -4,8 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
+using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Core.Maps
 {

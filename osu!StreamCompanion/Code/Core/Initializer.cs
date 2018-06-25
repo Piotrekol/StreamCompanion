@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.ClickCounter;
 using osu_StreamCompanion.Code.Modules.CommandsPreview;
@@ -33,6 +31,8 @@ using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
 using osu_StreamCompanion.Code.Modules.SCGUI;
 using osu_StreamCompanion.Code.Modules.Updater;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -57,10 +57,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<IMapDataGetter> _mapDataGetters = new List<IMapDataGetter>();
         private readonly List<IMapDataReplacements> _mapDataReplacementSetters = new List<IMapDataReplacements>();
         private Msn _msn;
-
-
-
-
+        
         public Initializer()
         {
             new FileChecker();

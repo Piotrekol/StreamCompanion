@@ -7,17 +7,17 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.IngameOverlay
 {
     class IngameOverlay : IModule, ISettingsProvider, ISaveRequester, IMapDataGetter, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private ISaver _saver;
         public bool Started { get; set; }
         public string SettingGroup { get; } = "General";
@@ -129,7 +129,7 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
 
         private string GetFullFreeTypeLocation() => Path.Combine(GetFilesFolder(), "FreeType.dll");
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

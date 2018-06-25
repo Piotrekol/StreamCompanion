@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Core.DataTypes
+﻿namespace StreamCompanionTypes.DataTypes
 {
     public class MapSearchArgs
     {

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CollectionManager.DataTypes;
-using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
-using osu_StreamCompanion.Code.Modules.ModsHandler;
 
-namespace osu_StreamCompanion.Code.Core.DataTypes
+namespace StreamCompanionTypes.DataTypes
 {
     public class MapSearchResult
     {

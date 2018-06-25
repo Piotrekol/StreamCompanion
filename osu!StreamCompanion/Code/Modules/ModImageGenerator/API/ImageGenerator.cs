@@ -4,8 +4,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.Interfaces;
 using Point = System.Drawing.Point;
 
 namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
@@ -14,10 +14,10 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private ISaver _saver;
         public string ImagesFolderName { get; set; }
-        public ImageGenerator(Settings settings, string imagesFolderName)
+        public ImageGenerator(ISettingsHandler settings, string imagesFolderName)
         {
             ImagesFolderName = imagesFolderName;
             _settings = settings;

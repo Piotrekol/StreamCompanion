@@ -5,11 +5,11 @@ using System.IO;
 using System.Threading;
 using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
 using OppaiSharp;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 using Beatmap = OppaiSharp.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
@@ -21,7 +21,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
         DiffCalc diffCalculator = new DiffCalc();
         PPv2 _ppCalculator;
         Accuracy _accCalculator = new Accuracy();
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private Mods _lastMods = Mods.NoMod;
         private string _lastModsStr = "None";
         public bool Started { get; set; }
@@ -116,7 +116,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
             return _settings.Get<string>(_names.MainOsuDirectory);
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             this._settings = settings;
         }

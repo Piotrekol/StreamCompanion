@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
 {
     public partial class ModImageGeneratorSettings : UserControl
     {
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private bool init = true;
         private Func<string[], Bitmap> _generateImage;
         private readonly SettingNames _names = SettingNames.Instance;
-        public ModImageGeneratorSettings(Settings settings, Func<string[], Bitmap> generateImage)
+        public ModImageGeneratorSettings(ISettingsHandler settings, Func<string[], Bitmap> generateImage)
         {
             _generateImage = generateImage;
             _settings = settings;

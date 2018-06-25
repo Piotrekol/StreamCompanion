@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 {
@@ -16,7 +16,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 
         public bool Started { get; set; }
         private TcpSocketManager _tcpSocketManager;
-        private Settings _settings;
+        private ISettingsHandler _settings;
 
         public void Start(ILogger logger)
         {
@@ -60,7 +60,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 
 
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

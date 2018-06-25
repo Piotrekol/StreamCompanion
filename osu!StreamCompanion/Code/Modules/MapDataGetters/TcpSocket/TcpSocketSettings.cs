@@ -8,15 +8,16 @@ using System.Text;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
 {
     public partial class TcpSocketSettings : UserControl
     {
-        private readonly Settings _settings;
+        private readonly ISettingsHandler _settings;
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public TcpSocketSettings(Settings settings)
+        public TcpSocketSettings(ISettingsHandler settings)
         {
             _settings = settings;
             InitializeComponent();

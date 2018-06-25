@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Misc
 {
@@ -7,7 +8,7 @@ namespace osu_StreamCompanion.Code.Misc
     {//main
         public readonly ConfigEntry MainOsuDirectory = new ConfigEntry("MainOsuDirectory", "");
         public readonly ConfigEntry SongsFolderLocation = new ConfigEntry("SongsFolderLocation", "Songs");
-        public readonly ConfigEntry LogLevel = new ConfigEntry("LogLevel", Core.DataTypes.LogLevel.Disabled.GetHashCode());
+        public readonly ConfigEntry LogLevel = new ConfigEntry("LogLevel", StreamCompanionTypes.DataTypes.LogLevel.Disabled.GetHashCode());
         public readonly ConfigEntry StartHidden = new ConfigEntry("StartHidden", false);
         public readonly ConfigEntry Console = new ConfigEntry("console", false);
         public readonly ConfigEntry LoadingRawBeatmaps = new ConfigEntry("LoadingRawBeatmaps", false);
@@ -71,18 +72,5 @@ namespace osu_StreamCompanion.Code.Misc
         private SettingNames()
         { }
     }
-    public class ConfigEntry
-    {
-        public ConfigEntry(string name, object value)
-        {
-            Name = name;
-            _defaultValue = value;
-        }
-        public string Name { get; set; }
-        private readonly object _defaultValue;
-        public T Default<T>()
-        {
-            return (T)_defaultValue;
-        }
-    }
+    
 }

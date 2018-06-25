@@ -5,8 +5,9 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {

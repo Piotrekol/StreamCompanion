@@ -1,7 +1,7 @@
 ﻿using CollectionManager.DataTypes;
-using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
+using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
-namespace osu_StreamCompanion.Code.Interfaces
+namespace StreamCompanionTypes.Interfaces
 {
     public interface IDifficultyCalculator
     {

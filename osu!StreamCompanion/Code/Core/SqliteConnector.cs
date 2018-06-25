@@ -4,9 +4,9 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Text;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfaces;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core
 {

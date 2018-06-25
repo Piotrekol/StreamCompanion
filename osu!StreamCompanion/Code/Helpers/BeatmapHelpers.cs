@@ -8,7 +8,8 @@ using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Misc;
-using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
+using StreamCompanionTypes.Interfaces;
+using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -270,7 +271,7 @@ namespace osu_StreamCompanion.Code.Helpers
         }
         private static readonly SettingNames _names = SettingNames.Instance;
 
-        public static string GetFullSongsLocation(Settings settings)
+        public static string GetFullSongsLocation(ISettingsHandler settings)
         {
             var dir = settings.Get<string>(_names.SongsFolderLocation);
             if (dir == _names.SongsFolderLocation.Default<string>())

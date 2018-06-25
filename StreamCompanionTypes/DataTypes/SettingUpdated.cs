@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace osu_StreamCompanion.Code.Helpers
+namespace StreamCompanionTypes.DataTypes
 {
-    public class SettingUpdated :EventArgs
+    public class SettingUpdated : EventArgs
     {
         public SettingUpdated(string name)
         {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace osu_StreamCompanion.Code.Core.DataTypes
+namespace StreamCompanionTypes.DataTypes
 {
     [Flags]
     public enum LogLevel

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace osu_StreamCompanion.Code.Interfaces
+namespace StreamCompanionTypes.Interfaces
 {
     public interface ISettingsGetter
     {
