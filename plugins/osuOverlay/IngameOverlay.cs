@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.IngameOverlay
+namespace osuOverlay
 {
-    class IngameOverlay : IModule, ISettingsProvider, ISaveRequester, IMapDataGetter, IDisposable
+    public class IngameOverlay : IModule, ISettingsProvider, ISaveRequester, IMapDataGetter, IDisposable
     {
-        private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
         private ISaver _saver;
         public bool Started { get; set; }
@@ -29,13 +22,13 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
         private Process _currentOsuProcess;
         private bool _pauseProcessTracking;
         private bool _injectedAtleastOnce = false;
-
+        
         public void Start(ILogger logger)
         {
             Started = true;
             _logger = logger;
 
-            if (_settings.Get<bool>(_names.EnableIngameOverlay))
+            if (_settings.Get<bool>(PluginSettings.EnableIngameOverlay))
             {
                 CopyFreeType();
                 _workerThread = new Thread(WatchForProcessStart);
@@ -49,7 +42,8 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
             {
                 while (true)
                 {
-                    if (_currentOsuProcess == null || _currentOsuProcess.SafeHasExited())
+                    
+                    if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
                         _currentOsuProcess = null;
                         foreach (var process in Process.GetProcesses())
@@ -81,7 +75,7 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
 
         private void CopyFreeType()
         {
-            var osuFolderDirectory = _settings.Get<string>(_names.MainOsuDirectory);
+            var osuFolderDirectory = _settings.Get<string>(PluginSettings.MainOsuDirectory);
             if (Directory.Exists(osuFolderDirectory))
             {
                 var newFreeTypeLocation = Path.Combine(osuFolderDirectory, "FreeType.dll");
@@ -89,6 +83,18 @@ namespace osu_StreamCompanion.Code.Modules.IngameOverlay
                     return;
 
                 File.Copy(GetFullFreeTypeLocation(), newFreeTypeLocation);
+            }
+        }
+        public bool SafeHasExited(Process process)
+        {
+
+            try
+            {
+                return process.HasExited;
+            }
+            catch
+            {
+                return true;
             }
         }
 

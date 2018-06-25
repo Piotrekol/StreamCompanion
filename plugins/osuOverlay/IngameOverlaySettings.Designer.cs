@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.IngameOverlay
+﻿namespace osuOverlay
 {
     partial class IngameOverlaySettings
     {
