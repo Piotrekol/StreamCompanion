@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps;
@@ -11,7 +14,6 @@ using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
 using osu_StreamCompanion.Code.Modules.FileSaveLocation;
 using osu_StreamCompanion.Code.Modules.FirstRun;
-using osu_StreamCompanion.Code.Modules.IngameOverlay;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.NoData;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.osuMemoryID;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData;
@@ -57,7 +59,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<IMapDataGetter> _mapDataGetters = new List<IMapDataGetter>();
         private readonly List<IMapDataReplacements> _mapDataReplacementSetters = new List<IMapDataReplacements>();
         private Msn _msn;
-        
+
         public Initializer()
         {
             new FileChecker();
@@ -83,7 +85,7 @@ namespace osu_StreamCompanion.Code.Core
 
             #region First run
 
-            bool shouldForceFirstRun=false;
+            bool shouldForceFirstRun = false;
             var lastVersionStr = Settings.Get<string>(_names.LastRunVersion);
             if (lastVersionStr == _names.LastRunVersion.Default<string>())
             {
@@ -108,7 +110,7 @@ namespace osu_StreamCompanion.Code.Core
 
             if (Settings.Get<bool>(_names.FirstRun) || shouldForceFirstRun)
             {
-                var firstRunModule = new FirstRun(delegate()
+                var firstRunModule = new FirstRun(delegate ()
                 {
                     var module = new OsuPathResolver();
                     if (AddModule(module))
@@ -124,7 +126,7 @@ namespace osu_StreamCompanion.Code.Core
 
             var mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters, _saver, _logger, Settings));
             AddModule(mapStringFormatter);
-            
+
             _logger.Log("Starting...", LogLevel.Advanced);
             _logger.Log(">Main classes...", LogLevel.Advanced);
             _sqliteControler = new SqliteControler(new SqliteConnector());
@@ -132,15 +134,46 @@ namespace osu_StreamCompanion.Code.Core
             _logger.Log(">Modules...", LogLevel.Advanced);
             StartModules();
             _logger.Log(">loaded {0} modules, where {1} are providing settings", LogLevel.Basic, _modules.Count.ToString(), SettingsList.Count.ToString());
-            
+
             #region plugins
-            //TODO: plugin loading
+
+            var plugins = GetPlugins();
+            foreach (var plugin in plugins)
+            {
+                if (AddModule(plugin))
+                    StartModule(plugin);
+            }
+
             #endregion plugins
-            
+
             Settings.Add(_names.FirstRun.Name, false);
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
             _started = true;
             _logger.Log("Started!", LogLevel.Basic);
+        }
+
+        public string PluginsLocation => Path.Combine(ConfigSaveLocation, "Plugins");
+        private List<IModule> GetPlugins()
+        {
+            var files = Directory.GetFiles(PluginsLocation, "*.dll");
+            List<Assembly> assemblies = new List<Assembly>();
+            List<IModule> plugins = new List<IModule>();
+
+            foreach (var file in files)
+            {
+                var asm = Assembly.LoadFile(Path.Combine(PluginsLocation, file));
+                foreach (var type in asm.GetTypes())
+                {
+                    if (type.GetInterfaces().Contains(typeof(IModule)))
+                    {
+                        assemblies.Add(asm);
+                        var p = Activator.CreateInstance(type) as IModule;
+                        plugins.Add(p);
+                    }
+                }
+            }
+
+            return plugins;
         }
         public void StartModules()
         {
@@ -156,23 +189,25 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new ClickCounter());
 #endif
             AddModule(new OsuSongsFolderWatcher());
-            
+
             AddModule(new FileSaveLocation());
             AddModule(new CommandsPreview());
             AddModule(new OsuPost());
             AddModule(new Updater());
-            
+
             //AddModule(new MemoryDataFinder());
             AddModule(new SqliteDataFinder());
             AddModule(new NoDataFinder());
 
-            AddModule(new IngameOverlay());
             AddModule(new ModsHandler());
             AddModule(new ModImageGenerator());
             AddModule(new MainWindow());
             AddModule(new FileMapDataGetter());
             AddModule(new TcpSocketDataGetter());
             AddModule(new Donation());
+
+
+
 
             for (int i = 0; i < _modules.Count; i++)
             {
@@ -189,7 +224,7 @@ namespace osu_StreamCompanion.Code.Core
                     ((IDisposable)_modules[i]).Dispose();
                 }
             }
-            Settings.Save();   
+            Settings.Save();
         }
         /// <summary>
         /// Adds module to _module array while ensuring that only 1 instance of specific module exists at the time.
@@ -197,7 +232,7 @@ namespace osu_StreamCompanion.Code.Core
         /// <param name="newModule"></param>
         /// <returns>true if module has been added to list</returns>
         public bool AddModule(IModule newModule)
-        { 
+        {
             var ss = newModule.GetType();
             foreach (var module in _modules)
             {
@@ -277,7 +312,7 @@ namespace osu_StreamCompanion.Code.Core
             var modParserGetter = module as IModParserGetter;
             if (modParserGetter != null)
                 modParserGetter.SetModParserHandle(this._modParser);
-            
+
             var msnGetter = module as IMsnGetter;
             if ((msnGetter) != null)
             {
