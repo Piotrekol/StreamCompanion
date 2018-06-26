@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.SCGUI
+namespace ScGui
 {
-    class MainWindow : IModule, ISettingsProvider, IMainWindowUpdater, ISettingsGetter
+    class MainWindow : IPlugin, ISettingsProvider, IMainWindowUpdater, ISettingsGetter,IExiter
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -14,7 +14,15 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
         private MainForm _mainForm;
         private IMainWindowModel _mainWindowHandle;
         private List<ISettingsProvider> _settingsList;
+        private Action<object> exitAction;
         public bool Started { get; set; }
+
+        public string Description { get; } = "";
+        public string Name { get; } = "StreamCompanion GUI";
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -34,7 +42,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
                 _mainForm.Closed += (sender, args) =>
                 {
                     _settings.Save();
-                    Program.SafeQuit();
+                    exitAction?.Invoke("User pressed exit");
                 };
                 _mainForm.button_OpenSettings.Click += (sender, args) =>
                 {
@@ -73,7 +81,7 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
 
         public UserControl GetUiSettings()
         {
-            return null;
+            return (UserControl)null;
         }
 
         public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
@@ -84,6 +92,11 @@ namespace osu_StreamCompanion.Code.Modules.SCGUI
         public void SetSettingsListHandle(List<ISettingsProvider> settingsList)
         {
             _settingsList = settingsList;
+        }
+
+        public void SetExitHandle(Action<object> exiter)
+        {
+            this.exitAction = exiter;
         }
     }
 }

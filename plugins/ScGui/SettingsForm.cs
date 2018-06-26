@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.SCGUI
+namespace ScGui
 {
     public partial class SettingsForm : Form
     {

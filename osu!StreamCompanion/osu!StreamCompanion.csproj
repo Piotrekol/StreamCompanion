@@ -246,7 +246,6 @@
       <DependentUpon>ModParserSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
-    <Compile Include="Code\Modules\SCGUI\MainWindow.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
     <Compile Include="Code\Core\Maps\MSN.cs" />
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
@@ -267,12 +266,6 @@
     </Compile>
     <Compile Include="Code\Core\Settings.cs" />
     <Compile Include="Code\Core\SqliteControler.cs" />
-    <Compile Include="Code\Modules\SCGUI\AboutForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\AboutForm.Designer.cs">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\Updater\UpdateContainer.cs" />
     <Compile Include="Code\Modules\Updater\UpdateForm.cs">
       <SubType>Form</SubType>
@@ -282,18 +275,6 @@
     </Compile>
     <Compile Include="Code\Modules\Updater\Updater.cs" />
     <Compile Include="Code\Windows\MainWindowEntities.cs" />
-    <Compile Include="Code\Modules\SCGUI\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\SettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\SettingsForm.Designer.cs">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Windows\ErrorFrm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -349,15 +330,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
       <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\SCGUI\AboutForm.resx">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\SCGUI\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\SCGUI\SettingsForm.resx">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\Updater\UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>

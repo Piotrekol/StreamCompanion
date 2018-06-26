@@ -28,7 +28,6 @@ using osu_StreamCompanion.Code.Modules.ModsHandler;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
 using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
-using osu_StreamCompanion.Code.Modules.SCGUI;
 using osu_StreamCompanion.Code.Modules.Updater;
 using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes;
@@ -200,7 +199,7 @@ namespace osu_StreamCompanion.Code.Core
 
             AddModule(new ModsHandler()); //refactor
             AddModule(new ModImageGenerator()); //refactor
-            AddModule(new MainWindow()); //refactor
+            //AddModule(new MainWindow()); //refactor
             AddModule(new FileMapDataGetter()); //refactor
             AddModule(new TcpSocketDataGetter()); //refactor
             AddModule(new Donation());

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.SCGUI
+namespace ScGui
 {
     public partial class MainForm : Form
     {

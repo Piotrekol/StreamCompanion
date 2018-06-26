@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Modules.SCGUI
+namespace ScGui
 {
     public partial class AboutForm : Form
     {

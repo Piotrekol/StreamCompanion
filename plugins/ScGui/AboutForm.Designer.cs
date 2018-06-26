@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.SCGUI
+﻿namespace ScGui
 {
     partial class AboutForm
     {
@@ -49,7 +49,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::osu_StreamCompanion.Properties.Resources.logo_256x256;
+            this.pictureBox1.Image = global::ScGui.Properties.Resources.logo_256x256;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(64, 64);
@@ -60,7 +60,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox2.Image = global::osu_StreamCompanion.Properties.Resources.btn_donate_92x26;
+            this.pictureBox2.Image = global::ScGui.Properties.Resources.btn_donate_92x26;
             this.pictureBox2.Location = new System.Drawing.Point(12, 82);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(64, 23);

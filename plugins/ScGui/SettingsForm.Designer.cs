@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.SCGUI
+﻿namespace ScGui
 {
     partial class SettingsForm
     {
