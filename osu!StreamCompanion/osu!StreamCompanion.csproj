@@ -117,7 +117,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\Core\Initializer.cs" />
@@ -139,7 +138,6 @@
     <Compile Include="Code\Helpers\ListExtensions.cs" />
     <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
     <Compile Include="Code\Core\Loggers\MainLogger.cs" />
-    <Compile Include="Code\Misc\MouseListener.cs" />
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreview.cs" />
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.cs">
       <SubType>UserControl</SubType>
@@ -251,7 +249,6 @@
     <Compile Include="Code\Modules\SCGUI\MainWindow.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
     <Compile Include="Code\Core\Maps\MSN.cs" />
-    <Compile Include="Code\Misc\KeyboardListener.cs" />
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
     <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
