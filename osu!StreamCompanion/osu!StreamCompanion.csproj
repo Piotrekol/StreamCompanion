@@ -215,7 +215,6 @@
     <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.Designer.cs">
       <DependentUpon>PatternPositionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\MapDataReplacements\PP\PpReplacements.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">

@@ -2,20 +2,17 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Threading;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Misc;
 using OppaiSharp;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using Beatmap = OppaiSharp.Beatmap;
+using Helpers = StreamCompanionTypes.Helpers;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
+namespace BeatmapPpReplacements
 {
-    public class PpReplacements : IModule, IMapDataReplacements, ISettings
+    public class PpReplacements : IPlugin, IMapDataReplacements, ISettings
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -26,6 +23,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
         private Mods _lastMods = Mods.NoMod;
         private string _lastModsStr = "None";
         public bool Started { get; set; }
+
+        public string Description { get; } = "";
+        public string Name { get; } = nameof(PpReplacements);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
 
         public void Start(ILogger logger)
         {
@@ -62,7 +65,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
             Beatmap beatmap = null;
             try
             {
-                beatmap = Helpers.Helpers.GetOppaiSharpBeatmap(mapLocation);
+                beatmap = BeatmapHelpers.GetOppaiSharpBeatmap(mapLocation);
                 if (beatmap == null)
                     return ret;
 
@@ -111,7 +114,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.PP
             return Math.Round(_ppCalculator.Total, 2);
         }
 
-        
+
         private string GetOsuDir()
         {
             return _settings.Get<string>(_names.MainOsuDirectory);

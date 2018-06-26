@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
-using CollectionManager.DataTypes;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.Maps;
-using osu_StreamCompanion.Code.Misc;
-using StreamCompanionTypes;
-using StreamCompanionTypes.Interfaces;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
@@ -259,29 +254,7 @@ namespace osu_StreamCompanion.Code.Helpers
             return string.Empty;
         }
 
-        public static string BeatmapDirectory(this Beatmap beatmap, string songsDirectory)
-        {
-            return Path.Combine(songsDirectory, beatmap.Dir);
-        }
-        public static string FullOsuFileLocation(this Beatmap beatmap, string songsDirectory)
-        {
-            var beatmapDirectory = beatmap.BeatmapDirectory(songsDirectory);
-            if (string.IsNullOrEmpty(beatmapDirectory) || string.IsNullOrEmpty(beatmap.OsuFileName))
-                return "";
-            return Path.Combine(beatmapDirectory, beatmap.OsuFileName);
-        }
-        private static readonly SettingNames _names = SettingNames.Instance;
-
-        public static string GetFullSongsLocation(ISettingsHandler settings)
-        {
-            var dir = settings.Get<string>(_names.SongsFolderLocation);
-            if (dir == _names.SongsFolderLocation.Default<string>())
-            {
-                dir = settings.Get<string>(_names.MainOsuDirectory);
-                dir = Path.Combine(dir, "Songs\\");
-            }
-            return dir;
-        }
+        
     }
 
 }
