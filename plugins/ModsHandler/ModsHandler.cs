@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
-namespace osu_StreamCompanion.Code.Modules.ModsHandler
+namespace ModsHandler
 {
     public class ModsHandler : IModule, IModParser, ISettingsProvider, IDifficultyCalculator, IMapDataReplacements
     {

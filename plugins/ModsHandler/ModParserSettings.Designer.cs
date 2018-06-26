@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.ModParser
+﻿namespace ModsHandler
 {
     partial class ModParserSettings
     {

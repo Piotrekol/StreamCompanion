@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CollectionManager.DataTypes;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
-namespace osu_StreamCompanion.Code.Modules.ModsHandler
+namespace ModsHandler
 {
     public class DifficultyCalculator
     {

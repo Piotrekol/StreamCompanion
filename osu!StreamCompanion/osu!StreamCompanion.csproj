@@ -216,8 +216,6 @@
       <DependentUpon>PatternPositionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\MapDataReplacements\PP\PpReplacements.cs" />
-    <Compile Include="Code\Modules\ModsHandler\DifficultyCalculator.cs" />
-    <Compile Include="Code\Modules\ModsHandler\ModsHandler.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
@@ -236,15 +234,8 @@
     <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.Designer.cs">
       <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\ModsHandler\ModParser.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Plays\PlaysReplacements.cs" />
-    <Compile Include="Code\Modules\ModsHandler\ModParserSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ModsHandler\ModParserSettings.Designer.cs">
-      <DependentUpon>ModParserSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
     <Compile Include="Code\Core\Maps\MSN.cs" />
@@ -324,9 +315,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.resx">
       <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ModsHandler\ModParserSettings.resx">
-      <DependentUpon>ModParserSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
       <DependentUpon>osuPathResolverSettings.cs</DependentUpon>

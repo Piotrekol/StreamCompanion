@@ -24,7 +24,6 @@ using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.PP;
 using osu_StreamCompanion.Code.Modules.ModImageGenerator;
-using osu_StreamCompanion.Code.Modules.ModsHandler;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
 using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
@@ -142,7 +141,7 @@ namespace osu_StreamCompanion.Code.Core
 
             foreach (var plugin in plugins)
             {
-                _logger.Log("Loading: {0}", LogLevel.Advanced, plugin.Name);
+                _logger.Log("Loading: {0} by {1}", LogLevel.Advanced, plugin.Name, plugin.Author);
 
                 if (AddModule(plugin))
                 {
@@ -212,7 +211,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new SqliteDataFinder());
             AddModule(new NoDataFinder());
 
-            AddModule(new ModsHandler()); //refactor
+            //AddModule(new ModsHandler()); //refactor
             AddModule(new ModImageGenerator()); //refactor
             //AddModule(new MainWindow()); //refactor
             AddModule(new FileMapDataGetter()); //refactor
