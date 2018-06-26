@@ -176,33 +176,33 @@ namespace osu_StreamCompanion.Code.Core
         }
         public void StartModules()
         {
-            AddModule(new OsuPathResolver());
+            AddModule(new OsuPathResolver()); 
             AddModule(new OsuFallbackDetector());
             //AddModule(new MapDataParser());
-            AddModule(new MapDataParser());
-            AddModule(new WindowDataGetter());
-            AddModule(new PlaysReplacements());
-            AddModule(new MapReplacement());
-            AddModule(new PpReplacements());
+            AddModule(new MapDataParser()); 
+            AddModule(new WindowDataGetter()); //refactor
+            AddModule(new PlaysReplacements()); //refactor
+            AddModule(new MapReplacement()); 
+            AddModule(new PpReplacements()); //refactor
 #if !DEBUG
             //AddModule(new ClickCounter());
 #endif
-            AddModule(new OsuSongsFolderWatcher());
+            AddModule(new OsuSongsFolderWatcher()); //refactor
 
-            AddModule(new FileSaveLocation());
-            AddModule(new CommandsPreview());
+            AddModule(new FileSaveLocation()); 
+            AddModule(new CommandsPreview()); 
             //AddModule(new OsuPost());
             AddModule(new Updater());
 
-            //AddModule(new MemoryDataFinder());
+            //AddModule(new MemoryDataFinder()); //refactor
             AddModule(new SqliteDataFinder());
-            AddModule(new NoDataFinder());
+            AddModule(new NoDataFinder()); 
 
-            AddModule(new ModsHandler());
-            AddModule(new ModImageGenerator());
-            AddModule(new MainWindow());
-            AddModule(new FileMapDataGetter());
-            AddModule(new TcpSocketDataGetter());
+            AddModule(new ModsHandler()); //refactor
+            AddModule(new ModImageGenerator()); //refactor
+            AddModule(new MainWindow()); //refactor
+            AddModule(new FileMapDataGetter()); //refactor
+            AddModule(new TcpSocketDataGetter()); //refactor
             AddModule(new Donation());
 
 
