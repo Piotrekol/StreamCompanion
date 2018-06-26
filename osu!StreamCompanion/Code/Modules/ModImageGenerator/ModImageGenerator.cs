@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.ModImageGenerator.API;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 

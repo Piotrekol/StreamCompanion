@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.ClickCounter

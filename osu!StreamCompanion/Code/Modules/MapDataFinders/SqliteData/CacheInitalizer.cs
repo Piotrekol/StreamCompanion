@@ -4,6 +4,7 @@ using CollectionManager.Modules.FileIO.OsuDb;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 

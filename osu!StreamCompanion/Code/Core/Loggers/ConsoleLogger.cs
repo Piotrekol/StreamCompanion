@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using StreamCompanionTypes.DataTypes;
 
-namespace osu_StreamCompanion.Code.Misc
+namespace StreamCompanionTypes
 {
-
     public sealed class SettingNames
-    {//main
+    {
+        //main
         public readonly ConfigEntry MainOsuDirectory = new ConfigEntry("MainOsuDirectory", "");
         public readonly ConfigEntry SongsFolderLocation = new ConfigEntry("SongsFolderLocation", "Songs");
         public readonly ConfigEntry LogLevel = new ConfigEntry("LogLevel", StreamCompanionTypes.DataTypes.LogLevel.Disabled.GetHashCode());
@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry Console = new ConfigEntry("console", false);
         public readonly ConfigEntry LoadingRawBeatmaps = new ConfigEntry("LoadingRawBeatmaps", false);
         public readonly ConfigEntry LastRunVersion = new ConfigEntry("LastRunVersion", "N/A");
-    
+
         //ClickCounter 
         public readonly ConfigEntry KeyList = new ConfigEntry("keyList", new List<string>());
         public readonly ConfigEntry KeyNames = new ConfigEntry("keyNames", new List<string>());
@@ -61,7 +61,7 @@ namespace osu_StreamCompanion.Code.Misc
         public readonly ConfigEntry tcpSocketIp = new ConfigEntry("tcpSocketIp", "127.0.0.1");
         public readonly ConfigEntry tcpSocketPort = new ConfigEntry("tcpSocketPort", 7839);
         public readonly ConfigEntry tcpSocketLiveMapDataPort = new ConfigEntry("tcpSocketLiveMapDataPort", 7840);
-        
+
 
         private static readonly SettingNames _instance = new SettingNames();
         public static SettingNames Instance
@@ -72,5 +72,4 @@ namespace osu_StreamCompanion.Code.Misc
         private SettingNames()
         { }
     }
-    
 }

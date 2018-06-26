@@ -1,5 +1,6 @@
 ﻿using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.ModParser;
+using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.ModsHandler

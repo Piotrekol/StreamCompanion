@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 

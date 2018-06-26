@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 using Point = System.Drawing.Point;
 

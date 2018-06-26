@@ -8,6 +8,7 @@ using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 

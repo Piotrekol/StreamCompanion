@@ -130,7 +130,6 @@
     <Compile Include="Code\Misc\ImpatientWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Code\Misc\SettingNames.cs" />
     <Compile Include="Code\Core\SqliteConnector.cs" />
     <Compile Include="Code\Helpers\BeatmapHelpers.cs" />
     <Compile Include="Code\Helpers\Helpers.cs" />
