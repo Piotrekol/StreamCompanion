@@ -2,14 +2,21 @@
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays
+namespace PlaysReplacements
 {
-    public class PlaysReplacements : IModule, IMapDataReplacements
+    public class PlaysReplacements : IPlugin, IMapDataReplacements
     {
         private int Plays, Retrys;
         public bool Started { get; set; }
         public void Start(ILogger logger) { Started = true; }
         private string lastMapSearchString = "";
+
+        public string Description { get; } = "";
+        public string Name { get; } = nameof(PlaysReplacements);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
         public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
         {
             if (map.Action == OsuStatus.Playing)
@@ -25,5 +32,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays
             ret.Add("!Retrys!", Retrys.ToString());
             return ret;
         }
+
     }
 }
