@@ -30,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StreamCompanionTypes">
-      <HintPath>..\..\build\Release\StreamCompanionTypes.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -95,6 +91,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\logo_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
+      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
+      <Name>StreamCompanionTypes</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -34,10 +34,6 @@
       <HintPath>..\..\osu!StreamCompanion\Resources\CollectionManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="StreamCompanionTypes">
-      <HintPath>..\..\build\Release\StreamCompanionTypes.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -63,6 +59,13 @@
     <EmbeddedResource Include="osuPostSettings.resx">
       <DependentUpon>osuPostSettings.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
+      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
+      <Name>StreamCompanionTypes</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
