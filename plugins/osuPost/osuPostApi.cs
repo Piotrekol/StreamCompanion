@@ -2,7 +2,7 @@
 using System.Net;
 using StreamCompanionTypes.DataTypes;
 
-namespace osu_StreamCompanion.Code.Modules.osuPost
+namespace osuPost
 {
     public class OsuPostApi : IDisposable
     {

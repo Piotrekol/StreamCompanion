@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.osuPost
+namespace osuPost
 {
-    public class OsuPost :IModule,ISettingsProvider,IMapDataGetter,IDisposable
+    public class OsuPost :IPlugin,ISettingsProvider,IMapDataGetter,IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private ISettingsHandler _settings;
         public bool Started { get; set; }
         private OsuPostApi api = new OsuPostApi();
+
+
+        public string Description { get; } = "";
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -75,5 +81,6 @@ namespace osu_StreamCompanion.Code.Modules.osuPost
         {
             api.Dispose();
         }
+
     }
 }

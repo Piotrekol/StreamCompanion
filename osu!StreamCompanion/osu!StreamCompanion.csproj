@@ -267,14 +267,6 @@
     </Compile>
     <Compile Include="Code\Core\Settings.cs" />
     <Compile Include="Code\Core\SqliteControler.cs" />
-    <Compile Include="Code\Modules\osuPost\osuPost.cs" />
-    <Compile Include="Code\Modules\osuPost\osuPostApi.cs" />
-    <Compile Include="Code\Modules\osuPost\osuPostSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\osuPost\osuPostSettings.Designer.cs">
-      <DependentUpon>osuPostSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\SCGUI\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -357,9 +349,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
       <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\osuPost\osuPostSettings.resx">
-      <DependentUpon>osuPostSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\SCGUI\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>

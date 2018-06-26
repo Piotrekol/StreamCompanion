@@ -27,7 +27,6 @@ using osu_StreamCompanion.Code.Modules.ModImageGenerator;
 using osu_StreamCompanion.Code.Modules.ModsHandler;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
-using osu_StreamCompanion.Code.Modules.osuPost;
 using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
 using osu_StreamCompanion.Code.Modules.SCGUI;
 using osu_StreamCompanion.Code.Modules.Updater;
@@ -192,7 +191,7 @@ namespace osu_StreamCompanion.Code.Core
 
             AddModule(new FileSaveLocation());
             AddModule(new CommandsPreview());
-            AddModule(new OsuPost());
+            //AddModule(new OsuPost());
             AddModule(new Updater());
 
             //AddModule(new MemoryDataFinder());

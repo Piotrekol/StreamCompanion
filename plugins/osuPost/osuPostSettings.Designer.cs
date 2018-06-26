@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.osuPost
+﻿namespace osuPost
 {
     partial class osuPostSettings
     {
