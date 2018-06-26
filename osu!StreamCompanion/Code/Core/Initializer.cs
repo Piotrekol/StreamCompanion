@@ -134,13 +134,28 @@ namespace osu_StreamCompanion.Code.Core
             _logger.Log(">loaded {0} modules, where {1} are providing settings", LogLevel.Basic, _modules.Count.ToString(), SettingsList.Count.ToString());
 
             #region plugins
+            _logger.Log("Loading plugins", LogLevel.Advanced);
 
             var plugins = GetPlugins();
+            _logger.Log(">Prepared {0} plugins", LogLevel.Advanced, plugins.Count.ToString());
+            _logger.Log("==========", LogLevel.Advanced, plugins.Count.ToString());
+
             foreach (var plugin in plugins)
             {
+                _logger.Log("Loading: {0}", LogLevel.Advanced, plugin.Name);
+
                 if (AddModule(plugin))
+                {
                     StartModule(plugin);
+                    _logger.Log(">Started: {0}", LogLevel.Advanced, plugin.Name);
+                }
+                else
+                {
+                    _logger.Log(">FAILED: {0}", LogLevel.Advanced, plugin.Name);
+                }
             }
+            _logger.Log("==========", LogLevel.Advanced, plugins.Count.ToString());
+
 
             #endregion plugins
 
