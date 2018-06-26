@@ -33,6 +33,7 @@ using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
 using osu_StreamCompanion.Code.Modules.SCGUI;
 using osu_StreamCompanion.Code.Modules.Updater;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
@@ -153,21 +154,21 @@ namespace osu_StreamCompanion.Code.Core
         }
 
         public string PluginsLocation => Path.Combine(ConfigSaveLocation, "Plugins");
-        private List<IModule> GetPlugins()
+        private List<IPlugin> GetPlugins()
         {
             var files = Directory.GetFiles(PluginsLocation, "*.dll");
             List<Assembly> assemblies = new List<Assembly>();
-            List<IModule> plugins = new List<IModule>();
+            List<IPlugin> plugins = new List<IPlugin>();
 
             foreach (var file in files)
             {
                 var asm = Assembly.LoadFile(Path.Combine(PluginsLocation, file));
                 foreach (var type in asm.GetTypes())
                 {
-                    if (type.GetInterfaces().Contains(typeof(IModule)))
+                    if (type.GetInterfaces().Contains(typeof(IPlugin)))
                     {
                         assemblies.Add(asm);
-                        var p = Activator.CreateInstance(type) as IModule;
+                        var p = Activator.CreateInstance(type) as IPlugin;
                         plugins.Add(p);
                     }
                 }
