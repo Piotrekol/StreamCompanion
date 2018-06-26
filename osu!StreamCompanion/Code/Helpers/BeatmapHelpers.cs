@@ -12,7 +12,6 @@ namespace osu_StreamCompanion.Code.Helpers
     public static class BeatmapHelpers
     {
 
-        private static OsuFileParser _osuFileParser = new OsuFileParser();
         public static void Read(this Beatmap beatmap, SQLiteDataReader reader)
         {
             int i = 1;
@@ -219,40 +218,7 @@ namespace osu_StreamCompanion.Code.Helpers
 
             return dict;
         }
-
-        public static Beatmap ReadBeatmap(string fullPath)
-        {
-            Console.WriteLine("reading beatmap located at {0}", fullPath);
-
-            var beatmap = _osuFileParser.ReadBeatmapData(fullPath);
-            return beatmap;
-        }
-        public static string GetDiffFromString(string msnString)
-        {
-            if (msnString.Contains("]") && msnString.Contains("["))
-            {
-                var openBr = 0;
-                var closedBr = 0;
-                var strPos = msnString.Length - 1;
-                do
-                {
-                    var character = msnString[strPos];
-                    switch (character)
-                    {
-                        case ']':
-                            closedBr++;
-                            break;
-                        case '[':
-                            openBr++;
-                            break;
-                    }
-                    strPos--;
-                } while (closedBr != openBr);
-
-                return msnString.Substring(strPos + 2, msnString.Length - strPos - 3);
-            }
-            return string.Empty;
-        }
+        
 
         
     }

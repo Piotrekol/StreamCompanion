@@ -4,13 +4,15 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes.DataTypes;
 
-namespace osu_StreamCompanion.Code.Core.Maps
+namespace OsuSongsFolderWatcher
 {
-    class OsuFileParser
+    public sealed class OsuFileParser
     {
+        public static OsuFileParser Instance { get; } = new OsuFileParser();
+
+
         //TODO: support older osu file versions (Query in-game api using md5 hash??) 
         private readonly Dictionary<string, Action<List<string>, Beatmap>> _sections = new Dictionary<string, Action<List<string>, Beatmap>>() { { "General", ParseGeneral }, { "Editor", ParseEditor }, { "Metadata", ParseMetadata }, { "Difficulty", ParseDifficulty }, { "Events", IgnoreSection }, { "TimingPoints", IgnoreSection }, { "Colours", IgnoreSection }, { "HitObjects", ParseHitObjects } };
 
@@ -204,7 +206,7 @@ namespace osu_StreamCompanion.Code.Core.Maps
             List<string> lines = new List<string>();
             Thread.Sleep(50);
             FileInfo fileInfo = new FileInfo(fullFileDir);
-            while (Helpers.Helpers.FileIsLocked(fileInfo))
+            while (BeatmapHelpers.FileIsLocked(fileInfo))
             {
                 Thread.Sleep(1);
             }
@@ -241,7 +243,7 @@ namespace osu_StreamCompanion.Code.Core.Maps
             } while (tryCount < 2);
             if (tryCount != 5)
                 return map;
-           
+
 
 
             if (string.IsNullOrEmpty(map.TitleUnicode))
@@ -311,7 +313,7 @@ namespace osu_StreamCompanion.Code.Core.Maps
             }
             catch (IndexOutOfRangeException e)
             {
-                Console.WriteLine("There was a problem with processing new beatmap. | {0}", string.Join("+",lines.ToArray()));
+                Console.WriteLine("There was a problem with processing new beatmap. | {0}", string.Join("+", lines.ToArray()));
             }
             sectionStarts.Remove(-1);
 

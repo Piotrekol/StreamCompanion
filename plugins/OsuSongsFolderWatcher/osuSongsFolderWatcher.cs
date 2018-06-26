@@ -3,15 +3,13 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
+namespace OsuSongsFolderWatcher
 {
-    class OsuSongsFolderWatcher : IModule, ISettings, ISqliteUser, IDisposable
+    class OsuSongsFolderWatcher : IPlugin, ISettings, ISqliteUser, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -22,6 +20,12 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
         private int _numberOfBeatmapsCurrentlyBeingLoaded = 0;
         public bool Started { get; set; }
         private Thread _consumerThread;
+
+        public string Description { get; } = "";
+        public string Name { get; } = nameof(OsuSongsFolderWatcher);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
 
         public void Start(ILogger logger)
         {
@@ -108,7 +112,7 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
 
         public UserControl GetUiSettings()
         {
-            return new UserControl();
+            return null;
         }
 
         public void SetSqliteControlerHandle(ISqliteControler sqLiteControler)
@@ -121,5 +125,6 @@ namespace osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher
             _watcher?.Dispose();
             _consumerThread?.Abort();
         }
+
     }
 }

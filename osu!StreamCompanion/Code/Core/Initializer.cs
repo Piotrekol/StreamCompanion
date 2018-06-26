@@ -19,10 +19,8 @@ using osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData;
 using osu_StreamCompanion.Code.Modules.MapDataGetters.Window;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
-using osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
-using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
 using osu_StreamCompanion.Code.Modules.Updater;
 using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes;
@@ -190,13 +188,13 @@ namespace osu_StreamCompanion.Code.Core
             //AddModule(new MapDataParser());
             AddModule(new MapDataParser());
             AddModule(new WindowDataGetter()); //refactor
-            AddModule(new PlaysReplacements()); //refactor
+            //AddModule(new PlaysReplacements()); //refactor
             AddModule(new MapReplacement());
             //AddModule(new PpReplacements()); //refactor
 #if !DEBUG
             //AddModule(new ClickCounter());
 #endif
-            AddModule(new OsuSongsFolderWatcher()); //refactor
+            //AddModule(new OsuSongsFolderWatcher()); //refactor
 
             AddModule(new FileSaveLocation());
             AddModule(new CommandsPreview());

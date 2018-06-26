@@ -215,7 +215,6 @@
     </Compile>
     <Compile Include="Code\Modules\FirstRun\FirstRun.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
-    <Compile Include="Code\Modules\MapDataReplacements\Plays\PlaysReplacements.cs" />
     <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
     <Compile Include="Code\Core\Maps\MSN.cs" />
