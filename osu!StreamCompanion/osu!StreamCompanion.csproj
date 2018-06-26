@@ -88,8 +88,8 @@
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
@@ -121,7 +121,6 @@
   <ItemGroup>
     <Compile Include="Code\Core\Initializer.cs" />
     <Compile Include="Code\Core\Loggers\FileLogger.cs" />
-    <Compile Include="Code\Core\Maps\osuFileParser.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapDataGetter.cs" />
     <Compile Include="Code\Core\Savers\FileSaver.cs" />
     <Compile Include="Code\Core\Savers\MainSaver.cs" />
@@ -215,7 +214,6 @@
     </Compile>
     <Compile Include="Code\Modules\FirstRun\FirstRun.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
-    <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
     <Compile Include="Code\Core\Maps\MSN.cs" />
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
