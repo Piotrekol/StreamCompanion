@@ -8,7 +8,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osuOverlay
 {
-    public class IngameOverlay : IModule, ISettingsProvider, ISaveRequester, IMapDataGetter, IDisposable
+    public class IngameOverlay : IPlugin, ISettingsProvider, ISaveRequester, IMapDataGetter, IDisposable
     {
         private ISettingsHandler _settings;
         private ISaver _saver;
@@ -22,7 +22,14 @@ namespace osuOverlay
         private Process _currentOsuProcess;
         private bool _pauseProcessTracking;
         private bool _injectedAtleastOnce = false;
-        
+
+
+        public string Description { get; } = "";
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -177,5 +184,6 @@ namespace osuOverlay
             _overlaySettings?.Dispose();
             _workerThread?.Abort();
         }
+
     }
 }
