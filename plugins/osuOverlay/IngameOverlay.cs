@@ -25,6 +25,7 @@ namespace osuOverlay
 
 
         public string Description { get; } = "";
+        public string Name { get; } = nameof(IngameOverlay);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";

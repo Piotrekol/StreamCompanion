@@ -26,6 +26,7 @@ namespace ClickCounter
         public string SettingGroup { get; } = "Click counter";
 
         public string Description { get; } = "";
+        public string Name { get; } = "Click Counter";
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";

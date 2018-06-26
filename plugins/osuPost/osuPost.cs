@@ -16,6 +16,7 @@ namespace osuPost
 
 
         public string Description { get; } = "";
+        public string Name { get; } = nameof(OsuPost);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
