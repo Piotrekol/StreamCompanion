@@ -88,8 +88,8 @@
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
@@ -173,14 +173,6 @@
       <DependentUpon>FirstRunMsn.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\CacheInitalizer.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketDataGetter.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketManager.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.Designer.cs">
-      <DependentUpon>TcpSocketSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\MapDataParsers\Parser1\LegacyParserConfigConverter.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
@@ -282,9 +274,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.resx">
-      <DependentUpon>TcpSocketSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.resx">
       <DependentUpon>ParserSettings.cs</DependentUpon>

@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
+namespace TcpSocketDataSender
 {
     public class TcpSocketManager : IDisposable
     {

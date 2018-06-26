@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
+namespace TcpSocketDataSender
 {
     public partial class TcpSocketSettings : UserControl
     {

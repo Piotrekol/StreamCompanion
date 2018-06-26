@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket
+﻿namespace TcpSocketDataSender
 {
     partial class TcpSocketSettings
     {
