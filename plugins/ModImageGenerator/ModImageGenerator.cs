@@ -4,15 +4,14 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Modules.ModImageGenerator.API;
+using ModImageGenerator.API;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
+namespace ModImageGenerator
 {
-    class ModImageGenerator : IModule, IMapDataReplacements, ISettingsProvider, ISaveRequester
+    class ModImageGenerator : IPlugin, IMapDataReplacements, ISettingsProvider, ISaveRequester
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
@@ -22,6 +21,13 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
         ImageGenerator _imageGenerator;
         private ModImageGeneratorSettings _modImageGeneratorSettings;
         private ILogger _logger;
+
+
+        public string Description { get; } = "";
+        public string Name { get; } = nameof(ModImageGenerator);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
 
         public void Start(ILogger logger)
         {
@@ -51,7 +57,7 @@ namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
                         }
                         catch (ExternalException e)
                         {
-                            _logger.Log("Image file save fail: {0} {1}",LogLevel.Error,e.ErrorCode.ToString(),e.Message?? "null");     
+                            _logger.Log("Image file save fail: {0} {1}", LogLevel.Error, e.ErrorCode.ToString(), e.Message ?? "null");
                         }
                     }
                 }

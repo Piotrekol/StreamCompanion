@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
+namespace ModImageGenerator
 {
     public partial class ModImageGeneratorSettings : UserControl
     {

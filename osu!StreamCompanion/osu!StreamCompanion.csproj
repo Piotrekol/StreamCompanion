@@ -225,15 +225,6 @@
       <DependentUpon>FileSaveLocationSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\FirstRun\FirstRun.cs" />
-    <Compile Include="Code\Modules\ModImageGenerator\API\ImageDeployer.cs" />
-    <Compile Include="Code\Modules\ModImageGenerator\API\ImageGenerator.cs" />
-    <Compile Include="Code\Modules\ModImageGenerator\ModImageGenerator.cs" />
-    <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.Designer.cs">
-      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Plays\PlaysReplacements.cs" />
     <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
@@ -313,9 +304,6 @@
     <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.resx">
       <DependentUpon>PatternPositionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.resx">
-      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
       <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
     </EmbeddedResource>
@@ -327,19 +315,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -350,24 +338,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Code\Modules\ModImageGenerator\Images\DT.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\HD.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\HR.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\HT.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K4.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K5.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K6.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K7.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K8.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\NC.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\NF.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\PF.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\RN.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\RX.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\RX2.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\SD.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\SO.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\TP.png" />
     <Content Include="Resources\btn_donate_92x26.png" />
     <Content Include="Resources\CollectionManager.dll" />
     <Content Include="Resources\compiled.ico" />

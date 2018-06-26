@@ -4,9 +4,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Resources;
-using osu_StreamCompanion.Properties;
+using ModImageGenerator.Properties;
 
-namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
+namespace ModImageGenerator.API
 {
     public class ImageDeployer
     {

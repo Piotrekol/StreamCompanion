@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScGui", "plugins\ScGui\ScGu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModsHandler", "plugins\ModsHandler\ModsHandler.csproj", "{53702F40-8EDA-4A2B-ABBF-F85548FF7442}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModImageGenerator", "plugins\ModImageGenerator\ModImageGenerator.csproj", "{16BB58FA-897B-4A75-BEDC-D42428EB8312}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +171,18 @@ Global
 		{53702F40-8EDA-4A2B-ABBF-F85548FF7442}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{53702F40-8EDA-4A2B-ABBF-F85548FF7442}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{53702F40-8EDA-4A2B-ABBF-F85548FF7442}.Remote debug|x86.Build.0 = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Debug|x86.Build.0 = Debug|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Release|x86.ActiveCfg = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Release|x86.Build.0 = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -181,6 +195,7 @@ Global
 		{909409E5-7DED-43FC-95D7-913C7576E91C} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{4FAB5F27-FF28-4A41-BDD7-1BFF4D0DC71E} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{53702F40-8EDA-4A2B-ABBF-F85548FF7442} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
+		{16BB58FA-897B-4A75-BEDC-D42428EB8312} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}

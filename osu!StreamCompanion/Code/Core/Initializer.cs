@@ -23,7 +23,6 @@ using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.PP;
-using osu_StreamCompanion.Code.Modules.ModImageGenerator;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
 using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
@@ -212,7 +211,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new NoDataFinder());
 
             //AddModule(new ModsHandler()); //refactor
-            AddModule(new ModImageGenerator()); //refactor
+            //AddModule(new ModImageGenerator()); //refactor
             //AddModule(new MainWindow()); //refactor
             AddModule(new FileMapDataGetter()); //refactor
             AddModule(new TcpSocketDataGetter()); //refactor

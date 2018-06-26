@@ -3,13 +3,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 using Point = System.Drawing.Point;
 
-namespace osu_StreamCompanion.Code.Modules.ModImageGenerator.API
+namespace ModImageGenerator.API
 {
     public class ImageGenerator:ISaveRequester
     {

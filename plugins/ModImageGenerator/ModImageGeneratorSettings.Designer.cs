@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.ModImageGenerator
+﻿namespace ModImageGenerator
 {
     partial class ModImageGeneratorSettings
     {
