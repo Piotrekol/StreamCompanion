@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
+namespace FileMapDataSender
 {
-    public class FileMapDataGetter : IModule, IMapDataGetter,IDisposable
+    public class FileMapDataSender : IPlugin, IMapDataGetter, IDisposable
     {
         public bool Started { get; set; }
         private readonly FileMapManager _fileMapManager = new FileMapManager();
         private ILogger _logger;
+
+        public string Description { get; } = "";
+        public string Name { get; } = nameof(FileMapDataSender);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
 
         public void Start(ILogger logger)
         {
@@ -33,7 +38,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
                 {
                     var configName = "conf-" + name;
                     var valueName = "value-" + name;
-                    var config = $"{s.XPosition} {s.YPosition} {s.Color.R} {s.Color.G} {s.Color.B} {s.FontName.Replace(' ','/')} {s.FontSize}";
+                    var config = $"{s.XPosition} {s.YPosition} {s.Color.R} {s.Color.G} {s.Color.B} {s.FontName.Replace(' ', '/')} {s.FontSize}";
                     _fileMapManager.Write(configName, config);
                     if (!s.IsMemoryFormat)
                         _fileMapManager.Write(valueName, valueToWrite.Replace("\r", ""));
@@ -42,7 +47,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
                 if (!s.IsMemoryFormat)
                     _fileMapManager.Write(name, valueToWrite);
             }
-            _fileMapManager.Write("Sc-ingamePatterns", string.Join(" ", ingamePatterns)+" ");
+            _fileMapManager.Write("Sc-ingamePatterns", string.Join(" ", ingamePatterns) + " ");
         }
 
         public void Dispose()
@@ -50,5 +55,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
             _fileMapManager.Write("Sc-ingamePatterns", " ");
 
         }
+
     }
 }

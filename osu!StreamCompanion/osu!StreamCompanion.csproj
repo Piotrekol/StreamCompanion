@@ -173,8 +173,6 @@
       <DependentUpon>FirstRunMsn.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\CacheInitalizer.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapManager.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapDataGetter.cs" />
     <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketDataGetter.cs" />
     <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketManager.cs" />
     <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.cs">

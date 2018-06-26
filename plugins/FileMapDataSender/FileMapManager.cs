@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Text;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap
+namespace FileMapDataSender
 {
     public class FileMapManager
     {

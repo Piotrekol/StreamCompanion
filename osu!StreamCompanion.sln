@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModImageGenerator", "plugin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatmapPpReplacements", "plugins\BeatmapPpReplacements\BeatmapPpReplacements.csproj", "{0C50FF12-C298-424F-8B56-E65BCDDAB159}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMapDataSender", "plugins\FileMapDataSender\FileMapDataSender.csproj", "{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -197,6 +199,18 @@ Global
 		{0C50FF12-C298-424F-8B56-E65BCDDAB159}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{0C50FF12-C298-424F-8B56-E65BCDDAB159}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{0C50FF12-C298-424F-8B56-E65BCDDAB159}.Remote debug|x86.Build.0 = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Debug|x86.Build.0 = Debug|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Release|x86.Build.0 = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,6 +225,7 @@ Global
 		{53702F40-8EDA-4A2B-ABBF-F85548FF7442} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{16BB58FA-897B-4A75-BEDC-D42428EB8312} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{0C50FF12-C298-424F-8B56-E65BCDDAB159} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
+		{32A61CD7-FA30-40CB-8A23-788BBD65D4A7} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}
