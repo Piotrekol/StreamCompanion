@@ -64,6 +64,7 @@
     <Compile Include="DataTypes\SettingUpdated.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Interfaces\IDifficultyCalculator.cs" />
+    <Compile Include="Interfaces\IExiter.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IMainWindowModel.cs" />
     <Compile Include="Interfaces\IMainWindowUpdater.cs" />

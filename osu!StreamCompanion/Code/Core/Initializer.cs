@@ -175,27 +175,27 @@ namespace osu_StreamCompanion.Code.Core
         }
         public void StartModules()
         {
-            AddModule(new OsuPathResolver()); 
+            AddModule(new OsuPathResolver());
             AddModule(new OsuFallbackDetector());
             //AddModule(new MapDataParser());
-            AddModule(new MapDataParser()); 
+            AddModule(new MapDataParser());
             AddModule(new WindowDataGetter()); //refactor
             AddModule(new PlaysReplacements()); //refactor
-            AddModule(new MapReplacement()); 
+            AddModule(new MapReplacement());
             AddModule(new PpReplacements()); //refactor
 #if !DEBUG
             //AddModule(new ClickCounter());
 #endif
             AddModule(new OsuSongsFolderWatcher()); //refactor
 
-            AddModule(new FileSaveLocation()); 
-            AddModule(new CommandsPreview()); 
+            AddModule(new FileSaveLocation());
+            AddModule(new CommandsPreview());
             //AddModule(new OsuPost());
             AddModule(new Updater());
 
             //AddModule(new MemoryDataFinder()); //refactor
             AddModule(new SqliteDataFinder());
-            AddModule(new NoDataFinder()); 
+            AddModule(new NoDataFinder());
 
             AddModule(new ModsHandler()); //refactor
             AddModule(new ModImageGenerator()); //refactor
@@ -315,6 +315,33 @@ namespace osu_StreamCompanion.Code.Core
             if ((msnGetter) != null)
             {
                 MsnGetters.Add(msnGetter);
+            }
+
+            if (module is IExiter exiter)
+            {
+                if (module is IPlugin plugin)
+                {
+                    exiter.SetExitHandle((o) =>
+                    {
+                        string reason = "unknown";
+                        try
+                        {
+                            reason = o.ToString();
+                        }
+                        catch { }
+                        _logger.Log("Plugin {0} has requested StreamCompanion shutdown! due to: {1}", LogLevel.Basic, plugin.Name, reason);
+                        Program.SafeQuit();
+                    });
+                }
+                else
+                {
+                    exiter.SetExitHandle((o) =>
+                    {
+                        _logger.Log("StreamCompanion is shutting down", LogLevel.Basic);
+                        Program.SafeQuit();
+                    });
+                }
+
             }
 
             module.Start(_logger);
