@@ -1,6 +1,6 @@
-﻿namespace osu_StreamCompanion.Code.Modules.ClickCounter
+﻿namespace ClickCounter
 {
-    partial class KeyboardCounterKeyClick
+    partial class KeyClickFrm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeyboardCounterKeyClick));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KeyClickFrm));
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -41,17 +41,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Waiting for key press...";
             // 
-            // KeyboardCounterKeyClick
+            // KeyClick
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(139, 36);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "KeyboardCounterKeyClick";
+            this.Name = "KeyClick";
             this.Text = "Click any key";
             this.ResumeLayout(false);
             this.PerformLayout();

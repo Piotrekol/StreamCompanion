@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Modules.ClickCounter
+namespace ClickCounter
 {
-    public partial class KeyboardCounterKeyClick : Form
+    public partial class KeyClickFrm : Form
     {
         private const int CP_NOCLOSE_BUTTON = 0x200;
         protected override CreateParams CreateParams
@@ -14,7 +14,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
                 return myCp;
             }
         }
-        public KeyboardCounterKeyClick()
+        public KeyClickFrm()
         {
             InitializeComponent();
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Modules.ClickCounter
+namespace ClickCounter
 {
     public partial class ClickCounterFileName : Form
     {

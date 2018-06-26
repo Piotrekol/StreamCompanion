@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Modules.ClickCounter
+namespace ClickCounter
 {
     public partial class KeyboardCounterMain : UserControl
     {

@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.ClickCounter
+namespace ClickCounter
 {
-    public class ClickCounter : ISettingsProvider, IModule, ISaveRequester, IDisposable, IMapDataReplacements
+    public class ClickCounter : IPlugin,ISettingsProvider, ISaveRequester, IDisposable, IMapDataReplacements
     {
-        private FileMapManager _fileMapManager = new FileMapManager();
+        //private FileMapManager _fileMapManager = new FileMapManager();
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
         private ClickCounterSettings _frmSettings;
@@ -27,6 +24,12 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
         public string SettingGroup { get; } = "Click counter";
+
+        public string Description { get; } = "";
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
 
         public void HookAll()
         {
@@ -56,13 +59,13 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
                 _logger.Log(">Mouse hooked!", LogLevel.Debug);
             }
         }
-
+        //TODO: add a way for plugins to use fileMapManager(access to memory files)
         private void MouseListener_OnRightMouseDown(object sender, EventArgs e)
         {
             _rightMouseCount++;
             if (!disableSavingToDisk)
                 _saver.Save("M1.txt", _rightMouseCount.ToString());
-            _fileMapManager.Write("SC-M1", _rightMouseCount.ToString());
+            //_fileMapManager.Write("SC-M1", _rightMouseCount.ToString());
         }
 
         private void _mouseListener_OnLeftMouseDown(object sender, EventArgs e)
@@ -70,7 +73,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
             _leftMouseCount++;
             if (!disableSavingToDisk)
                 _saver.Save("M2.txt", _leftMouseCount.ToString());
-            _fileMapManager.Write("SC-M2", _leftMouseCount.ToString());
+            //_fileMapManager.Write("SC-M2", _leftMouseCount.ToString());
 
         }
 
@@ -106,7 +109,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
                     _keyCount[args.VKCode]++;
                     if (!disableSavingToDisk)
                         _saver.Save(_filenames[args.VKCode], _keyCount[args.VKCode].ToString());
-                    _fileMapManager.Write("SC-" + _filenames[args.VKCode].Replace(".txt", ""), _keyCount[args.VKCode].ToString());
+                    //_fileMapManager.Write("SC-" + _filenames[args.VKCode].Replace(".txt", ""), _keyCount[args.VKCode].ToString());
                     _keyPressed[args.VKCode] = false;
                     _keysPerX?.AddToKeys();
                 }

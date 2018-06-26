@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.ClickCounter
+﻿namespace ClickCounter
 {
     partial class ClickCounterSettings
     {

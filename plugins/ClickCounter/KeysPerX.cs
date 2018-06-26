@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
-namespace osu_StreamCompanion.Code.Modules.ClickCounter
+namespace ClickCounter
 {
     public partial class KeysPerX : Form
     {

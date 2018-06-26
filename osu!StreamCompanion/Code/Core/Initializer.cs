@@ -9,7 +9,6 @@ using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Modules.ClickCounter;
 using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
 using osu_StreamCompanion.Code.Modules.FileSaveLocation;
@@ -187,7 +186,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new MapReplacement());
             AddModule(new PpReplacements());
 #if !DEBUG
-            AddModule(new ClickCounter());
+            //AddModule(new ClickCounter());
 #endif
             AddModule(new OsuSongsFolderWatcher());
 

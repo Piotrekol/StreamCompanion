@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.ClickCounter
+namespace ClickCounter
 {
     public partial class ClickCounterSettings : UserControl
     {
@@ -52,7 +50,7 @@ namespace osu_StreamCompanion.Code.Modules.ClickCounter
         {
             if (keyboardCounterKeyClick == null)
                 keyboardCounterKeyClick = new KeyboardCounterKeyClick();
-            keyboardCounterKeyClick.Location = new Point(this.Location.X + 20, this.Location.Y + 20);
+            keyboardCounterKeyClick.Location = new System.Drawing.Point(this.Location.X + 20, this.Location.Y + 20);
             keyboardListener = new KeyboardListener(true);
             keyboardListener.KeyDown += Kb_KeyDown;
             keyboardCounterKeyClick.Closing += KeyboardCounterKeyClick_Closing;
