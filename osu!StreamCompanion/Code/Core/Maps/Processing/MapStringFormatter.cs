@@ -9,6 +9,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
+    //TODO: refactor to use list of IOsuEventSource providers instead.
     public class MapStringFormatter : IModule, IMsnGetter, ISettings,IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
@@ -23,12 +24,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             _mainMapDataGetter = mainMapDataGetter;
             ConsumerThread = new Thread(ConsumerTask);
-            ConsumerThread.Start();
         }
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
             _logger = logger;
+            ConsumerThread.Start();
         }
         public void SetSettingsHandle(ISettingsHandler settings)
         {

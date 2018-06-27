@@ -22,6 +22,9 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             _settings = settings;
             AllocConsole();
+#if !DEBUG
+            Console.WindowWidth = Console.LargestWindowWidth-Convert.ToInt32(Console.LargestWindowWidth/3);
+#endif
         }
 
 

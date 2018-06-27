@@ -63,7 +63,6 @@ namespace ScGui
         /// <summary>
         /// The current value of the data sources' datamember
         /// </summary>
-        [System.Reflection.Obfuscation(Feature = "renaming")]
         public object Value
         {
             get

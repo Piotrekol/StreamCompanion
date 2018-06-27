@@ -29,6 +29,11 @@ namespace ModsHandler
             return _modParser.GetModsFromEnum(modsEnum);
         }
 
+        public string GetModsFromEnum(int modsEnum, bool shortMod = false)
+        {
+            return _modParser.GetModsFromEnum(modsEnum, shortMod);
+        }
+
         public void SetSettingsHandle(ISettingsHandler settings)
         {
             _modParser.SetSettingsHandle(settings);

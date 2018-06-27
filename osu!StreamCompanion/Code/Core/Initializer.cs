@@ -86,7 +86,7 @@ namespace osu_StreamCompanion.Code.Core
                 try
                 {
                     var lastVersion = Helpers.Helpers.GetDateFromVersionString(lastVersionStr);
-                    var versionToResetOn = Helpers.Helpers.GetDateFromVersionString("v161030.20");
+                    var versionToResetOn = Helpers.Helpers.GetDateFromVersionString("v180209.13");
                     shouldForceFirstRun = lastVersion < versionToResetOn;
                 }
                 catch (Exception e)
@@ -100,6 +100,7 @@ namespace osu_StreamCompanion.Code.Core
 
             if (Settings.Get<bool>(_names.FirstRun) || shouldForceFirstRun)
             {
+                //TODO: plugins need to be able to add additional steps to firstRun
                 var firstRunModule = new FirstRun(delegate ()
                 {
                     var module = new OsuPathResolver();
@@ -147,8 +148,7 @@ namespace osu_StreamCompanion.Code.Core
                 }
             }
             _logger.Log("==========", LogLevel.Advanced, plugins.Count.ToString());
-
-
+            
             #endregion plugins
 
             Settings.Add(_names.FirstRun.Name, false);
@@ -352,6 +352,40 @@ namespace osu_StreamCompanion.Code.Core
             }
 
             module.Start(_logger);
+
+        }
+
+        public void RemoveModule(IModule module)
+        {
+            //TODO: finish removeModule
+            var mapDataFinder = module as IMapDataFinder;
+            if (mapDataFinder != null)
+            {
+                _mapDataFinders.Remove(mapDataFinder);
+            }
+            var settings = module as ISettingsProvider;
+            if (settings != null)
+            {
+                settings.SetSettingsHandle(Settings);
+                SettingsList.Remove(settings);
+            }
+
+            //ISettings-nothing to do
+
+            var msnGetter = module as IMsnGetter;
+            if ((msnGetter) != null)
+            {
+                MsnGetters.Remove(msnGetter);
+            }
+            //var memoryGetter = module as IMemoryGetter;
+            //if (memoryGetter != null)
+            //{
+            //    MemoryGetters.Remove(memoryGetter);
+            //}
+
+            _modules.Remove(module);
+            if (module is IDisposable)
+                ((IDisposable)module).Dispose();
 
         }
 

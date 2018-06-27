@@ -199,7 +199,14 @@ namespace OsuSongsFolderWatcher
             if (!filename.EndsWith("]"))
             {
                 var idx = filename.LastIndexOf("]", StringComparison.InvariantCulture);
-                filename = filename.Remove(idx + 1);
+                try
+                {
+                    filename = filename.Remove(idx + 1);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    //TODO: create unit test for this function to figure out why does this still break from time to time
+                }
             }
             map.DiffName = BeatmapHelpers.GetDiffFromString(filename);
 
