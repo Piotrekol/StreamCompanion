@@ -308,8 +308,7 @@
     <Content Include="Resources\btn_donate_92x26.png" />
     <Content Include="Resources\CollectionManager.dll" />
     <Content Include="Resources\compiled.ico" />
-    <None Include="Resources\logo_256x256.png" />
-    <None Include="Resources\BG.png" />
+    <EmbeddedResource Include="Resources\logo_256x256.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StreamCompanionTypes\StreamCompanionTypes.csproj">

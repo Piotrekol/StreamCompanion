@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun.Phases
 {
@@ -7,6 +8,12 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun.Phases
         public FirstRunFinish()
         {
             InitializeComponent();
+
+            Bitmap bmp = new Bitmap(
+                System.Reflection.Assembly.GetEntryAssembly().
+                    GetManifestResourceStream("osu_StreamCompanion.Resources.logo_256x256.png"));
+            this.pictureBox1.Image = bmp;
+
             this.HandleCreated += Finish_HandleCreated;
         }
 
