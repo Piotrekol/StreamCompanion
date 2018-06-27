@@ -1,16 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
-namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
+namespace WindowDataGetter
 {
-    public class WindowDataGetter :IModule,IMapDataGetter,IMainWindowUpdater
+    public class WindowDataGetter : IPlugin, IMapDataGetter, IMainWindowUpdater
     {
         private IMainWindowModel _mainwindowHandle;
         public bool Started { get; set; }
+        
+        public string Description { get; } = "Provides map data for StreamCompanion GUI";
+        public string Name { get; } = nameof(WindowDataGetter);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -25,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
                 {
                     nowPlaying += string.Format(" [{0}] {1}", foundMap.DiffName, map.Mods?.Item2 ?? "");
-                    nowPlaying += string.Format(Environment.NewLine+"NoMod:{0:##.###}", foundMap.StarsNomod);
+                    nowPlaying += string.Format(Environment.NewLine + "NoMod:{0:##.###}", foundMap.StarsNomod);
                     var mods = map.Mods?.Item1 ?? Mods.Omod;
                     nowPlaying += string.Format(" Modded: {0:##.###}", foundMap.Stars(PlayMode.Osu, mods));
                 }
@@ -33,7 +42,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
             }
             else
             {
-                _mainwindowHandle.NowPlaying = "notFound:( " + map.MapSearchString;
+                _mainwindowHandle.NowPlaying = "map data not found: " + map.MapSearchString;
             }
         }
 
@@ -41,5 +50,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataGetters.Window
         {
             _mainwindowHandle = mainWindowHandle;
         }
+
     }
 }

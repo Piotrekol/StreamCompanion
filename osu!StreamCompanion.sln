@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaysReplacements", "plugin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuSongsFolderWatcher", "plugins\OsuSongsFolderWatcher\OsuSongsFolderWatcher.csproj", "{111A3460-AC37-402C-98B6-D6A1A6B5C214}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowDataGetter", "plugins\WindowDataGetter\WindowDataGetter.csproj", "{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -253,6 +255,18 @@ Global
 		{111A3460-AC37-402C-98B6-D6A1A6B5C214}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{111A3460-AC37-402C-98B6-D6A1A6B5C214}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{111A3460-AC37-402C-98B6-D6A1A6B5C214}.Remote debug|x86.Build.0 = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Debug|x86.Build.0 = Debug|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Release|x86.ActiveCfg = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Release|x86.Build.0 = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -271,6 +285,7 @@ Global
 		{50E3D207-3812-433A-8F9A-757FF55C991A} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{3D20C5F7-1CFC-4313-8B21-D3FA298F82A9} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{111A3460-AC37-402C-98B6-D6A1A6B5C214} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
+		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}

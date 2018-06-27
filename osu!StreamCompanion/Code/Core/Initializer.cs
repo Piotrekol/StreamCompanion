@@ -16,7 +16,6 @@ using osu_StreamCompanion.Code.Modules.FirstRun;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.NoData;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.osuMemoryID;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData;
-using osu_StreamCompanion.Code.Modules.MapDataGetters.Window;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
@@ -187,7 +186,7 @@ namespace osu_StreamCompanion.Code.Core
             AddModule(new OsuFallbackDetector());
             //AddModule(new MapDataParser());
             AddModule(new MapDataParser());
-            AddModule(new WindowDataGetter()); //refactor
+            //AddModule(new WindowDataGetter()); //refactor
             //AddModule(new PlaysReplacements()); //refactor
             AddModule(new MapReplacement());
             //AddModule(new PpReplacements()); //refactor
