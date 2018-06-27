@@ -48,7 +48,8 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<IMapDataParser> _mapDataParsers = new List<IMapDataParser>();
         private readonly List<IMapDataGetter> _mapDataGetters = new List<IMapDataGetter>();
         private readonly List<IMapDataReplacements> _mapDataReplacementSetters = new List<IMapDataReplacements>();
-        private Msn _msn;
+
+        private readonly List<IOsuEventSource> _osuEventSources = new List<IOsuEventSource>();
 
         public Initializer()
         {
@@ -71,7 +72,6 @@ namespace osu_StreamCompanion.Code.Core
         {
             if (_started)
                 return;
-            _msn = new Msn(MsnGetters);
 
             #region First run
 
@@ -115,8 +115,7 @@ namespace osu_StreamCompanion.Code.Core
             MsnGetters.Clear();
             #endregion
 
-            var mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters, _saver, _logger, Settings));
-            AddModule(mapStringFormatter);
+
 
             _logger.Log("Starting...", LogLevel.Advanced);
             _logger.Log(">Main classes...", LogLevel.Advanced);
@@ -148,11 +147,19 @@ namespace osu_StreamCompanion.Code.Core
                 }
             }
             _logger.Log("==========", LogLevel.Advanced, plugins.Count.ToString());
-            
+
             #endregion plugins
 
             Settings.Add(_names.FirstRun.Name, false);
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
+
+            var mapStringFormatter = new MapStringFormatter(
+                new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters, _saver, _logger, Settings),
+                _osuEventSources);
+
+            AddModule(mapStringFormatter);
+            StartModule(mapStringFormatter);
+
             _started = true;
             _logger.Log("Started!", LogLevel.Basic);
         }
@@ -322,6 +329,11 @@ namespace osu_StreamCompanion.Code.Core
             if ((msnGetter) != null)
             {
                 MsnGetters.Add(msnGetter);
+            }
+
+            if (module is IOsuEventSource osuEventSource)
+            {
+                _osuEventSources.Add(osuEventSource);
             }
 
             if (module is IExiter exiter)
