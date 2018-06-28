@@ -76,6 +76,7 @@
     <Compile Include="Interfaces\IModParserGetter.cs" />
     <Compile Include="Interfaces\IModule.cs" />
     <Compile Include="Interfaces\IMsnGetter.cs" />
+    <Compile Include="Interfaces\IOsuEventSource.cs" />
     <Compile Include="Interfaces\IPlugin.cs" />
     <Compile Include="Interfaces\ISaver.cs" />
     <Compile Include="Interfaces\ISaveRequester.cs" />
