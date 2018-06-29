@@ -5,14 +5,14 @@ using StreamCompanionTypes.Interfaces;
 
 namespace FileMapDataSender
 {
-    public class FileMapDataSender : IPlugin, IMapDataGetter, IDisposable
+    public class FileMapDataSender : IPlugin, IMapDataGetter, IDisposable, IFileMapDataSender
     {
         public bool Started { get; set; }
         private readonly FileMapManager _fileMapManager = new FileMapManager();
         private ILogger _logger;
 
         public string Description { get; } = "";
-        public string Name { get; } = nameof(FileMapDataSender);
+        public string Name { get; } = "FileMapDataSender";
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
@@ -21,6 +21,11 @@ namespace FileMapDataSender
         {
             _logger = logger;
             Started = true;
+        }
+
+        public void Save(string fileName, string content)
+        {
+            _fileMapManager.Write(fileName, content);
         }
 
         public void SetNewMap(MapSearchResult map)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using FileMapDataSender;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -9,7 +10,7 @@ namespace ClickCounter
 {
     public class ClickCounter : IPlugin,ISettingsProvider, ISaveRequester, IDisposable, IMapDataReplacements
     {
-        //private FileMapManager _fileMapManager = new FileMapManager();
+        private IFileMapDataSender _fileMapManager = new FileMapDataSender.FileMapDataSender();
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
         private ClickCounterSettings _frmSettings;
@@ -60,13 +61,12 @@ namespace ClickCounter
                 _logger.Log(">Mouse hooked!", LogLevel.Debug);
             }
         }
-        //TODO: add a way for plugins to use fileMapManager(access to memory files)
         private void MouseListener_OnRightMouseDown(object sender, EventArgs e)
         {
             _rightMouseCount++;
             if (!disableSavingToDisk)
                 _saver.Save("M1.txt", _rightMouseCount.ToString());
-            //_fileMapManager.Write("SC-M1", _rightMouseCount.ToString());
+            _fileMapManager.Save("SC-M1", _rightMouseCount.ToString());
         }
 
         private void _mouseListener_OnLeftMouseDown(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace ClickCounter
             _leftMouseCount++;
             if (!disableSavingToDisk)
                 _saver.Save("M2.txt", _leftMouseCount.ToString());
-            //_fileMapManager.Write("SC-M2", _leftMouseCount.ToString());
+           _fileMapManager.Save("SC-M2", _leftMouseCount.ToString());
 
         }
 
@@ -110,7 +110,7 @@ namespace ClickCounter
                     _keyCount[args.VKCode]++;
                     if (!disableSavingToDisk)
                         _saver.Save(_filenames[args.VKCode], _keyCount[args.VKCode].ToString());
-                    //_fileMapManager.Write("SC-" + _filenames[args.VKCode].Replace(".txt", ""), _keyCount[args.VKCode].ToString());
+                    _fileMapManager.Save("SC-" + _filenames[args.VKCode].Replace(".txt", ""), _keyCount[args.VKCode].ToString());
                     _keyPressed[args.VKCode] = false;
                     _keysPerX?.AddToKeys();
                 }
