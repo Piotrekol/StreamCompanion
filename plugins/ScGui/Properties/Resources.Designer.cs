@@ -63,29 +63,9 @@ namespace ScGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BG {
-            get {
-                object obj = ResourceManager.GetObject("BG", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap btn_donate_92x26 {
             get {
                 object obj = ResourceManager.GetObject("btn_donate_92x26", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap logo_256x256 {
-            get {
-                object obj = ResourceManager.GetObject("logo_256x256", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

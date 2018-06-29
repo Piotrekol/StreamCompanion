@@ -7,6 +7,7 @@ namespace ScGui
         public AboutForm()
         {
             InitializeComponent();
+            this.pictureBox1.Image = Helpers.GetStreamCompanionLogo();
             richTextBox1.Text = @"This software is licensed under MIT. You can find the full text of the license inside this link:
 https://github.com/Piotrekol/StreamCompanion/blob/master/LICENSE
 StreamCompanion is written by Piotrekol

@@ -48,6 +48,7 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AsyncBindingHelper.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -87,10 +88,7 @@
     <None Include="Resources\btn_donate_92x26.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\BG.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\logo_256x256.png" />
+    <EmbeddedResource Include="Resources\BG.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">

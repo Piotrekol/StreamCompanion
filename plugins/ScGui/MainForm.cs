@@ -10,7 +10,7 @@ namespace ScGui
         public MainForm()
         {
             InitializeComponent();
-
+            this.BackgroundImage = Helpers.GetStreamCompanionBackground();
         }
         #region Form dragging
         public const int WM_NCLBUTTONDOWN = 0xA1;
