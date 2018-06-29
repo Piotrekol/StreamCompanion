@@ -87,7 +87,7 @@ namespace OsuMemoryEventSource
 
         private void ResetOutput()
         {
-
+            SendData(true);
         }
 
         private void SendData(bool emptyPatterns = false)
@@ -103,6 +103,7 @@ namespace OsuMemoryEventSource
                     if (emptyPatterns)
                     {
                         SetOutput(pattern, "   ");
+                        output[pattern.Name] = "   ";
                         continue;
                     }
 
