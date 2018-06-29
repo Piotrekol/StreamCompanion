@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace MSNEventSource
 {
-    public class Msn : IDisposable, IPlugin, IOsuEventSource
+    public class Msn : IDisposable, IPlugin, IOsuEventSource, IFirstRunControlProvider
     {
         private IntPtr m_hwnd;
         private Dictionary<string, string> _osuStatus = new Dictionary<string, string>();
@@ -36,6 +37,8 @@ namespace MSNEventSource
                 return;
             Task.Factory.StartNew<int>(() =>
             {
+                _firstRunUserControl?.GotMsn(string.Format("{0} - {1}", _osuStatus["title"], _osuStatus["artist"]));
+
                 var args = CreateArgs(_osuStatus);
                 NewOsuEvent?.Invoke(this, args);
                 return 1;
@@ -221,5 +224,13 @@ namespace MSNEventSource
         }
 
         #endregion //MSN FIX
+
+        private FirstRunMsn _firstRunUserControl = null;
+        public List<FirstRunUserControl> GetFirstRunUserControls()
+        {
+            _firstRunUserControl = new FirstRunMsn();
+            return new List<FirstRunUserControl> { _firstRunUserControl };
+        }
+        
     }
 }

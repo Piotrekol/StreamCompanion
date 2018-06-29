@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using CollectionManager.DataTypes;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
@@ -159,5 +162,22 @@ namespace OsuMemoryEventSource
             return dir;
         }
         #endregion
+
+        [DebuggerStepThrough()]
+        public static T ExecWithTimeout<T>(Func<CancellationToken, T> function, int timeout = 10000, ILogger logger = null)
+        {
+            var cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
+            var task = new Task<T>(() => function(token));
+            task.Start();
+            if (task.Wait(TimeSpan.FromMilliseconds(timeout)))
+            {
+                logger?.Log("task finished", LogLevel.Debug);
+                return task.Result;
+            }
+            cancellationTokenSource.Cancel();
+            logger?.Log("task aborted", LogLevel.Debug);
+            return default(T);
+        }
     }
 }

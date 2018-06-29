@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.FirstRun.Phases;
-using StreamCompanionTypes;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
     public partial class FirstRunFrm : Form
-    {
-        private readonly SettingNames _names = SettingNames.Instance;
-        
-        private ISettingsHandler _settings;
-        private List<FirstRunControl> phases = new List<FirstRunControl>();
+    {        
+        private List<FirstRunUserControl> phases = new List<FirstRunUserControl>();
         public bool CompletedSuccesfully { get; set; }
 
-        public FirstRunFrm(ISettingsHandler settings)
+        public FirstRunFrm(List<FirstRunUserControl> firstRunControls)
         {
-            _settings = settings;
-            phases.Add(new FirstRunMsn());
+            foreach (var control in firstRunControls)
+            {
+                phases.Add(control);
+            }
             phases.Add(new FirstRunFinish());
             InitializeComponent();
         }
@@ -46,6 +42,7 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
             {
                 phases[_currentPhase].Completed -= Phase_Completed;
                 this.Controls.RemoveAt(0);
+                phases[_currentPhase].Dispose();
                 if (phases.Count > _currentPhase+1)
                 {
                     _currentPhase++;
@@ -62,17 +59,6 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
                     });
                 }
             });
-        }
-
-        public void GotMsn(string msnString)
-        {
-            var osuDir = _settings.Get<string>(_names.MainOsuDirectory);
-
-            foreach (var phase in phases)
-            {
-                phase.GotMsn(msnString);
-                phase.GotOsuDirectory(osuDir);
-            }
         }
         
     }

@@ -99,15 +99,28 @@ namespace osu_StreamCompanion.Code.Core
                 }
             }
 
+            _logger.Log("Preloading plugins", LogLevel.Advanced);
+
+            var plugins = GetPlugins();
+
+
             if (Settings.Get<bool>(_names.FirstRun) || shouldForceFirstRun)
             {
-                //TODO: plugins need to be able to add additional steps to firstRun
-                var firstRunModule = new FirstRun(delegate ()
+                var firstRunControls = new List<FirstRunUserControl>();
+
+                var firstRunControlProviders =
+                    plugins.Where(p => p.GetType().GetInterfaces().Contains(typeof(IFirstRunControlProvider))).ToList();
+
+
+                foreach (var plugin in firstRunControlProviders)
                 {
-                    var module = new OsuPathResolver();
-                    if (AddModule(module))
-                        StartModule(module);
-                });
+                    LoadPlugin(plugin);
+                    firstRunControls.AddRange(((IFirstRunControlProvider)plugin).GetFirstRunUserControls());
+                }
+                _logger.Log(">Early loaded {0} plugins for firstRun setup", LogLevel.Advanced, firstRunControlProviders.Count.ToString());
+
+                var firstRunModule = new FirstRun(firstRunControls);
+
                 AddModule(firstRunModule);
                 StartModule(firstRunModule);
                 if (!firstRunModule.CompletedSuccesfully)
@@ -127,27 +140,15 @@ namespace osu_StreamCompanion.Code.Core
             _logger.Log(">loaded {0} modules, where {1} are providing settings", LogLevel.Basic, _modules.Count.ToString(), SettingsList.Count.ToString());
 
             #region plugins
-            _logger.Log("Loading plugins", LogLevel.Advanced);
+            _logger.Log("Initalizing {0} plugins", LogLevel.Advanced, plugins.Count.ToString());
 
-            var plugins = GetPlugins();
-            _logger.Log(">Prepared {0} plugins", LogLevel.Advanced, plugins.Count.ToString());
-            _logger.Log("==========", LogLevel.Advanced, plugins.Count.ToString());
+            _logger.Log("==========", LogLevel.Advanced);
 
             foreach (var plugin in plugins)
             {
-                _logger.Log("Loading: {0} by {1}", LogLevel.Advanced, plugin.Name, plugin.Author);
-
-                if (AddModule(plugin))
-                {
-                    StartModule(plugin);
-                    _logger.Log(">Started: {0}", LogLevel.Advanced, plugin.Name);
-                }
-                else
-                {
-                    _logger.Log(">FAILED: {0}", LogLevel.Advanced, plugin.Name);
-                }
+                LoadPlugin(plugin);
             }
-            _logger.Log("==========", LogLevel.Advanced, plugins.Count.ToString());
+            _logger.Log("==========", LogLevel.Advanced);
 
             #endregion plugins
 
@@ -165,6 +166,20 @@ namespace osu_StreamCompanion.Code.Core
             _logger.Log("Started!", LogLevel.Basic);
         }
 
+        private void LoadPlugin(IPlugin plugin)
+        {
+            _logger.Log("Loading: {0} by {1}", LogLevel.Advanced, plugin.Name, plugin.Author);
+
+            if (AddModule(plugin))
+            {
+                StartModule(plugin);
+                _logger.Log(">Started: {0}", LogLevel.Advanced, plugin.Name);
+            }
+            else
+            {
+                _logger.Log(">FAILED: {0}", LogLevel.Advanced, plugin.Name);
+            }
+        }
         public string PluginsLocation => Path.Combine(ConfigSaveLocation, "Plugins");
         private List<IPlugin> GetPlugins()
         {
@@ -185,6 +200,7 @@ namespace osu_StreamCompanion.Code.Core
 
                             var p = Activator.CreateInstance(type) as IPlugin;
                             plugins.Add(p);
+
                         }
                     }
                 }
@@ -192,6 +208,7 @@ namespace osu_StreamCompanion.Code.Core
 
             return plugins;
         }
+
         public void StartModules()
         {
             AddModule(new OsuPathResolver());

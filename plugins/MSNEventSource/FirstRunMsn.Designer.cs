@@ -1,4 +1,4 @@
-﻿namespace osu_StreamCompanion.Code.Modules.FirstRun.Phases
+﻿namespace MSNEventSource
 {
     partial class FirstRunMsn
     {

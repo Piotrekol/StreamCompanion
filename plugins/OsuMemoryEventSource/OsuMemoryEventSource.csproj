@@ -53,6 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FirstRunMemoryCalibration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FirstRunMemoryCalibration.Designer.cs">
+      <DependentUpon>FirstRunMemoryCalibration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers.cs" />
     <Compile Include="MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
@@ -83,6 +89,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FirstRunMemoryCalibration.resx">
+      <DependentUpon>FirstRunMemoryCalibration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MemoryDataFinderSettings.resx">
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
     </EmbeddedResource>

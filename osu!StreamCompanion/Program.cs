@@ -14,7 +14,7 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v180627.17";
+        public static string ScVersion ="v180629.20";
         private static Initializer _initializer;
         /// <summary>
         /// The main entry point for the application.

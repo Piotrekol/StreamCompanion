@@ -47,7 +47,7 @@ namespace OsuMemoryEventSource
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
 
-                    NewOsuEvent.Invoke(this, new MapSearchArgs("OsuMemory")
+                    NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
                         MapId = _currentMapId,
                         Status = status,

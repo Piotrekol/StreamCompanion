@@ -57,6 +57,7 @@
     <Compile Include="DataTypes\Beatmap.cs" />
     <Compile Include="DataTypes\ConfigEntry.cs" />
     <Compile Include="DataTypes\Enums.cs" />
+    <Compile Include="DataTypes\FirstRunUserControl.cs" />
     <Compile Include="DataTypes\LogLevel.cs" />
     <Compile Include="DataTypes\MapSearchArgs.cs" />
     <Compile Include="DataTypes\MapSearchResult.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Interfaces\IDifficultyCalculator.cs" />
     <Compile Include="Interfaces\IExiter.cs" />
+    <Compile Include="Interfaces\IFirstRunControlProvider.cs" />
     <Compile Include="Interfaces\IHighFrequencyDataHandler.cs" />
     <Compile Include="Interfaces\IHighFrequencyDataSender.cs" />
     <Compile Include="Interfaces\ILogger.cs" />

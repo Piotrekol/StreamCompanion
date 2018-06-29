@@ -13,7 +13,7 @@ namespace OsuMemoryEventSource
 {
     //TODO: OsuMemoryEventSource should get refactored into several interface-scoped classes
     public class OsuMemoryEventSource : OsuMemoryEventSourceBase,
-        IMapDataFinder, ISettingsProvider
+        IMapDataFinder, ISettingsProvider, IFirstRunControlProvider
     {
         public string SettingGroup { get; } = "Map matching";
 
@@ -82,6 +82,21 @@ namespace OsuMemoryEventSource
             }
 
             return result;
+        }
+
+        private FirstRunMemoryCalibration _firstRunMemoryCalibration = null;
+        public List<FirstRunUserControl> GetFirstRunUserControls()
+        {
+            if (_firstRunMemoryCalibration == null || _firstRunMemoryCalibration.IsDisposed)
+            {
+                _firstRunMemoryCalibration = new FirstRunMemoryCalibration( _memoryReader, _settings);
+            }
+
+            NewOsuEvent += (s, args) =>
+            {
+                _firstRunMemoryCalibration?.GotMemory(args.MapId, args.Status, args.Raw);
+            };
+            return new List<FirstRunUserControl> { _firstRunMemoryCalibration };
         }
     }
 }

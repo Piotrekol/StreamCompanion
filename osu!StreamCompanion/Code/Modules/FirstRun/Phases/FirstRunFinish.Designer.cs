@@ -29,39 +29,25 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label_msnString = new System.Windows.Forms.Label();
             this.button_end = new System.Windows.Forms.Button();
-            this.label_osuDirectory = new System.Windows.Forms.Label();
             this.label_Description2 = new System.Windows.Forms.Label();
-            this.label_Description1 = new System.Windows.Forms.Label();
-            this.label_Title = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.label_msnString);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.button_end);
-            this.panel1.Controls.Add(this.label_osuDirectory);
             this.panel1.Controls.Add(this.label_Description2);
-            this.panel1.Controls.Add(this.label_Description1);
-            this.panel1.Controls.Add(this.label_Title);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(399, 242);
             this.panel1.TabIndex = 2;
-            // 
-            // label_msnString
-            // 
-            this.label_msnString.Location = new System.Drawing.Point(140, 27);
-            this.label_msnString.Name = "label_msnString";
-            this.label_msnString.Size = new System.Drawing.Size(251, 51);
-            this.label_msnString.TabIndex = 9;
-            this.label_msnString.Text = "-\r\n-\r\n-";
             // 
             // button_end
             // 
@@ -73,14 +59,6 @@
             this.button_end.UseVisualStyleBackColor = true;
             this.button_end.Click += new System.EventHandler(this.button_end_Click);
             // 
-            // label_osuDirectory
-            // 
-            this.label_osuDirectory.Location = new System.Drawing.Point(137, 98);
-            this.label_osuDirectory.Name = "label_osuDirectory";
-            this.label_osuDirectory.Size = new System.Drawing.Size(254, 33);
-            this.label_osuDirectory.TabIndex = 6;
-            this.label_osuDirectory.Text = "-\r\n-";
-            // 
             // label_Description2
             // 
             this.label_Description2.Location = new System.Drawing.Point(3, 134);
@@ -88,22 +66,6 @@
             this.label_Description2.Size = new System.Drawing.Size(388, 24);
             this.label_Description2.TabIndex = 4;
             this.label_Description2.Text = "You can now close this setup.";
-            // 
-            // label_Description1
-            // 
-            this.label_Description1.Location = new System.Drawing.Point(137, 78);
-            this.label_Description1.Name = "label_Description1";
-            this.label_Description1.Size = new System.Drawing.Size(254, 20);
-            this.label_Description1.TabIndex = 3;
-            this.label_Description1.Text = "Your osu location:";
-            // 
-            // label_Title
-            // 
-            this.label_Title.Location = new System.Drawing.Point(137, 3);
-            this.label_Title.Name = "label_Title";
-            this.label_Title.Size = new System.Drawing.Size(254, 20);
-            this.label_Title.TabIndex = 2;
-            this.label_Title.Text = "Got information from osu!:";
             // 
             // pictureBox1
             // 
@@ -114,7 +76,16 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // Finish
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(135, 69);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(256, 24);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "All setup steps completed";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // FirstRunFinish
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -131,11 +102,8 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label_Description2;
-        private System.Windows.Forms.Label label_Description1;
-        private System.Windows.Forms.Label label_Title;
         private System.Windows.Forms.PictureBox pictureBox1;
-        public System.Windows.Forms.Label label_osuDirectory;
         public System.Windows.Forms.Button button_end;
-        public System.Windows.Forms.Label label_msnString;
+        private System.Windows.Forms.Label label1;
     }
 }

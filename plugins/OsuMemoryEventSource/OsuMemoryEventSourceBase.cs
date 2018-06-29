@@ -68,7 +68,7 @@ namespace OsuMemoryEventSource
             }
 
             _memoryListener = new MemoryListener(Helpers.GetFullSongsLocation(_settings));
-            _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent.Invoke(this, args);
+            _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent?.Invoke(this, args);
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
         }
 
