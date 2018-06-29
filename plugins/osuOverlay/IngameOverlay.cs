@@ -14,7 +14,6 @@ namespace osuOverlay
         private ISaver _saver;
         public bool Started { get; set; }
         public string SettingGroup { get; } = "General";
-        private const string FilesFolder = "Dlls";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
 
@@ -50,7 +49,7 @@ namespace osuOverlay
             {
                 while (true)
                 {
-                    
+
                     if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
                         _currentOsuProcess = null;
@@ -137,7 +136,7 @@ namespace osuOverlay
             return true;
         }
 
-        private string GetFilesFolder() => Path.Combine(_saver.SaveDirectory, FilesFolder);
+        private string GetFilesFolder() => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "Dlls");
 
         private string GetFullDllLocation() => Path.Combine(GetFilesFolder(), "osuOverlay.dll");
 
