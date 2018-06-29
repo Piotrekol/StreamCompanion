@@ -13,7 +13,7 @@ namespace StreamCompanionTypes.DataTypes
         public string MapSearchString;
         public Tuple<Mods,string> Mods = null;
         public OsuStatus Action=OsuStatus.Null;
-        
+        public string EventSource { get; set; }
         public MapSearchResult(List<Beatmap> beatmaps)
         {
             _beatmapsFound = beatmaps;

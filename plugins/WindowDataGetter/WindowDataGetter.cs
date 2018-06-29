@@ -31,7 +31,7 @@ namespace WindowDataGetter
             {
                 var foundMap = map.BeatmapsFound[0];
                 var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
-                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
+                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.EventSource!="Msn")
                 {
                     nowPlaying += string.Format(" [{0}] {1}", foundMap.DiffName, map.Mods?.Item2 ?? "");
                     nowPlaying += string.Format(Environment.NewLine + "NoMod:{0:##.###}", foundMap.StarsNomod);

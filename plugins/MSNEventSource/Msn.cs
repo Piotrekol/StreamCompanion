@@ -71,7 +71,7 @@ namespace MSNEventSource
                 }
                 _logger.Log(result, LogLevel.Basic);
 
-                var searchArgs = new MapSearchArgs("MSN")
+                var searchArgs = new MapSearchArgs("Msn")
                 {
                     Artist = osuStatus["artist"] ?? "",
                     Title = osuStatus["title"] ?? "",
