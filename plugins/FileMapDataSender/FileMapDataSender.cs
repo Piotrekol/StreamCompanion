@@ -5,7 +5,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace FileMapDataSender
 {
-    public class FileMapDataSender : IPlugin, IMapDataGetter, IDisposable, IFileMapDataSender
+    public class FileMapDataSender : IPlugin, IMapDataGetter, IDisposable, IHighFrequencyDataHandler
     {
         public bool Started { get; set; }
         private readonly FileMapManager _fileMapManager = new FileMapManager();
@@ -33,6 +33,7 @@ namespace FileMapDataSender
             var ingamePatterns = new List<string>();
             foreach (var s in map.FormatedStrings)
             {
+                //TODO: export ingameOverlay(showInOsu) stuff out of there
                 var name = $"SC-{s.Name}";
                 if (s.ShowInOsu)
                 {
@@ -58,8 +59,17 @@ namespace FileMapDataSender
         public void Dispose()
         {
             _fileMapManager.Write("Sc-ingamePatterns", " ");
-
         }
 
+        public void Handle(string content)
+        {
+            //ignored
+        }
+
+        public void Handle(string name, string content)
+        {
+            _fileMapManager.Write(name, content);
+
+        }
     }
 }

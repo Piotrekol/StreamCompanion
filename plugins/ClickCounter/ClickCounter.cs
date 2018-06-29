@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using FileMapDataSender;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace ClickCounter
 {
-    public class ClickCounter : IPlugin,ISettingsProvider, ISaveRequester, IDisposable, IMapDataReplacements
+    public class ClickCounter : IPlugin, ISettingsProvider, ISaveRequester, IDisposable, IMapDataReplacements, IHighFrequencyDataSender
     {
-        private IFileMapDataSender _fileMapManager = new FileMapDataSender.FileMapDataSender();
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
         private ClickCounterSettings _frmSettings;
@@ -24,6 +22,8 @@ namespace ClickCounter
         private readonly List<int> _keyList = new List<int>();
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
+        private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
+
         public string SettingGroup { get; } = "Click counter";
 
         public string Description { get; } = "";
@@ -50,6 +50,15 @@ namespace ClickCounter
             }
         }
 
+        private void UpdateValue(string name, string value)
+        {
+            if (!disableSavingToDisk)
+                _saver.Save(name + ".txt", value);
+
+            _highFrequencyDataHandler.ForEach(h =>
+                h.Handle("SC-" + name, value)
+            );
+        }
         private void HookMouse()
         {
             if (_settings.Get<bool>(_names.EnableMouseHook) && _mouseListener == null)
@@ -64,18 +73,13 @@ namespace ClickCounter
         private void MouseListener_OnRightMouseDown(object sender, EventArgs e)
         {
             _rightMouseCount++;
-            if (!disableSavingToDisk)
-                _saver.Save("M1.txt", _rightMouseCount.ToString());
-            _fileMapManager.Save("SC-M1", _rightMouseCount.ToString());
+            UpdateValue("M1", _rightMouseCount.ToString());
         }
 
         private void _mouseListener_OnLeftMouseDown(object sender, EventArgs e)
         {
             _leftMouseCount++;
-            if (!disableSavingToDisk)
-                _saver.Save("M2.txt", _leftMouseCount.ToString());
-           _fileMapManager.Save("SC-M2", _leftMouseCount.ToString());
-
+            UpdateValue("M2", _rightMouseCount.ToString());
         }
 
         private void UnHookAll()
@@ -108,9 +112,10 @@ namespace ClickCounter
                 if (_keyPressed[args.VKCode])
                 {
                     _keyCount[args.VKCode]++;
-                    if (!disableSavingToDisk)
-                        _saver.Save(_filenames[args.VKCode], _keyCount[args.VKCode].ToString());
-                    _fileMapManager.Save("SC-" + _filenames[args.VKCode].Replace(".txt", ""), _keyCount[args.VKCode].ToString());
+
+                    var name = _filenames[args.VKCode].Replace(".txt", "");
+                    UpdateValue(name, _keyCount[args.VKCode].ToString());
+                    
                     _keyPressed[args.VKCode] = false;
                     _keysPerX?.AddToKeys();
                 }
@@ -288,6 +293,11 @@ namespace ClickCounter
             ret["!M1!"] = _rightMouseCount.ToString();
             ret["!M2!"] = _leftMouseCount.ToString();
             return ret;
+        }
+
+        public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
+        {
+            _highFrequencyDataHandler = handlers;
         }
     }
 }

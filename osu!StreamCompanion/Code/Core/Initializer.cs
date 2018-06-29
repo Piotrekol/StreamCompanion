@@ -50,7 +50,8 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<IMapDataReplacements> _mapDataReplacementSetters = new List<IMapDataReplacements>();
 
         private readonly List<IOsuEventSource> _osuEventSources = new List<IOsuEventSource>();
-
+        private readonly List<IHighFrequencyDataHandler> _highFrequencyDataHandlers = new List<IHighFrequencyDataHandler>(
+            );
         public Initializer()
         {
             new FileChecker();
@@ -335,6 +336,17 @@ namespace osu_StreamCompanion.Code.Core
             {
                 _osuEventSources.Add(osuEventSource);
             }
+
+            if (module is IHighFrequencyDataHandler handler)
+            {
+                _highFrequencyDataHandlers.Add(handler);
+            }
+
+            if (module is IHighFrequencyDataSender sender)
+            {
+                sender.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
+            }
+
 
             if (module is IExiter exiter)
             {

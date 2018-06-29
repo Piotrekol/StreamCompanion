@@ -8,7 +8,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace TcpSocketDataSender
 {
-    public class TcpSocketDataGetter : IModule, IMapDataGetter, ISettingsProvider, IDisposable
+    public class TcpSocketDataGetter : IModule, IMapDataGetter, ISettingsProvider, IDisposable, IHighFrequencyDataHandler
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -16,12 +16,14 @@ namespace TcpSocketDataSender
         private TcpSocketManager _tcpSocketManager;
         private ISettingsHandler _settings;
 
+        private bool tcpSocketIsEnabled = false;
         public void Start(ILogger logger)
         {
             _tcpSocketManager = new TcpSocketManager();
             _tcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _tcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketPort);
-            if (_settings.Get<bool>(_names.tcpSocketEnabled))
+            tcpSocketIsEnabled = _settings.Get<bool>(_names.tcpSocketEnabled);
+            if (tcpSocketIsEnabled)
             {
                 _tcpSocketManager.AutoReconnect = true;
                 _tcpSocketManager.Connect();
@@ -34,16 +36,16 @@ namespace TcpSocketDataSender
         {
             if (settingUpdated.Name == _names.tcpSocketEnabled.Name)
             {
-                var enabled = _settings.Get<bool>(_names.tcpSocketEnabled);
-                _tcpSocketManager.AutoReconnect = enabled;
-                if (enabled)
+                tcpSocketIsEnabled = _settings.Get<bool>(_names.tcpSocketEnabled);
+                _tcpSocketManager.AutoReconnect = tcpSocketIsEnabled;
+                if (tcpSocketIsEnabled)
                     _tcpSocketManager.Connect();
             }
         }
 
         public void SetNewMap(MapSearchResult map)
         {
-            if (_settings.Get<bool>(_names.tcpSocketEnabled))
+            if (tcpSocketIsEnabled)
             {
                 Dictionary<string, string> output = new Dictionary<string, string>();
                 foreach (var s in map.FormatedStrings)
@@ -84,6 +86,19 @@ namespace TcpSocketDataSender
             _settings.SettingUpdated -= SettingUpdated;
             _tcpSocketManager?.Dispose();
             settingsUserControl?.Dispose();
+        }
+
+        public void Handle(string content)
+        {
+            if (!tcpSocketIsEnabled) return;
+
+            _tcpSocketManager.Write(content);
+
+        }
+
+        public void Handle(string name, string content)
+        {
+            //Ignored
         }
     }
 }
