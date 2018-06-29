@@ -9,8 +9,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
-    //TODO: refactor to use list of IOsuEventSource providers instead.
-    public class MapStringFormatter : IModule, ISettings,IDisposable
+    public class MapStringFormatter : IModule, ISettings, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ILogger _logger;
@@ -19,23 +18,34 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private ISettingsHandler _settings;
         private string _lastMsnString = "";
         private Thread ConsumerThread;
-        private ConcurrentStack<MapSearchArgs> Tasks = new ConcurrentStack<MapSearchArgs>();
+        private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
+        private ConcurrentStack<MapSearchArgs> TasksMemory = new ConcurrentStack<MapSearchArgs>();
 
-        public MapStringFormatter(MainMapDataGetter mainMapDataGetter,List<IOsuEventSource> osuEventSources)
+        public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources)
         {
             _mainMapDataGetter = mainMapDataGetter;
             _osuEventSources = osuEventSources;
             foreach (var source in osuEventSources)
             {
-                source.NewOsuEvent+=NewOsuEvent;
+                source.NewOsuEvent += NewOsuEvent;
             }
             ConsumerThread = new Thread(ConsumerTask);
         }
 
         private void NewOsuEvent(object sender, MapSearchArgs mapSearchArgs)
         {
-            Tasks.Clear();
-            Tasks.Push(mapSearchArgs);
+            //TODO: priority system for IOsuEventSource 
+            if (mapSearchArgs.SourceName == "OsuMemory")
+            {
+                TasksMemory.Clear();
+                TasksMemory.Push(mapSearchArgs);
+            }
+            else
+            {
+                TasksMsn.Clear();
+                TasksMsn.Push(mapSearchArgs);
+            }
+
         }
 
         public bool Started { get; set; }
@@ -49,19 +59,58 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _settings = settings;
         }
 
-        
+
         public void ConsumerTask()
         {
             try
             {
+                bool isPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
+                int counter = 0;
                 MapSearchArgs searchArgs;
                 MapSearchResult searchResult;
+                var memorySearchFailed = false;
                 while (true)
                 {
-                    if (Tasks.TryPop(out searchArgs))
+                    if (counter % 400 == 0)
+                    {//more or less every 2 seconds given 5ms delay at end.
+                        counter = 0;
+                        isPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
+                    }
+                    counter++;
+                    if (isPoolingEnabled)
                     {
-                        searchResult = _mainMapDataGetter.FindMapData(searchArgs);
-                        _mainMapDataGetter.ProcessMapResult(searchResult);
+                        //Here we prioritize Memory events over MSN/other.
+                        if (TasksMemory.TryPop(out searchArgs))
+                        {
+                            searchResult = _mainMapDataGetter.FindMapData(searchArgs);
+                            if (searchResult.FoundBeatmaps)
+                            {
+                                memorySearchFailed = false;
+                                searchResult.EventSource = searchArgs.SourceName;
+                                _mainMapDataGetter.ProcessMapResult(searchResult);
+                            }
+                            else
+                                memorySearchFailed = true;
+                        }
+                        if (memorySearchFailed)
+                        {
+                            if (TasksMsn.TryPop(out searchArgs))
+                            {
+                                searchResult = _mainMapDataGetter.FindMapData(searchArgs);
+                                searchResult.EventSource = searchArgs.SourceName;
+                                _mainMapDataGetter.ProcessMapResult(searchResult);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Use MSN/other events only
+                        if (TasksMsn.TryPop(out searchArgs))
+                        {
+                            searchResult = _mainMapDataGetter.FindMapData(searchArgs);
+                            searchResult.EventSource = searchArgs.SourceName;
+                            _mainMapDataGetter.ProcessMapResult(searchResult);
+                        }
                     }
                     Thread.Sleep(5);
                 }
@@ -74,7 +123,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
             }
         }
-        
+
 
         public void Dispose()
         {

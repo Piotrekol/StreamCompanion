@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowDataGetter", "plugins
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSNEventSource", "plugins\MSNEventSource\MSNEventSource.csproj", "{0BE726DB-D370-4D9D-988A-2B79AF562283}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuMemoryEventSource", "plugins\OsuMemoryEventSource\OsuMemoryEventSource.csproj", "{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -281,6 +283,18 @@ Global
 		{0BE726DB-D370-4D9D-988A-2B79AF562283}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{0BE726DB-D370-4D9D-988A-2B79AF562283}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{0BE726DB-D370-4D9D-988A-2B79AF562283}.Remote debug|x86.Build.0 = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x86.Build.0 = Debug|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Release|x86.ActiveCfg = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Release|x86.Build.0 = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -301,6 +315,7 @@ Global
 		{111A3460-AC37-402C-98B6-D6A1A6B5C214} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{9B64F5D5-5A53-44EB-9CBF-9C27391A9279} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{0BE726DB-D370-4D9D-988A-2B79AF562283} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}
