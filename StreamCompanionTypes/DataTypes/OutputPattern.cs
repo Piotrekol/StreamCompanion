@@ -19,7 +19,6 @@ namespace StreamCompanionTypes.DataTypes
         };
         [IgnoreDataMember]
         public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
-        private bool _isMemoryFormat;
         private OsuStatus _saveEvent = OsuStatus.All;
         private string _pattern = "Your pattern text";
         private string _name;

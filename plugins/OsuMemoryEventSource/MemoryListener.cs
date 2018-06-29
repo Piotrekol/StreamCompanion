@@ -6,7 +6,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace OsuMemoryEventSource
 {
-    public class MemoryListener : IOsuEventSource
+    public class MemoryListener : IOsuEventSource, IHighFrequencyDataSender
     {
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
 
@@ -17,7 +17,12 @@ namespace OsuMemoryEventSource
         private OsuMemoryStatus _currentStatus = OsuMemoryStatus.Unknown;
         private string _lastMapString = "-";
         private string _currentMapString = "";
-        
+        private MemoryDataProcessor _memoryDataProcessor;
+
+        public MemoryListener(string songsFolderLocation)
+        {
+            _memoryDataProcessor = new MemoryDataProcessor(songsFolderLocation);
+        }
 
         public void Tick(IOsuMemoryReader reader)
         {
@@ -34,13 +39,14 @@ namespace OsuMemoryEventSource
                 _currentMapId = reader.GetMapId();
                 _currentMapString = reader.GetSongString();
                 OsuStatus status = _currentStatus.Convert();
+
                 if (_lastMapId != _currentMapId || _lastStatus != _currentStatus ||
                     _currentMapString != _lastMapString)
                 {
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
-                    
+
                     NewOsuEvent.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
                         MapId = _currentMapId,
@@ -49,12 +55,17 @@ namespace OsuMemoryEventSource
                     });
 
                 }
-                //_memoryFileOutput.Process(status, reader);
+
+                _memoryDataProcessor.Tick(status, reader);
             }
         }
         public void SetNewMap(MapSearchResult map)
         {
-            //_memoryFileOutput.SetNewMap(map);
+            _memoryDataProcessor.SetNewMap(map);
+        }
+        public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
+        {
+            _memoryDataProcessor.SetHighFrequencyDataHandlers(handlers);
         }
 
     }

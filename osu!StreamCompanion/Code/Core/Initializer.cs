@@ -179,9 +179,13 @@ namespace osu_StreamCompanion.Code.Core
                 {
                     if (type.GetInterfaces().Contains(typeof(IPlugin)))
                     {
-                        assemblies.Add(asm);
-                        var p = Activator.CreateInstance(type) as IPlugin;
-                        plugins.Add(p);
+                        if (!type.IsAbstract)
+                        {
+                            assemblies.Add(asm);
+
+                            var p = Activator.CreateInstance(type) as IPlugin;
+                            plugins.Add(p);
+                        }
                     }
                 }
             }
