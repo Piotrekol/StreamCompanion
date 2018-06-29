@@ -7,8 +7,11 @@ using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
+using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
+using SharpRaven;
+using SharpRaven.Data;
 
 namespace osu_StreamCompanion
 {
@@ -129,6 +132,12 @@ namespace osu_StreamCompanion
         {
             try
             {
+#if !DEBUG
+                var ravenClient = SentryLogger.RavenClient;
+                ravenClient.Release = ScVersion;
+                var sentryEvent = new SentryEvent(ex);
+                ravenClient.Capture(sentryEvent);
+#endif
                 MessageBox.Show(errorNotification, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 var form = new Error(ex.Message + Environment.NewLine + ex.StackTrace);
                 form.ShowDialog();

@@ -65,7 +65,9 @@ namespace osu_StreamCompanion.Code.Core
             else
                 _logger.ChangeLogger(new EmptyLogger());
             _logger.AddLogger(new FileLogger(_saver, Settings));
-
+#if !DEBUG
+            _logger.AddLogger(new SentryLogger());
+#endif
             _logger.Log("booting up...", LogLevel.Basic);
         }
 
