@@ -32,4 +32,4 @@ cd ..
 REM clean installer folder
 rm ./innoSetup/Output/*
 REM create installer (Inno Setup 5)
-ISCC ".\innoSetup\setupScript.iss"
+"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" ".\innoSetup\setupScript.iss"
