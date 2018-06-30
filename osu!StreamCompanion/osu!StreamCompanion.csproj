@@ -80,32 +80,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\CollectionManager.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpRaven.2.4.0\lib\net40\SharpRaven.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net40\System.Data.SQLite.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.98.1\lib\net40\System.Data.SQLite.EF6.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.98.1\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
@@ -117,53 +106,27 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\Core\DataTypes\Beatmap.cs" />
-    <Compile Include="Code\Core\DataTypes\LogLevel.cs" />
-    <Compile Include="Code\Core\DataTypes\MapSearchArgs.cs" />
-    <Compile Include="Code\Core\DataTypes\MapSearchResult.cs" />
     <Compile Include="Code\Core\Initializer.cs" />
     <Compile Include="Code\Core\Loggers\FileLogger.cs" />
-    <Compile Include="Code\Core\Maps\osuFileParser.cs" />
+    <Compile Include="Code\Core\Loggers\SentryLogger.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapDataGetter.cs" />
     <Compile Include="Code\Core\Savers\FileSaver.cs" />
     <Compile Include="Code\Core\Savers\MainSaver.cs" />
     <Compile Include="Code\Helpers\Exceptions.cs" />
-    <Compile Include="Code\Interfaces\IDifficultyCalculator.cs" />
     <Compile Include="Code\Misc\ImpatientWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Code\Misc\SettingNames.cs" />
     <Compile Include="Code\Core\SqliteConnector.cs" />
     <Compile Include="Code\Helpers\BeatmapHelpers.cs" />
     <Compile Include="Code\Helpers\Helpers.cs" />
     <Compile Include="Code\Helpers\StringCipher.cs" />
-    <Compile Include="Code\Helpers\EventClass.cs" />
-    <Compile Include="Code\Interfaces\IMainWindowUpdater.cs" />
-    <Compile Include="Code\Interfaces\IMapDataFinder.cs" />
-    <Compile Include="Code\Interfaces\IMapDataParser.cs" />
-    <Compile Include="Code\Interfaces\IMapDataReplacements.cs" />
-    <Compile Include="Code\Interfaces\IMapDataStorer.cs" />
-    <Compile Include="Code\Interfaces\IModParserGetter.cs" />
-    <Compile Include="Code\Interfaces\ISaver.cs" />
-    <Compile Include="Code\Interfaces\ISaveRequester.cs" />
     <Compile Include="Code\Core\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Code\Core\DataTypes\Enums.cs" />
     <Compile Include="Code\Helpers\AsyncBindingHelper.cs" />
     <Compile Include="Code\Helpers\ListExtensions.cs" />
-    <Compile Include="Code\Interfaces\ILogger.cs" />
-    <Compile Include="Code\Interfaces\IModParser.cs" />
-    <Compile Include="Code\Interfaces\IModule.cs" />
-    <Compile Include="Code\Interfaces\IMsnGetter.cs" />
-    <Compile Include="Code\Interfaces\ISettingsProvider.cs" />
     <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
     <Compile Include="Code\Core\Loggers\MainLogger.cs" />
-    <Compile Include="Code\Interfaces\ISettings.cs" />
-    <Compile Include="Code\Interfaces\ISettingsGetter.cs" />
-    <Compile Include="Code\Interfaces\ISqliteUser.cs" />
-    <Compile Include="Code\Misc\MouseListener.cs" />
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreview.cs" />
     <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.cs">
       <SubType>UserControl</SubType>
@@ -179,7 +142,6 @@
       <DependentUpon>DonationSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Misc\FileChecker.cs" />
-    <Compile Include="Code\Modules\FirstRun\FirstRunControl.cs" />
     <Compile Include="Code\Modules\FirstRun\FirstRunFrm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -192,34 +154,9 @@
     <Compile Include="Code\Modules\FirstRun\Phases\FirstRunFinish.Designer.cs">
       <DependentUpon>FirstRunFinish.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunMsn.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunMsn.Designer.cs">
-      <DependentUpon>FirstRunMsn.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\IngameOverlay\IngameOverlay.cs" />
-    <Compile Include="Code\Modules\IngameOverlay\DllInjector.cs" />
-    <Compile Include="Code\Modules\IngameOverlay\IngameOverlaySettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\IngameOverlay\IngameOverlaySettings.Designer.cs">
-      <DependentUpon>IngameOverlaySettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\CacheInitalizer.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapManager.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\FileMap\FileMapDataGetter.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketDataGetter.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketManager.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.Designer.cs">
-      <DependentUpon>TcpSocketSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\MapDataParsers\Parser1\LegacyParserConfigConverter.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\OutputPattern.cs" />
     <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -250,9 +187,6 @@
     <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.Designer.cs">
       <DependentUpon>PatternPositionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\MapDataReplacements\PP\PpReplacements.cs" />
-    <Compile Include="Code\Modules\ModsHandler\DifficultyCalculator.cs" />
-    <Compile Include="Code\Modules\ModsHandler\ModsHandler.cs" />
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
@@ -262,61 +196,8 @@
       <DependentUpon>FileSaveLocationSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\FirstRun\FirstRun.cs" />
-    <Compile Include="Code\Modules\ClickCounter\KeysPerX.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\KeysPerX.Designer.cs">
-      <DependentUpon>KeysPerX.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\ModImageGenerator\API\ImageDeployer.cs" />
-    <Compile Include="Code\Modules\ModImageGenerator\API\ImageGenerator.cs" />
-    <Compile Include="Code\Modules\ModImageGenerator\ModImageGenerator.cs" />
-    <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.Designer.cs">
-      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\ModsHandler\ModParser.cs" />
     <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
-    <Compile Include="Code\Modules\MapDataReplacements\Plays\PlaysReplacements.cs" />
-    <Compile Include="Code\Modules\ModsHandler\ModParserSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ModsHandler\ModParserSettings.Designer.cs">
-      <DependentUpon>ModParserSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\osuSongsFolderWatcher\osuSongsFolderWatcher.cs" />
-    <Compile Include="Code\Modules\SCGUI\MainWindow.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
-    <Compile Include="Code\Core\Maps\MSN.cs" />
-    <Compile Include="Code\Interfaces\MapDataGetter.cs" />
-    <Compile Include="Code\Misc\KeyboardListener.cs" />
-    <Compile Include="Code\Modules\ClickCounter\ClickCounter.cs" />
-    <Compile Include="Code\Modules\ClickCounter\ClickCounterFileName.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\ClickCounterFileName.Designer.cs">
-      <DependentUpon>ClickCounterFileName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterKeyClick.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterKeyClick.Designer.cs">
-      <DependentUpon>KeyboardCounterKeyClick.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterMain.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\KeyboardCounterMain.Designer.cs">
-      <DependentUpon>KeyboardCounterMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\ClickCounterSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\ClickCounter\ClickCounterSettings.Designer.cs">
-      <DependentUpon>ClickCounterSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
     <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
@@ -325,7 +206,6 @@
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\MapDataFinders\NoData\NoDataFinder.cs" />
-    <Compile Include="Code\Modules\MapDataGetters\Window\WindowDataGetter.cs" />
     <Compile Include="Code\Modules\osuPathReslover\osuPathResolver.cs" />
     <Compile Include="Code\Modules\osuPathReslover\osuPathResolverSettings.cs">
       <SubType>UserControl</SubType>
@@ -335,20 +215,6 @@
     </Compile>
     <Compile Include="Code\Core\Settings.cs" />
     <Compile Include="Code\Core\SqliteControler.cs" />
-    <Compile Include="Code\Modules\osuPost\osuPost.cs" />
-    <Compile Include="Code\Modules\osuPost\osuPostApi.cs" />
-    <Compile Include="Code\Modules\osuPost\osuPostSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\osuPost\osuPostSettings.Designer.cs">
-      <DependentUpon>osuPostSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\AboutForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\AboutForm.Designer.cs">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\Updater\UpdateContainer.cs" />
     <Compile Include="Code\Modules\Updater\UpdateForm.cs">
       <SubType>Form</SubType>
@@ -358,18 +224,6 @@
     </Compile>
     <Compile Include="Code\Modules\Updater\Updater.cs" />
     <Compile Include="Code\Windows\MainWindowEntities.cs" />
-    <Compile Include="Code\Modules\SCGUI\MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\SettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\SCGUI\SettingsForm.Designer.cs">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Windows\ErrorFrm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -390,35 +244,11 @@
     <EmbeddedResource Include="Code\Modules\FirstRun\FirstRunFrm.resx">
       <DependentUpon>FirstRunFrm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ClickCounter\ClickCounterFileName.resx">
-      <DependentUpon>ClickCounterFileName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ClickCounter\KeyboardCounterKeyClick.resx">
-      <DependentUpon>KeyboardCounterKeyClick.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ClickCounter\KeyboardCounterMain.resx">
-      <DependentUpon>KeyboardCounterMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ClickCounter\ClickCounterSettings.resx">
-      <DependentUpon>ClickCounterSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ClickCounter\KeysPerX.resx">
-      <DependentUpon>KeysPerX.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\FirstRun\Phases\FirstRunFinish.resx">
       <DependentUpon>FirstRunFinish.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\FirstRun\Phases\FirstRunMsn.resx">
-      <DependentUpon>FirstRunMsn.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\IngameOverlay\IngameOverlaySettings.resx">
-      <DependentUpon>IngameOverlaySettings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataGetters\TcpSocket\TcpSocketSettings.resx">
-      <DependentUpon>TcpSocketSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.resx">
       <DependentUpon>ParserSettings.cs</DependentUpon>
@@ -435,26 +265,8 @@
     <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.resx">
       <DependentUpon>PatternPositionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ModImageGenerator\ModImageGeneratorSettings.resx">
-      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\ModsHandler\ModParserSettings.resx">
-      <DependentUpon>ModParserSettings.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
       <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\osuPost\osuPostSettings.resx">
-      <DependentUpon>osuPostSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\SCGUI\AboutForm.resx">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\SCGUI\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\SCGUI\SettingsForm.resx">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\Updater\UpdateForm.resx">
       <DependentUpon>UpdateForm.cs</DependentUpon>
@@ -464,19 +276,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -487,35 +299,23 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Code\Modules\ModImageGenerator\Images\DT.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\HD.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\HR.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\HT.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K4.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K5.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K6.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K7.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\K8.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\NC.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\NF.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\PF.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\RN.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\RX.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\RX2.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\SD.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\SO.png" />
-    <Content Include="Code\Modules\ModImageGenerator\Images\TP.png" />
     <Content Include="Resources\btn_donate_92x26.png" />
-    <Content Include="Resources\CollectionManager.dll" />
+    <None Include="Resources\CollectionManager.dll" />
     <Content Include="Resources\compiled.ico" />
-    <None Include="Resources\logo_256x256.png" />
-    <None Include="Resources\BG.png" />
+    <EmbeddedResource Include="Resources\logo_256x256.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StreamCompanionTypes\StreamCompanionTypes.csproj">
+      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
+      <Name>StreamCompanionTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\submodules\OppaiSharp\OppaiSharp\OppaiSharp.csproj">
       <Project>{ad29051a-0960-4e92-baa9-7ac50827f823}</Project>
       <Name>OppaiSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Code\Modules\MapDataGetters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" />
@@ -538,6 +338,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>msbuild "$(SolutionDir)VersionControler\VersionControler.csproj" /p:Configuration=Debug
-"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" 14</PreBuildEvent>
+"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" -1 "" "public static string ScVersion ="</PreBuildEvent>
   </PropertyGroup>
 </Project>

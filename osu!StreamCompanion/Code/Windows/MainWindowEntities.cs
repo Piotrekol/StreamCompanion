@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Windows
 {
     /// <summary>
     /// display information for main window
     /// </summary>
-    public class MainWindowUpdater : INotifyPropertyChanged
+    public class MainWindowUpdater : INotifyPropertyChanged, IMainWindowModel
     {
         private string _beatmapsLoaded;
         [System.Reflection.Obfuscation(Feature = "renaming")]

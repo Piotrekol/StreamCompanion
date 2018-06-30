@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
-using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
+using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
     class MapReplacement : IModule, IMapDataReplacements, ISettings
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private Settings _settings;
+        private ISettingsHandler _settings;
         public bool Started { get; set; }
         public void Start(ILogger logger) { Started = true; }
 
@@ -48,7 +49,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             return dict;
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

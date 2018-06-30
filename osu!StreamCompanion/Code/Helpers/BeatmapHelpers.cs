@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
-using CollectionManager.DataTypes;
 using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Core.Maps;
-using osu_StreamCompanion.Code.Misc;
-using Beatmap = osu_StreamCompanion.Code.Core.DataTypes.Beatmap;
+using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
     public static class BeatmapHelpers
     {
 
-        private static OsuFileParser _osuFileParser = new OsuFileParser();
         public static void Read(this Beatmap beatmap, SQLiteDataReader reader)
         {
             int i = 1;
@@ -222,64 +218,9 @@ namespace osu_StreamCompanion.Code.Helpers
 
             return dict;
         }
+        
 
-        public static Beatmap ReadBeatmap(string fullPath)
-        {
-            Console.WriteLine("reading beatmap located at {0}", fullPath);
-
-            var beatmap = _osuFileParser.ReadBeatmapData(fullPath);
-            return beatmap;
-        }
-        public static string GetDiffFromString(string msnString)
-        {
-            if (msnString.Contains("]") && msnString.Contains("["))
-            {
-                var openBr = 0;
-                var closedBr = 0;
-                var strPos = msnString.Length - 1;
-                do
-                {
-                    var character = msnString[strPos];
-                    switch (character)
-                    {
-                        case ']':
-                            closedBr++;
-                            break;
-                        case '[':
-                            openBr++;
-                            break;
-                    }
-                    strPos--;
-                } while (closedBr != openBr);
-
-                return msnString.Substring(strPos + 2, msnString.Length - strPos - 3);
-            }
-            return string.Empty;
-        }
-
-        public static string BeatmapDirectory(this Beatmap beatmap, string songsDirectory)
-        {
-            return Path.Combine(songsDirectory, beatmap.Dir);
-        }
-        public static string FullOsuFileLocation(this Beatmap beatmap, string songsDirectory)
-        {
-            var beatmapDirectory = beatmap.BeatmapDirectory(songsDirectory);
-            if (string.IsNullOrEmpty(beatmapDirectory) || string.IsNullOrEmpty(beatmap.OsuFileName))
-                return "";
-            return Path.Combine(beatmapDirectory, beatmap.OsuFileName);
-        }
-        private static readonly SettingNames _names = SettingNames.Instance;
-
-        public static string GetFullSongsLocation(Settings settings)
-        {
-            var dir = settings.Get<string>(_names.SongsFolderLocation);
-            if (dir == _names.SongsFolderLocation.Default<string>())
-            {
-                dir = settings.Get<string>(_names.MainOsuDirectory);
-                dir = Path.Combine(dir, "Songs\\");
-            }
-            return dir;
-        }
+        
     }
 
 }

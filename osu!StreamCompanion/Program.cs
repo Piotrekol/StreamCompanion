@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -6,13 +7,17 @@ using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
+using osu_StreamCompanion.Code.Core.Loggers;
+using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
+using SharpRaven;
+using SharpRaven.Data;
 
 namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v180205.20";
+        public static string ScVersion ="v180629.20";
         private static Initializer _initializer;
         /// <summary>
         /// The main entry point for the application.
@@ -51,6 +56,7 @@ namespace osu_StreamCompanion
                     Application.SetCompatibleTextRenderingDefault(false);
                     AppDomain.CurrentDomain.UnhandledException +=
                     new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+                    Application.ThreadException += Application_ThreadException;
                     _initializer = new Initializer();
                     _initializer.Start();
                     Application.Run(_initializer);
@@ -67,7 +73,16 @@ namespace osu_StreamCompanion
 
 
         }
+        private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            HandleException(e.Exception);
+        }
 
+        static void HandleNonLoggableException(NonLoggableException ex)
+        {
+            MessageBox.Show(ex.CustomMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+        }
         public static void SafeQuit()
         {
             try
@@ -93,12 +108,39 @@ namespace osu_StreamCompanion
         }
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            if (e.ExceptionObject is NonLoggableException)
+            {
+                var ex = (NonLoggableException)e.ExceptionObject;
+                HandleNonLoggableException(ex);
+            }
+            else
+            {
+                Exception ex = null;
+                try
+                {
+                    ex = (Exception)e.ExceptionObject;
+                }
+                finally
+                {
+                }
+                HandleException(ex);
+            }
+        }
+        private static string errorNotification = @"There was unhandled problem with a program and it needs to close." + Environment.NewLine + "Error report was sent to Piotrekol";
+
+        public static void HandleException(Exception ex)
+        {
             try
             {
-                Exception ex = (Exception)e.ExceptionObject;
-
-                Error errorFrm = new Error(ex.Message + ex.StackTrace);
-                errorFrm.ShowDialog();
+#if !DEBUG
+                var ravenClient = SentryLogger.RavenClient;
+                ravenClient.Release = ScVersion;
+                var sentryEvent = new SentryEvent(ex);
+                ravenClient.Capture(sentryEvent);
+#endif
+                MessageBox.Show(errorNotification, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                var form = new Error(ex.Message + Environment.NewLine + ex.StackTrace);
+                form.ShowDialog();
             }
             finally
             {

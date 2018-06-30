@@ -1,38 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core.DataTypes;
 using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Modules.ClickCounter;
 using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
 using osu_StreamCompanion.Code.Modules.FileSaveLocation;
 using osu_StreamCompanion.Code.Modules.FirstRun;
-using osu_StreamCompanion.Code.Modules.IngameOverlay;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.NoData;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.osuMemoryID;
 using osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData;
-using osu_StreamCompanion.Code.Modules.MapDataGetters.FileMap;
-using osu_StreamCompanion.Code.Modules.MapDataGetters.TcpSocket;
-using osu_StreamCompanion.Code.Modules.MapDataGetters.Window;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using osu_StreamCompanion.Code.Modules.MapDataReplacements.Map;
-using osu_StreamCompanion.Code.Modules.MapDataReplacements.Plays;
-using osu_StreamCompanion.Code.Modules.MapDataReplacements.PP;
-using osu_StreamCompanion.Code.Modules.ModImageGenerator;
-using osu_StreamCompanion.Code.Modules.ModsHandler;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
-using osu_StreamCompanion.Code.Modules.osuPost;
-using osu_StreamCompanion.Code.Modules.osuSongsFolderWatcher;
-using osu_StreamCompanion.Code.Modules.SCGUI;
 using osu_StreamCompanion.Code.Modules.Updater;
 using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -56,11 +48,10 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<IMapDataParser> _mapDataParsers = new List<IMapDataParser>();
         private readonly List<IMapDataGetter> _mapDataGetters = new List<IMapDataGetter>();
         private readonly List<IMapDataReplacements> _mapDataReplacementSetters = new List<IMapDataReplacements>();
-        private Msn _msn;
 
-
-
-
+        private readonly List<IOsuEventSource> _osuEventSources = new List<IOsuEventSource>();
+        private readonly List<IHighFrequencyDataHandler> _highFrequencyDataHandlers = new List<IHighFrequencyDataHandler>(
+            );
         public Initializer()
         {
             new FileChecker();
@@ -74,7 +65,9 @@ namespace osu_StreamCompanion.Code.Core
             else
                 _logger.ChangeLogger(new EmptyLogger());
             _logger.AddLogger(new FileLogger(_saver, Settings));
-
+#if !DEBUG
+            _logger.AddLogger(new SentryLogger());
+#endif
             _logger.Log("booting up...", LogLevel.Basic);
         }
 
@@ -82,11 +75,10 @@ namespace osu_StreamCompanion.Code.Core
         {
             if (_started)
                 return;
-            _msn = new Msn(MsnGetters);
 
             #region First run
 
-            bool shouldForceFirstRun=false;
+            bool shouldForceFirstRun = false;
             var lastVersionStr = Settings.Get<string>(_names.LastRunVersion);
             if (lastVersionStr == _names.LastRunVersion.Default<string>())
             {
@@ -97,7 +89,7 @@ namespace osu_StreamCompanion.Code.Core
                 try
                 {
                     var lastVersion = Helpers.Helpers.GetDateFromVersionString(lastVersionStr);
-                    var versionToResetOn = Helpers.Helpers.GetDateFromVersionString("v161030.20");
+                    var versionToResetOn = Helpers.Helpers.GetDateFromVersionString("v180209.13");
                     shouldForceFirstRun = lastVersion < versionToResetOn;
                 }
                 catch (Exception e)
@@ -109,14 +101,28 @@ namespace osu_StreamCompanion.Code.Core
                 }
             }
 
+            _logger.Log("Preloading plugins", LogLevel.Advanced);
+
+            var plugins = GetPlugins();
+
+
             if (Settings.Get<bool>(_names.FirstRun) || shouldForceFirstRun)
             {
-                var firstRunModule = new FirstRun(delegate()
+                var firstRunControls = new List<FirstRunUserControl>();
+
+                var firstRunControlProviders =
+                    plugins.Where(p => p.GetType().GetInterfaces().Contains(typeof(IFirstRunControlProvider))).ToList();
+
+
+                foreach (var plugin in firstRunControlProviders)
                 {
-                    var module = new OsuPathResolver();
-                    if (AddModule(module))
-                        StartModule(module);
-                });
+                    LoadPlugin(plugin);
+                    firstRunControls.AddRange(((IFirstRunControlProvider)plugin).GetFirstRunUserControls());
+                }
+                _logger.Log(">Early loaded {0} plugins for firstRun setup", LogLevel.Advanced, firstRunControlProviders.Count.ToString());
+
+                var firstRunModule = new FirstRun(firstRunControls);
+
                 AddModule(firstRunModule);
                 StartModule(firstRunModule);
                 if (!firstRunModule.CompletedSuccesfully)
@@ -125,9 +131,8 @@ namespace osu_StreamCompanion.Code.Core
             MsnGetters.Clear();
             #endregion
 
-            var mapStringFormatter = new MapStringFormatter(new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters, _saver, _logger, Settings));
-            AddModule(mapStringFormatter);
-            
+
+
             _logger.Log("Starting...", LogLevel.Advanced);
             _logger.Log(">Main classes...", LogLevel.Advanced);
             _sqliteControler = new SqliteControler(new SqliteConnector());
@@ -135,47 +140,110 @@ namespace osu_StreamCompanion.Code.Core
             _logger.Log(">Modules...", LogLevel.Advanced);
             StartModules();
             _logger.Log(">loaded {0} modules, where {1} are providing settings", LogLevel.Basic, _modules.Count.ToString(), SettingsList.Count.ToString());
-            
+
             #region plugins
-            //TODO: plugin loading
+            _logger.Log("Initalizing {0} plugins", LogLevel.Advanced, plugins.Count.ToString());
+
+            _logger.Log("==========", LogLevel.Advanced);
+
+            foreach (var plugin in plugins)
+            {
+                LoadPlugin(plugin);
+            }
+            _logger.Log("==========", LogLevel.Advanced);
+
             #endregion plugins
-            
+
             Settings.Add(_names.FirstRun.Name, false);
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
+
+            var mapStringFormatter = new MapStringFormatter(
+                new MainMapDataGetter(_mapDataFinders, _mapDataGetters, _mapDataParsers, _mapDataReplacementSetters, _saver, _logger, Settings),
+                _osuEventSources);
+
+            AddModule(mapStringFormatter);
+            StartModule(mapStringFormatter);
+
             _started = true;
             _logger.Log("Started!", LogLevel.Basic);
         }
+
+        private void LoadPlugin(IPlugin plugin)
+        {
+            _logger.Log("Loading: {0} by {1}", LogLevel.Advanced, plugin.Name, plugin.Author);
+
+            if (AddModule(plugin))
+            {
+                StartModule(plugin);
+                _logger.Log(">Started: {0}", LogLevel.Advanced, plugin.Name);
+            }
+            else
+            {
+                _logger.Log(">FAILED: {0}", LogLevel.Advanced, plugin.Name);
+            }
+        }
+        public string PluginsLocation => Path.Combine(ConfigSaveLocation, "Plugins");
+        private List<IPlugin> GetPlugins()
+        {
+            var files = Directory.GetFiles(PluginsLocation, "*.dll");
+            List<Assembly> assemblies = new List<Assembly>();
+            List<IPlugin> plugins = new List<IPlugin>();
+
+            foreach (var file in files)
+            {
+                var asm = Assembly.LoadFile(Path.Combine(PluginsLocation, file));
+                foreach (var type in asm.GetTypes())
+                {
+                    if (type.GetInterfaces().Contains(typeof(IPlugin)))
+                    {
+                        if (!type.IsAbstract)
+                        {
+                            assemblies.Add(asm);
+
+                            var p = Activator.CreateInstance(type) as IPlugin;
+                            plugins.Add(p);
+
+                        }
+                    }
+                }
+            }
+
+            return plugins;
+        }
+
         public void StartModules()
         {
             AddModule(new OsuPathResolver());
             AddModule(new OsuFallbackDetector());
             //AddModule(new MapDataParser());
             AddModule(new MapDataParser());
-            AddModule(new WindowDataGetter());
-            AddModule(new PlaysReplacements());
+            //AddModule(new WindowDataGetter()); //refactor
+            //AddModule(new PlaysReplacements()); //refactor
             AddModule(new MapReplacement());
-            AddModule(new PpReplacements());
+            //AddModule(new PpReplacements()); //refactor
 #if !DEBUG
-            AddModule(new ClickCounter());
+            //AddModule(new ClickCounter());
 #endif
-            AddModule(new OsuSongsFolderWatcher());
-            
+            //AddModule(new OsuSongsFolderWatcher()); //refactor
+
             AddModule(new FileSaveLocation());
             AddModule(new CommandsPreview());
-            AddModule(new OsuPost());
+            //AddModule(new OsuPost());
             AddModule(new Updater());
-            
-            //AddModule(new MemoryDataFinder());
+
+            //AddModule(new MemoryDataFinder()); //refactor
             AddModule(new SqliteDataFinder());
             AddModule(new NoDataFinder());
 
-            AddModule(new IngameOverlay());
-            AddModule(new ModsHandler());
-            AddModule(new ModImageGenerator());
-            AddModule(new MainWindow());
-            AddModule(new FileMapDataGetter());
-            AddModule(new TcpSocketDataGetter());
+            //AddModule(new ModsHandler()); //refactor
+            //AddModule(new ModImageGenerator()); //refactor
+            //AddModule(new MainWindow()); //refactor
+            //AddModule(new FileMapDataGetter()); //refactor
+            //AddModule(new TcpSocketDataGetter()); //refactor
             AddModule(new Donation());
+
+
+
 
             for (int i = 0; i < _modules.Count; i++)
             {
@@ -192,7 +260,7 @@ namespace osu_StreamCompanion.Code.Core
                     ((IDisposable)_modules[i]).Dispose();
                 }
             }
-            Settings.Save();   
+            Settings.Save();
         }
         /// <summary>
         /// Adds module to _module array while ensuring that only 1 instance of specific module exists at the time.
@@ -200,7 +268,7 @@ namespace osu_StreamCompanion.Code.Core
         /// <param name="newModule"></param>
         /// <returns>true if module has been added to list</returns>
         public bool AddModule(IModule newModule)
-        { 
+        {
             var ss = newModule.GetType();
             foreach (var module in _modules)
             {
@@ -280,14 +348,91 @@ namespace osu_StreamCompanion.Code.Core
             var modParserGetter = module as IModParserGetter;
             if (modParserGetter != null)
                 modParserGetter.SetModParserHandle(this._modParser);
-            
+
             var msnGetter = module as IMsnGetter;
             if ((msnGetter) != null)
             {
                 MsnGetters.Add(msnGetter);
             }
 
+            if (module is IOsuEventSource osuEventSource)
+            {
+                _osuEventSources.Add(osuEventSource);
+            }
+
+            if (module is IHighFrequencyDataHandler handler)
+            {
+                _highFrequencyDataHandlers.Add(handler);
+            }
+
+            if (module is IHighFrequencyDataSender sender)
+            {
+                sender.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
+            }
+
+
+            if (module is IExiter exiter)
+            {
+                if (module is IPlugin plugin)
+                {
+                    exiter.SetExitHandle((o) =>
+                    {
+                        string reason = "unknown";
+                        try
+                        {
+                            reason = o.ToString();
+                        }
+                        catch { }
+                        _logger.Log("Plugin {0} has requested StreamCompanion shutdown! due to: {1}", LogLevel.Basic, plugin.Name, reason);
+                        Program.SafeQuit();
+                    });
+                }
+                else
+                {
+                    exiter.SetExitHandle((o) =>
+                    {
+                        _logger.Log("StreamCompanion is shutting down", LogLevel.Basic);
+                        Program.SafeQuit();
+                    });
+                }
+
+            }
+
             module.Start(_logger);
+
+        }
+
+        public void RemoveModule(IModule module)
+        {
+            //TODO: finish removeModule
+            var mapDataFinder = module as IMapDataFinder;
+            if (mapDataFinder != null)
+            {
+                _mapDataFinders.Remove(mapDataFinder);
+            }
+            var settings = module as ISettingsProvider;
+            if (settings != null)
+            {
+                settings.SetSettingsHandle(Settings);
+                SettingsList.Remove(settings);
+            }
+
+            //ISettings-nothing to do
+
+            var msnGetter = module as IMsnGetter;
+            if ((msnGetter) != null)
+            {
+                MsnGetters.Remove(msnGetter);
+            }
+            //var memoryGetter = module as IMemoryGetter;
+            //if (memoryGetter != null)
+            //{
+            //    MemoryGetters.Remove(memoryGetter);
+            //}
+
+            _modules.Remove(module);
+            if (module is IDisposable)
+                ((IDisposable)module).Dispose();
 
         }
 

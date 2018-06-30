@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
-using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -18,7 +14,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private readonly SettingNames _names = SettingNames.Instance;
 
         private readonly BindingList<OutputPattern> _patterns = new BindingList<OutputPattern>();
-        private Settings _settings;
+        private ISettingsHandler _settings;
         private readonly object _lockingObject = new object();
         private ParserSettings _parserSettings = null;
         private ILogger _logger;
@@ -109,7 +105,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             return toFormat;
         }
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }
@@ -174,5 +170,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _parserSettings?.Dispose();
             Save();
         }
+        
     }
 }

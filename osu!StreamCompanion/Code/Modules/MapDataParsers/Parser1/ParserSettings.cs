@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
     public partial class ParserSettings : UserControl
     {
-        private readonly Settings _settings;
+        private readonly ISettingsHandler _settings;
         private readonly Action _resetPatterns;
         private BindingList<OutputPattern> _patterns;
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public ParserSettings(Settings settings, Action resetPatterns)
+        public ParserSettings(ISettingsHandler settings, Action resetPatterns)
         {
             _settings = settings;
             _resetPatterns = resetPatterns;

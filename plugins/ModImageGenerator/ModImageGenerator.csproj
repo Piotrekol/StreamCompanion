@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{16BB58FA-897B-4A75-BEDC-D42428EB8312}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ModImageGenerator</RootNamespace>
+    <AssemblyName>ModImageGenerator</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\Debug\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\Release\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CollectionManager">
+      <HintPath>..\..\osu!StreamCompanion\Resources\CollectionManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\ImageDeployer.cs" />
+    <Compile Include="API\ImageGenerator.cs" />
+    <Compile Include="ModImageGenerator.cs" />
+    <Compile Include="ModImageGeneratorSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ModImageGeneratorSettings.Designer.cs">
+      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
+      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
+      <Name>StreamCompanionTypes</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\DT.png" />
+    <Content Include="Images\HD.png" />
+    <Content Include="Images\HR.png" />
+    <Content Include="Images\HT.png" />
+    <Content Include="Images\K4.png" />
+    <Content Include="Images\K5.png" />
+    <Content Include="Images\K6.png" />
+    <Content Include="Images\K7.png" />
+    <Content Include="Images\K8.png" />
+    <Content Include="Images\NC.png" />
+    <Content Include="Images\NF.png" />
+    <Content Include="Images\PF.png" />
+    <Content Include="Images\RN.png" />
+    <Content Include="Images\RX.png" />
+    <Content Include="Images\RX2.png" />
+    <Content Include="Images\SD.png" />
+    <Content Include="Images\SO.png" />
+    <Content Include="Images\TP.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ModImageGeneratorSettings.resx">
+      <DependentUpon>ModImageGeneratorSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

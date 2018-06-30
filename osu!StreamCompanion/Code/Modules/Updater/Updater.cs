@@ -5,14 +5,14 @@ using System.Net;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Windows;
+using StreamCompanionTypes.Interfaces;
+
 namespace osu_StreamCompanion.Code.Modules.Updater
 {
     class Updater : IModule, IMainWindowUpdater
     {
-        private MainWindowUpdater _mainWindowHandle;
+        private IMainWindowModel _mainWindowHandle;
         private const string baseGithubUrl = "https://api.github.com/repos/Piotrekol/StreamCompanion";
         private const string githubUpdateUrl = baseGithubUrl + "/releases/latest";
         private const string githubChangelogUrl = baseGithubUrl + "/releases";
@@ -21,6 +21,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
+            //TODO: handle not supported exception
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; //Force usage of TLS1.2 when possible.
             Started = true;
             CheckForUpdates();
@@ -160,7 +161,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         {
             _mainWindowHandle.UpdateText = status;
         }
-        public void GetMainWindowHandle(MainWindowUpdater mainWindowHandle)
+        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
         {
             _mainWindowHandle = mainWindowHandle;
             _mainWindowHandle.OnUpdateTextClicked += _mainWindowHandle_OnUpdateTextClicked;

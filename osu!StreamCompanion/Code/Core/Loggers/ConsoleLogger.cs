@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {
@@ -21,6 +22,9 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             _settings = settings;
             AllocConsole();
+#if !DEBUG
+            Console.WindowWidth = Console.LargestWindowWidth-Convert.ToInt32(Console.LargestWindowWidth/3);
+#endif
         }
 
 

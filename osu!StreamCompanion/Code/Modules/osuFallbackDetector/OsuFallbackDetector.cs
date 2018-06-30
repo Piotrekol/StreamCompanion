@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.DataTypes;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
 {
@@ -14,7 +14,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
         private const string LAST_FALLBACK_VERSION = "b20160403.6";
         private bool _isFallback;
         private string _customBeatmapDirectoryLocation;
-        private Settings _settings;
+        private ISettingsHandler _settings;
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -41,7 +41,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
                 logger.Log("Detected custom songs folder location \"{0}\"", LogLevel.Basic, _customBeatmapDirectoryLocation);
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
         }

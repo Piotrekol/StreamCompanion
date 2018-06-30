@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfaces;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
 {
@@ -17,7 +17,7 @@ namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
         }
 
         public string SettingGroup { get; } = "General";
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
         }
 

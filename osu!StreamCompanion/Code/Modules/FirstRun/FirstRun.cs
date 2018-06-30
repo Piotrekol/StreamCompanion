@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Interfaces;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
-    public class FirstRun : IModule, ISettings, IMsnGetter
+    public class FirstRun : IModule, ISettings
     {
-        private Settings _settings;
+        private readonly List<FirstRunUserControl> _firstRunControls;
+        private ISettingsHandler _settings;
         private FirstRunFrm _setupFrm;
-        private Action _getOsuDirectory;
 
-        public FirstRun(Action getOsuDirectory)
+        public FirstRun(List<FirstRunUserControl> firstRunControls)
         {
-            _getOsuDirectory = getOsuDirectory;
+            _firstRunControls = firstRunControls;
         }
 
         public bool Started { get; set; }
@@ -24,7 +25,12 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
         public void Start(ILogger logger)
         {
             Started = true;
-            _setupFrm = new FirstRunFrm(_settings);
+            if (_firstRunControls.Count == 0)
+            {
+                CompletedSuccesfully = true;
+                return;
+            }
+            _setupFrm = new FirstRunFrm(_firstRunControls);
             _setupFrm.Closing += _setupFrm_Closing;
             _setupFrm.StartSetup();
         }
@@ -34,20 +40,9 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
             CompletedSuccesfully = _setupFrm.CompletedSuccesfully;
         }
 
-        public void SetSettingsHandle(Settings settings)
+        public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
-        }
-
-        public void nothing() { }
-        public void SetNewMsnString(Dictionary<string, string> osuStatus)
-        {
-            if (_setupFrm != null && !_setupFrm.IsDisposed)
-            {
-                _getOsuDirectory();
-                _getOsuDirectory = nothing;
-                _setupFrm.GotMsn(string.Format("{0} {1} - {2} ", osuStatus["status"], osuStatus["artist"], osuStatus["title"]));
-            }
         }
     }
 }
