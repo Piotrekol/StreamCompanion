@@ -37,10 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "..\build\Release\osu!StreamCompanion.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\build\Release\StreamCompanion Updater.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\plugins\osuOverlay\freetype.dll"; DestDir: "{app}\Files\Dlls\"; Flags: ignoreversion
-Source: "..\plugins\osuOverlay\osuOverlay.dll"; DestDir: "{app}\Files\Dlls\"; Flags: ignoreversion
+Source: "..\build\Output\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
@@ -48,8 +45,8 @@ Name: {app}; Permissions: users-modify
 Name: "{app}\Files"; Permissions: users-modify
 Name: "{app}\Files\Images"; Permissions: users-modify
 Name: "{app}\Files\Logs"; Permissions: users-modify
-Name: "{app}\Files\Dlls"; Permissions: users-modify
-
+Name: "{app}\Plugins"; Permissions: users-modify
+Name: "{app}\Plugins\Dlls"; Permissions: users-modify
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
