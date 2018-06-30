@@ -23,7 +23,6 @@ these used to be included before but I decided to remove them because of how hor
 Any contributions / constructive criticism is appreciated 
 # License
 This software is licensed under MIT. You can find the full text of the license [here][license].
-Note that parts of code used to create Release version of this executable is unavaliable on this repository.
 
    [license]: <https://github.com/Piotrekol/StreamCompanion/blob/master/LICENSE>
    [osuPost]: <https://osu.ppy.sh/forum/t/164486>
