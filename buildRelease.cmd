@@ -8,6 +8,8 @@ MSBuild osu!StreamCompanion.sln /p:Configuration=Release /p:Platform=x86
 
 cd ./build
 
+mkdir Output
+
 REM copy files to new folder
 cp -r ./Release/* ./Output/
 
