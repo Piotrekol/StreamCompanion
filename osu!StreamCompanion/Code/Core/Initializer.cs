@@ -152,6 +152,7 @@ namespace osu_StreamCompanion.Code.Core
             }
             _logger.Log("==========", LogLevel.Advanced);
 
+            ProritizePluginsUsage();
             #endregion plugins
 
             Settings.Add(_names.FirstRun.Name, false);
@@ -168,6 +169,21 @@ namespace osu_StreamCompanion.Code.Core
             _logger.Log("Started!", LogLevel.Basic);
         }
 
+        private void ProritizePluginsUsage()
+        {
+            var mapDataFindersCopy = new List<IMapDataFinder>(_mapDataFinders);
+            _mapDataFinders.Clear();
+            foreach (var finder in mapDataFindersCopy)
+            {
+                if(finder is IPlugin)
+                    _mapDataFinders.Add(finder);
+            }
+            foreach (var finder in mapDataFindersCopy)
+            {
+                if (finder is IModule && !(finder is IPlugin))
+                    _mapDataFinders.Add(finder);
+            }
+        }
         private void LoadPlugin(IPlugin plugin)
         {
             _logger.Log("Loading: {0} by {1}", LogLevel.Advanced, plugin.Name, plugin.Author);
