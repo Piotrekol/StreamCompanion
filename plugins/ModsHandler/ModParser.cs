@@ -3,7 +3,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace ModsHandler
 {
-    public class ModParser : CollectionManager.Modules.ModParser.ModParser, IPlugin, IModParser, ISettingsProvider
+    public class ModParser : CollectionManager.Modules.ModParser.ModParser, IModule, IModParser, ISettingsProvider
     {
         private readonly SettingNames _names = SettingNames.Instance;
    
@@ -11,14 +11,7 @@ namespace ModsHandler
         private ModParserSettings _modParserSettings;
         public bool Started { get; set; }
         public string SettingGroup { get; } = "Map matching";
-
-
-        public string Description { get; } = "";
-        public string Name { get; } = nameof(ModParser);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
-
+        
         public void Start(ILogger logger)
         {
             Started = true;
