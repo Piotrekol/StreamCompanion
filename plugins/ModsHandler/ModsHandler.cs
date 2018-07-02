@@ -9,11 +9,19 @@ using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace ModsHandler
 {
-    public class ModsHandler : IModule, IModParser, ISettingsProvider, IDifficultyCalculator, IMapDataReplacements
+    public class ModsHandler : IPlugin, IModParser, ISettingsProvider, IDifficultyCalculator, IMapDataReplacements
     {
         private readonly ModParser _modParser = new ModParser();
         private readonly DifficultyCalculator _difficultyCalculator = new DifficultyCalculator();
         public bool Started { get; set; }
+
+
+        public string Description { get; } = "";
+        public string Name { get; } = nameof(ModsHandler);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
         public void Start(ILogger logger)
         {
             Started = true;
