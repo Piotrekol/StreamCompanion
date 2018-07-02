@@ -34,6 +34,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private void NewOsuEvent(object sender, MapSearchArgs mapSearchArgs)
         {
+            if (mapSearchArgs == null)
+                return;
             //TODO: priority system for IOsuEventSource 
             if (mapSearchArgs.SourceName == "OsuMemory")
             {
