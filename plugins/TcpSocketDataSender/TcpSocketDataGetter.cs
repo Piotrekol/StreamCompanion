@@ -8,7 +8,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace TcpSocketDataSender
 {
-    public class TcpSocketDataGetter : IModule, IMapDataGetter, ISettingsProvider, IDisposable, IHighFrequencyDataHandler
+    public class TcpSocketDataGetter : IPlugin, IMapDataGetter, ISettingsProvider, IDisposable, IHighFrequencyDataHandler
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -17,6 +17,13 @@ namespace TcpSocketDataSender
         private ISettingsHandler _settings;
 
         private bool tcpSocketIsEnabled = false;
+        
+        public string Description { get; } = "";
+        public string Name { get; } = nameof(TcpSocketDataGetter);
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
         public void Start(ILogger logger)
         {
             _tcpSocketManager = new TcpSocketManager();
