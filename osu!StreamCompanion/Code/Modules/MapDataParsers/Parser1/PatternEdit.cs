@@ -58,7 +58,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private Dictionary<string, string> _replacements;
         private Dictionary<string, string> _liveReplacements = new Dictionary<string, string>
         {
-            { "!acc!", "98,05%" },
+            { "!acc!", "98.05" },
             { "!300!", "301" },
             { "!100!", "101" },
             { "!50!", "51" },
@@ -66,9 +66,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             { "!time!", "116,5" },
             { "!combo!", "124" },
             { "!CurrentMaxCombo!", "1000" },
-            { "!PpIfMapEndsNow!", "99,52pp" },
-            { "!PpIfRestFced!", "257,27pp" },
-            { "!AccIfRestFced!", "99,54%" }
+            { "!PpIfMapEndsNow!", "99,52" },
+            { "!PpIfRestFced!", "257,27" },
+            { "!AccIfRestFced!", "99,54" }
         };
 
         public PatternEdit()
