@@ -33,17 +33,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_userId = new System.Windows.Forms.TextBox();
             this.textBox_userPassword = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.label5 = new System.Windows.Forms.Label();
             this.panel_settings = new System.Windows.Forms.Panel();
             this.panel_advanced = new System.Windows.Forms.Panel();
+            this.button_resetEndpoint = new System.Windows.Forms.Button();
             this.textBox_endpointUrl = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.checkBox_advanced = new System.Windows.Forms.CheckBox();
-            this.button_resetEndpoint = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel_settings.SuspendLayout();
             this.panel_advanced.SuspendLayout();
             this.SuspendLayout();
@@ -95,68 +95,14 @@
             this.textBox_userPassword.TabIndex = 4;
             this.textBox_userPassword.TextChanged += new System.EventHandler(this.textBox_password_TextChanged);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 66);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(167, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "You don\'t know what osu!Post is?";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 83);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Check";
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(46, 83);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(28, 13);
-            this.linkLabel1.TabIndex = 8;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "here";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // linkLabel2
-            // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(88, 83);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(28, 13);
-            this.linkLabel2.TabIndex = 9;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "here";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(72, 83);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(16, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "or";
-            // 
             // panel_settings
             // 
             this.panel_settings.Controls.Add(this.panel_advanced);
             this.panel_settings.Controls.Add(this.checkBox_advanced);
             this.panel_settings.Controls.Add(this.label2);
-            this.panel_settings.Controls.Add(this.label5);
             this.panel_settings.Controls.Add(this.label1);
-            this.panel_settings.Controls.Add(this.linkLabel2);
             this.panel_settings.Controls.Add(this.textBox_userId);
-            this.panel_settings.Controls.Add(this.linkLabel1);
             this.panel_settings.Controls.Add(this.textBox_userPassword);
-            this.panel_settings.Controls.Add(this.label4);
-            this.panel_settings.Controls.Add(this.label3);
             this.panel_settings.Location = new System.Drawing.Point(4, 27);
             this.panel_settings.Name = "panel_settings";
             this.panel_settings.Size = new System.Drawing.Size(482, 138);
@@ -172,6 +118,16 @@
             this.panel_advanced.Size = new System.Drawing.Size(241, 100);
             this.panel_advanced.TabIndex = 13;
             this.panel_advanced.Visible = false;
+            // 
+            // button_resetEndpoint
+            // 
+            this.button_resetEndpoint.Location = new System.Drawing.Point(6, 52);
+            this.button_resetEndpoint.Name = "button_resetEndpoint";
+            this.button_resetEndpoint.Size = new System.Drawing.Size(75, 23);
+            this.button_resetEndpoint.TabIndex = 2;
+            this.button_resetEndpoint.Text = "Reset";
+            this.button_resetEndpoint.UseVisualStyleBackColor = true;
+            this.button_resetEndpoint.Click += new System.EventHandler(this.button_resetEndpoint_Click);
             // 
             // textBox_endpointUrl
             // 
@@ -201,20 +157,64 @@
             this.checkBox_advanced.UseVisualStyleBackColor = true;
             this.checkBox_advanced.CheckedChanged += new System.EventHandler(this.checkBox_advanced_CheckedChanged);
             // 
-            // button_resetEndpoint
+            // label5
             // 
-            this.button_resetEndpoint.Location = new System.Drawing.Point(6, 52);
-            this.button_resetEndpoint.Name = "button_resetEndpoint";
-            this.button_resetEndpoint.Size = new System.Drawing.Size(75, 23);
-            this.button_resetEndpoint.TabIndex = 2;
-            this.button_resetEndpoint.Text = "Reset";
-            this.button_resetEndpoint.UseVisualStyleBackColor = true;
-            this.button_resetEndpoint.Click += new System.EventHandler(this.button_resetEndpoint_Click);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(75, 120);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(16, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "or";
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(91, 120);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(28, 13);
+            this.linkLabel2.TabIndex = 15;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "here";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(49, 120);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(28, 13);
+            this.linkLabel1.TabIndex = 14;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "here";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(15, 120);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Check";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 103);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(167, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "You don\'t know what osu!Post is?";
             // 
             // osuPostSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.linkLabel2);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.panel_settings);
             this.Controls.Add(this.checkBox_osuPostEnabled);
             this.Name = "osuPostSettings";
@@ -233,11 +233,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_userId;
         private System.Windows.Forms.TextBox textBox_userPassword;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.Label label5;
         public System.Windows.Forms.CheckBox checkBox_osuPostEnabled;
         private System.Windows.Forms.Panel panel_settings;
         public System.Windows.Forms.CheckBox checkBox_advanced;
@@ -245,5 +240,10 @@
         private System.Windows.Forms.TextBox textBox_endpointUrl;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button_resetEndpoint;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }
