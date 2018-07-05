@@ -144,7 +144,14 @@ namespace osu_StreamCompanion
             }
             finally
             {
-                _initializer.ExitThread();
+                try
+                {
+                    SafeQuit();
+                }
+                catch
+                {
+                    _initializer.ExitThread();
+                }
             }
         }
 
