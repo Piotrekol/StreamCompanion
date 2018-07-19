@@ -76,14 +76,14 @@ namespace OsuMemoryEventSource
         public void SetNewMap(MapSearchResult map)
         {
             lock (_lockingObject)
-                _memoryListener.SetNewMap(map);
+                _memoryListener?.SetNewMap(map);
         }
 
         protected virtual void OnSettingsSettingUpdated(object sender, SettingUpdated e) { }
 
         protected void TimerTick()
         {
-            _memoryListener.Tick(_memoryReader);
+            _memoryListener?.Tick(_memoryReader);
         }
         private void TimerCallback(object state)
         {
