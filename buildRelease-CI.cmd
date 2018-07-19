@@ -25,7 +25,7 @@ rm ./Output/Plugins/*.pdb
 
 REM remove misc files
 rm ./Output/*.xml
-rm ./Output/*.exe.config
+rm "./Output/StreamCompanion Updater.exe.config"
 
 REM plugin specific action..
 mv ./Output/Plugins/OsuMemoryDataProvider.dll ./Output/
