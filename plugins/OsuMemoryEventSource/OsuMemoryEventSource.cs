@@ -62,7 +62,7 @@ namespace OsuMemoryEventSource
             {
                 Thread.Sleep(250);
                 mods = _memoryReader.GetMods();
-                result.Mods = new Tuple<Mods, string>((Mods)mods, _modParser[0].GetModsFromEnum(mods));
+                result.Mods = new Tuple<Mods, string>((Mods)mods, ModsToString(mods));
             }
 
             _logger.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
@@ -84,6 +84,13 @@ namespace OsuMemoryEventSource
             return result;
         }
 
+        private string ModsToString(int modsValue)
+        {
+            if (_modParser == null || _modParser.Count == 0)
+                return "NoModParser";
+
+            return _modParser[0].GetModsFromEnum(modsValue);
+        }
         private FirstRunMemoryCalibration _firstRunMemoryCalibration = null;
         public List<FirstRunUserControl> GetFirstRunUserControls()
         {
