@@ -55,7 +55,7 @@ namespace OsuSongsFolderWatcher
                 }
                 else
                 {
-                    _logger.Log("Could not find osu! songs directory", LogLevel.Error);
+                    _logger.Log($"Could not find osu! songs directory, tried: \"{dir}\" & setting value was: \"{_settings.Get<string>(_names.SongsFolderLocation)}\"", LogLevel.Error);
                 }
             }
         }
