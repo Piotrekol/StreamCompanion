@@ -29,7 +29,7 @@ namespace OsuMemoryEventSource
         protected ISqliteControler _sqLiteController;
         protected List<IModParser> _modParser;
         protected ISettingsHandler _settings;
-        protected ILogger _logger;
+        internal static ILogger Logger;
         protected IOsuMemoryReader _memoryReader;
         protected MemoryListener _memoryListener;
 
@@ -41,8 +41,7 @@ namespace OsuMemoryEventSource
 
         public virtual void Start(ILogger logger)
         {
-            Started = true;
-            _logger = logger;
+            Logger = logger;
 
             OsuMemoryDataProvider.DataProvider.Initalize();
             _memoryReader = OsuMemoryDataProvider.DataProvider.Instance;
@@ -70,6 +69,8 @@ namespace OsuMemoryEventSource
             _memoryListener = new MemoryListener(Helpers.GetFullSongsLocation(_settings));
             _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent?.Invoke(this, args);
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
+
+            Started = true;
         }
 
 

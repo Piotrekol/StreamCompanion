@@ -19,6 +19,10 @@ namespace OsuMemoryEventSource
 
         private double _accIfRestFced = double.NaN;
 
+        public RawMemoryDataProcessor()
+        {
+            OppaiSharpBeatmapHelper.GetCurrentBeatmap = () => _currentBeatmap;
+        }
         public void SetCurrentMap(Beatmap beatmap, OppaiSharp.Mods mods, string osuFileLocation)
         {
             _currentBeatmap = beatmap;
@@ -56,8 +60,8 @@ namespace OsuMemoryEventSource
 
             //Calculate how much objects we can get starting from current Time
             _preprocessedBeatmap.Cut(Play.Time, 100000000);
-            var c300Left = _preprocessedBeatmap.GetMaxCombo(true);
-            var comboLeft = _preprocessedBeatmap.GetMaxCombo();
+            var c300Left = _preprocessedBeatmap.GetMaxComboSafe(true);
+            var comboLeft = _preprocessedBeatmap.GetMaxComboSafe();
 
             var newMaxCombo = Math.Max(Play.MaxCombo, comboLeft + Play.Combo);
             var newC300Count = Play.C300 + c300Left;

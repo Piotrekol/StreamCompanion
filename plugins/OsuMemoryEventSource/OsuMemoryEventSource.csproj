@@ -68,6 +68,7 @@
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="MemoryDataProcessor.cs" />
+    <Compile Include="OppaiSharpBeatmapHelper.cs" />
     <Compile Include="RawMemoryDataProcessor.cs" />
     <Compile Include="MemoryListener.cs" />
     <Compile Include="OsuMemoryEventSource.cs" />
