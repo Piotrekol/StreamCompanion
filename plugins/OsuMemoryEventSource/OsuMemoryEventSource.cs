@@ -66,12 +66,12 @@ namespace OsuMemoryEventSource
                 result.Mods = new Tuple<Mods, string>((Mods)mods, ModsToString(mods));
             }
 
-            _logger.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
+            Logger.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
 
             Mods eMods = result?.Mods?.Item1 ?? Mods.Omod;
             if (mapId > 2000000 || mapId < 0 || Helpers.IsInvalidCombination(eMods))
             {
-                _logger.Log("Sanity check tiggered - invalidating last result", LogLevel.Advanced);
+                Logger.Log("Sanity check tiggered - invalidating last result", LogLevel.Advanced);
                 result.Mods = null;
                 return result;
             }
