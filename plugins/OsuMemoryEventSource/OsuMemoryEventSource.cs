@@ -50,9 +50,10 @@ namespace OsuMemoryEventSource
 
         public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
+
             var result = new MapSearchResult();
             result.MapSearchString = searchArgs.Raw;
-            if (!_settings.Get<bool>(_names.EnableMemoryScanner))
+            if (!Started || !_settings.Get<bool>(_names.EnableMemoryScanner))
                 return result;
 
             int mapId = _memoryReader.GetMapId();
