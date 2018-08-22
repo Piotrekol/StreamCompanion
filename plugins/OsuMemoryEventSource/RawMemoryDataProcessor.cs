@@ -67,6 +67,9 @@ namespace OsuMemoryEventSource
             var newC300Count = Play.C300 + c300Left;
 
             _preprocessedBeatmap.ResetCut();
+            if (newC300Count < 0)
+                newC300Count = 0;
+
             accCalc = new Accuracy(newC300Count, Play.C100, Play.C50, Play.CMiss);
             _accIfRestFced = accCalc.Value() * 100;
 
