@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
@@ -50,6 +50,8 @@ namespace OsuMemoryEventSource
 
         public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
+            if (!Started)
+                return null;
 
             var result = new MapSearchResult();
             result.MapSearchString = searchArgs.Raw;
@@ -66,12 +68,12 @@ namespace OsuMemoryEventSource
                 result.Mods = new Tuple<Mods, string>((Mods)mods, ModsToString(mods));
             }
 
-            Logger.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
+            Logger?.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
 
             Mods eMods = result?.Mods?.Item1 ?? Mods.Omod;
             if (mapId > 2000000 || mapId < 0 || Helpers.IsInvalidCombination(eMods))
             {
-                Logger.Log("Sanity check tiggered - invalidating last result", LogLevel.Advanced);
+                Logger?.Log("Sanity check tiggered - invalidating last result", LogLevel.Advanced);
                 result.Mods = null;
                 return result;
             }
