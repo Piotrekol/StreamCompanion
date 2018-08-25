@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
@@ -43,8 +43,16 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
                 if ((_mapDataFinders[i].SearchModes & searchArgs.Status) == 0)
                     continue;
+                try
+                {
+                    mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs);
 
-                mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs);
+                }
+                catch (Exception e)
+                {
+                    _logger.Log(e, LogLevel.Error);
+                    mapSearchResult = null;
+                }
 
                 if (mapSearchResult?.FoundBeatmaps == true)
                 {
