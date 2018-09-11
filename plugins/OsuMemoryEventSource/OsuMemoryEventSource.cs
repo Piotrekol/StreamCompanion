@@ -21,12 +21,7 @@ namespace OsuMemoryEventSource
         {
             if (e.Name == _names.EnableMemoryPooling.Name)
             {
-                if (_settings.Get<bool>(_names.EnableMemoryPooling))
-                {
-                    EnableTimer();
-                }
-                else
-                    DisableTimer();
+                base.MemoryPoolingIsEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
             }
             base.OnSettingsSettingUpdated(sender, e);
         }

@@ -39,6 +39,8 @@ namespace OsuMemoryEventSource
         private Timer _timer;
         private int _poolingMsDelay = 33;
 
+        protected bool MemoryPoolingIsEnabled=false;
+
         public virtual void Start(ILogger logger)
         {
             Logger = logger;
@@ -50,7 +52,7 @@ namespace OsuMemoryEventSource
 
             bool isFallback = _settings.Get<bool>(_names.OsuFallback);
             bool memoryScannerIsEnabled = _settings.Get<bool>(_names.EnableMemoryScanner);
-            bool poolingIsEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
+            MemoryPoolingIsEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
 
             if (!memoryScannerIsEnabled)
                 return;
@@ -59,12 +61,10 @@ namespace OsuMemoryEventSource
                 _settings.Add(_names.EnableMemoryScanner.Name, false);
                 return;
             }
-
-            if (poolingIsEnabled)
-            {
-                lock (_lockingObject)
-                    _timer = new Timer(TimerCallback, null, 250, Int32.MaxValue);
-            }
+            
+            lock (_lockingObject)
+                _timer = new Timer(TimerCallback, null, 250, Int32.MaxValue);
+            
 
             _memoryListener = new MemoryListener(Helpers.GetFullSongsLocation(_settings));
             _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent?.Invoke(this, args);
@@ -84,7 +84,7 @@ namespace OsuMemoryEventSource
 
         protected void TimerTick()
         {
-            _memoryListener?.Tick(_memoryReader);
+            _memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
         }
         private void TimerCallback(object state)
         {

@@ -24,7 +24,7 @@ namespace OsuMemoryEventSource
             _memoryDataProcessor = new MemoryDataProcessor(songsFolderLocation);
         }
 
-        public void Tick(IOsuMemoryReader reader)
+        public void Tick(IOsuMemoryReader reader, bool sendEvents)
         {
             int num;
             _currentStatus = reader.GetCurrentStatus(out num);
@@ -40,8 +40,11 @@ namespace OsuMemoryEventSource
                 _currentMapString = reader.GetSongString();
                 OsuStatus status = _currentStatus.Convert();
 
-                if (_lastMapId != _currentMapId || _lastStatus != _currentStatus ||
+                if (sendEvents && 
+                    (_lastMapId != _currentMapId || 
+                    _lastStatus != _currentStatus ||
                     _currentMapString != _lastMapString)
+                    )
                 {
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
