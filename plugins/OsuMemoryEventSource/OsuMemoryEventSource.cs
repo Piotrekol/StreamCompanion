@@ -73,6 +73,12 @@ namespace OsuMemoryEventSource
                 return result;
             }
 
+            if (mapId == 0)
+            {
+                Logger?.Log("Map has no ID", LogLevel.Advanced);
+                return result;
+            }
+
             var b = _sqLiteController.GetBeatmap(mapId);
             if (b != null)
             {

@@ -84,15 +84,22 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         //Here we prioritize Memory events over MSN/other.
                         if (TasksMemory.TryPop(out searchArgs))
                         {
-                            searchResult = _mainMapDataGetter.FindMapData(searchArgs);
-                            if (searchResult.FoundBeatmaps)
+                            if (searchArgs.MapId == 0)
                             {
-                                memorySearchFailed = false;
-                                searchResult.EventSource = searchArgs.SourceName;
-                                _mainMapDataGetter.ProcessMapResult(searchResult);
+                                memorySearchFailed = true;
                             }
                             else
-                                memorySearchFailed = true;
+                            {
+                                searchResult = _mainMapDataGetter.FindMapData(searchArgs);
+                                if (searchResult.FoundBeatmaps)
+                                {
+                                    memorySearchFailed = false;
+                                    searchResult.EventSource = searchArgs.SourceName;
+                                    _mainMapDataGetter.ProcessMapResult(searchResult);
+                                }
+                                else
+                                    memorySearchFailed = true;
+                            }
                         }
                         if (memorySearchFailed)
                         {
