@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
@@ -77,6 +77,12 @@ namespace ModsHandler
                 var foundMap = map.BeatmapsFound[0];
                 var mods = map.Mods?.Item1 ?? Mods.Omod;
                 var c = _difficultyCalculator.ApplyMods(foundMap, mods);
+
+                if ((mods & Mods.Nc) != 0)
+                {
+                    mods -= Mods.Nc;
+                    mods |= Mods.Dt;
+                }
 
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
                 dict = new Dictionary<string, string>()
