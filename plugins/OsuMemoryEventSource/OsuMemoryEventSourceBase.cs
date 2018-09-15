@@ -69,6 +69,7 @@ namespace OsuMemoryEventSource
             _memoryListener = new MemoryListener(Helpers.GetFullSongsLocation(_settings));
             _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent?.Invoke(this, args);
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
+            _memoryListener.SetSettingsHandle(_settings);
 
             Started = true;
         }
@@ -155,6 +156,7 @@ namespace OsuMemoryEventSource
                 timerDisposed.Set();
                 Thread.Sleep(200);
                 _timer?.Dispose();
+                _memoryListener?.Dispose();
             }
         }
     }

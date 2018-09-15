@@ -17,6 +17,8 @@ namespace OsuMemoryEventSource
 
             _settings = settings;
 
+            checkBox_enableSmoothPp.Checked = _settings.Get<bool>(Helpers.EnablePpSmoothing);
+
             bool isFallback = _settings.Get<bool>(_names.OsuFallback);
             if (isFallback)
             {
@@ -42,6 +44,12 @@ namespace OsuMemoryEventSource
         {
             if (init) return;
             _settings.Add(_names.EnableMemoryPooling.Name, checkBox_EnableMemoryPooling.Checked, true);
+        }
+
+        private void checkBox_enableSmoothPp_CheckedChanged(object sender, EventArgs e)
+        {
+            if (init) return;
+            _settings.Add(Helpers.EnablePpSmoothing.Name, checkBox_enableSmoothPp.Checked, true);
         }
     }
 }

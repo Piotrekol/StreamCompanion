@@ -14,6 +14,8 @@ namespace OsuMemoryEventSource
 {
     internal static class Helpers
     {
+        public static readonly ConfigEntry EnablePpSmoothing = new ConfigEntry("EnablePPSmoothing", true);
+
         public static bool IsInvalidCombination(Mods mods)
         {
             //There can be only one KMod active at the time.

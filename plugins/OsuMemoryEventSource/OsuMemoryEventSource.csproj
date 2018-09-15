@@ -61,6 +61,7 @@
       <DependentUpon>FirstRunMemoryCalibration.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers.cs" />
+    <Compile Include="LinearValue.cs" />
     <Compile Include="MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>

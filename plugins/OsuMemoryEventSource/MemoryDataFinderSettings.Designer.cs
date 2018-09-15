@@ -33,6 +33,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.checkBox_EnableMemoryPooling = new System.Windows.Forms.CheckBox();
+            this.checkBox_enableSmoothPp = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // checkBox_EnableMemoryFinder
@@ -87,17 +88,30 @@
             this.checkBox_EnableMemoryPooling.UseVisualStyleBackColor = true;
             this.checkBox_EnableMemoryPooling.CheckedChanged += new System.EventHandler(this.checkBox_EnableMemoryPooling_CheckedChanged);
             // 
+            // checkBox_enableSmoothPp
+            // 
+            this.checkBox_enableSmoothPp.AutoSize = true;
+            this.checkBox_enableSmoothPp.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.checkBox_enableSmoothPp.Location = new System.Drawing.Point(3, 148);
+            this.checkBox_enableSmoothPp.Name = "checkBox_enableSmoothPp";
+            this.checkBox_enableSmoothPp.Size = new System.Drawing.Size(184, 17);
+            this.checkBox_enableSmoothPp.TabIndex = 7;
+            this.checkBox_enableSmoothPp.Text = "Enable smooth pp value changes";
+            this.checkBox_enableSmoothPp.UseVisualStyleBackColor = true;
+            this.checkBox_enableSmoothPp.CheckedChanged += new System.EventHandler(this.checkBox_enableSmoothPp_CheckedChanged);
+            // 
             // MemoryDataFinderSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox_enableSmoothPp);
             this.Controls.Add(this.checkBox_EnableMemoryPooling);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBox_EnableMemoryFinder);
             this.Name = "MemoryDataFinderSettings";
-            this.Size = new System.Drawing.Size(591, 138);
+            this.Size = new System.Drawing.Size(591, 199);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,5 +124,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox checkBox_EnableMemoryPooling;
+        private System.Windows.Forms.CheckBox checkBox_enableSmoothPp;
     }
 }

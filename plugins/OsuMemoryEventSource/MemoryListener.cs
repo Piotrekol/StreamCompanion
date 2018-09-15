@@ -6,7 +6,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace OsuMemoryEventSource
 {
-    public class MemoryListener : IOsuEventSource, IHighFrequencyDataSender
+    public class MemoryListener : IOsuEventSource, IHighFrequencyDataSender, IDisposable, ISettings
     {
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
 
@@ -18,6 +18,7 @@ namespace OsuMemoryEventSource
         private string _lastMapString = "-";
         private string _currentMapString = "";
         private MemoryDataProcessor _memoryDataProcessor;
+        private ISettingsHandler _settings;
 
         public MemoryListener(string songsFolderLocation)
         {
@@ -71,5 +72,26 @@ namespace OsuMemoryEventSource
             _memoryDataProcessor.SetHighFrequencyDataHandlers(handlers);
         }
 
+        public void Dispose()
+        {
+            _memoryDataProcessor?.Dispose();
+            _settings.SettingUpdated -= SettingUpdated;
+        }
+
+        public void SetSettingsHandle(ISettingsHandler settings)
+        {
+            _settings = settings;
+            _settings.SettingUpdated += SettingUpdated;
+            _memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
+        }
+
+        private void SettingUpdated(object sender, SettingUpdated settingUpdated)
+        {
+            if (settingUpdated.Name == Helpers.EnablePpSmoothing.Name)
+            {
+                var enableSmoothing = _settings.Get<bool>(Helpers.EnablePpSmoothing);
+                _memoryDataProcessor.ToggleSmoothing(enableSmoothing);
+            }
+        }
     }
 }

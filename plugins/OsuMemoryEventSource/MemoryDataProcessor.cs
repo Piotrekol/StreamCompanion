@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using CollectionManager.DataTypes;
@@ -9,7 +10,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace OsuMemoryEventSource
 {
-    public class MemoryDataProcessor : IHighFrequencyDataSender
+    public class MemoryDataProcessor : IHighFrequencyDataSender,IDisposable
     {
         private readonly string _songsFolderLocation;
         private readonly object _lockingObject = new object();
@@ -19,11 +20,34 @@ namespace OsuMemoryEventSource
 
         private List<OutputPattern> OutputPatterns = new List<OutputPattern>();
 
-        public MemoryDataProcessor(string songsFolderLocation)
+        InterpolatedValue _ppIfMapEndsNow = new InterpolatedValue(0.15);
+        InterpolatedValue _ppIfRestFced = new InterpolatedValue(0.15);
+        private Thread _workerThread;
+
+        public MemoryDataProcessor(string songsFolderLocation, bool enablePpSmoothing=true)
         {
             _songsFolderLocation = songsFolderLocation;
+            ToggleSmoothing(enablePpSmoothing);
+
+            _workerThread = new Thread(ThreadWork);
+            _workerThread.Start();
         }
 
+        public void ThreadWork()
+        {
+            try
+            {
+                while (true)
+                {
+                    _ppIfMapEndsNow.Tick();
+                    _ppIfRestFced.Tick();
+                    Thread.Sleep(11);
+                }
+            }
+            catch (ThreadAbortException)
+            {
+            }
+        }
         public void SetNewMap(MapSearchResult map)
         {
             lock (_lockingObject)
@@ -156,8 +180,12 @@ namespace OsuMemoryEventSource
             replacements["!time!"] = string.Format("{0:0.00}", time);
             replacements["!combo!"] = string.Format("{0}", _rawData.Play.Combo);
             replacements["!CurrentMaxCombo!"] = string.Format("{0}", _rawData.Play.MaxCombo);
-            replacements["!PpIfMapEndsNow!"] = Normalize(_rawData.PPIfBeatmapWouldEndNow(), "{0:0.00}");
-            replacements["!PpIfRestFced!"] = Normalize(_rawData.PPIfRestFCed(), "{0:0.00}");
+
+            _ppIfMapEndsNow.Set(_rawData.PPIfBeatmapWouldEndNow());
+            _ppIfRestFced.Set(_rawData.PPIfRestFCed());
+
+            replacements["!PpIfMapEndsNow!"] = Normalize(_ppIfMapEndsNow.Current, "{0:0.00}");
+            replacements["!PpIfRestFced!"] = Normalize(_ppIfRestFced.Current, "{0:0.00}");
             replacements["!AccIfRestFced!"] = Normalize(_rawData.AccIfRestFCed(), "{0:0.00}");
             if (replacements["!AccIfRestFced!"] == "100.00")
                 replacements["!AccIfRestFced!"] = "100";
@@ -178,6 +206,18 @@ namespace OsuMemoryEventSource
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
         {
             _highFrequencyDataHandler = handlers;
+        }
+
+        public void Dispose()
+        {
+            _workerThread?.Abort();
+        }
+
+        public void ToggleSmoothing(bool enable)
+        {
+            var speed = enable ? 0.15d : 1d;
+            _ppIfRestFced.ChangeSpeed(speed);
+            _ppIfMapEndsNow.ChangeSpeed(speed);
         }
     }
 }
