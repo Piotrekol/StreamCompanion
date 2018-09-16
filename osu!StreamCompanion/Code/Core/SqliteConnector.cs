@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Text;
 using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes.DataTypes;
@@ -12,6 +13,7 @@ namespace osu_StreamCompanion.Code.Core
 {
     public class SqliteConnector : IDisposable, IMapDataStorer
     {
+        private readonly ILogger _logger;
         private SQLiteConnection _mDbConnection;
         private string DbFilename = "StreamCompanionCacheV2.db";
         private int _schemaVersion = 2;
@@ -55,8 +57,9 @@ namespace osu_StreamCompanion.Code.Core
                 return ret.ToString();
             }
         }
-        public SqliteConnector()
+        public SqliteConnector(ILogger logger)
         {
+            _logger = logger;
 
             _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "VideoDir", "StarsOsu" });
             _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "VARCHAR", "BLOB" });
@@ -152,7 +155,8 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.ExecuteNonQuery();
 
         }
-
+        private string lastQuery = string.Empty;
+        private string lastQueryParameters = string.Empty;
         private SQLiteDataReader Query(string query, IDictionary<string, string> replacements)
         {
             SQLiteCommand cmd = new SQLiteCommand(query, _mDbConnection);
@@ -160,6 +164,10 @@ namespace osu_StreamCompanion.Code.Core
             {
                 cmd.Parameters.Add(replacement.Key, DbType.String).Value = replacement.Value;
             }
+
+            lastQuery = cmd.CommandText;
+            lastQueryParameters = string.Join(" |~| ", replacements.Select((k, v) => $"{k} = {v}").ToList());
+
             return cmd.ExecuteReader();
         }
         public SQLiteDataReader Query(string query)
@@ -336,35 +344,44 @@ namespace osu_StreamCompanion.Code.Core
         {
             var retBeatmap = new Beatmap();
             bool foundData = false;
-            if (useRaw)
+            try
             {
-                string sql = string.Format("SELECT * FROM `{0}` WHERE (Raw LIKE @Raw)", table);
-                if (replacements["@diff"] != string.Empty)
+                if (useRaw)
                 {
-                    sql += " AND DiffName LIKE @diff";
+                    string sql = string.Format("SELECT * FROM `{0}` WHERE (Raw LIKE @Raw)", table);
+                    if (replacements["@diff"] != string.Empty)
+                    {
+                        sql += " AND DiffName LIKE @diff";
+                    }
+                    var reader = Query(sql, replacements);
+                    if (reader.Read())
+                    {
+                        retBeatmap.Read(reader);
+                        foundData = true;
+                    }
                 }
-                var reader = Query(sql, replacements);
-                if (reader.Read())
+                else
                 {
-                    retBeatmap.Read(reader);
-                    foundData = true;
+                    var sql = string.Format(
+                        "SELECT * FROM `{0}` WHERE (TitleRoman LIKE @title OR TitleUnicode LIKE @title) AND (ArtistRoman LIKE @artist OR ArtistUnicode LIKE @artist)",
+                        table);
+                    if (replacements["@diff"] != string.Empty)
+                    {
+                        sql += " AND DiffName LIKE @diff";
+                    }
+                    var reader = Query(sql, replacements);
+                    if (reader.Read())
+                    {
+                        retBeatmap.Read(reader);
+                        foundData = true;
+                    }
                 }
             }
-            else
+            catch (SQLiteException e)
             {
-                var sql = string.Format("SELECT * FROM `{0}` WHERE (TitleRoman LIKE @title OR TitleUnicode LIKE @title) AND (ArtistRoman LIKE @artist OR ArtistUnicode LIKE @artist)", table);
-                if (replacements["@diff"] != string.Empty)
-                {
-                    sql += " AND DiffName LIKE @diff";
-                }
-                var reader = Query(sql, replacements);
-                if (reader.Read())
-                {
-                    retBeatmap.Read(reader);
-                    foundData = true;
-                }
+                var exception = new Exception($"GetBeatmapUsingReplacementsException: ''{lastQuery}'', ''{lastQueryParameters}''", e);
+                _logger.Log(exception, LogLevel.Error);
             }
-
             return foundData ? retBeatmap : null;
 
         }

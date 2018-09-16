@@ -13,10 +13,6 @@ namespace osu_StreamCompanion.Code.Core
     {
         private readonly SqliteConnector _sqlConnector;
         private Dictionary<string, int> _md5List;
-        public SqliteControler()
-        {
-            _sqlConnector = new SqliteConnector();
-        }
         public SqliteControler(SqliteConnector sqLiteConnector)
         {
             _sqlConnector = sqLiteConnector;

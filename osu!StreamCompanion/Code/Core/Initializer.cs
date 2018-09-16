@@ -135,7 +135,7 @@ namespace osu_StreamCompanion.Code.Core
 
             _logger.Log("Starting...", LogLevel.Advanced);
             _logger.Log(">Main classes...", LogLevel.Advanced);
-            _sqliteControler = new SqliteControler(new SqliteConnector());
+            _sqliteControler = new SqliteControler(new SqliteConnector(_logger));
 
             _logger.Log(">Modules...", LogLevel.Advanced);
             StartModules();
