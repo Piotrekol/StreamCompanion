@@ -55,6 +55,10 @@ namespace OsuSongsFolderWatcher
                 }
                 else
                 {
+                    MessageBox.Show($"Could not find osu! songs directory at \"{dir}\"" + Environment.NewLine +
+                                    "StreamCompanion won't be able to provide data for newly loaded songs!"
+                        , "StreamCompanion - New songs watcher error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //TODO: ask user to provide songs directory path?
                     _logger.Log($"Could not find osu! songs directory, tried: \"{dir}\" & setting value was: \"{_settings.Get<string>(_names.SongsFolderLocation)}\"", LogLevel.Error);
                 }
             }
