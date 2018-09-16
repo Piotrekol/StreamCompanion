@@ -40,7 +40,10 @@ namespace MSNEventSource
                 _firstRunUserControl?.GotMsn(string.Format("{0} - {1}", _osuStatus["title"], _osuStatus["artist"]));
 
                 var args = CreateArgs(_osuStatus);
-                NewOsuEvent?.Invoke(this, args);
+
+                if(args != null)
+                    NewOsuEvent?.Invoke(this, args);
+
                 return 1;
             });
         }
