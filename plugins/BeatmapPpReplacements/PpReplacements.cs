@@ -78,20 +78,21 @@ namespace BeatmapPpReplacements
                 ret["!95PP!"] = GetPp(beatmap, 95d).ToString(CultureInfo.InvariantCulture);
                 ret["!90PP!"] = GetPp(beatmap, 90d).ToString(CultureInfo.InvariantCulture);
 
-                Mods mods;
-                string modsStr;
+                Mods mods = _lastMods;
+                string modsStr = _lastModsStr;
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
                 {
-                    mods = (map.Mods?.Item1 ?? CollectionManager.DataTypes.Mods.Omod).Convert();
-                    modsStr = map.Mods?.Item2 ?? "NM";
-                    _lastMods = mods;
-                    _lastModsStr = modsStr;
+                    var tempMods = (map.Mods?.Item1 ?? CollectionManager.DataTypes.Mods.Omod).Convert();
+                    if (tempMods != Mods.NoMod)
+                    {
+                        modsStr = map.Mods?.Item2 ?? "NM";
+                        mods = tempMods;
+
+                        _lastMods = tempMods;
+                        _lastModsStr = modsStr;
+                    }
                 }
-                else
-                {
-                    mods = _lastMods;
-                    modsStr = _lastModsStr;
-                }
+
                 ret["!mMod!"] = modsStr;
                 ret["!mSSPP!"] = GetPp(beatmap, 100d, mods).ToString(CultureInfo.InvariantCulture);
                 ret["!m99.9PP!"] = GetPp(beatmap, 99.9d, mods).ToString(CultureInfo.InvariantCulture);
