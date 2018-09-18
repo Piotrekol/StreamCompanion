@@ -10,7 +10,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace OsuMemoryEventSource
 {
-    public class MemoryDataProcessor : IHighFrequencyDataSender,IDisposable
+    public class MemoryDataProcessor : IHighFrequencyDataSender, IDisposable
     {
         private readonly string _songsFolderLocation;
         private readonly object _lockingObject = new object();
@@ -20,13 +20,29 @@ namespace OsuMemoryEventSource
 
         private List<OutputPattern> OutputPatterns = new List<OutputPattern>();
 
-        InterpolatedValue _ppIfMapEndsNow = new InterpolatedValue(0.15);
-        InterpolatedValue _ppIfRestFced = new InterpolatedValue(0.15);
+        private enum InterpolatedValueName
+        {
+            PpIfMapEndsNow,
+            AimPpIfMapEndsNow,
+            SpeedPpIfMapEndsNow,
+            AccPpIfMapEndsNow,
+            PpIfRestFced,
+
+        }
+        private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
+
         private Thread _workerThread;
 
-        public MemoryDataProcessor(string songsFolderLocation, bool enablePpSmoothing=true)
+        public MemoryDataProcessor(string songsFolderLocation, bool enablePpSmoothing = true)
         {
             _songsFolderLocation = songsFolderLocation;
+
+            foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
+            {
+                InterpolatedValues.Add(v, new InterpolatedValue(0.15));
+            }
+
+
             ToggleSmoothing(enablePpSmoothing);
 
             _workerThread = new Thread(ThreadWork);
@@ -39,8 +55,12 @@ namespace OsuMemoryEventSource
             {
                 while (true)
                 {
-                    _ppIfMapEndsNow.Tick();
-                    _ppIfRestFced.Tick();
+                    foreach (var interpolatedValue in InterpolatedValues)
+                    {
+                        interpolatedValue.Value.Tick();
+                    }
+                    //_ppIfMapEndsNow.Tick();
+                    //_ppIfRestFced.Tick();
                     Thread.Sleep(11);
                 }
             }
@@ -180,12 +200,20 @@ namespace OsuMemoryEventSource
             replacements["!time!"] = string.Format("{0:0.00}", time);
             replacements["!combo!"] = string.Format("{0}", _rawData.Play.Combo);
             replacements["!CurrentMaxCombo!"] = string.Format("{0}", _rawData.Play.MaxCombo);
+            
+            
+            InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Set(_rawData.PPIfBeatmapWouldEndNow());
+            InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
+            InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Set(_rawData.SpeedPPIfBeatmapWouldEndNow);
+            InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Set(_rawData.AccPPIfBeatmapWouldEndNow);
+            InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
 
-            _ppIfMapEndsNow.Set(_rawData.PPIfBeatmapWouldEndNow());
-            _ppIfRestFced.Set(_rawData.PPIfRestFCed());
+            replacements["!PpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, "{0:0.00}");
+            replacements["!AimPpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, "{0:0.00}");
+            replacements["!SpeedPpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, "{0:0.00}");
+            replacements["!AccPpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, "{0:0.00}");
 
-            replacements["!PpIfMapEndsNow!"] = Normalize(_ppIfMapEndsNow.Current, "{0:0.00}");
-            replacements["!PpIfRestFced!"] = Normalize(_ppIfRestFced.Current, "{0:0.00}");
+            replacements["!PpIfRestFced!"] = Normalize(InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, "{0:0.00}");
             replacements["!AccIfRestFced!"] = Normalize(_rawData.AccIfRestFCed(), "{0:0.00}");
             if (replacements["!AccIfRestFced!"] == "100.00")
                 replacements["!AccIfRestFced!"] = "100";
@@ -216,8 +244,11 @@ namespace OsuMemoryEventSource
         public void ToggleSmoothing(bool enable)
         {
             var speed = enable ? 0.15d : 1d;
-            _ppIfRestFced.ChangeSpeed(speed);
-            _ppIfMapEndsNow.ChangeSpeed(speed);
+
+            foreach (var v in InterpolatedValues)
+            {
+                v.Value.ChangeSpeed(speed);
+            }
         }
     }
 }

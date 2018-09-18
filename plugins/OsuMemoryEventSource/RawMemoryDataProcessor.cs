@@ -78,6 +78,10 @@ namespace OsuMemoryEventSource
             return ppCalculator.Total;
         }
 
+        public double AimPPIfBeatmapWouldEndNow { get; private set; }= double.NaN;
+        public double SpeedPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
+        public double AccPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
+
         public double PPIfBeatmapWouldEndNow()
         {
             if (_preprocessedBeatmap == null || Play.Time <= 0)
@@ -88,7 +92,11 @@ namespace OsuMemoryEventSource
                 var ppCalculator =
                     new PPv2(new PPv2Parameters(_preprocessedBeatmap, Play.C100,
                         Play.C50, Play.CMiss, Play.MaxCombo, Play.C300, _currentMods));
+                AimPPIfBeatmapWouldEndNow = ppCalculator.Aim;
+                SpeedPPIfBeatmapWouldEndNow = ppCalculator.Speed;
+                AccPPIfBeatmapWouldEndNow = ppCalculator.Acc;
                 return ppCalculator.Total;
+                
             }
             catch
             {
