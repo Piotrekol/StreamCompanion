@@ -78,30 +78,30 @@ namespace OsuMemoryEventSource
             return ppCalculator.Total;
         }
 
-        public double AimPPIfBeatmapWouldEndNow { get; private set; }= double.NaN;
+        public double AimPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double SpeedPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double AccPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
 
         public double PPIfBeatmapWouldEndNow()
         {
-            if (_preprocessedBeatmap == null || Play.Time <= 0)
-                return double.NaN;
-            try
-            {
-                _preprocessedBeatmap.Cut(0, Play.Time);
-                var ppCalculator =
-                    new PPv2(new PPv2Parameters(_preprocessedBeatmap, Play.C100,
-                        Play.C50, Play.CMiss, Play.MaxCombo, Play.C300, _currentMods));
-                AimPPIfBeatmapWouldEndNow = ppCalculator.Aim;
-                SpeedPPIfBeatmapWouldEndNow = ppCalculator.Speed;
-                AccPPIfBeatmapWouldEndNow = ppCalculator.Acc;
-                return ppCalculator.Total;
-                
-            }
-            catch
-            {
-                return double.NaN;
-            }
+            if (_preprocessedBeatmap != null && Play.Time > 0)
+                try
+                {
+                    _preprocessedBeatmap.Cut(0, Play.Time);
+                    var ppCalculator =
+                        new PPv2(new PPv2Parameters(_preprocessedBeatmap, Play.C100,
+                            Play.C50, Play.CMiss, Play.MaxCombo, Play.C300, _currentMods));
+                    AimPPIfBeatmapWouldEndNow = ppCalculator.Aim;
+                    SpeedPPIfBeatmapWouldEndNow = ppCalculator.Speed;
+                    AccPPIfBeatmapWouldEndNow = ppCalculator.Acc;
+                    return ppCalculator.Total;
+
+                }
+                catch { }
+            AimPPIfBeatmapWouldEndNow = double.NaN;
+            SpeedPPIfBeatmapWouldEndNow = double.NaN;
+            AccPPIfBeatmapWouldEndNow = double.NaN;
+            return double.NaN;
         }
 
         public double AccIfRestFCed() => _accIfRestFced;
