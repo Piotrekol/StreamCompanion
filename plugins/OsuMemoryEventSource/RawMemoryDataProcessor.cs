@@ -36,7 +36,12 @@ namespace OsuMemoryEventSource
                     _preprocessedBeatmap = null;
                     return;
                 }
-                _preprocessedBeatmap = Helpers.GetOppaiSharpBeatmap(osuFileLocation);
+                var preprocessedBeatmap = Helpers.GetOppaiSharpBeatmap(osuFileLocation);
+
+                if (_preprocessedBeatmap != null && _preprocessedBeatmap.Mode != GameMode.Standard)
+                    _preprocessedBeatmap = null;
+                else
+                    _preprocessedBeatmap = preprocessedBeatmap;
             }
             catch (FileNotFoundException) { }
         }
