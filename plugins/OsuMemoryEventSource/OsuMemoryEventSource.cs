@@ -42,11 +42,33 @@ namespace OsuMemoryEventSource
             return userSettings;
         }
 
-
+        private bool TEMPfatalExceptionTiggered = false;
         public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
             if (!Started)
                 return null;
+
+            if(searchArgs==null)
+                throw new ArgumentException(nameof(searchArgs));
+
+            if (!TEMPfatalExceptionTiggered)
+            {
+                if (_memoryReader == null)
+                {
+                    TEMPfatalExceptionTiggered = true;
+                    throw new Exception("MemoryReader was not initalized");
+                }
+                if (_settings == null)
+                {
+                    TEMPfatalExceptionTiggered = true;
+                    throw new Exception("Settings were not initalized");
+                }
+                if (_sqLiteController == null)
+                {
+                    TEMPfatalExceptionTiggered = true;
+                    throw new Exception("SqLiteController was not initalized");
+                }
+            }
 
             var result = new MapSearchResult();
             result.MapSearchString = searchArgs.Raw;
