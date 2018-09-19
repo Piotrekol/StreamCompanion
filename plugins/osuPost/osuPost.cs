@@ -12,7 +12,7 @@ namespace osuPost
 
         private ISettingsHandler _settings;
         public bool Started { get; set; }
-        private OsuPostApi api = new OsuPostApi();
+        private OsuPostApi api;
 
 
         public string Description { get; } = "";
@@ -24,6 +24,7 @@ namespace osuPost
         public void Start(ILogger logger)
         {
             Started = true;
+            api = new OsuPostApi(logger);
             api.EndpointUrl = _settings.Get<string>(_names.osuPostEndpoint);
             SwitchApiStatus(_settings.Get<bool>(_names.osuPostEnabled));
             _settings.SettingUpdated+=SettingUpdated;

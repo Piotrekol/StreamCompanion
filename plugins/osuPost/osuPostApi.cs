@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Net;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace osuPost
 {
     public class OsuPostApi : IDisposable
     {
+        private readonly ILogger _logger;
+
         #region variables
         string _userId = "-1";
         string _userKey = "";
         bool _isLoginDataSet;
         public string EndpointUrl = @"http://osupost.givenameplz.de/input.php?u=";
+
+        public OsuPostApi(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public bool IsEnabled => _isLoginDataSet;
 
         public class ErrorReport : EventArgs
@@ -122,11 +131,22 @@ namespace osuPost
 
         #region Request Formating
 
+        private class OsuPostApiMapNameTooLongException : Exception
+        {
+            public OsuPostApiMapNameTooLongException(string mapName) : base(mapName) { }
+        }
         private string FormatRequest(MapSearchResult map, bool isOnline)
         {
             var output = "key=" + _userKey;
             output += "&isOnline=" + (isOnline ? "true" : "false");
-            output += "&mapName=" + Uri.EscapeDataString((GetMapName(map)));
+            var mapName = GetMapName(map);
+            if (mapName.Length >= 2000)
+            {
+                var ex = new OsuPostApiMapNameTooLongException(mapName);
+                _logger.Log(ex,LogLevel.Error);
+                mapName = mapName.Substring(0, 2000);
+            }
+            output += "&mapName=" + Uri.EscapeDataString(mapName);
             output += "&mapID=" + GetMapId(map);
             output += "&mapSetID=" + GetMapSetId(map);
             output += "&userAction=" + GetMapAction(map);
