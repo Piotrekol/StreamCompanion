@@ -38,7 +38,7 @@ namespace OsuMemoryEventSource
                 }
                 var preprocessedBeatmap = Helpers.GetOppaiSharpBeatmap(osuFileLocation);
 
-                if (_preprocessedBeatmap != null && _preprocessedBeatmap.Mode != GameMode.Standard)
+                if (preprocessedBeatmap != null && preprocessedBeatmap.Mode != GameMode.Standard)
                     _preprocessedBeatmap = null;
                 else
                     _preprocessedBeatmap = preprocessedBeatmap;
