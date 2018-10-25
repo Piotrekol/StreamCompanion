@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,7 +10,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace OsuMemoryEventSource
 {
-    public class MemoryDataProcessor : IHighFrequencyDataSender, IDisposable
+    public class MemoryDataProcessor : IHighFrequencyDataSender, ISettings, IDisposable
     {
         private readonly string _songsFolderLocation;
         private readonly object _lockingObject = new object();
@@ -19,6 +19,7 @@ namespace OsuMemoryEventSource
         private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
 
         private List<OutputPattern> OutputPatterns = new List<OutputPattern>();
+        private ISettingsHandler _settings;
 
         private enum InterpolatedValueName
         {
@@ -107,7 +108,7 @@ namespace OsuMemoryEventSource
             {
                 if (status != OsuStatus.Playing)
                 {
-                    if ((status & OsuStatus.ResultsScreen) == 0)
+                    if (_clearLiveTokensAfterResultScreenExit && (status & OsuStatus.ResultsScreen) == 0)
                     {//we're not playing or we haven't just finished playing - clear
                         ResetOutput();
                         _lastStatus = status;
@@ -239,6 +240,7 @@ namespace OsuMemoryEventSource
         public void Dispose()
         {
             _workerThread?.Abort();
+            _settings.SettingUpdated -= SettingUpdated;
         }
 
         public void ToggleSmoothing(bool enable)
@@ -248,6 +250,22 @@ namespace OsuMemoryEventSource
             foreach (var v in InterpolatedValues)
             {
                 v.Value.ChangeSpeed(speed);
+            }
+        }
+
+        public void SetSettingsHandle(ISettingsHandler settings)
+        {
+            _settings = settings;
+            _settings.SettingUpdated+=SettingUpdated;
+            _clearLiveTokensAfterResultScreenExit = _settings.Get<bool>(Helpers.ClearLiveTokensAfterResultScreenExit);
+        }
+
+        private bool _clearLiveTokensAfterResultScreenExit;
+        private void SettingUpdated(object sender, SettingUpdated e)
+        {
+            if (e.Name == Helpers.ClearLiveTokensAfterResultScreenExit.Name)
+            {
+                _clearLiveTokensAfterResultScreenExit = _settings.Get<bool>(Helpers.ClearLiveTokensAfterResultScreenExit);
             }
         }
     }

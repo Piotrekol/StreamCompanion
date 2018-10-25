@@ -83,6 +83,7 @@ namespace OsuMemoryEventSource
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
             _memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
+            _memoryDataProcessor.SetSettingsHandle(_settings);
         }
 
         private void SettingUpdated(object sender, SettingUpdated settingUpdated)
