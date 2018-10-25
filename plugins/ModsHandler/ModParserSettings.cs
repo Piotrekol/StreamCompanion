@@ -28,7 +28,7 @@ namespace ModsHandler
             if (this.IsHandleCreated)
                 this.BeginInvoke((MethodInvoker)(() =>
            {
-               if (settingUpdated.Name != _names.EnableMemoryScanner.Name)
+               if (settingUpdated.Name == _names.EnableMemoryScanner.Name)
                    this.Enabled = _settings.Get<bool>(_names.EnableMemoryScanner);
            }));
         }
