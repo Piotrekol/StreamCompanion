@@ -171,7 +171,7 @@ namespace OsuMemoryEventSource
         private void SetOutput(OutputPattern p, string value)
         {
             //Standard output
-            WriteToHandlers("SC-" + p.Name, value.Replace("\r", ""));
+            WriteToHandlers(p.Name, value.Replace("\r", ""));
 
             //ingameOverlay part
             if (p.ShowInOsu)

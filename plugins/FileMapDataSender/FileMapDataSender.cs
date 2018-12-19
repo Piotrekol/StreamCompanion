@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using StreamCompanionTypes.DataTypes;
+﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace FileMapDataSender
 {
@@ -34,7 +34,7 @@ namespace FileMapDataSender
             foreach (var s in map.FormatedStrings)
             {
                 //TODO: export ingameOverlay(showInOsu) stuff out of there
-                var name = $"SC-{s.Name}";
+                var name = s.Name;
                 if (s.ShowInOsu)
                 {
                     ingamePatterns.Add(name);
@@ -53,6 +53,7 @@ namespace FileMapDataSender
                 if (!s.IsMemoryFormat)
                     _fileMapManager.Write(name, valueToWrite);
             }
+
             _fileMapManager.Write("Sc-ingamePatterns", string.Join(" ", ingamePatterns) + " ");
         }
 
@@ -69,7 +70,6 @@ namespace FileMapDataSender
         public void Handle(string name, string content)
         {
             _fileMapManager.Write(name, content);
-
         }
     }
 }

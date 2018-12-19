@@ -56,7 +56,7 @@ namespace ClickCounter
                 _saver.Save(name + ".txt", value);
 
             _highFrequencyDataHandler.ForEach(h =>
-                h.Handle("SC-" + name, value)
+                h.Handle(name, value)
             );
         }
         private void HookMouse()
