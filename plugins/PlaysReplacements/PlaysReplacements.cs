@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using StreamCompanionTypes.DataTypes;
+﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using System.Collections.Generic;
 
 namespace PlaysReplacements
 {
@@ -17,7 +17,7 @@ namespace PlaysReplacements
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
+        public Tokens GetMapReplacements(MapSearchResult map)
         {
             if (map.Action == OsuStatus.Playing)
             {
@@ -27,10 +27,12 @@ namespace PlaysReplacements
                     Plays++;
                 lastMapSearchString = map.MapSearchString;
             }
-            var ret = new Dictionary<string, string>();
-            ret.Add("!Plays!", Plays.ToString());
-            ret.Add("!Retrys!", Retrys.ToString());
-            return ret;
+
+            return new Tokens
+            {
+                { "Plays", new Token(Plays)},
+                { "Retrys", new Token(Retrys)}
+            };
         }
 
     }

@@ -5,6 +5,6 @@ namespace StreamCompanionTypes.Interfaces
 {
     public interface IMapDataReplacements
     {
-        Dictionary<string, string> GetMapReplacements(MapSearchResult map);
+        Tokens GetMapReplacements(MapSearchResult map);
     }
 }

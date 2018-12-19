@@ -115,6 +115,9 @@ namespace osu_StreamCompanion
             }
             else
             {
+#if DEBUG
+                throw (Exception)e.ExceptionObject;
+#endif
                 Exception ex = null;
                 try
                 {

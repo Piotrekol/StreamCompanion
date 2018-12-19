@@ -34,26 +34,27 @@ namespace BeatmapPpReplacements
         {
             Started = true;
         }
-
-        public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
+        
+        public Tokens GetMapReplacements(MapSearchResult map)
         {
-            var ret = new Dictionary<string, string>
+            var ret = new Tokens
             {
-                {"!MaxCombo!", ""},
-                {"!SSPP!", ""},
-                {"!99.9PP!", ""},
-                {"!99PP!", ""},
-                {"!98PP!", ""},
-                {"!95PP!", ""},
-                {"!90PP!", ""},
-                {"!mMod!", ""},
-                {"!mSSPP!", ""},
-                {"!m99.9PP!", ""},
-                {"!m99PP!", ""},
-                {"!m98PP!", ""},
-                {"!m95PP!", ""},
-                {"!m90PP!", ""},
+                {"MaxCombo", new Token(null)},
+                {"SSPP", new Token(null)},
+                {"99.9PP", new Token(null)},
+                {"99PP", new Token(null)},
+                {"98PP", new Token(null)},
+                {"95PP", new Token(null)},
+                {"90PP", new Token(null)},
+                {"mMod", new Token(null)},
+                {"mSSPP", new Token(null)},
+                {"m99.9PP", new Token(null)},
+                {"m99PP", new Token(null)},
+                {"m98PP", new Token(null)},
+                {"m95PP", new Token(null)},
+                {"m90PP", new Token(null)},
             };
+
             if (!map.FoundBeatmaps) return ret;
             if (map.BeatmapsFound[0].PlayMode != PlayMode.Osu) return ret;
             var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(BeatmapHelpers.GetFullSongsLocation(_settings));
@@ -69,14 +70,14 @@ namespace BeatmapPpReplacements
                 if (beatmap == null)
                     return ret;
 
-                ret["!MaxCombo!"] = beatmap.GetMaxCombo().ToString(CultureInfo.InvariantCulture);
+                ret["MaxCombo"] = new TokenWithFormat(beatmap.GetMaxCombo());
 
-                ret["!SSPP!"] = GetPp(beatmap, 100d).ToString(CultureInfo.InvariantCulture);
-                ret["!99.9PP!"] = GetPp(beatmap, 99.9d).ToString(CultureInfo.InvariantCulture);
-                ret["!99PP!"] = GetPp(beatmap, 99d).ToString(CultureInfo.InvariantCulture);
-                ret["!98PP!"] = GetPp(beatmap, 98d).ToString(CultureInfo.InvariantCulture);
-                ret["!95PP!"] = GetPp(beatmap, 95d).ToString(CultureInfo.InvariantCulture);
-                ret["!90PP!"] = GetPp(beatmap, 90d).ToString(CultureInfo.InvariantCulture);
+                ret["SSPP"] = new TokenWithFormat(GetPp(beatmap, 100d));
+                ret["99.9PP"] = new TokenWithFormat(GetPp(beatmap, 99.9d));
+                ret["99PP"] = new TokenWithFormat(GetPp(beatmap, 99d));
+                ret["98PP"] = new TokenWithFormat(GetPp(beatmap, 98d));
+                ret["95PP"] = new TokenWithFormat(GetPp(beatmap, 95d));
+                ret["90PP"] = new TokenWithFormat(GetPp(beatmap, 90d));
 
                 Mods mods = _lastMods;
                 string modsStr = _lastModsStr;
@@ -93,21 +94,22 @@ namespace BeatmapPpReplacements
                     }
                 }
 
-                ret["!mMod!"] = modsStr;
-                ret["!mSSPP!"] = GetPp(beatmap, 100d, mods).ToString(CultureInfo.InvariantCulture);
-                ret["!m99.9PP!"] = GetPp(beatmap, 99.9d, mods).ToString(CultureInfo.InvariantCulture);
-                ret["!m99PP!"] = GetPp(beatmap, 99d, mods).ToString(CultureInfo.InvariantCulture);
-                ret["!m98PP!"] = GetPp(beatmap, 98d, mods).ToString(CultureInfo.InvariantCulture);
-                ret["!m95PP!"] = GetPp(beatmap, 95d, mods).ToString(CultureInfo.InvariantCulture);
-                ret["!m90PP!"] = GetPp(beatmap, 90d, mods).ToString(CultureInfo.InvariantCulture);
+                ret["mMod"] = new Token(modsStr);
+                ret["mSSPP"] = new TokenWithFormat(GetPp(beatmap, 100d, mods));
+                ret["m99.9PP"] = new TokenWithFormat(GetPp(beatmap, 99.9d, mods));
+                ret["m99PP"] = new TokenWithFormat(GetPp(beatmap, 99d, mods));
+                ret["m98PP"] = new TokenWithFormat(GetPp(beatmap, 98d, mods));
+                ret["m95PP"] = new TokenWithFormat(GetPp(beatmap, 95d, mods));
+                ret["m90PP"] = new TokenWithFormat(GetPp(beatmap, 90d, mods));
+
                 return ret;
             }
             catch
             {
-                return ret;
             }
-        }
 
+            return ret;
+        }
         private double GetPp(Beatmap beatmap, double acc, Mods mods = Mods.NoMod)
         {
             _accCalculator = new Accuracy(acc, beatmap.Objects.Count, 0);

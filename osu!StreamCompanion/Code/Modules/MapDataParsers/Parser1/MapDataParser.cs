@@ -78,8 +78,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             Save();
         }
-
-        public List<OutputPattern> GetFormatedPatterns(Dictionary<string, string> replacements, OsuStatus status)
+        
+        public List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
             List<OutputPattern> ret = null;
 
@@ -97,6 +97,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             return ret;
         }
+
         public string FormatMapString(string toFormat, Dictionary<string, string> replacements)
         {
             foreach (var r in replacements)

@@ -18,6 +18,7 @@ namespace OsuMemoryEventSource
         private string _lastMapString = "-";
         private string _currentMapString = "";
         private MemoryDataProcessor _memoryDataProcessor;
+        public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettingsHandler _settings;
 
         public MemoryListener(string songsFolderLocation)

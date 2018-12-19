@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CollectionManager.Enums;
+using osu_StreamCompanion.Code.Core.Maps;
+using StreamCompanionTypes.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
-using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core.Maps;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
@@ -119,6 +120,107 @@ namespace osu_StreamCompanion.Code.Helpers
             }
         }
 
+        public static Tokens GetTokens(this Beatmap bm, bool empty = false)
+        {
+            Tokens tokens;
+            Dictionary<string, string> dict;
+            if (bm == null || empty)
+            {
+                tokens = new Tokens()
+                {
+                    {"TitleRoman", new Token(null)},
+                    {"ArtistRoman", new Token(null)},
+                    {"TitleUnicode", new Token(null)},
+                    {"ArtistUnicode", new Token(null)},
+                    {"MapArtistTitle", new Token(null)},
+                    {"MapDiff", new Token(null)},
+                    {"Creator", new Token(null)},
+                    {"DiffName", new Token(null)},
+                    {"Mp3Name", new Token(null)},
+                    {"Md5", new Token(null)},
+                    {"OsuFileName", new Token(null)},
+                    {"MaxBpm", new Token(null)},
+                    {"MinBpm", new Token(null)},
+                    {"Bpm", new Token(null)},
+                    {"tags", new Token(null)},
+                    {"state", new Token(null)},
+                    {"circles", new Token(null)},
+                    {"sliders", new Token(null)},
+                    {"spinners", new Token(null)},
+                    {"ar", new Token(null)},
+                    {"cs", new Token(null)},
+                    {"hp", new Token(null)},
+                    {"od", new Token(null)},
+                    {"sv", new Token(null)},
+                    {"starsNomod", new Token(null)},
+                    {"drainingtime", new Token(null)},
+                    {"totaltime", new Token(null)},
+                    {"previewtime", new Token(null)},
+                    {"mapid", new Token(null)},
+                    {"dl", new Token(null)},
+                    {"mapsetid", new Token(null)},
+                    {"threadid", new Token(null)},
+                    {"SL", new Token(null)},
+                    {"mode", new Token(null)},
+                    {"source", new Token(null)},
+                    {"dir", new Token(null)},
+                    {"lb", new Token(null)},
+                };
+            }
+            else
+            {
+                tokens = new Tokens()
+                {
+                    {"TitleRoman", new Token(bm.TitleRoman)},
+                    {"ArtistRoman", new Token(bm.ArtistRoman)},
+                    {"TitleUnicode", new Token(bm.TitleUnicode)},
+                    {"ArtistUnicode", new Token(bm.ArtistUnicode)},
+                    {"MapArtistTitle", new Token(string.Format("{0} - {1}", bm.ArtistRoman, bm.TitleRoman) )},
+                    {"MapDiff", new Token(string.IsNullOrWhiteSpace(bm.DiffName)? "" : "[" + bm.DiffName + "]" )},
+                    {"Creator", new Token(bm.Creator)},
+                    {"DiffName", new Token(bm.DiffName)},
+                    {"Mp3Name", new Token(bm.Mp3Name)},
+                    {"Md5", new Token(bm.Md5)},
+                    {"OsuFileName", new Token(bm.OsuFileName)},
+                    {"MaxBpm", new Token(Math.Round(bm.MaxBpm, 2))},
+                    {"MinBpm", new Token(Math.Round(bm.MinBpm, 2))},
+                    {"Bpm", new Token(bm.MinBpm == bm.MaxBpm
+                        ? Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture)
+                        : string.Format("{0} - {1}",Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture),Math.Round(bm.MaxBpm, 2).ToString(CultureInfo.InvariantCulture))
+                    )},
+                    {"tags", new Token(bm.Tags)},
+                    {"state", new Token(bm.StateStr)},
+                    {"circles", new Token(bm.Circles)},
+                    {"sliders", new Token(bm.Sliders)},
+                    {"spinners", new Token(bm.Spinners)},
+                    {"ar", new Token(bm.ApproachRate)},
+                    {"cs", new Token(bm.CircleSize)},
+                    {"hp", new Token(bm.HpDrainRate)},
+                    {"od", new Token(bm.OverallDifficulty)},
+                    {"sv", new Token(bm.SliderVelocity)},
+                    {"starsNomod", new Token(bm.StarsNomod)},
+                    {"drainingtime", new Token(bm.DrainingTime)},
+                    {"totaltime", new Token(bm.TotalTime)},
+                    {"previewtime", new Token(bm.PreviewTime)},
+                    {"mapid", new Token(bm.MapId)},
+                    {"dl", new Token(bm.MapLink)},
+                    {"mapsetid", new Token(bm.MapSetId)},
+                    {"threadid", new Token(bm.ThreadId)},
+                    {"SL", new Token(bm.StackLeniency)},
+                    {"mode", new Token(bm.PlayMode.GetHashCode().ToString())},
+                    {"source", new Token(bm.Source)},
+                    {"dir", new Token(bm.Dir)},
+                    {"lb", new Token(Environment.NewLine)},
+                };
+            }
+
+            return tokens;
+        }
+
+
+
+
+
         public static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
         {
             Dictionary<string, string> dict;
@@ -218,9 +320,9 @@ namespace osu_StreamCompanion.Code.Helpers
 
             return dict;
         }
-        
 
-        
+
+
     }
 
 }

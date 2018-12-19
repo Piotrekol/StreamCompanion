@@ -69,7 +69,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _patterns = patterns;
             this.patternList.SetPatterns(patterns);
         }
-        public void SetPreview(Dictionary<string, string> replacements)
+        public void SetPreview(Tokens replacements)
         {
             this.patternEdit.SetPreview(replacements);
         }

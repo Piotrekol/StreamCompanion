@@ -40,7 +40,7 @@ namespace ModImageGenerator
             _imageGenerator.SetSaveHandle(_saver);
         }
 
-        public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
+        public Tokens GetMapReplacements(MapSearchResult map)
         {
 
             if (_settings.Get<bool>(_names.EnableModImages))
@@ -62,6 +62,7 @@ namespace ModImageGenerator
                     }
                 }
             }
+
             return null;
         }
 

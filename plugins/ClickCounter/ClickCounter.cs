@@ -282,16 +282,17 @@ namespace ClickCounter
             UnHookAll();
             SaveKeysToSettings();
         }
-
-        public Dictionary<string, string> GetMapReplacements(MapSearchResult map)
+        
+        public Tokens GetMapReplacements(MapSearchResult map)
         {
-            var ret = new Dictionary<string, string>();
+            var ret = new Tokens();
             for (int i = 0; i < _keyList.Count; i++)
             {
-                ret[$"!{_filenames[_keyList[i]]}!"] = _keyCount[_keyList[i]].ToString();
+                ret[$"{_filenames[_keyList[i]]}"] = new Token(_keyCount[_keyList[i]]);
             }
-            ret["!M1!"] = _rightMouseCount.ToString();
-            ret["!M2!"] = _leftMouseCount.ToString();
+
+            ret["M1"] = new Token(_rightMouseCount);
+            ret["M2"] = new Token(_leftMouseCount);
             return ret;
         }
 

@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using CollectionManager.DataTypes;
 using Newtonsoft.Json;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace OsuMemoryEventSource
 {
@@ -45,6 +46,8 @@ namespace OsuMemoryEventSource
 
 
             ToggleSmoothing(enablePpSmoothing);
+
+            InitReplacements();
 
             _workerThread = new Thread(ThreadWork);
             _workerThread.Start();
@@ -96,8 +99,11 @@ namespace OsuMemoryEventSource
             foreach (var f in patterns)
             {
                 var newPattern = (OutputPattern)f.Clone();
-                newPattern.Replacements = f.Replacements
-                    .ToDictionary(entry => entry.Key, entry => entry.Value);
+                newPattern.Replacements = new Tokens();
+                foreach (var r in f.Replacements)
+                {
+                    newPattern.Replacements.Add(r.Key, r.Value.Clone());
+                }
                 OutputPatterns.Add(newPattern);
             }
         }
@@ -152,9 +158,12 @@ namespace OsuMemoryEventSource
                         continue;
                     }
 
-                    foreach (var r in replacements)
+                    foreach (var r in replacements2)
                     {
-                        pattern.Replacements[r.Key] = r.Value;
+                        if (pattern.Replacements.ContainsKey(r.Key))
+                            ((TokenWithFormat)pattern.Replacements[r.Key]).Value = r.Value.Value;
+                        else
+                            pattern.Replacements.Add(r.Key, r.Value);
                     }
                     output[pattern.Name] = pattern.GetFormatedPattern();
                     SetOutput(pattern, output[pattern.Name]);
@@ -176,60 +185,75 @@ namespace OsuMemoryEventSource
             //ingameOverlay part
             if (p.ShowInOsu)
             {
-                var configName = "conf-SC-" + p.Name;
-                var valueName = "value-SC-" + p.Name;
+                var configName = "conf-" + p.Name;
+                var valueName = "value-" + p.Name;
                 var config = $"{p.XPosition} {p.YPosition} {p.Color.R} {p.Color.G} {p.Color.B} {p.FontName.Replace(' ', '/')} {p.FontSize}";
                 WriteToHandlers(configName, config);
                 WriteToHandlers(valueName, value);
             }
         }
 
-        private readonly Dictionary<string, string> replacements = new Dictionary<string, string>();
+        private readonly Dictionary<string, TokenWithFormat> replacements2 = new Dictionary<string, TokenWithFormat>();
+
+        public Tokens Tokens
+        {
+            get
+            {
+                var ret = new Tokens("Live tokens");
+                foreach (var r in replacements2)
+                {
+                    ret.Add(r.Key, r.Value);
+                }
+
+                return ret;
+            }
+        }
+
+        private void InitReplacements()
+        {
+            replacements2["acc"] = new TokenWithFormat(_rawData.Play.Acc, TokenType.Live, "{0:0.00}");
+            replacements2["300"] = new TokenWithFormat(_rawData.Play.C300, TokenType.Live, "{0}");
+            replacements2["100"] = new TokenWithFormat(_rawData.Play.C100, TokenType.Live, "{0}");
+            replacements2["50"] = new TokenWithFormat(_rawData.Play.C50, TokenType.Live, "{0}");
+            replacements2["miss"] = new TokenWithFormat(_rawData.Play.CMiss, TokenType.Live, "{0}");
+            replacements2["time"] = new TokenWithFormat(0d, TokenType.Live, "{0:0.00}");
+            replacements2["combo"] = new TokenWithFormat(_rawData.Play.Combo, TokenType.Live, "{0}");
+            replacements2["CurrentMaxCombo"] = new TokenWithFormat(_rawData.Play.MaxCombo, TokenType.Live, "{0}");
+            replacements2["PpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            replacements2["AimPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            replacements2["SpeedPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            replacements2["AccPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            replacements2["PpIfRestFced"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}");
+            replacements2["AccIfRestFced"] = new TokenWithFormat(_rawData.AccIfRestFCed(), TokenType.Live, "{0:0.00}");
+        }
 
         private void PrepareReplacements()
         {
-            replacements["!acc!"] = string.Format("{0:0.00}", _rawData.Play.Acc);
-            if (replacements["!acc!"] == "100.00")
-                replacements["!acc!"] = "100";
-            replacements["!300!"] = string.Format("{0}", _rawData.Play.C300);
-            replacements["!100!"] = string.Format("{0}", _rawData.Play.C100);
-            replacements["!50!"] = string.Format("{0}", _rawData.Play.C50);
-            replacements["!miss!"] = string.Format("{0}", _rawData.Play.CMiss);
+
+            replacements2["acc"].Value = _rawData.Play.Acc;
+            replacements2["300"].Value = _rawData.Play.C300;
+            replacements2["100"].Value = _rawData.Play.C100;
+            replacements2["50"].Value = _rawData.Play.C50;
+            replacements2["miss"].Value = _rawData.Play.CMiss;
             double time = 0;
             if (_rawData.Play.Time != 0)
                 time = _rawData.Play.Time / 1000d;
-            replacements["!time!"] = string.Format("{0:0.00}", time);
-            replacements["!combo!"] = string.Format("{0}", _rawData.Play.Combo);
-            replacements["!CurrentMaxCombo!"] = string.Format("{0}", _rawData.Play.MaxCombo);
-            
-            
+            replacements2["time"].Value = time;
+            replacements2["combo"].Value = _rawData.Play.Combo;
+            replacements2["CurrentMaxCombo"].Value = _rawData.Play.MaxCombo;
+
             InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Set(_rawData.PPIfBeatmapWouldEndNow());
             InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Set(_rawData.SpeedPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Set(_rawData.AccPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
 
-            replacements["!PpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, "{0:0.00}");
-            replacements["!AimPpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, "{0:0.00}");
-            replacements["!SpeedPpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, "{0:0.00}");
-            replacements["!AccPpIfMapEndsNow!"] = Normalize(InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, "{0:0.00}");
-
-            replacements["!PpIfRestFced!"] = Normalize(InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, "{0:0.00}");
-            replacements["!AccIfRestFced!"] = Normalize(_rawData.AccIfRestFCed(), "{0:0.00}");
-            if (replacements["!AccIfRestFced!"] == "100.00")
-                replacements["!AccIfRestFced!"] = "100";
-        }
-        private string Normalize(double pp, string pattern, bool zeroOnNaN = true)
-        {
-            if (double.IsNaN(pp))
-            {
-                if (zeroOnNaN)
-                    pp = 0d;
-                else
-                    return "";
-            }
-
-            return string.Format(pattern, pp);
+            replacements2["PpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current;
+            replacements2["AimPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current;
+            replacements2["SpeedPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current;
+            replacements2["AccPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current;
+            replacements2["PpIfRestFced"].Value = InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
+            replacements2["AccIfRestFced"].Value = _rawData.AccIfRestFCed();
         }
 
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
@@ -256,7 +280,7 @@ namespace OsuMemoryEventSource
         public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
-            _settings.SettingUpdated+=SettingUpdated;
+            _settings.SettingUpdated += SettingUpdated;
             _clearLiveTokensAfterResultScreenExit = _settings.Get<bool>(Helpers.ClearLiveTokensAfterResultScreenExit);
         }
 

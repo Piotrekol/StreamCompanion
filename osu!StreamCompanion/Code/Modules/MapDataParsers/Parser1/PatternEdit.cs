@@ -1,13 +1,14 @@
-﻿using System;
+﻿using osu_StreamCompanion.Code.Helpers;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using osu_StreamCompanion.Code.Helpers;
-using StreamCompanionTypes;
-using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -55,7 +56,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         public EventHandler<OutputPattern> DeletePattern;
         public EventHandler AddPattern;
-        private Dictionary<string, string> _replacements;
+        private Tokens _replacements;
         private Dictionary<string, string> _liveReplacements = new Dictionary<string, string>
         {
             { "!acc!", "98.05" },
@@ -126,7 +127,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
         }
 
-        public void SetPreview(Dictionary<string, string> replacements)
+        public void SetPreview(Tokens replacements)
         {
             _replacements = replacements;
         }
@@ -147,11 +148,22 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 var toFormat = textBox_formating.Text ?? "";
                 foreach (var r in _replacements)
                 {
-                    toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
+                    string replacement;
+                    if (r.Value.Value is null)
+                        replacement = "";
+                    else
+                    {
+                        if (r.Value is TokenWithFormat tok)
+                            replacement = tok.FormatedValue;
+                        else
+                            replacement = r.Value.Value.ToString();
+                    }
+
+                    toFormat = toFormat.Replace($"!{r.Key}!", replacement, StringComparison.InvariantCultureIgnoreCase);
                 }
                 foreach (var r in _liveReplacements)
                 {
-                    toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
+                    toFormat = toFormat.Replace($"!{r.Key}!", r.Value, StringComparison.InvariantCultureIgnoreCase);
                 }
                 textBox_preview.Text = toFormat;
             }
@@ -188,7 +200,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 label_TestText.Font = new Font(font, 10);
             }
             catch (ArgumentException)
-            {}
+            { }
         }
 
         private void button_changePatternPosition_Click(object sender, EventArgs e)

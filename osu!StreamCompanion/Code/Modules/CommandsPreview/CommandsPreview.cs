@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         public void Start(ILogger logger)
         { Started = true; }
 
-        public List<OutputPattern> GetFormatedPatterns(Dictionary<string, string> replacements, OsuStatus status)
+        public List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
             if (_commandsPreviewSettings != null && !_commandsPreviewSettings.IsDisposed)
                 _commandsPreviewSettings.Add(replacements);

@@ -81,9 +81,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             SetNewMap(mapSearchResult);
         }
 
-        private Dictionary<string, string> GetMapReplacements(MapSearchResult mapSearchResult)
+        private Tokens GetMapReplacements(MapSearchResult mapSearchResult)
         {
-            var ret = new Dictionary<string, string>();
+            var ret = new Tokens();
             foreach (var mapDataReplacementsGetter in _mapDataReplacementsGetters)
             {
                 var temp = mapDataReplacementsGetter.GetMapReplacements(mapSearchResult);
@@ -117,7 +117,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         }
 
 
-        private List<OutputPattern> GetMapPatterns(Dictionary<string, string> replacements, OsuStatus status)
+        private List<OutputPattern> GetMapPatterns(Tokens replacements, OsuStatus status)
         {
             var ret = new List<OutputPattern>();
             foreach (var dataGetter in _mapDataParsers)

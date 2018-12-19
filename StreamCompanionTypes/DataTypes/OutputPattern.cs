@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CollectionManager.Annotations;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,8 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
-using CollectionManager.Annotations;
-using Newtonsoft.Json;
 
 namespace StreamCompanionTypes.DataTypes
 {
@@ -23,7 +23,7 @@ namespace StreamCompanionTypes.DataTypes
         private string _pattern = "Your pattern text";
         private string _name;
         [IgnoreDataMember]
-        public Dictionary<string, string> Replacements;
+        public Tokens Replacements;
         [DisplayName("Name")]
         [JsonProperty(PropertyName = "Name")]
         public string Name
@@ -127,7 +127,18 @@ namespace StreamCompanionTypes.DataTypes
                 string toFormat = this.Pattern ?? "";
                 foreach (var r in Replacements)
                 {
-                    toFormat = toFormat.Replace(r.Key, r.Value, StringComparison.InvariantCultureIgnoreCase);
+                    string replacement;
+                    if (r.Value.Value is null)
+                        replacement = "";
+                    else
+                    {
+                        if (r.Value is TokenWithFormat tok)
+                            replacement = tok.FormatedValue;
+                        else
+                            replacement = r.Value.Value.ToString();
+                    }
+
+                    toFormat = toFormat.Replace($"!{r.Key}!", replacement, StringComparison.InvariantCultureIgnoreCase);
                 }
                 return toFormat;
             }
