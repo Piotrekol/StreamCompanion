@@ -48,8 +48,6 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         private List<KeyValuePair<string, Token>> liveTokens = null;
         public void Add(Tokens replacements)
         {
-            //TODO: fix this
-
             if (InvokeRequired)
             {
                 BeginInvoke((MethodInvoker)(() => { Add(replacements); }));
@@ -76,7 +74,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             {
                 var value = replacement.Value is TokenWithFormat tok
                     ? tok.FormatedValue
-                    : replacement.Value.Value.ToString();
+                    : replacement.Value.Value?.ToString();
 
                 string key = "T" + replacement.Key.Replace("!", "");
                 if (p.Controls.ContainsKey(key))
