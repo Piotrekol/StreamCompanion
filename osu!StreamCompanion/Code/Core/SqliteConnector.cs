@@ -339,6 +339,30 @@ namespace osu_StreamCompanion.Code.Core
             }
             return beatmap;
         }
+        public Beatmap GetBeatmap(string mapHash)
+        {
+            mapHash = mapHash.ToLower();
+            List<string> tableNames = new List<string>{"withID", "Temp", "withoutID" };
+
+            Beatmap beatmap = null;
+
+            foreach (var tableName in tableNames)
+            {
+                string sql = $"SELECT * FROM `{tableName}` WHERE Md5 = '{mapHash}'";
+                var reader = Query(sql);
+
+                if (reader.Read())
+                {
+                    beatmap = new Beatmap();
+                    beatmap.Read(reader);
+                    reader.Dispose();
+                    break;
+                }
+                reader.Dispose();
+            }
+            
+            return beatmap;
+        }
 
         private Beatmap GetBeatmapUsingReplacements(string table, bool useRaw, Dictionary<string, string> replacements)
         {

@@ -42,7 +42,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             Beatmap beatmap = null;
             if (searchArgs.MapId > 0)
                 beatmap = _sqliteControler.GetBeatmap(searchArgs.MapId);
-            if (beatmap == null || (beatmap.MapId <= 0))
+
+            if(!IsValidBeatmap(beatmap) && !string.IsNullOrEmpty(searchArgs.MapHash))
+                beatmap = _sqliteControler.GetBeatmap(searchArgs.MapHash);
+
+
+            if (!IsValidBeatmap(beatmap))
             {
                 if (!(string.IsNullOrEmpty(searchArgs.Artist) && string.IsNullOrEmpty(searchArgs.Title)) || !string.IsNullOrEmpty(searchArgs.Raw))
                 {
@@ -50,12 +55,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                 }
             }
 
-            if (beatmap?.MapId > -1 && !(string.IsNullOrWhiteSpace(beatmap.ArtistRoman) || string.IsNullOrWhiteSpace(beatmap.TitleRoman)))
+            if (IsValidBeatmap(beatmap))
             {
                 result.BeatmapsFound.Add(beatmap);
             }
             result.MapSearchString = searchArgs.Raw;
             return result;
+        }
+
+        private bool IsValidBeatmap(Beatmap beatmap)
+        {
+            return beatmap != null 
+                   && !string.IsNullOrEmpty(beatmap.Md5) 
+                   && !(string.IsNullOrWhiteSpace(beatmap.ArtistRoman) || string.IsNullOrWhiteSpace(beatmap.TitleRoman));
         }
 
         public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)

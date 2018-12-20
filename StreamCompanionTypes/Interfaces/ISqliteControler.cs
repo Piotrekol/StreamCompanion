@@ -55,6 +55,13 @@ namespace StreamCompanionTypes.Interfaces
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="mapId"></param>
+        /// <returns>Beatmap object with data, or null on not found</returns>
+        Beatmap GetBeatmap(string mapHash);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="artist"></param>
         /// <param name="title"></param>
         /// <param name="diff"></param>

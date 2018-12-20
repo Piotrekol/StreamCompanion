@@ -11,6 +11,7 @@ namespace StreamCompanionTypes.DataTypes
         public int MapId { get; set; } = 0;
         public OsuStatus Status { get; set; } = OsuStatus.Null;
         public string SourceName { get; }
+        public string MapHash { get; set; }
         //TODO: enforce explicitly setting event type via ctor
         public OsuEventType EventType { get; set; } = OsuEventType.MapChange;
 

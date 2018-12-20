@@ -125,6 +125,15 @@ namespace osu_StreamCompanion.Code.Core
                 return _sqlConnector.GetBeatmap(mapId);
             }
         }
+
+        public Beatmap GetBeatmap(string mapHash)
+        {
+            lock (_sqlConnector)
+            {
+                return _sqlConnector.GetBeatmap(mapHash);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>

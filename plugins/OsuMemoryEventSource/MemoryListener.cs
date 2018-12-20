@@ -51,12 +51,14 @@ namespace OsuMemoryEventSource
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
+                    var mapHash = reader.GetMapMd5();
 
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
                         MapId = _currentMapId,
                         Status = status,
-                        Raw = _currentMapString
+                        Raw = _currentMapString,
+                        MapHash = mapHash
                     });
 
                 }

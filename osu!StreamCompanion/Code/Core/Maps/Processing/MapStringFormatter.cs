@@ -84,7 +84,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         //Here we prioritize Memory events over MSN/other.
                         if (TasksMemory.TryPop(out searchArgs))
                         {
-                            if (searchArgs.MapId == 0)
+                            if (searchArgs.MapId == 0 && string.IsNullOrEmpty(searchArgs.MapHash))
                             {
                                 memorySearchFailed = true;
                             }
