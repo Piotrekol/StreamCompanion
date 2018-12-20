@@ -1,6 +1,7 @@
 ﻿using StreamCompanionTypes.Enums;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace StreamCompanionTypes.DataTypes
 {
@@ -44,7 +45,7 @@ namespace StreamCompanionTypes.DataTypes
                 else
                     FormatedValue = string.IsNullOrEmpty(Format)
                         ? _value.ToString()
-                        : string.Format(Format, _value);
+                        : string.Format(CultureInfo.InvariantCulture, Format, _value);
             }
         }
 

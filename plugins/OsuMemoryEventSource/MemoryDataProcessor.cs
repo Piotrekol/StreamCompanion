@@ -219,6 +219,8 @@ namespace OsuMemoryEventSource
             replacements2["time"] = new TokenWithFormat(0d, TokenType.Live, "{0:0.00}");
             replacements2["combo"] = new TokenWithFormat(_rawData.Play.Combo, TokenType.Live, "{0}");
             replacements2["CurrentMaxCombo"] = new TokenWithFormat(_rawData.Play.MaxCombo, TokenType.Live, "{0}");
+            replacements2["PlayerHp"] = new TokenWithFormat(_rawData.Play.Hp, TokenType.Live, "{0:0.00}");
+
             replacements2["PpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["AimPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["SpeedPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
@@ -241,6 +243,8 @@ namespace OsuMemoryEventSource
             replacements2["time"].Value = time;
             replacements2["combo"].Value = _rawData.Play.Combo;
             replacements2["CurrentMaxCombo"].Value = _rawData.Play.MaxCombo;
+            replacements2["PlayerHp"].Value = _rawData.Play.Hp;
+
 
             InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Set(_rawData.PPIfBeatmapWouldEndNow());
             InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
