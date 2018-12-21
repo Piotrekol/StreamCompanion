@@ -63,11 +63,6 @@ namespace OsuMemoryEventSource
                     TEMPfatalExceptionTiggered = true;
                     throw new Exception("Settings were not initalized");
                 }
-                if (_sqLiteController == null)
-                {
-                    TEMPfatalExceptionTiggered = true;
-                    throw new Exception("SqLiteController was not initalized");
-                }
             }
 
             var result = new MapSearchResult();
@@ -101,7 +96,7 @@ namespace OsuMemoryEventSource
                 return result;
             }
 
-            var b = _sqLiteController.GetBeatmap(mapId);
+            var b = _sqLiteController?.GetBeatmap(mapId);
             if (b != null)
             {
                 result.BeatmapsFound.Add(b);

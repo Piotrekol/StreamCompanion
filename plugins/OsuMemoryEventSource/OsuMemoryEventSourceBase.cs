@@ -76,7 +76,7 @@ namespace OsuMemoryEventSource
 
         public Tokens GetMapReplacements(MapSearchResult map)
         {
-            return _memoryListener.Tokens;
+            return Started ? _memoryListener.Tokens : null;
         }
 
         public void SetNewMap(MapSearchResult map)
