@@ -21,7 +21,6 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             if (loglvevel == LogLevel.Error)
             {
-
                 SentryEvent sentryEvent;
                 if (logMessage is Exception)
                 {

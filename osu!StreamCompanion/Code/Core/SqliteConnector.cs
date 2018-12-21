@@ -1,13 +1,13 @@
-﻿using System;
+﻿using osu_StreamCompanion.Code.Helpers;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text;
-using osu_StreamCompanion.Code.Helpers;
-using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -342,25 +342,33 @@ namespace osu_StreamCompanion.Code.Core
         public Beatmap GetBeatmap(string mapHash)
         {
             mapHash = mapHash.ToLower();
-            List<string> tableNames = new List<string>{"withID", "Temp", "withoutID" };
+            List<string> tableNames = new List<string> { "withID", "Temp", "withoutID" };
 
             Beatmap beatmap = null;
-
-            foreach (var tableName in tableNames)
+            try
             {
-                string sql = $"SELECT * FROM `{tableName}` WHERE Md5 = '{mapHash}'";
-                var reader = Query(sql);
-
-                if (reader.Read())
+                foreach (var tableName in tableNames)
                 {
-                    beatmap = new Beatmap();
-                    beatmap.Read(reader);
+                    string sql = $"SELECT * FROM `{tableName}` WHERE Md5 = '{mapHash}'";
+                    var reader = Query(sql);
+
+                    if (reader.Read())
+                    {
+                        beatmap = new Beatmap();
+                        beatmap.Read(reader);
+                        reader.Dispose();
+                        break;
+                    }
+
                     reader.Dispose();
-                    break;
                 }
-                reader.Dispose();
             }
-            
+            catch (SQLiteException e)
+            {
+                e.Data.Add("maphash", mapHash);
+                _logger?.Log(e, LogLevel.Error);
+            }
+
             return beatmap;
         }
 
