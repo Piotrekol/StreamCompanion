@@ -135,7 +135,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (!this.IsHandleCreated || this.IsDisposed || Current == null)
                 return;
-            var isMemoryPattern = Current.MemoryFormatTokens.Any(textBox_formating.Text.Contains);
+            var isMemoryPattern = Current.MemoryFormatTokens.Select(s => s.ToLower()).Any(textBox_formating.Text.ToLower().Contains);
             label_warning.Visible = isMemoryPattern;
             comboBox_saveEvent.SelectedItem = isMemoryPattern ? "Playing" : comboBox_saveEvent.SelectedItem;
             comboBox_saveEvent.Enabled = !isMemoryPattern;

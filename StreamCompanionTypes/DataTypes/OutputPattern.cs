@@ -1,4 +1,4 @@
-using CollectionManager.Annotations;
+﻿using CollectionManager.Annotations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ namespace StreamCompanionTypes.DataTypes
             {
                 if (value == _pattern) return;
                 _pattern = value;
-                IsMemoryFormat = MemoryFormatTokens.Any(value.Contains);
+                IsMemoryFormat = MemoryFormatTokens.Select(s=>s.ToLower()).Any(value.ToLower().Contains);
                 OnPropertyChanged(nameof(Pattern));
             }
         }
