@@ -1,4 +1,4 @@
-﻿using CollectionManager.Annotations;
+using CollectionManager.Annotations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace StreamCompanionTypes.DataTypes
     {
         private static readonly List<string> _memoryFormatTokens = new List<string>
         {
-            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!CurrentMaxCombo!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!"
+            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!CurrentMaxCombo!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!", "!PlayerHp!"
         };
         [IgnoreDataMember]
         public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
