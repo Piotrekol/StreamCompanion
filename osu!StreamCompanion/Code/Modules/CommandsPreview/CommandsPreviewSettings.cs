@@ -58,10 +58,10 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             var normal = replacements.Where(t => t.Value.Type == TokenType.Normal);
             var live = replacements.Where(t => t.Value.Type == TokenType.Live).ToList();
 
-            AddHeader("Live patterns (avaliable only when playing or watching)");
+            AddHeader("Live tokens (avaliable only when playing or watching)");
             ProcessReplacements(live, 200);
 
-            AddHeader("Regular patterns");
+            AddHeader("Regular tokens");
             ProcessReplacements(normal);
 
             liveTokens = live;
