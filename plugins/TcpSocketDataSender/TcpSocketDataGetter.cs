@@ -13,7 +13,9 @@ namespace TcpSocketDataSender
         private readonly SettingNames _names = SettingNames.Instance;
 
         public bool Started { get; set; }
+        private TcpSocketManager _liveTcpSocketManager;
         private TcpSocketManager _tcpSocketManager;
+
         private ISettingsHandler _settings;
 
         private bool tcpSocketIsEnabled = false;
@@ -26,12 +28,21 @@ namespace TcpSocketDataSender
 
         public void Start(ILogger logger)
         {
+            _liveTcpSocketManager = new TcpSocketManager();
+            _liveTcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
+            _liveTcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketLiveMapDataPort);
+            
             _tcpSocketManager = new TcpSocketManager();
             _tcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _tcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketPort);
+            
+
             tcpSocketIsEnabled = _settings.Get<bool>(_names.tcpSocketEnabled);
             if (tcpSocketIsEnabled)
             {
+                _liveTcpSocketManager.AutoReconnect = true;
+                _liveTcpSocketManager.Connect();
+
                 _tcpSocketManager.AutoReconnect = true;
                 _tcpSocketManager.Connect();
             }
@@ -44,9 +55,13 @@ namespace TcpSocketDataSender
             if (settingUpdated.Name == _names.tcpSocketEnabled.Name)
             {
                 tcpSocketIsEnabled = _settings.Get<bool>(_names.tcpSocketEnabled);
+                _liveTcpSocketManager.AutoReconnect = tcpSocketIsEnabled;
                 _tcpSocketManager.AutoReconnect = tcpSocketIsEnabled;
                 if (tcpSocketIsEnabled)
+                {
+                    _liveTcpSocketManager.Connect();
                     _tcpSocketManager.Connect();
+                }
             }
         }
 
@@ -91,6 +106,7 @@ namespace TcpSocketDataSender
         public void Dispose()
         {
             _settings.SettingUpdated -= SettingUpdated;
+            _liveTcpSocketManager?.Dispose();
             _tcpSocketManager?.Dispose();
             settingsUserControl?.Dispose();
         }
@@ -99,7 +115,7 @@ namespace TcpSocketDataSender
         {
             if (!tcpSocketIsEnabled) return;
 
-            _tcpSocketManager.Write(content);
+            _liveTcpSocketManager.Write(content);
 
         }
 
