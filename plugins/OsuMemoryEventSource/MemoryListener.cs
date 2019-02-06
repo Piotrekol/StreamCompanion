@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using OsuMemoryDataProvider;
+﻿using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace OsuMemoryEventSource
 {
@@ -26,6 +26,10 @@ namespace OsuMemoryEventSource
             _memoryDataProcessor = new MemoryDataProcessor(songsFolderLocation);
         }
 
+        public class InvalidMapHashException : Exception
+        {
+
+        }
         public void Tick(IOsuMemoryReader reader, bool sendEvents)
         {
             int num;
@@ -42,8 +46,8 @@ namespace OsuMemoryEventSource
                 _currentMapString = reader.GetSongString();
                 OsuStatus status = _currentStatus.Convert();
 
-                if (sendEvents && 
-                    (_lastMapId != _currentMapId || 
+                if (sendEvents &&
+                    (_lastMapId != _currentMapId ||
                     _lastStatus != _currentStatus ||
                     _currentMapString != _lastMapString)
                     )
@@ -52,6 +56,22 @@ namespace OsuMemoryEventSource
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
                     var mapHash = reader.GetMapMd5();
+
+                    if (!Helpers.IsMD5(mapHash))
+                    {
+                        var junk = "";
+                        if (!string.IsNullOrEmpty(mapHash))
+                            junk = mapHash.Substring(0, Math.Min(mapHash.Length, 32));
+
+                        var ex = new InvalidMapHashException();
+
+                        ex.Data.Add("junk", junk);
+                        ex.Data.Add("hashLength", mapHash?.Length ?? -1);
+
+                        OsuMemoryEventSourceBase.Logger.Log(ex, LogLevel.Error);
+
+                        mapHash = null;
+                    }
 
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
