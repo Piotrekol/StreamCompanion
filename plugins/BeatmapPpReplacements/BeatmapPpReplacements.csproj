@@ -60,11 +60,6 @@
       <Name>StreamCompanionTypes</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\submodules\OppaiSharp\OppaiSharp\OppaiSharp.csproj">
-      <Project>{ad29051a-0960-4e92-baa9-7ac50827f823}</Project>
-      <Name>OppaiSharp</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
