@@ -16,7 +16,7 @@ namespace PpCalculator
         public IBeatmap PlayableBeatmap { get; private set; }
         public abstract Ruleset Ruleset { get; }
 
-        public virtual double Accuracy { get; set; }
+        public virtual double Accuracy { get; set; } = 100;
 
         public virtual int? Combo { get; set; }
 
@@ -38,13 +38,13 @@ namespace PpCalculator
         public void PreProcess(string file)
         {
             WorkingBeatmap = new ProcessorWorkingBeatmap(file);
-            var a = WorkingBeatmap.GetPlayableBeatmap(Ruleset.RulesetInfo);
+            PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(Ruleset.RulesetInfo);
         }
 
-        public void Calculate(double? time = null)
+        public double Calculate(double? time = null)
         {
             if (WorkingBeatmap == null)
-                return;
+                return -1d;
 
             var ruleset = Ruleset;
 
@@ -57,7 +57,7 @@ namespace PpCalculator
             var beatmapMaxCombo = GetMaxCombo(PlayableBeatmap);
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
             var statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap, Misses, Mehs, Goods);
-            var score = 1234567;
+            var score = Score;
             var accuracy = GetAccuracy(statistics);
 
             var scoreInfo = new ScoreInfo
@@ -77,19 +77,19 @@ namespace PpCalculator
             else
                 pp = ruleset.CreatePerformanceCalculator(WorkingBeatmap, scoreInfo).Calculate(categoryAttribs);
 
-            Console.WriteLine(WorkingBeatmap.BeatmapInfo.ToString());
+            //Console.WriteLine(WorkingBeatmap.BeatmapInfo.ToString());
 
             //WritePlayInfo(scoreInfo, beatmap);
 
-            WriteAttribute("Mods", mods.Length > 0
+            Console.WriteLine("Mods" + (mods.Length > 0
                 ? mods.Select(m => m.Acronym).Aggregate((c, n) => $"{c}, {n}")
-                : "None");
+                : "None"));
 
-            foreach (var kvp in categoryAttribs)
-                WriteAttribute(kvp.Key, kvp.Value.ToString(CultureInfo.InvariantCulture));
+            //foreach (var kvp in categoryAttribs)
+            //    WriteAttribute(kvp.Key, kvp.Value.ToString(CultureInfo.InvariantCulture));
 
-            WriteAttribute("pp", pp.ToString(CultureInfo.InvariantCulture));
-
+            //WriteAttribute("pp", pp.ToString(CultureInfo.InvariantCulture));
+            return pp;
         }
 
 
@@ -111,14 +111,14 @@ namespace PpCalculator
             return mods;
         }
 
-        protected abstract void WritePlayInfo(ScoreInfo scoreInfo, IBeatmap beatmap);
 
         protected abstract int GetMaxCombo(IBeatmap beatmap);
 
+        public int GetMaxCombo() => PlayableBeatmap != null ? GetMaxCombo(PlayableBeatmap) : -1;
+
         protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IBeatmap beatmap, int countMiss, int? countMeh, int? countGood);
 
-        protected virtual double GetAccuracy(Dictionary<HitResult, int> statistics) => 0;
+        protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 
-        protected void WriteAttribute(string name, string value) => Console.WriteLine($"{name.PadRight(15)}: {value}");
     }
 }

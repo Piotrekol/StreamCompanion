@@ -13,11 +13,7 @@ namespace PpCalculator
     public class OsuCalculator : PpCalculator
     {
         public override Ruleset Ruleset { get; } = new osu.Game.Rulesets.Osu.OsuRuleset();
-
-        protected override void WritePlayInfo(ScoreInfo scoreInfo, IBeatmap beatmap)
-        {
-            Console.Write("TODO: play info display");//TODO: play info display
-        }
+        
 
         protected override int GetMaxCombo(IBeatmap beatmap) => beatmap.HitObjects.Count + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
 
@@ -56,6 +52,16 @@ namespace PpCalculator
                 { HitResult.Meh, countMeh ?? 0 },
                 { HitResult.Miss, countMiss }
             };
+        }
+        protected override double GetAccuracy(Dictionary<HitResult, int> statistics)
+        {
+            var countGreat = statistics[HitResult.Great];
+            var countGood = statistics[HitResult.Good];
+            var countMeh = statistics[HitResult.Meh];
+            var countMiss = statistics[HitResult.Miss];
+            var total = countGreat + countGood + countMeh + countMiss;
+
+            return (double)((6 * countGreat) + (2 * countGood) + countMeh) / (6 * total);
         }
     }
 }
