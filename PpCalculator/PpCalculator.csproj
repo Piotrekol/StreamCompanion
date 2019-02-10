@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,7 @@
     <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Taiko\osu.Game.Rulesets.Taiko.csproj" />
     <ProjectReference Include="..\submodules\osu\osu.Game\osu.Game.csproj">
       <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>true</Private>
     </ProjectReference>
   </ItemGroup>
 
