@@ -1,4 +1,4 @@
-﻿using CollectionManager.DataTypes;
+using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using PpCalculator;
 using StreamCompanionTypes;
@@ -106,10 +106,8 @@ namespace BeatmapPpReplacements
             {
                 return ppCalculator.Calculate();
             }
-            catch (ArgumentException e)
+            catch (ArgumentException e) when (!e.Message.Contains("Invalid mod provided"))
             {
-                if (!e.Message.Contains("Invalid mod provided"))
-                    throw;
             }
 
             return -1;
