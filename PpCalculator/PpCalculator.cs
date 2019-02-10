@@ -1,5 +1,6 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
+using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
@@ -24,7 +25,7 @@ namespace PpCalculator
 
         public virtual int Score { get; set; }
 
-        public virtual string[] Mods { get; set; }
+        public virtual string[] Mods { get; set; } = { "--" };
 
         public virtual int Misses { get; set; }
 
@@ -32,27 +33,45 @@ namespace PpCalculator
 
         public virtual int? Goods { get; set; }
 
-        public PpCalculator()
-        { }
+        protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
+
+        protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
 
         public void PreProcess(string file)
         {
             WorkingBeatmap = new ProcessorWorkingBeatmap(file);
-            PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(Ruleset.RulesetInfo);
+            
+            ResetPerformanceCalculator = true;
         }
+
+        protected string LastMods { get; set; } = null;
+        protected bool ResetPerformanceCalculator { get; set; }
 
         public double Calculate(double? time = null)
         {
             if (WorkingBeatmap == null)
                 return -1d;
 
+            //huge performance gains by reusing existing performance calculator when possible
+            var createPerformanceCalculator = PerformanceCalculator == null || ResetPerformanceCalculator;
+
             var ruleset = Ruleset;
 
-            var mods = getMods(ruleset).ToArray();
+            Mod[] mods = null;
+            var newMods = Mods != null ? string.Concat(Mods) : "";
+            if (LastMods != newMods || ResetPerformanceCalculator)
+            {
+                mods = getMods(ruleset).ToArray();
+                LastMods = newMods;
 
-            WorkingBeatmap.Mods.Value = mods;
+                WorkingBeatmap.Mods.Value = mods;
 
-            PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo);
+                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo);
+
+                createPerformanceCalculator = true;
+            }
+            
+            
 
             var beatmapMaxCombo = GetMaxCombo(PlayableBeatmap);
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
@@ -60,35 +79,28 @@ namespace PpCalculator
             var score = Score;
             var accuracy = GetAccuracy(statistics);
 
-            var scoreInfo = new ScoreInfo
-            {
-                Accuracy = accuracy,
-                MaxCombo = maxCombo,
-                Statistics = statistics,
-                Mods = mods,
-                TotalScore = score
-            };
+            ScoreInfo.Accuracy = accuracy;
+            ScoreInfo.MaxCombo = maxCombo;
+            ScoreInfo.Statistics = statistics;
+            ScoreInfo.Mods = mods;
+            ScoreInfo.TotalScore = score;
+
 
             var categoryAttribs = new Dictionary<string, double>();
+
+            if (createPerformanceCalculator)
+            {
+                PerformanceCalculator = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo);
+                ResetPerformanceCalculator = false;
+            }
+
             double pp;
 
             if (time.HasValue)
-                pp = ruleset.CreatePerformanceCalculator(WorkingBeatmap, scoreInfo).Calculate(time.Value, categoryAttribs);
+                pp = PerformanceCalculator.Calculate(time.Value, categoryAttribs);
             else
-                pp = ruleset.CreatePerformanceCalculator(WorkingBeatmap, scoreInfo).Calculate(categoryAttribs);
+                pp = PerformanceCalculator.Calculate(categoryAttribs);
 
-            //Console.WriteLine(WorkingBeatmap.BeatmapInfo.ToString());
-
-            //WritePlayInfo(scoreInfo, beatmap);
-
-            Console.WriteLine("Mods" + (mods.Length > 0
-                ? mods.Select(m => m.Acronym).Aggregate((c, n) => $"{c}, {n}")
-                : "None"));
-
-            //foreach (var kvp in categoryAttribs)
-            //    WriteAttribute(kvp.Key, kvp.Value.ToString(CultureInfo.InvariantCulture));
-
-            //WriteAttribute("pp", pp.ToString(CultureInfo.InvariantCulture));
             return pp;
         }
 
