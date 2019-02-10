@@ -106,7 +106,7 @@ namespace BeatmapPpReplacements
             {
                 return ppCalculator.Calculate();
             }
-            catch (ArgumentException e) when (!e.Message.Contains("Invalid mod provided"))
+            catch (ArgumentException e) when (e.Message.Contains("Invalid mod provided"))
             {
             }
 
