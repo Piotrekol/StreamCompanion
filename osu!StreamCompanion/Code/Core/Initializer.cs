@@ -205,7 +205,7 @@ namespace osu_StreamCompanion.Code.Core
             List<Assembly> assemblies = new List<Assembly>();
             List<IPlugin> plugins = new List<IPlugin>();
 
-            List<string> exclusionList = new List<string> { "System.", "netstandard", "Microsoft.Win32.Primitives", "osu." };
+            List<string> exclusionList = new List<string> { "System.", "netstandard", "Microsoft.Win32.Primitives", "osu.", "Microsoft.", "SixLabors" };
             foreach (var file in files)
             {
 
