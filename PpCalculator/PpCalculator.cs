@@ -1,7 +1,9 @@
-﻿using osu.Game.Beatmaps;
+﻿using JetBrains.Annotations;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 using System;
@@ -37,17 +39,20 @@ namespace PpCalculator
 
         protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
 
+        public int? RulesetId => Ruleset.LegacyID;
+
         public void PreProcess(string file)
         {
             WorkingBeatmap = new ProcessorWorkingBeatmap(file);
-            
+
             ResetPerformanceCalculator = true;
         }
 
         protected string LastMods { get; set; } = null;
         protected bool ResetPerformanceCalculator { get; set; }
 
-        public double Calculate(double? time = null)
+
+        public double Calculate(double? time = null, Dictionary<string, double> categoryAttribs = null)
         {
             if (WorkingBeatmap == null)
                 return -1d;
@@ -70,23 +75,20 @@ namespace PpCalculator
 
                 createPerformanceCalculator = true;
             }
-            
-            
+
+
 
             var beatmapMaxCombo = GetMaxCombo(PlayableBeatmap);
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
             var statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap, Misses, Mehs, Goods);
             var score = Score;
             var accuracy = GetAccuracy(statistics);
-
+            
             ScoreInfo.Accuracy = accuracy;
             ScoreInfo.MaxCombo = maxCombo;
             ScoreInfo.Statistics = statistics;
             ScoreInfo.Mods = mods;
             ScoreInfo.TotalScore = score;
-
-
-            var categoryAttribs = new Dictionary<string, double>();
 
             if (createPerformanceCalculator)
             {
@@ -123,10 +125,18 @@ namespace PpCalculator
             return mods;
         }
 
-
         protected abstract int GetMaxCombo(IBeatmap beatmap);
+        protected abstract int GetMaxCombo(IBeatmap beatmap, int fromTime);
+        public int GetMaxCombo(int? fromTime = null)
+        {
+            if (PlayableBeatmap == null)
+                return -1;
 
-        public int GetMaxCombo() => PlayableBeatmap != null ? GetMaxCombo(PlayableBeatmap) : -1;
+            if (fromTime.HasValue)
+                return GetMaxCombo(PlayableBeatmap, fromTime.Value);
+
+            return GetMaxCombo(PlayableBeatmap);
+        }
 
         protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IBeatmap beatmap, int countMiss, int? countMeh, int? countGood);
 

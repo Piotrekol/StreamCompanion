@@ -1,21 +1,27 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Osu.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PpCalculator
 {
     public class OsuCalculator : PpCalculator
     {
         public override Ruleset Ruleset { get; } = new osu.Game.Rulesets.Osu.OsuRuleset();
-        
 
-        protected override int GetMaxCombo(IBeatmap beatmap) => beatmap.HitObjects.Count + beatmap.HitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
+
+        protected override int GetMaxCombo(IBeatmap beatmap) => GetMaxCombo(beatmap.HitObjects);
+        private int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>
+            hitObjects.Count + hitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);
+
+        protected override int GetMaxCombo(IBeatmap beatmap, int fromTime) =>
+            GetMaxCombo(beatmap.HitObjects.Where(h => h.StartTime > fromTime).ToList());
 
 
         protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IBeatmap beatmap, int countMiss, int? countMeh, int? countGood)
