@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
@@ -8,7 +7,6 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace PpCalculator
@@ -41,12 +39,14 @@ namespace PpCalculator
 
         public int? RulesetId => Ruleset.LegacyID;
 
-        public void PreProcess(string file)
+
+        public void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
         {
-            WorkingBeatmap = new ProcessorWorkingBeatmap(file);
+            WorkingBeatmap = workingBeatmap;
 
             ResetPerformanceCalculator = true;
         }
+        public void PreProcess(string file) => PreProcess(new ProcessorWorkingBeatmap(file));
 
         protected string LastMods { get; set; } = null;
         protected bool ResetPerformanceCalculator { get; set; }
@@ -83,7 +83,7 @@ namespace PpCalculator
             var statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap, Misses, Mehs, Goods);
             var score = Score;
             var accuracy = GetAccuracy(statistics);
-            
+
             ScoreInfo.Accuracy = accuracy;
             ScoreInfo.MaxCombo = maxCombo;
             ScoreInfo.Statistics = statistics;
@@ -125,8 +125,6 @@ namespace PpCalculator
             return mods;
         }
 
-        protected abstract int GetMaxCombo(IBeatmap beatmap);
-        protected abstract int GetMaxCombo(IBeatmap beatmap, int fromTime);
         public int GetMaxCombo(int? fromTime = null)
         {
             if (PlayableBeatmap == null)
@@ -137,6 +135,13 @@ namespace PpCalculator
 
             return GetMaxCombo(PlayableBeatmap);
         }
+
+        protected int GetMaxCombo(IBeatmap beatmap) => GetMaxCombo(beatmap.HitObjects);
+
+        protected int GetMaxCombo(IBeatmap beatmap, int fromTime) =>
+            GetMaxCombo(beatmap.HitObjects.Where(h => h.StartTime > fromTime).ToList());
+
+        protected abstract int GetMaxCombo(IReadOnlyList<HitObject> hitObjects);
 
         protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IBeatmap beatmap, int countMiss, int? countMeh, int? countGood);
 
