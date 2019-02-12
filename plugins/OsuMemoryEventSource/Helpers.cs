@@ -88,32 +88,7 @@ namespace OsuMemoryEventSource
 
 
         #region copied from BeatmapPpReplacements\BeatmapHelpers.cs
-        public static OppaiSharp.Beatmap GetOppaiSharpBeatmap(string mapLocation)
-        {
-            bool retry = true;
-            OppaiSharp.Beatmap beatmap = null;
-            do
-            {
-                try
-                {
-                    using (var stream = new FileStream(mapLocation, FileMode.Open, FileAccess.Read))
-                    {
-                        using (var reader = new StreamReader(stream))
-                        {
-                            beatmap = OppaiSharp.Beatmap.Read(reader);
-                            retry = false;
-                        }
-                    }
-                }
-                catch
-                {
-                    if (!File.Exists(mapLocation))
-                        return null;
-                }
-            } while (retry);
-
-            return beatmap;
-        }
+        
 
         public static string BeatmapDirectory(this Beatmap beatmap, string songsDirectory)
         {
@@ -127,32 +102,7 @@ namespace OsuMemoryEventSource
             return Path.Combine(beatmapDirectory, beatmap.OsuFileName);
         }
 
-        [DebuggerStepThrough()]
-        public static OppaiSharp.Mods Convert(this Mods mods)
-        {
-            OppaiSharp.Mods result = OppaiSharp.Mods.NoMod;
-            if ((Mods.Nf & mods) != 0)
-                result |= OppaiSharp.Mods.NoFail;
-            if ((Mods.Ez & mods) != 0)
-                result |= OppaiSharp.Mods.Easy;
-            //if ((Mods.TD & mods) != 0)
-            //result |= OppaiSharp.Mods.TouchDevice;
-            if ((Mods.Hd & mods) != 0)
-                result |= OppaiSharp.Mods.Hidden;
-            if ((Mods.Hr & mods) != 0)
-                result |= OppaiSharp.Mods.Hardrock;
-            if ((Mods.Dt & mods) != 0)
-                result |= OppaiSharp.Mods.DoubleTime;
-            if ((Mods.Ht & mods) != 0)
-                result |= OppaiSharp.Mods.HalfTime;
-            if ((Mods.Nc & mods) != 0)
-                result |= OppaiSharp.Mods.Nightcore;
-            if ((Mods.Fl & mods) != 0)
-                result |= OppaiSharp.Mods.Flashlight;
-            if ((Mods.So & mods) != 0)
-                result |= OppaiSharp.Mods.SpunOut;
-            return result;
-        }
+        
         private static readonly SettingNames _names = SettingNames.Instance;
 
         public static string GetFullSongsLocation(ISettingsHandler settings)

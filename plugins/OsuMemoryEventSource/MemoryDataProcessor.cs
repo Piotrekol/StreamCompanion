@@ -84,13 +84,13 @@ namespace OsuMemoryEventSource
                 if (map.FoundBeatmaps)
                 {
                     var mods = map.Mods?.Item1 ?? Mods.Omod;
-                    _rawData.SetCurrentMap(map.BeatmapsFound[0], mods.Convert(),
+                    _rawData.SetCurrentMap(map.BeatmapsFound[0], mods,
                         map.BeatmapsFound[0].FullOsuFileLocation(_songsFolderLocation));
 
                     CopyPatterns(map.FormatedStrings);
                 }
                 else
-                    _rawData.SetCurrentMap(null, OppaiSharp.Mods.NoMod, null);
+                    _rawData.SetCurrentMap(null, Mods.Omod, null);
             }
         }
 
@@ -226,7 +226,6 @@ namespace OsuMemoryEventSource
             replacements2["SpeedPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["AccPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["PpIfRestFced"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}");
-            replacements2["AccIfRestFced"] = new TokenWithFormat(_rawData.AccIfRestFCed(), TokenType.Live, "{0:0.00}");
         }
 
         private void PrepareReplacements()
@@ -257,7 +256,6 @@ namespace OsuMemoryEventSource
             replacements2["SpeedPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current;
             replacements2["AccPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current;
             replacements2["PpIfRestFced"].Value = InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
-            replacements2["AccIfRestFced"].Value = _rawData.AccIfRestFCed();
         }
 
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
