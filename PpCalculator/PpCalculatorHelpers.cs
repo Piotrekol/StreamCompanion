@@ -49,19 +49,28 @@ namespace PpCalculator
         {
             var workingBeatmap = new ProcessorWorkingBeatmap(file);
 
-            if (workingBeatmap.BeatmapInfo.RulesetID == ppCalculator?.RulesetId)
-            {
-                ppCalculator.PreProcess(workingBeatmap);
-                return ppCalculator;
-            }
-
-            ppCalculator = GetPpCalculator(workingBeatmap.BeatmapInfo.RulesetID);
-
+            ppCalculator = GetPpCalculator(workingBeatmap.BeatmapInfo.RulesetID, ppCalculator);
+            
             if (ppCalculator == null)
                 return null;
 
             ppCalculator.PreProcess(workingBeatmap);
             return ppCalculator;
+        }
+
+        /// <summary>
+        /// Returns performance calculator suitable for given beatmap<para/>
+        /// Reuses provided calculator if possible
+        /// </summary>
+        /// <param name="rulesetId"></param>
+        /// <param name="ppCalculator"></param>
+        /// <returns></returns>
+        public static PpCalculator GetPpCalculator(int rulesetId, PpCalculator ppCalculator)
+        {
+            if (rulesetId == ppCalculator?.RulesetId)
+                return ppCalculator;
+
+             return GetPpCalculator(rulesetId);
         }
 
     }
