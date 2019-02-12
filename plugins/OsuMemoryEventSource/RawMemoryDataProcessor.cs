@@ -68,10 +68,8 @@ namespace OsuMemoryEventSource
 
             _ppCalculator.Combo = newMaxCombo;
 
-            var pp = _ppCalculator.Calculate(null, attribs);
+            var pp = _ppCalculator.Calculate(null);
 
-            _accIfRestFced = attribs["PlayAccuracy"];
-            attribs.Clear();
 
             return pp;
 
