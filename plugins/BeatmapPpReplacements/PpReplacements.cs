@@ -14,7 +14,7 @@ namespace BeatmapPpReplacements
         private readonly SettingNames _names = SettingNames.Instance;
 
         //TODO: SC can now support all gamemodes
-        OsuCalculator _osuCalculator = new OsuCalculator();
+        private PpCalculator.PpCalculator _ppCalculator = null;
         
         private ISettingsHandler _settings;
         private Mods _lastMods;
@@ -53,7 +53,6 @@ namespace BeatmapPpReplacements
             };
 
             if (!map.FoundBeatmaps) return ret;
-            if (map.BeatmapsFound[0].PlayMode != PlayMode.Osu) return ret;
             var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(BeatmapHelpers.GetFullSongsLocation(_settings));
 
             if (!File.Exists(mapLocation)) return ret;
@@ -61,15 +60,26 @@ namespace BeatmapPpReplacements
 
             if (file.Length == 0) return ret;
 
-            _osuCalculator.PreProcess(mapLocation);
+            _ppCalculator = PpCalculatorHelpers.GetPpCalculator(mapLocation, _ppCalculator);
 
-            ret["MaxCombo"] = new TokenWithFormat(_osuCalculator.GetMaxCombo());
-            ret["SSPP"] = new TokenWithFormat(GetPp(_osuCalculator, 100d), format: "{0:0.00}");
-            ret["99.9PP"] = new TokenWithFormat(GetPp(_osuCalculator, 99.9d), format: "{0:0.00}");
-            ret["99PP"] = new TokenWithFormat(GetPp(_osuCalculator, 99d), format: "{0:0.00}");
-            ret["98PP"] = new TokenWithFormat(GetPp(_osuCalculator, 98d), format: "{0:0.00}");
-            ret["95PP"] = new TokenWithFormat(GetPp(_osuCalculator, 95d), format: "{0:0.00}");
-            ret["90PP"] = new TokenWithFormat(GetPp(_osuCalculator, 90d), format: "{0:0.00}");
+            if (_ppCalculator == null)
+                return ret;
+
+            //TODO: mania needs separate tokens
+            if (_ppCalculator.RulesetId.Value == (int) PlayMode.OsuMania)
+                _ppCalculator.Score = 1_000_000;
+            else
+                _ppCalculator.Score = 0;
+
+
+
+            ret["MaxCombo"] = new TokenWithFormat(_ppCalculator.GetMaxCombo());
+            ret["SSPP"] = new TokenWithFormat(GetPp(_ppCalculator, 100d), format: "{0:0.00}");
+            ret["99.9PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99.9d), format: "{0:0.00}");
+            ret["99PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99d), format: "{0:0.00}");
+            ret["98PP"] = new TokenWithFormat(GetPp(_ppCalculator, 98d), format: "{0:0.00}");
+            ret["95PP"] = new TokenWithFormat(GetPp(_ppCalculator, 95d), format: "{0:0.00}");
+            ret["90PP"] = new TokenWithFormat(GetPp(_ppCalculator, 90d), format: "{0:0.00}");
 
             Mods mods;
             string modsStr;
@@ -87,12 +97,12 @@ namespace BeatmapPpReplacements
             }
 
             ret["mMod"] = new Token(modsStr);
-            ret["mSSPP"] = new TokenWithFormat(GetPp(_osuCalculator, 100d, mods), format: "{0:0.00}");
-            ret["m99.9PP"] = new TokenWithFormat(GetPp(_osuCalculator, 99.9d, mods), format: "{0:0.00}");
-            ret["m99PP"] = new TokenWithFormat(GetPp(_osuCalculator, 99d, mods), format: "{0:0.00}");
-            ret["m98PP"] = new TokenWithFormat(GetPp(_osuCalculator, 98d, mods), format: "{0:0.00}");
-            ret["m95PP"] = new TokenWithFormat(GetPp(_osuCalculator, 95d, mods), format: "{0:0.00}");
-            ret["m90PP"] = new TokenWithFormat(GetPp(_osuCalculator, 90d, mods), format: "{0:0.00}");
+            ret["mSSPP"] = new TokenWithFormat(GetPp(_ppCalculator, 100d, mods), format: "{0:0.00}");
+            ret["m99.9PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99.9d, mods), format: "{0:0.00}");
+            ret["m99PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99d, mods), format: "{0:0.00}");
+            ret["m98PP"] = new TokenWithFormat(GetPp(_ppCalculator, 98d, mods), format: "{0:0.00}");
+            ret["m95PP"] = new TokenWithFormat(GetPp(_ppCalculator, 95d, mods), format: "{0:0.00}");
+            ret["m90PP"] = new TokenWithFormat(GetPp(_ppCalculator, 90d, mods), format: "{0:0.00}");
 
             return ret;
         }
