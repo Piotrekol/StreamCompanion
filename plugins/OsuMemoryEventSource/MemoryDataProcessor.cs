@@ -1,4 +1,5 @@
 using CollectionManager.DataTypes;
+using CollectionManager.Enums;
 using Newtonsoft.Json;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
@@ -124,7 +125,10 @@ namespace OsuMemoryEventSource
                 }
 
                 if (_lastStatus != OsuStatus.Playing)
+                {
                     Thread.Sleep(500);//Initial play delay
+                    _rawData.SetPlayMode((PlayMode)reader.ReadGameMode());
+                }
 
                 _lastStatus = status;
 

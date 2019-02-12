@@ -17,6 +17,9 @@ namespace OsuMemoryEventSource
 
         private Beatmap _currentBeatmap = null;
         private Mods _currentMods;
+        private string _currentOsuFileLocation = null;
+        private int? _playMode = null;
+
         private PpCalculator.PpCalculator _ppCalculator = null;
 
         private double _accIfRestFced = double.NaN;
@@ -24,31 +27,32 @@ namespace OsuMemoryEventSource
 
         public void SetCurrentMap(Beatmap beatmap, Mods mods, string osuFileLocation)
         {
-            _currentBeatmap = beatmap;
-            _currentMods = mods;
             if (beatmap == null)
                 return;
 
-            //TODO: remove this after implementing gamemode-specific calculators
-            if (_currentBeatmap.PlayMode != PlayMode.Osu || !File.Exists(osuFileLocation))
+            _currentBeatmap = beatmap;
+            _currentMods = mods;
+            _currentOsuFileLocation = osuFileLocation;
+
+            _ppCalculator = PpCalculatorHelpers.GetPpCalculator(_playMode ?? 0, _ppCalculator);
+
+            if (_ppCalculator == null)
                 return;
-
-
-            if (_ppCalculator == null || _ppCalculator.RulesetId != (int)beatmap.PlayMode)
-            {
-                //TODO: change pp calculator depending on played gamemode
-                _ppCalculator = new OsuCalculator();
-            }
 
             _ppCalculator.Mods = mods == Mods.Omod ? null : mods.ToString().Split(new[] { ", " }, StringSplitOptions.None);
 
             _ppCalculator.PreProcess(osuFileLocation);
+        }
 
+        public void SetPlayMode(PlayMode playMode)
+        {
+            _playMode = (int)playMode;
+            SetCurrentMap(_currentBeatmap, _currentMods, _currentOsuFileLocation);
         }
 
         public double PPIfRestFCed()
         {
-            if (_ppCalculator == null)
+            if (_ppCalculator == null || _currentBeatmap.PlayMode == PlayMode.OsuMania)
                 return double.NaN;
 
             if (Play.Time <= 0)
@@ -59,7 +63,6 @@ namespace OsuMemoryEventSource
                 _ppCalculator.PercentCombo = 100;
                 _accIfRestFced = 100;
                 return _ppCalculator.Calculate();//fc pp
-
             }
 
             var comboLeft = _ppCalculator.GetMaxCombo(Play.Time);
@@ -80,11 +83,13 @@ namespace OsuMemoryEventSource
                    $"acc:{p.Acc},combo: {p.Combo},maxCombo {p.MaxCombo}|" +
                    $"time: {p.Time}";
         }
+        public double StrainPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double AimPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double SpeedPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double AccPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
 
         Dictionary<string, double> attribs = new Dictionary<string, double>();
+
         public double PPIfBeatmapWouldEndNow()
         {
 
@@ -95,12 +100,24 @@ namespace OsuMemoryEventSource
                     _ppCalculator.Mehs = Play.C50;
                     _ppCalculator.Misses = Play.CMiss;
                     _ppCalculator.Combo = Play.MaxCombo;
-
+                    _ppCalculator.Score = Play.Score;
                     var pp = _ppCalculator.Calculate(Play.Time, attribs);
 
-                    AimPPIfBeatmapWouldEndNow = attribs["Aim"];
-                    SpeedPPIfBeatmapWouldEndNow = attribs["Speed"];
-                    AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
+                    switch (_currentBeatmap.PlayMode)
+                    {
+                        case PlayMode.Taiko:
+                        case PlayMode.OsuMania:
+                            StrainPPIfBeatmapWouldEndNow = attribs["Strain"];
+                            AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
+                            AimPPIfBeatmapWouldEndNow = double.NaN;
+                            SpeedPPIfBeatmapWouldEndNow = double.NaN;
+                            break;
+                        default:
+                            AimPPIfBeatmapWouldEndNow = attribs["Aim"];
+                            SpeedPPIfBeatmapWouldEndNow = attribs["Speed"];
+                            AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
+                            break;
+                    }
 
                     attribs.Clear();
 
@@ -110,6 +127,7 @@ namespace OsuMemoryEventSource
             AimPPIfBeatmapWouldEndNow = double.NaN;
             SpeedPPIfBeatmapWouldEndNow = double.NaN;
             AccPPIfBeatmapWouldEndNow = double.NaN;
+            StrainPPIfBeatmapWouldEndNow = double.NaN;
             return double.NaN;
         }
 
