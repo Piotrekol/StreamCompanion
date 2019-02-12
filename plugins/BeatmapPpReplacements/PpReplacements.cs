@@ -36,6 +36,7 @@ namespace BeatmapPpReplacements
         {
             var ret = new Tokens
             {
+                {"GameMode", new Token(null)},
                 {"MaxCombo", new Token(null)},
                 {"SSPP", new Token(null)},
                 {"99.9PP", new Token(null)},
@@ -73,6 +74,7 @@ namespace BeatmapPpReplacements
 
 
 
+            ret["GameMode"] = new TokenWithFormat(map.BeatmapsFound[0].PlayMode.ToString());
             ret["MaxCombo"] = new TokenWithFormat(_ppCalculator.GetMaxCombo());
             ret["SSPP"] = new TokenWithFormat(GetPp(_ppCalculator, 100d), format: "{0:0.00}");
             ret["99.9PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99.9d), format: "{0:0.00}");
