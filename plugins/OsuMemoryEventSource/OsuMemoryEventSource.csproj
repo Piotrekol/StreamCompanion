@@ -72,7 +72,6 @@
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="MemoryDataProcessor.cs" />
-    <Compile Include="OppaiSharpBeatmapHelper.cs" />
     <Compile Include="RawMemoryDataProcessor.cs" />
     <Compile Include="MemoryListener.cs" />
     <Compile Include="OsuMemoryEventSource.cs" />
@@ -87,11 +86,6 @@
     <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
       <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
       <Name>StreamCompanionTypes</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\submodules\OppaiSharp\OppaiSharp\OppaiSharp.csproj">
-      <Project>{ad29051a-0960-4e92-baa9-7ac50827f823}</Project>
-      <Name>OppaiSharp</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
