@@ -15,7 +15,7 @@ namespace BeatmapPpReplacements
 
         //TODO: SC can now support all gamemodes
         private PpCalculator.PpCalculator _ppCalculator = null;
-        
+
         private ISettingsHandler _settings;
         private Mods _lastMods;
         private string _lastModsStr = "None";
@@ -75,13 +75,14 @@ namespace BeatmapPpReplacements
             _ppCalculator.Mods = null;
 
             ret["GameMode"] = new TokenWithFormat(map.BeatmapsFound[0].PlayMode.ToString());
-            ret["MaxCombo"] = new TokenWithFormat(_ppCalculator.GetMaxCombo());
             ret["SSPP"] = new TokenWithFormat(GetPp(_ppCalculator, 100d), format: "{0:0.00}");
             ret["99.9PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99.9d), format: "{0:0.00}");
             ret["99PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99d), format: "{0:0.00}");
             ret["98PP"] = new TokenWithFormat(GetPp(_ppCalculator, 98d), format: "{0:0.00}");
             ret["95PP"] = new TokenWithFormat(GetPp(_ppCalculator, 95d), format: "{0:0.00}");
             ret["90PP"] = new TokenWithFormat(GetPp(_ppCalculator, 90d), format: "{0:0.00}");
+
+            ret["MaxCombo"] = new TokenWithFormat(_ppCalculator.GetMaxCombo());
 
             Mods mods;
             string modsStr;
