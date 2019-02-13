@@ -67,12 +67,12 @@ namespace BeatmapPpReplacements
                 return ret;
 
             //TODO: mania needs separate tokens
-            if (_ppCalculator.RulesetId.Value == (int) PlayMode.OsuMania)
+            if (_ppCalculator.RulesetId.Value == (int)PlayMode.OsuMania)
                 _ppCalculator.Score = 1_000_000;
             else
                 _ppCalculator.Score = 0;
 
-
+            _ppCalculator.Mods = null;
 
             ret["GameMode"] = new TokenWithFormat(map.BeatmapsFound[0].PlayMode.ToString());
             ret["MaxCombo"] = new TokenWithFormat(_ppCalculator.GetMaxCombo());
