@@ -25,11 +25,7 @@ namespace OsuMemoryEventSource
         {
             _memoryDataProcessor = new MemoryDataProcessor(songsFolderLocation);
         }
-
-        public class InvalidMapHashException : Exception
-        {
-
-        }
+        
         public void Tick(IOsuMemoryReader reader, bool sendEvents)
         {
             int num;
@@ -58,20 +54,7 @@ namespace OsuMemoryEventSource
                     var mapHash = reader.GetMapMd5();
 
                     if (!Helpers.IsMD5(mapHash))
-                    {
-                        var junk = "";
-                        if (!string.IsNullOrEmpty(mapHash))
-                            junk = mapHash.Substring(0, Math.Min(mapHash.Length, 32));
-
-                        var ex = new InvalidMapHashException();
-
-                        ex.Data.Add("junk", junk);
-                        ex.Data.Add("hashLength", mapHash?.Length ?? -1);
-
-                        OsuMemoryEventSourceBase.Logger.Log(ex, LogLevel.Error);
-
                         mapHash = null;
-                    }
 
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
