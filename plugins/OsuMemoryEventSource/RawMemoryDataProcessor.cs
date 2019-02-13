@@ -39,7 +39,7 @@ namespace OsuMemoryEventSource
             if (_ppCalculator == null)
                 return;
 
-            _ppCalculator.Mods = mods == Mods.Omod ? null : mods.ToString().Split(new[] { ", " }, StringSplitOptions.None);
+            _ppCalculator.Mods = mods == Mods.Omod ? null : mods.ToString().Replace("Au", "").Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             _ppCalculator.PreProcess(osuFileLocation);
         }

@@ -293,7 +293,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@MapId", DbType.Int32).Value = beatmap.MapId;
             _insertSql.Parameters.Add("@MapSetId", DbType.Int32).Value = beatmap.MapSetId;
             _insertSql.Parameters.Add("@ThreadId", DbType.Int32).Value = beatmap.ThreadId;
-            _insertSql.Parameters.Add("@MapRating", DbType.Int32).Value = beatmap.MapRating;
+            _insertSql.Parameters.Add("@MapRating", DbType.Int32).Value = 0; //TODO: store per-gamemode pass ranks
             _insertSql.Parameters.Add("@Offset", DbType.Int32).Value = beatmap.Offset;
             _insertSql.Parameters.Add("@StackLeniency", DbType.Double).Value = beatmap.StackLeniency;
             _insertSql.Parameters.Add("@Mode", DbType.Int16).Value = (byte)beatmap.PlayMode;

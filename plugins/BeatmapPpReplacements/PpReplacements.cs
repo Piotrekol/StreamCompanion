@@ -111,9 +111,8 @@ namespace BeatmapPpReplacements
         private double GetPp(PpCalculator.PpCalculator ppCalculator, double acc, Mods mods = Mods.Omod)
         {
             ppCalculator.Accuracy = acc;
-            
-            //TODO: (CollectionManager) autoplay and autopilot have invalid acronyms and scoreV2 does not exist in mods
-            ppCalculator.Mods = mods == Mods.Omod ? null : mods.ToString().Split(new[] { ", " }, StringSplitOptions.None);
+
+            _ppCalculator.Mods = mods == Mods.Omod ? null : mods.ToString().Replace("Au", "").Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             try
             {
                 return ppCalculator.Calculate();
