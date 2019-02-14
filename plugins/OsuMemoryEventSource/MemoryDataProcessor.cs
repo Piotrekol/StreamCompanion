@@ -127,7 +127,9 @@ namespace OsuMemoryEventSource
                 if (_lastStatus != OsuStatus.Playing)
                 {
                     Thread.Sleep(500);//Initial play delay
-                    _rawData.SetPlayMode((PlayMode)reader.ReadGameMode());
+                    var readGamemode = reader.ReadGameMode();
+                    var playMode = (PlayMode) (Enum.IsDefined(typeof(PlayMode), readGamemode) ? readGamemode : 0);
+                    _rawData.SetPlayMode(playMode);
                 }
 
                 _lastStatus = status;
