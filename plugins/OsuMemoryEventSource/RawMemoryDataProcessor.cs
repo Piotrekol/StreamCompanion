@@ -19,6 +19,7 @@ namespace OsuMemoryEventSource
         private Mods _currentMods;
         private string _currentOsuFileLocation = null;
         private int? _playMode = null;
+        
 
         private PpCalculator.PpCalculator _ppCalculator = null;
 
@@ -39,7 +40,7 @@ namespace OsuMemoryEventSource
             if (_ppCalculator == null)
                 return;
 
-            _ppCalculator.Mods = mods == Mods.Omod ? null : mods.ToString().Replace("Au", "").Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            _ppCalculator.Mods = mods.ToString().Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             _ppCalculator.PreProcess(osuFileLocation);
         }

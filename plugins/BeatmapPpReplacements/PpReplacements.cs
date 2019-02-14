@@ -113,7 +113,7 @@ namespace BeatmapPpReplacements
         {
             ppCalculator.Accuracy = acc;
 
-            _ppCalculator.Mods = mods == Mods.Omod ? null : mods.ToString().Replace("Au", "").Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            _ppCalculator.Mods = mods.ToString().Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             try
             {
                 return ppCalculator.Calculate();

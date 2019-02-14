@@ -25,7 +25,13 @@ namespace PpCalculator
 
         public virtual int Score { get; set; }
 
-        public virtual string[] Mods { get; set; } = { "--" };
+        private string[] _Mods { get; set; } = { "--" };
+
+        public virtual string[] Mods
+        {
+            get => _Mods;
+            set { _Mods = value?.Where(v => v != "Au" && v != "Sv2" && v != "Omod").ToArray(); }
+        }
 
         public virtual int Misses { get; set; }
 
@@ -63,7 +69,7 @@ namespace PpCalculator
             var ruleset = Ruleset;
 
             Mod[] mods = null;
-            var newMods = Mods != null ? string.Concat(Mods) : "";
+            var newMods = _Mods != null ? string.Concat(_Mods) : "";
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
                 mods = getMods(ruleset).ToArray();
@@ -110,11 +116,11 @@ namespace PpCalculator
         private List<Mod> getMods(Ruleset ruleset)
         {
             var mods = new List<Mod>();
-            if (Mods == null)
+            if (_Mods == null)
                 return mods;
 
             var availableMods = ruleset.GetAllMods().ToList();
-            foreach (var modString in Mods)
+            foreach (var modString in _Mods)
             {
                 Mod newMod = availableMods.FirstOrDefault(m => string.Equals(m.Acronym, modString, StringComparison.CurrentCultureIgnoreCase));
                 if (newMod == null)
