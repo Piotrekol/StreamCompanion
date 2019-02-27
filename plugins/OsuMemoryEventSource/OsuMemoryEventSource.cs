@@ -65,8 +65,8 @@ namespace OsuMemoryEventSource
                 }
             }
 
-            var result = new MapSearchResult();
-            result.MapSearchString = searchArgs.Raw;
+            var result = new MapSearchResult(searchArgs);
+
             if (!Started || !_settings.Get<bool>(_names.EnableMemoryScanner))
                 return result;
 

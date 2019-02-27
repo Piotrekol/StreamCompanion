@@ -44,7 +44,7 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.MapId = reader.GetInt32(i); i++;
             beatmap.MapSetId = reader.GetInt32(i); i++;
             beatmap.ThreadId = reader.GetInt32(i); i++;
-            beatmap.MapRating = reader.GetInt32(i); i++;
+            /*beatmap.MapRating =*/ reader.GetInt32(i); i++;
             beatmap.Offset = (short)reader.GetInt32(i); i++;
             beatmap.StackLeniency = (float)reader.GetDouble(i); i++;
             beatmap.PlayMode = (PlayMode)reader.GetByte(i); i++;

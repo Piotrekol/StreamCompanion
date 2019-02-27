@@ -1,6 +1,8 @@
 using CollectionManager.DataTypes;
+using CollectionManager.Enums;
 using Newtonsoft.Json;
 using OsuMemoryDataProvider;
+using PpCalculator;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -28,6 +30,7 @@ namespace OsuMemoryEventSource
             AimPpIfMapEndsNow,
             SpeedPpIfMapEndsNow,
             AccPpIfMapEndsNow,
+            StrainPpIfMapEndsNow,
             PpIfRestFced,
 
         }
@@ -83,14 +86,17 @@ namespace OsuMemoryEventSource
 
                 if (map.FoundBeatmaps)
                 {
+                    var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(_songsFolderLocation);
+                    var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.Item1 ?? Mods.Omod;
-                    _rawData.SetCurrentMap(map.BeatmapsFound[0], mods.Convert(),
-                        map.BeatmapsFound[0].FullOsuFileLocation(_songsFolderLocation));
+
+                    _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
+                        (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
 
                     CopyPatterns(map.FormatedStrings);
                 }
                 else
-                    _rawData.SetCurrentMap(null, OppaiSharp.Mods.NoMod, null);
+                    _rawData.SetCurrentMap(null, Mods.Omod, null, PlayMode.Osu);
             }
         }
 
@@ -124,7 +130,12 @@ namespace OsuMemoryEventSource
                 }
 
                 if (_lastStatus != OsuStatus.Playing)
+                {
                     Thread.Sleep(500);//Initial play delay
+                    //var readGamemode = reader.ReadPlayedGameMode();
+                    //var playMode = (PlayMode) (Enum.IsDefined(typeof(PlayMode), readGamemode) ? readGamemode : 0);
+                    //_rawData.SetPlayMode(playMode);
+                }
 
                 _lastStatus = status;
 
@@ -225,8 +236,9 @@ namespace OsuMemoryEventSource
             replacements2["AimPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["SpeedPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["AccPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            replacements2["StrainPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            
             replacements2["PpIfRestFced"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}");
-            replacements2["AccIfRestFced"] = new TokenWithFormat(_rawData.AccIfRestFCed(), TokenType.Live, "{0:0.00}");
         }
 
         private void PrepareReplacements()
@@ -250,14 +262,15 @@ namespace OsuMemoryEventSource
             InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Set(_rawData.SpeedPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Set(_rawData.AccPPIfBeatmapWouldEndNow);
+            InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Set(_rawData.StrainPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
 
             replacements2["PpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current;
             replacements2["AimPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current;
             replacements2["SpeedPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current;
             replacements2["AccPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current;
+            replacements2["StrainPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current;
             replacements2["PpIfRestFced"].Value = InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
-            replacements2["AccIfRestFced"].Value = _rawData.AccIfRestFCed();
         }
 
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)

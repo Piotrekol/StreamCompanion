@@ -1,4 +1,5 @@
 ﻿using System;
+using CollectionManager.Enums;
 
 namespace StreamCompanionTypes.DataTypes
 {
@@ -14,6 +15,8 @@ namespace StreamCompanionTypes.DataTypes
         public string MapHash { get; set; }
         //TODO: enforce explicitly setting event type via ctor
         public OsuEventType EventType { get; set; } = OsuEventType.MapChange;
+
+        public PlayMode? PlayMode { get; set; } = null;
 
         public MapSearchArgs(string sourceName)
         {

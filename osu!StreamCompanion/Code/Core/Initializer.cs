@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core.Loggers;
+﻿using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
@@ -25,6 +19,12 @@ using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -175,7 +175,7 @@ namespace osu_StreamCompanion.Code.Core
             _mapDataFinders.Clear();
             foreach (var finder in mapDataFindersCopy)
             {
-                if(finder is IPlugin)
+                if (finder is IPlugin)
                     _mapDataFinders.Add(finder);
             }
             foreach (var finder in mapDataFindersCopy)
@@ -207,7 +207,9 @@ namespace osu_StreamCompanion.Code.Core
 
             foreach (var file in files)
             {
+
                 var asm = Assembly.LoadFile(Path.Combine(PluginsLocation, file));
+                
                 foreach (var type in asm.GetTypes())
                 {
                     if (type.GetInterfaces().Contains(typeof(IPlugin)))

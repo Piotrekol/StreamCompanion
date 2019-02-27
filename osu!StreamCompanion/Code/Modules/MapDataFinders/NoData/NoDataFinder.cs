@@ -20,8 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
         public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
 
-            MapSearchResult mapSearchResult = new MapSearchResult();
-            mapSearchResult.MapSearchString = searchArgs.Raw;
+            MapSearchResult mapSearchResult = new MapSearchResult(searchArgs);
 
 
             return mapSearchResult;
