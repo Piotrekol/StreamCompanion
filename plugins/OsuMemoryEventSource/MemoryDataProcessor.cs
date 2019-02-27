@@ -2,6 +2,7 @@ using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using Newtonsoft.Json;
 using OsuMemoryDataProvider;
+using PpCalculator;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -84,14 +85,17 @@ namespace OsuMemoryEventSource
 
                 if (map.FoundBeatmaps)
                 {
+                    var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(_songsFolderLocation);
+                    var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.Item1 ?? Mods.Omod;
-                    _rawData.SetCurrentMap(map.BeatmapsFound[0], mods,
-                        map.BeatmapsFound[0].FullOsuFileLocation(_songsFolderLocation));
+
+                    _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
+                        (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
 
                     CopyPatterns(map.FormatedStrings);
                 }
                 else
-                    _rawData.SetCurrentMap(null, Mods.Omod, null);
+                    _rawData.SetCurrentMap(null, Mods.Omod, null, PlayMode.Osu);
             }
         }
 
@@ -127,9 +131,9 @@ namespace OsuMemoryEventSource
                 if (_lastStatus != OsuStatus.Playing)
                 {
                     Thread.Sleep(500);//Initial play delay
-                    var readGamemode = reader.ReadPlayedGameMode();
-                    var playMode = (PlayMode) (Enum.IsDefined(typeof(PlayMode), readGamemode) ? readGamemode : 0);
-                    _rawData.SetPlayMode(playMode);
+                    //var readGamemode = reader.ReadPlayedGameMode();
+                    //var playMode = (PlayMode) (Enum.IsDefined(typeof(PlayMode), readGamemode) ? readGamemode : 0);
+                    //_rawData.SetPlayMode(playMode);
                 }
 
                 _lastStatus = status;

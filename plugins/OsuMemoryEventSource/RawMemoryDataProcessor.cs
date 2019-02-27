@@ -18,7 +18,6 @@ namespace OsuMemoryEventSource
         private Beatmap _currentBeatmap = null;
         private Mods _currentMods;
         private string _currentOsuFileLocation = null;
-        private int? _playMode = null;
         
 
         private PpCalculator.PpCalculator _ppCalculator = null;
@@ -26,7 +25,7 @@ namespace OsuMemoryEventSource
         private double _accIfRestFced = double.NaN;
 
 
-        public void SetCurrentMap(Beatmap beatmap, Mods mods, string osuFileLocation)
+        public void SetCurrentMap(Beatmap beatmap, Mods mods, string osuFileLocation, PlayMode playMode)
         {
             if (beatmap == null)
                 return;
@@ -35,7 +34,7 @@ namespace OsuMemoryEventSource
             _currentMods = mods;
             _currentOsuFileLocation = osuFileLocation;
 
-            _ppCalculator = PpCalculatorHelpers.GetPpCalculator(_playMode ?? 0, _ppCalculator);
+            _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, _ppCalculator);
 
             if (_ppCalculator == null)
                 return;
@@ -44,12 +43,7 @@ namespace OsuMemoryEventSource
 
             _ppCalculator.PreProcess(osuFileLocation);
         }
-
-        public void SetPlayMode(PlayMode playMode)
-        {
-            _playMode = (int)playMode;
-            SetCurrentMap(_currentBeatmap, _currentMods, _currentOsuFileLocation);
-        }
+        
 
         public double PPIfRestFCed()
         {
