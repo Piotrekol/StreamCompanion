@@ -50,11 +50,9 @@ namespace PpCalculator
             var workingBeatmap = new ProcessorWorkingBeatmap(file);
 
             ppCalculator = GetPpCalculator(workingBeatmap.BeatmapInfo.RulesetID, ppCalculator);
+            
+            ppCalculator?.PreProcess(workingBeatmap);
 
-            if (ppCalculator == null)
-                return null;
-
-            ppCalculator.PreProcess(workingBeatmap);
             return ppCalculator;
         }
 
@@ -72,6 +70,8 @@ namespace PpCalculator
 
             return GetPpCalculator(rulesetId);
         }
+        
+
 
         /// <summary>
         /// Returns initalized performance calculator for specified ruleset(gamemode)<para/>
@@ -86,9 +86,27 @@ namespace PpCalculator
             if (rulesetId != ppCalculator?.RulesetId)
                 ppCalculator = GetPpCalculator(rulesetId);
 
-            ppCalculator.PreProcess(new ProcessorWorkingBeatmap(file));
+            ppCalculator?.PreProcess(new ProcessorWorkingBeatmap(file));
 
             return ppCalculator;
+        }
+
+
+        /// <summary>
+        /// Picks valid rulesetId for specified map ruleset
+        /// </summary>
+        /// <param name="mapRulesetId"></param>
+        /// <param name="desiredRulesetId"></param>
+        /// <returns></returns>
+        public static int GetRulesetId(int mapRulesetId, int? desiredRulesetId)
+        {
+            if (!desiredRulesetId.HasValue)
+                return mapRulesetId;
+
+            if (mapRulesetId != 0)//0=osu!
+                return mapRulesetId;
+
+            return desiredRulesetId.Value;
         }
     }
 }

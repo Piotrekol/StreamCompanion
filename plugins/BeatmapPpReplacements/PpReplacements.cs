@@ -60,17 +60,14 @@ namespace BeatmapPpReplacements
 
             if (file.Length == 0) return ret;
 
+            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
 
-            if (map.PlayMode.HasValue)
-                _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)map.PlayMode.Value, mapLocation, _ppCalculator);
-            else
-                _ppCalculator = PpCalculatorHelpers.GetPpCalculator(mapLocation, _ppCalculator);
-            
+            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null);
+
+            _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, _ppCalculator);
+
             if (_ppCalculator == null)
-                return ret;
-
-            var playMode = map.PlayMode.HasValue ? map.PlayMode.Value : (PlayMode)_ppCalculator.RulesetId.Value;
-
+                return ret;//Ctb not supported :(
 
             //TODO: mania needs separate tokens
             if (playMode == PlayMode.OsuMania)
@@ -80,7 +77,7 @@ namespace BeatmapPpReplacements
 
             _ppCalculator.Mods = null;
 
-            ret["GameMode"] = new TokenWithFormat(map.PlayMode.ToString());
+            ret["GameMode"] = new TokenWithFormat(playMode.ToString());
             ret["SSPP"] = new TokenWithFormat(GetPp(_ppCalculator, 100d), format: "{0:0.00}");
             ret["99.9PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99.9d), format: "{0:0.00}");
             ret["99PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99d), format: "{0:0.00}");
@@ -130,6 +127,8 @@ namespace BeatmapPpReplacements
 
             return -1;
         }
+
+
         private string GetOsuDir()
         {
             return _settings.Get<string>(_names.MainOsuDirectory);

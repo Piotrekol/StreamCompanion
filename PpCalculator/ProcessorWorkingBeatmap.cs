@@ -21,7 +21,7 @@ namespace PpCalculator
     public class ProcessorWorkingBeatmap : WorkingBeatmap
     {
         private readonly Beatmap beatmap;
-
+        public int RulesetID => beatmap.BeatmapInfo.RulesetID;
         /// <summary>
         /// Constructs a new <see cref="ProcessorWorkingBeatmap"/> from a .osu file.
         /// </summary>
