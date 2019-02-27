@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using CollectionManager.Modules.FileIO.OsuDb;
@@ -38,7 +38,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
         public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
-            var result = new MapSearchResult();
+            var result = new MapSearchResult(searchArgs);
             Beatmap beatmap = null;
             if (searchArgs.MapId > 0)
                 beatmap = _sqliteControler.GetBeatmap(searchArgs.MapId);
@@ -59,7 +59,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             {
                 result.BeatmapsFound.Add(beatmap);
             }
-            result.MapSearchString = searchArgs.Raw;
             return result;
         }
 

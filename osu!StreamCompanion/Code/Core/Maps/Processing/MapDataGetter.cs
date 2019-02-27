@@ -65,8 +65,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     foundMods = mapSearchResult.Mods;
             }
             if (mapSearchResult == null)
-                mapSearchResult = new MapSearchResult();
-            mapSearchResult.Action = searchArgs.Status;
+                mapSearchResult = new MapSearchResult(searchArgs);
+
             return mapSearchResult;
         }
 

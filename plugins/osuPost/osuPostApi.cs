@@ -88,7 +88,7 @@ namespace osuPost
         private void logOut()
         {
             if (_isLoginDataSet)
-                SendRequestToServer(FormatRequest(new MapSearchResult(), false));
+                SendRequestToServer(FormatRequest(new MapSearchResult(new MapSearchArgs("FakeSource")), false));
         }
         public void NewMap(MapSearchResult map, bool isOnline = true)
         {

@@ -50,7 +50,7 @@ namespace PpCalculator
             var workingBeatmap = new ProcessorWorkingBeatmap(file);
 
             ppCalculator = GetPpCalculator(workingBeatmap.BeatmapInfo.RulesetID, ppCalculator);
-            
+
             if (ppCalculator == null)
                 return null;
 
@@ -70,8 +70,25 @@ namespace PpCalculator
             if (rulesetId == ppCalculator?.RulesetId)
                 return ppCalculator;
 
-             return GetPpCalculator(rulesetId);
+            return GetPpCalculator(rulesetId);
         }
 
+        /// <summary>
+        /// Returns initalized performance calculator for specified ruleset(gamemode)<para/>
+        /// Reuses provided calculator if possible
+        /// </summary>
+        /// <param name="rulesetId"></param>
+        /// <param name="file"></param>
+        /// <param name="ppCalculator"></param>
+        /// <returns></returns>
+        public static PpCalculator GetPpCalculator(int rulesetId, string file, PpCalculator ppCalculator)
+        {
+            if (rulesetId != ppCalculator?.RulesetId)
+                ppCalculator = GetPpCalculator(rulesetId);
+
+            ppCalculator.PreProcess(new ProcessorWorkingBeatmap(file));
+
+            return ppCalculator;
+        }
     }
 }

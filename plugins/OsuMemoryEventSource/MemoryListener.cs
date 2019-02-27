@@ -3,6 +3,7 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using CollectionManager.Enums;
 
 namespace OsuMemoryEventSource
 {
@@ -12,6 +13,7 @@ namespace OsuMemoryEventSource
 
         private int _lastMapId = -1;
         private int _currentMapId = -2;
+        private int _lastGameMode = -1;
         private OsuMemoryStatus _lastStatus = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _lastStatusLog = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _currentStatus = OsuMemoryStatus.Unknown;
@@ -41,16 +43,19 @@ namespace OsuMemoryEventSource
                 _currentMapId = reader.GetMapId();
                 _currentMapString = reader.GetSongString();
                 OsuStatus status = _currentStatus.Convert();
-
+                var gameMode = reader.ReadSongSelectGameMode();
                 if (sendEvents &&
                     (_lastMapId != _currentMapId ||
                     _lastStatus != _currentStatus ||
-                    _currentMapString != _lastMapString)
+                    _currentMapString != _lastMapString ||
+                     gameMode != _lastGameMode)
                     )
                 {
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
+                    _lastGameMode = gameMode;
+
                     var mapHash = reader.GetMapMd5();
 
                     if (!Helpers.IsMD5(mapHash))
@@ -61,7 +66,8 @@ namespace OsuMemoryEventSource
                         MapId = _currentMapId,
                         Status = status,
                         Raw = _currentMapString,
-                        MapHash = mapHash
+                        MapHash = mapHash,
+                        PlayMode = (PlayMode)gameMode
                     });
 
                 }

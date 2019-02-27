@@ -13,7 +13,6 @@ namespace BeatmapPpReplacements
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        //TODO: SC can now support all gamemodes
         private PpCalculator.PpCalculator _ppCalculator = null;
 
         private ISettingsHandler _settings;
@@ -61,20 +60,27 @@ namespace BeatmapPpReplacements
 
             if (file.Length == 0) return ret;
 
-            _ppCalculator = PpCalculatorHelpers.GetPpCalculator(mapLocation, _ppCalculator);
 
+            if (map.PlayMode.HasValue)
+                _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)map.PlayMode.Value, mapLocation, _ppCalculator);
+            else
+                _ppCalculator = PpCalculatorHelpers.GetPpCalculator(mapLocation, _ppCalculator);
+            
             if (_ppCalculator == null)
                 return ret;
 
+            var playMode = map.PlayMode.HasValue ? map.PlayMode.Value : (PlayMode)_ppCalculator.RulesetId.Value;
+
+
             //TODO: mania needs separate tokens
-            if (_ppCalculator.RulesetId.Value == (int)PlayMode.OsuMania)
+            if (playMode == PlayMode.OsuMania)
                 _ppCalculator.Score = 1_000_000;
             else
                 _ppCalculator.Score = 0;
 
             _ppCalculator.Mods = null;
 
-            ret["GameMode"] = new TokenWithFormat(map.BeatmapsFound[0].PlayMode.ToString());
+            ret["GameMode"] = new TokenWithFormat(map.PlayMode.ToString());
             ret["SSPP"] = new TokenWithFormat(GetPp(_ppCalculator, 100d), format: "{0:0.00}");
             ret["99.9PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99.9d), format: "{0:0.00}");
             ret["99PP"] = new TokenWithFormat(GetPp(_ppCalculator, 99d), format: "{0:0.00}");
