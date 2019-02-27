@@ -30,6 +30,7 @@ namespace OsuMemoryEventSource
             AimPpIfMapEndsNow,
             SpeedPpIfMapEndsNow,
             AccPpIfMapEndsNow,
+            StrainPpIfMapEndsNow,
             PpIfRestFced,
 
         }
@@ -235,6 +236,8 @@ namespace OsuMemoryEventSource
             replacements2["AimPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["SpeedPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
             replacements2["AccPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            replacements2["StrainPpIfMapEndsNow"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}");
+            
             replacements2["PpIfRestFced"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}");
         }
 
@@ -259,12 +262,14 @@ namespace OsuMemoryEventSource
             InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Set(_rawData.SpeedPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Set(_rawData.AccPPIfBeatmapWouldEndNow);
+            InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Set(_rawData.StrainPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
 
             replacements2["PpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current;
             replacements2["AimPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current;
             replacements2["SpeedPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current;
             replacements2["AccPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current;
+            replacements2["StrainPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current;
             replacements2["PpIfRestFced"].Value = InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
         }
 
