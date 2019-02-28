@@ -13,10 +13,13 @@ namespace TcpSocketDataSender
         public int ServerPort = 7839;
         public string ServerIp = "127.0.0.1";
         public bool AutoReconnect = false;
-        public bool Connect()
+
+        public bool Connected { get; private set; }
+
+        public virtual bool Connect()
         {
             if (_writer != null)
-                return true;
+                return Connected = true;
             _tcpClient = new TcpClient();
             try
             {
@@ -26,13 +29,16 @@ namespace TcpSocketDataSender
             catch (SocketException)
             {
                 //No server avaliable, or it is busy/full.
-                return false;
+                return Connected = false;
             }
-            return true;
+            return Connected = true;
         }
 
-        public void Write(string data)
+        public virtual void Write(string data)
         {
+            if (!Connected && !Connect())
+                return;
+
             bool written = false;
             try
             {
@@ -48,15 +54,16 @@ namespace TcpSocketDataSender
                 _writer?.Dispose();
                 _writer = null;
                 ((IDisposable)_tcpClient)?.Dispose();
+                Connected = false;
             }
             if (!written && AutoReconnect)
             {
-                if(Connect())
+                if (Connect())
                     Write(data);
             }
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             ((IDisposable)_tcpClient)?.Dispose();
             _writer?.Dispose();

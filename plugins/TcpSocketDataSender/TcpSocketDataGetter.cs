@@ -13,8 +13,8 @@ namespace TcpSocketDataSender
         private readonly SettingNames _names = SettingNames.Instance;
 
         public bool Started { get; set; }
-        private TcpSocketManager _liveTcpSocketManager;
-        private TcpSocketManager _tcpSocketManager;
+        private BlockedTcpSocketManager _liveTcpSocketManager;
+        private BlockedTcpSocketManager _tcpSocketManager;
 
         private ISettingsHandler _settings;
 
@@ -28,11 +28,11 @@ namespace TcpSocketDataSender
 
         public void Start(ILogger logger)
         {
-            _liveTcpSocketManager = new TcpSocketManager();
+            _liveTcpSocketManager = new BlockedTcpSocketManager();
             _liveTcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _liveTcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketLiveMapDataPort);
             
-            _tcpSocketManager = new TcpSocketManager();
+            _tcpSocketManager = new BlockedTcpSocketManager();
             _tcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _tcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketPort);
             
