@@ -123,15 +123,13 @@ namespace BeatmapPpReplacements
                 ret["95PP"] = new TokenWithFormat(GetPp(_ppCalculator, 95d), format: PpFormat);
                 ret["90PP"] = new TokenWithFormat(GetPp(_ppCalculator, 90d), format: PpFormat);
             }
-
-
+            
             ret["MaxCombo"] = new TokenWithFormat(_ppCalculator.GetMaxCombo());
-
 
             string modsStr;
             if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
             {
-                mods = map.Mods?.Item1 ?? Mods.Omod;
+                mods = (map.Mods?.Item1 ?? Mods.Omod);
                 modsStr = map.Mods?.Item2 ?? "NM";
                 _lastMods = mods;
                 _lastModsStr = modsStr;
