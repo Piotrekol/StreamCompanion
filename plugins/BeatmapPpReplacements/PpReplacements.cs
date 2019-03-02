@@ -5,6 +5,7 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace BeatmapPpReplacements
@@ -75,13 +76,11 @@ namespace BeatmapPpReplacements
                 {"m600 000PP", new Token(null)},
             };
 
-            if (!map.FoundBeatmaps) return ret;
-            var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(BeatmapHelpers.GetFullSongsLocation(_settings));
-
-            if (!File.Exists(mapLocation)) return ret;
-            FileInfo file = new FileInfo(mapLocation);
-
-            if (file.Length == 0) return ret;
+            if (!map.FoundBeatmaps ||
+                !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)
+                )
+                return ret;
+            
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
 
@@ -104,6 +103,7 @@ namespace BeatmapPpReplacements
             Mods mods = Mods.Omod;
 
 
+            
             if (playMode == PlayMode.OsuMania)
             {
                 ret["1 000 000PP"] = new TokenWithFormat(GetPp(_ppCalculator, 0, mods, 1_000_000), format: PpFormat);
@@ -123,7 +123,7 @@ namespace BeatmapPpReplacements
                 ret["95PP"] = new TokenWithFormat(GetPp(_ppCalculator, 95d), format: PpFormat);
                 ret["90PP"] = new TokenWithFormat(GetPp(_ppCalculator, 90d), format: PpFormat);
             }
-            
+
             ret["MaxCombo"] = new TokenWithFormat(_ppCalculator.GetMaxCombo());
 
             string modsStr;
