@@ -40,6 +40,8 @@ namespace LiveVisualizer
             }
         }
 
+        private string _lastMapLocation = string.Empty;
+
 
         public override void Start(ILogger logger)
         {
@@ -56,7 +58,8 @@ namespace LiveVisualizer
         {
             if (_visualizerData == null ||
                 !mapSearchResult.FoundBeatmaps ||
-                !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation)
+                !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
+                mapLocation == _lastMapLocation
             )
                 return;
 
@@ -92,6 +95,8 @@ namespace LiveVisualizer
                     time += interval;
                 }
             }
+
+            _lastMapLocation = mapLocation;
 
             _visualizerData.TotalTime = mapLength;
 
