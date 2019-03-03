@@ -118,6 +118,9 @@ namespace OsuMemoryEventSource
         {
             lock (_lockingObject)
             {
+
+                PrepareTimeReplacement(reader.ReadPlayTime());
+
                 if (status != OsuStatus.Playing)
                 {
                     if (_clearLiveTokensAfterResultScreenExit && (status & OsuStatus.ResultsScreen) == 0)
@@ -126,6 +129,7 @@ namespace OsuMemoryEventSource
                         _lastStatus = status;
                     }
 
+                    
                     return;
                 }
 
@@ -241,6 +245,13 @@ namespace OsuMemoryEventSource
             replacements2["PpIfRestFced"] = new TokenWithFormat(InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}");
         }
 
+        private void PrepareTimeReplacement(int readPlayTime)
+        {
+            double time = 0;
+            if (readPlayTime != 0)
+                time = readPlayTime / 1000d;
+            replacements2["time"].Value = time;
+        }
         private void PrepareReplacements()
         {
 
@@ -249,10 +260,7 @@ namespace OsuMemoryEventSource
             replacements2["100"].Value = _rawData.Play.C100;
             replacements2["50"].Value = _rawData.Play.C50;
             replacements2["miss"].Value = _rawData.Play.CMiss;
-            double time = 0;
-            if (_rawData.Play.Time != 0)
-                time = _rawData.Play.Time / 1000d;
-            replacements2["time"].Value = time;
+
             replacements2["combo"].Value = _rawData.Play.Combo;
             replacements2["CurrentMaxCombo"].Value = _rawData.Play.MaxCombo;
             replacements2["PlayerHp"].Value = _rawData.Play.Hp;
