@@ -1,20 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using LiveCharts;
 
 namespace LiveVisualizer
 {
-    public interface IVisualizerForm
+    public interface IVisualizerData
     {
-        void SetStrains(IList<double> strains);
+        ChartValues<double> Strains { get; set; }
 
-        void SetBackgroundImage(string imageLocation);
+        string Title { get; set; }
+        string Artist { get; set; }
+        string ImageLocation { get; set; }
 
-        void SetPp(double pp);
+        int Hit300 { get; set; }
+        int Hit100 { get; set; }
+        int Hit50 { get; set; }
+        int HitMiss { get; set; }
+        double Pp { get; set; }
+        double Acc { get; set; }
+        
+        double CurrentTime { get; set; }
+        double TotalTime { get; set; }
+    }
 
-        void SetHits(int h300, int h100, int h50);
+    public interface IWpfVisualizerData : IVisualizerData
+    {
+        double FontsizeTitle { get; set; }
+        double FontsizeArtist { get; set; }
 
-        void Show();
+        double PixelMapProgress { get; set; }
+        string ChartColor { get; set; }
+        string ChartProgressColor { get; set; }
 
-        void Hide();
+        double MaxYValue { get; set; }
+
+        string FillColor { get; set; }
+    }
+
+    public interface IWpfChartConfiguration
+    {
 
     }
 }
