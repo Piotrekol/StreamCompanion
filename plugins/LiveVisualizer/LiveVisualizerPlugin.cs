@@ -75,7 +75,9 @@ namespace LiveVisualizer
 
 
             var strains = new Dictionary<int, double>(300);
-            var mapLength = workingBeatmap.Length;
+
+            //Total time refers to beatmap time, not song total time
+            var mapLength = mapSearchResult.BeatmapsFound[0].TotalTime;
 
             if (playMode != PlayMode.OsuMania)
             {
@@ -143,7 +145,8 @@ namespace LiveVisualizer
                         _visualizerData.Hit50 = (ushort)_hit50Token.Value;
                         _visualizerData.HitMiss = (ushort)_hitMissToken.Value;
                         _visualizerData.CurrentTime = (double)_timeToken.Value * 1000;
-                        _visualizerData.PixelMapProgress = 700 * (_visualizerData.CurrentTime / _visualizerData.TotalTime);
+                        var progress = 700 * (_visualizerData.CurrentTime / _visualizerData.TotalTime);
+                        _visualizerData.PixelMapProgress = progress < 700 ? progress : 700;
                     }
                 }
                 catch
