@@ -22,10 +22,20 @@
         </Border>
         <Rectangle Fill="#66000000"/>
 
-        <StackPanel>
-            <Label Name="Title" Content="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontSize="{Binding FontsizeTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FFE8E8E8" Margin="20 0 0 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
-            <Label Name="Artist" Content="{Binding Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontSize="{Binding FontsizeArtist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="20 0 0 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
-        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+
+            <Viewbox Grid.Row="0" MaxHeight="30"  >
+                <TextBlock Name="Title" Text="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FFE8E8E8" Margin="10 0 10 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
+            </Viewbox>
+            <Viewbox Grid.Row="1" >
+                <TextBlock Name="Artist" Text="{Binding Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="10 0 10 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
+            </Viewbox>
+        </Grid>
+
 
         <Rectangle Grid.Row="1" Fill="#141414"/>
         <Frame Name="frameholder" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="700"/>
