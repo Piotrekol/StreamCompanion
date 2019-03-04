@@ -1,18 +1,22 @@
-﻿using StreamCompanionTypes.DataTypes;
+﻿using System;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LiveVisualizer
 {
-    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataGetter, ISettings, IMapDataParser
+    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataGetter, ISettings, IMapDataParser, ISettingsProvider, IDisposable
     {
         protected ISettingsHandler Settings;
 
         private CancellationTokenSource _cts = new CancellationTokenSource();
+        public string SettingGroup { get; } = "Visualizer";
+        private LiveVisualizerSettings _liveVisualizerSettings = null;
 
         public bool Started { get; set; }
 
@@ -49,5 +53,26 @@ namespace LiveVisualizer
         public abstract List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
 
         protected abstract void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token);
+        
+        public void Free()
+        {
+            _liveVisualizerSettings?.Dispose();
+        }
+
+        public UserControl GetUiSettings()
+        {
+            if (_liveVisualizerSettings == null || _liveVisualizerSettings.IsDisposed)
+            {
+                _liveVisualizerSettings = new LiveVisualizerSettings(Settings);
+            }
+
+            return _liveVisualizerSettings;
+        }
+
+        public virtual void Dispose()
+        {
+            _cts?.Dispose();
+            _liveVisualizerSettings?.Dispose();
+        }
     }
 }

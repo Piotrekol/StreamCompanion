@@ -23,8 +23,8 @@
         <Rectangle Fill="#66000000"/>
 
         <StackPanel>
-            <Label Name="Title" Content="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontSize="{Binding FontsizeTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FFE8E8E8" Margin="20 0 0 0" FontFamily="Junegull" Padding="0 0 0 0"/>
-            <Label Name="Artist" Content="{Binding Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontSize="{Binding FontsizeArtist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="20 0 0 0" FontFamily="Junegull" Padding="0 0 0 0"/>
+            <Label Name="Title" Content="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontSize="{Binding FontsizeTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FFE8E8E8" Margin="20 0 0 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
+            <Label Name="Artist" Content="{Binding Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontSize="{Binding FontsizeArtist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="20 0 0 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
         </StackPanel>
 
         <Rectangle Grid.Row="1" Fill="#141414"/>
@@ -40,8 +40,8 @@
                     <ColumnDefinition Width="1.5*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Name="PPData" Text="{Binding Pp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="Junegull"/>
-                <Label Name="PP" Grid.Column="1" Content="pp" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Left" FontFamily="Junegull"/>
+                <TextBlock Name="PPData" Text="{Binding Pp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{Binding Font}"/>
+                <Label Name="PP" Grid.Column="1" Content="pp" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Left" FontFamily="{Binding Font}"/>
             </Grid>
 
             <Grid Grid.Column="1">
@@ -50,12 +50,12 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Name="hundreds" Content="100" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="Junegull"/>
-                <Label Name="hundredsData" Content="{Binding Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="Junegull"/>
-                <Label Name="fifties" Grid.Column="1" Content="50" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="Junegull"/>
-                <Label Name="fiftieData" Grid.Column="1" Content="{Binding Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="Junegull"/>
-                <Label Name="miss" Grid.Column="2" Content="MISS" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="Junegull"/>
-                <Label Name="missData" Grid.Column="2" Content="{Binding HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1" Margin="0 60 0 0 " FontFamily="Junegull" />
+                <Label Name="hundreds" Content="100" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Font}"/>
+                <Label Name="hundredsData" Content="{Binding Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Font}"/>
+                <Label Name="fifties" Grid.Column="1" Content="50" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Font}"/>
+                <Label Name="fiftieData" Grid.Column="1" Content="{Binding Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Font}"/>
+                <Label Name="miss" Grid.Column="2" Content="MISS" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Font}"/>
+                <Label Name="missData" Grid.Column="2" Content="{Binding HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1" Margin="0 60 0 0 " FontFamily="{Binding Font}" />
             </Grid>
         </Grid>
     </Grid>

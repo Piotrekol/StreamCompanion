@@ -1,4 +1,4 @@
-using CollectionManager.Enums;
+﻿using CollectionManager.Enums;
 using LiveCharts.Helpers;
 using PpCalculator;
 using StreamCompanionTypes;
@@ -17,6 +17,7 @@ namespace LiveVisualizer
     public class LiveVisualizerPlugin : LiveVisualizerPluginBase
     {
         private IWpfVisualizerData _visualizerData;
+        private SortedSet<int> ChartCutoffsSet = new SortedSet<int>();
         private MainWindow _visualizerWindow;
 
         private List<KeyValuePair<string, Token>> _liveTokens;
@@ -48,11 +49,68 @@ namespace LiveVisualizer
             base.Start(logger);
             _visualizerData = new VisualizerDataModel();
 
-            _visualizerWindow = new MainWindow(_visualizerData);
-            _visualizerWindow.Show();
+            _visualizerData.ChartColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartColor);
+            _visualizerData.ChartProgressColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartProgressColor);
+            _visualizerData.Font = Settings.Get<string>(ConfigEntrys.Font);
+
+            foreach (var cutoff in GetManualAxisCutoffs())
+            {
+                ChartCutoffsSet.Add(cutoff);
+            }
+
+            EnableVisualizer(Settings.Get<bool>(ConfigEntrys.Enable));
+
+            Settings.SettingUpdated += SettingUpdated;
 
             Task.Run(() => { UpdateLiveTokens(); });
         }
+
+        private void SettingUpdated(object sender, SettingUpdated e)
+        {
+            if (e.Name == ConfigEntrys.ChartProgressColor.Name)
+                _visualizerData.ChartProgressColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartProgressColor);
+
+            else if (e.Name == ConfigEntrys.ChartColor.Name)
+                _visualizerData.ChartColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartColor);
+
+            else if (e.Name == ConfigEntrys.Font.Name)
+                _visualizerData.Font = Settings.Get<string>(ConfigEntrys.Font);
+
+            else if (e.Name == ConfigEntrys.Enable.Name)
+                EnableVisualizer(Settings.Get<bool>(ConfigEntrys.Enable));
+
+            else if (e.Name == ConfigEntrys.ManualAxisCutoffs.Name || e.Name == ConfigEntrys.AutoSizeAxisY.Name)
+            {
+                ChartCutoffsSet.Clear();
+
+                foreach (var cutoff in GetManualAxisCutoffs())
+                {
+                    ChartCutoffsSet.Add(cutoff);
+                }
+
+                if (_visualizerData.Strains.Any())
+                    _visualizerData.MaxYValue = getMaxY(_visualizerData.Strains.Max());
+            }
+        }
+
+        private IEnumerable<int> GetManualAxisCutoffs()
+        => Settings.Get<string>(ConfigEntrys.ManualAxisCutoffs).Split(';').Select(v => int.TryParse(v, out int num) ? num : 0);
+
+        private void EnableVisualizer(bool enable)
+        {
+            if (enable)
+            {
+                if (_visualizerWindow == null)
+                    _visualizerWindow = new MainWindow(_visualizerData);
+
+                _visualizerWindow.Show();
+            }
+            else
+            {
+                _visualizerWindow?.Hide();
+            }
+        }
+
 
         protected override void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token)
         {
@@ -158,20 +216,23 @@ namespace LiveVisualizer
             }
         }
 
-
+        private bool AutomaticAxisControlIsEnabled => Settings.Get<bool>(ConfigEntrys.AutoSizeAxisY);
         private double getMaxY(double maxValue)
         {
-            if (maxValue < 50)
-                return 50;
-            if (maxValue < 100)
-                return 100;
-            if (maxValue < 200)
-                return 200;
-            if (maxValue < 350)
-                return 350;
+            if (!AutomaticAxisControlIsEnabled)
+                foreach (var cutoff in ChartCutoffsSet)
+                {
+                    if (maxValue < cutoff)
+                        return cutoff;
+                }
 
             return double.NaN;//auto size
         }
 
+        public override void Dispose()
+        {
+            Settings.SettingUpdated -= SettingUpdated;
+            base.Dispose();
+        }
     }
 }

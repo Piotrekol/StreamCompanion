@@ -34,6 +34,7 @@ namespace LiveVisualizer
         double MaxYValue { get; set; }
 
         string FillColor { get; set; }
+        string Font { get; set; }
     }
 
     public interface IWpfChartConfiguration

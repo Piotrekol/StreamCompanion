@@ -68,9 +68,23 @@
     <Compile Include="Chart.xaml.cs">
       <DependentUpon>Chart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ColorHelpers.cs" />
+    <Compile Include="ColorPickerWithPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ColorPickerWithPreview.Designer.cs">
+      <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigEntrys.cs" />
     <Compile Include="IVisualizerForm.cs" />
     <Compile Include="LiveVisualizerPlugin.cs" />
     <Compile Include="LiveVisualizerPluginBase.cs" />
+    <Compile Include="LiveVisualizerSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LiveVisualizerSettings.Designer.cs">
+      <DependentUpon>LiveVisualizerSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -95,6 +109,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ColorPickerWithPreview.resx">
+      <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LiveVisualizerSettings.resx">
+      <DependentUpon>LiveVisualizerSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
