@@ -1,4 +1,4 @@
-using CollectionManager.Enums;
+﻿using CollectionManager.Enums;
 using LiveCharts.Helpers;
 using PpCalculator;
 using StreamCompanionTypes;
@@ -175,10 +175,9 @@ namespace LiveVisualizer
                 _visualizerData.MaxYValue = getMaxY(_visualizerData.Strains.Max());
 
             var imageLocation = Path.Combine(mapSearchResult.BeatmapsFound[0]
-                .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), workingBeatmap.BackgroundFile);
+                .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), workingBeatmap.BackgroundFile ?? "");
 
-            if (File.Exists(imageLocation))
-                _visualizerData.ImageLocation = imageLocation;
+            _visualizerData.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
 
 
 
