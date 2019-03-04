@@ -1,4 +1,4 @@
-﻿using CollectionManager.Enums;
+using CollectionManager.Enums;
 using LiveCharts.Helpers;
 using PpCalculator;
 using StreamCompanionTypes;
@@ -123,8 +123,8 @@ namespace LiveVisualizer
             if (_visualizerData == null)
                 return null;
 
-            _visualizerData.Title = replacements.First(r => r.Key == "TitleRoman").Value.Value.ToString();
-            _visualizerData.Artist = replacements.First(r => r.Key == "ArtistRoman").Value.Value.ToString();
+            _visualizerData.Title = replacements.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
+            _visualizerData.Artist = replacements.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
 
             return null;
         }
