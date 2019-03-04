@@ -42,18 +42,28 @@ namespace LiveVisualizer
             panel_manualChart.Enabled = !checkBox_autosizeChart.Checked;
 
             color_chartPrimary.Color = ColorHelpers.GetColor(_settings, ConfigEntrys.ChartColor);
-
             color_chartProgress.Color = ColorHelpers.GetColor(_settings, ConfigEntrys.ChartProgressColor);
+            color_horizontalLegend.Color = ColorHelpers.GetColor(_settings, ConfigEntrys.AxisYSeparatorColor);
 
             textBox_chartCutoffs.Text = _settings.Get<string>(ConfigEntrys.ManualAxisCutoffs);
 
+            checkBox_showAxisYSeparator.Checked = _settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
+
+
             color_chartPrimary.ColorChanged += Color_chartPrimary_ColorChanged;
             color_chartProgress.ColorChanged += ColorChartProgressOnColorChanged;
+            color_horizontalLegend.ColorChanged += ColorHorizontalLegendOnColorChanged;
 
             checkBox_enable.CheckedChanged += CheckBoxEnableOnCheckedChanged;
             checkBox_autosizeChart.CheckedChanged += checkBox_autosizeChart_CheckedChanged;
             comboBox_font.SelectedValueChanged += ComboBoxFontOnSelectedValueChanged;
             textBox_chartCutoffs.TextChanged += textBox_chartCutoffs_TextChanged;
+            checkBox_showAxisYSeparator.CheckedChanged += checkBox_showAxisYSeparator_CheckedChanged;
+        }
+
+        private void ColorHorizontalLegendOnColorChanged(object sender, Color e)
+        {
+            ColorHelpers.SaveColor(_settings, ConfigEntrys.AxisYSeparatorColor, e);
         }
 
         private void ComboBoxFontOnSelectedValueChanged(object sender, EventArgs e)
@@ -92,6 +102,11 @@ namespace LiveVisualizer
             _settings.Add(ConfigEntrys.ManualAxisCutoffs.Name, textBox_chartCutoffs.Text, true);
         }
 
+        private void checkBox_showAxisYSeparator_CheckedChanged(object sender, EventArgs e)
+        {
+            _settings.Add(ConfigEntrys.ShowAxisYSeparator.Name, checkBox_showAxisYSeparator.Checked, true);
+        }
+
         private void linkLabel_UICredit1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://osu.ppy.sh/users/9173653");
@@ -102,5 +117,6 @@ namespace LiveVisualizer
         {
             Process.Start("https://osu.ppy.sh/users/4944211");
         }
+
     }
 }

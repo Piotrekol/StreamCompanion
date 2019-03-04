@@ -26,8 +26,8 @@ namespace LiveVisualizer
 
             this.DataContext = data;
 
-            this.frameholder.Content = new Chart(data, nameof(IWpfVisualizerData.ChartColor));
-            this.frameholderTimer.Content = new Chart(data, nameof(IWpfVisualizerData.ChartProgressColor));
+            this.frameholder.Content = new Chart(data, nameof(IWpfVisualizerData.ChartColor), false);
+            this.frameholderTimer.Content = new Chart(data, nameof(IWpfVisualizerData.ChartProgressColor), true);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

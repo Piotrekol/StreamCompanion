@@ -1,5 +1,6 @@
-﻿using System;
-using LiveCharts;
+﻿using LiveCharts;
+using System;
+using System.ComponentModel;
 
 namespace LiveVisualizer
 {
@@ -17,12 +18,12 @@ namespace LiveVisualizer
         int HitMiss { get; set; }
         double Pp { get; set; }
         double Acc { get; set; }
-        
+
         double CurrentTime { get; set; }
         double TotalTime { get; set; }
     }
 
-    public interface IWpfVisualizerData : IVisualizerData
+    public interface IWpfVisualizerData : IVisualizerData, INotifyPropertyChanged
     {
         double FontsizeTitle { get; set; }
         double FontsizeArtist { get; set; }
@@ -35,6 +36,9 @@ namespace LiveVisualizer
 
         string FillColor { get; set; }
         string Font { get; set; }
+
+        bool ShowAxisYSeparator { get; set; }
+        string AxisYSeparatorColor { get; set; }
     }
 
     public interface IWpfChartConfiguration

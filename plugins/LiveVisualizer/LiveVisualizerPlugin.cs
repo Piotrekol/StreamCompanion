@@ -1,4 +1,4 @@
-﻿using CollectionManager.Enums;
+using CollectionManager.Enums;
 using LiveCharts.Helpers;
 using PpCalculator;
 using StreamCompanionTypes;
@@ -51,6 +51,9 @@ namespace LiveVisualizer
 
             _visualizerData.ChartColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartColor);
             _visualizerData.ChartProgressColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartProgressColor);
+            _visualizerData.AxisYSeparatorColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.AxisYSeparatorColor);
+
+            _visualizerData.ShowAxisYSeparator = Settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
             _visualizerData.Font = Settings.Get<string>(ConfigEntrys.Font);
 
             foreach (var cutoff in GetManualAxisCutoffs())
@@ -78,6 +81,12 @@ namespace LiveVisualizer
 
             else if (e.Name == ConfigEntrys.Enable.Name)
                 EnableVisualizer(Settings.Get<bool>(ConfigEntrys.Enable));
+
+            else if (e.Name == ConfigEntrys.ShowAxisYSeparator.Name)
+                _visualizerData.ShowAxisYSeparator = Settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
+
+            else if (e.Name == ConfigEntrys.AxisYSeparatorColor.Name)
+                _visualizerData.AxisYSeparatorColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.AxisYSeparatorColor);
 
             else if (e.Name == ConfigEntrys.ManualAxisCutoffs.Name || e.Name == ConfigEntrys.AutoSizeAxisY.Name)
             {

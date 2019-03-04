@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="LiveVisualizer.Chart"
+<UserControl x:Class="LiveVisualizer.Chart"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,7 +17,7 @@
                 <Setter Property="Fill" Value="{Binding FillColor}"></Setter>
                 <Setter Property="PointGeometrySize" Value="0"></Setter>
                 <Setter Property="LineSmoothness" Value="1"></Setter>
-            </Style>
+            </Style> 
         </Grid.Resources>
         <wpf:CartesianChart Name="chart" Width="700" Hoverable="False" DataTooltip="{x:Null}" >
 
@@ -38,12 +38,24 @@
                 </wpf:Axis>
             </wpf:CartesianChart.AxisX>
             <wpf:CartesianChart.AxisY>
-                <lvc:Axis IsMerged="True" FontSize="0" Foreground="Transparent" MaxValue="{Binding MaxYValue}">
+                <lvc:Axis IsMerged="True"  FontSize="0" MaxValue="{Binding MaxYValue}" MinValue="0">
+                    <lvc:Axis.Style>
+                        <Style TargetType="lvc:Axis">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ShowAxisYSeparator}" Value="False">
+                                    <Setter Property="Foreground" Value="Transparent"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Style.Setters>
+                                <Setter Property="Foreground" Value="#FFFFFF"></Setter>
+                            </Style.Setters>
+                        </Style>
+                    </lvc:Axis.Style>
                     <lvc:Axis.Separator>
-                        <lvc:Separator StrokeThickness="0" StrokeDashArray="0" IsEnabled="False">
+                        <lvc:Separator Name="AxisYSeparator" StrokeThickness="1" StrokeDashArray="1" IsEnabled="{Binding ShowAxisYSeparator}" Step="100">
                             <!--Here, see the IsEnabled => false-->
                             <lvc:Separator.Stroke>
-                                <SolidColorBrush Color="{Binding FillColor}" />
+                                <SolidColorBrush Color="{Binding AxisYSeparatorColor}" />
                             </lvc:Separator.Stroke>
                         </lvc:Separator>
                     </lvc:Axis.Separator>

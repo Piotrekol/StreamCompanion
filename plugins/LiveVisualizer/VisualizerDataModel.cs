@@ -42,5 +42,7 @@ namespace LiveVisualizer
         public double MaxYValue { get; set; } = 350;
         public string FillColor { get; set; } = "#B2FFB2E3";
         public string Font { get; set; }
+        public bool ShowAxisYSeparator { get; set; }
+        public string AxisYSeparatorColor { get; set; }
     }
 }

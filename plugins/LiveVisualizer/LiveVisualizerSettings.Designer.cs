@@ -30,18 +30,20 @@
         {
             this.checkBox_enable = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.linkLabel_UICredit2 = new System.Windows.Forms.LinkLabel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.linkLabel_UICredit1 = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBox_font = new System.Windows.Forms.ComboBox();
             this.panel_manualChart = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_chartCutoffs = new System.Windows.Forms.TextBox();
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.linkLabel_UICredit1 = new System.Windows.Forms.LinkLabel();
+            this.checkBox_showAxisYSeparator = new System.Windows.Forms.CheckBox();
             this.color_chartProgress = new LiveVisualizer.ColorPickerWithPreview();
             this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
-            this.label4 = new System.Windows.Forms.Label();
-            this.linkLabel_UICredit2 = new System.Windows.Forms.LinkLabel();
+            this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
             this.panel1.SuspendLayout();
             this.panel_manualChart.SuspendLayout();
             this.SuspendLayout();
@@ -58,6 +60,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.color_horizontalLegend);
+            this.panel1.Controls.Add(this.checkBox_showAxisYSeparator);
             this.panel1.Controls.Add(this.linkLabel_UICredit2);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.linkLabel_UICredit1);
@@ -73,10 +77,50 @@
             this.panel1.Size = new System.Drawing.Size(443, 254);
             this.panel1.TabIndex = 1;
             // 
+            // linkLabel_UICredit2
+            // 
+            this.linkLabel_UICredit2.AutoSize = true;
+            this.linkLabel_UICredit2.Location = new System.Drawing.Point(188, 211);
+            this.linkLabel_UICredit2.Name = "linkLabel_UICredit2";
+            this.linkLabel_UICredit2.Size = new System.Drawing.Size(48, 13);
+            this.linkLabel_UICredit2.TabIndex = 31;
+            this.linkLabel_UICredit2.TabStop = true;
+            this.linkLabel_UICredit2.Text = "Dartandr";
+            this.linkLabel_UICredit2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_UICredit2_LinkClicked);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(162, 211);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(25, 13);
+            this.label4.TabIndex = 30;
+            this.label4.Text = "and";
+            // 
+            // linkLabel_UICredit1
+            // 
+            this.linkLabel_UICredit1.AutoSize = true;
+            this.linkLabel_UICredit1.Location = new System.Drawing.Point(99, 211);
+            this.linkLabel_UICredit1.Name = "linkLabel_UICredit1";
+            this.linkLabel_UICredit1.Size = new System.Drawing.Size(62, 13);
+            this.linkLabel_UICredit1.TabIndex = 29;
+            this.linkLabel_UICredit1.TabStop = true;
+            this.linkLabel_UICredit1.Text = "BlackShark";
+            this.linkLabel_UICredit1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_UICredit1_LinkClicked);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(5, 211);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(95, 13);
+            this.label3.TabIndex = 27;
+            this.label3.Text = "UI design made by";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 70);
+            this.label2.Location = new System.Drawing.Point(8, 102);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 26;
@@ -86,7 +130,7 @@
             // 
             this.comboBox_font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_font.FormattingEnabled = true;
-            this.comboBox_font.Location = new System.Drawing.Point(71, 67);
+            this.comboBox_font.Location = new System.Drawing.Point(71, 99);
             this.comboBox_font.Name = "comboBox_font";
             this.comboBox_font.Size = new System.Drawing.Size(152, 21);
             this.comboBox_font.TabIndex = 25;
@@ -95,7 +139,7 @@
             // 
             this.panel_manualChart.Controls.Add(this.label1);
             this.panel_manualChart.Controls.Add(this.textBox_chartCutoffs);
-            this.panel_manualChart.Location = new System.Drawing.Point(8, 120);
+            this.panel_manualChart.Location = new System.Drawing.Point(8, 169);
             this.panel_manualChart.Name = "panel_manualChart";
             this.panel_manualChart.Size = new System.Drawing.Size(432, 37);
             this.panel_manualChart.TabIndex = 4;
@@ -119,32 +163,22 @@
             // checkBox_autosizeChart
             // 
             this.checkBox_autosizeChart.AutoSize = true;
-            this.checkBox_autosizeChart.Location = new System.Drawing.Point(8, 97);
+            this.checkBox_autosizeChart.Location = new System.Drawing.Point(8, 146);
             this.checkBox_autosizeChart.Name = "checkBox_autosizeChart";
             this.checkBox_autosizeChart.Size = new System.Drawing.Size(252, 17);
             this.checkBox_autosizeChart.TabIndex = 2;
             this.checkBox_autosizeChart.Text = "Autosize chart value height based on max value";
             this.checkBox_autosizeChart.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // checkBox_showAxisYSeparator
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(5, 172);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(95, 13);
-            this.label3.TabIndex = 27;
-            this.label3.Text = "UI design made by";
-            // 
-            // linkLabel_UICredit1
-            // 
-            this.linkLabel_UICredit1.AutoSize = true;
-            this.linkLabel_UICredit1.Location = new System.Drawing.Point(99, 172);
-            this.linkLabel_UICredit1.Name = "linkLabel_UICredit1";
-            this.linkLabel_UICredit1.Size = new System.Drawing.Size(62, 13);
-            this.linkLabel_UICredit1.TabIndex = 29;
-            this.linkLabel_UICredit1.TabStop = true;
-            this.linkLabel_UICredit1.Text = "BlackShark";
-            this.linkLabel_UICredit1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_UICredit1_LinkClicked);
+            this.checkBox_showAxisYSeparator.AutoSize = true;
+            this.checkBox_showAxisYSeparator.Location = new System.Drawing.Point(8, 123);
+            this.checkBox_showAxisYSeparator.Name = "checkBox_showAxisYSeparator";
+            this.checkBox_showAxisYSeparator.Size = new System.Drawing.Size(136, 17);
+            this.checkBox_showAxisYSeparator.TabIndex = 32;
+            this.checkBox_showAxisYSeparator.Text = "Show horizontal legend";
+            this.checkBox_showAxisYSeparator.UseVisualStyleBackColor = true;
             // 
             // color_chartProgress
             // 
@@ -180,25 +214,22 @@
             this.color_chartPrimary.Size = new System.Drawing.Size(436, 26);
             this.color_chartPrimary.TabIndex = 0;
             // 
-            // label4
+            // color_horizontalLegend
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(162, 172);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(25, 13);
-            this.label4.TabIndex = 30;
-            this.label4.Text = "and";
+            this.color_horizontalLegend.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
             // 
-            // linkLabel_UICredit2
             // 
-            this.linkLabel_UICredit2.AutoSize = true;
-            this.linkLabel_UICredit2.Location = new System.Drawing.Point(188, 172);
-            this.linkLabel_UICredit2.Name = "linkLabel_UICredit2";
-            this.linkLabel_UICredit2.Size = new System.Drawing.Size(48, 13);
-            this.linkLabel_UICredit2.TabIndex = 31;
-            this.linkLabel_UICredit2.TabStop = true;
-            this.linkLabel_UICredit2.Text = "Dartandr";
-            this.linkLabel_UICredit2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_UICredit2_LinkClicked);
+            // 
+            this.color_horizontalLegend.LabelDesigner.AutoSize = true;
+            this.color_horizontalLegend.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_horizontalLegend.LabelDesigner.Name = "Label";
+            this.color_horizontalLegend.LabelDesigner.Size = new System.Drawing.Size(115, 13);
+            this.color_horizontalLegend.LabelDesigner.TabIndex = 1;
+            this.color_horizontalLegend.LabelDesigner.Text = "Horizontal legend color";
+            this.color_horizontalLegend.Location = new System.Drawing.Point(4, 68);
+            this.color_horizontalLegend.Name = "color_horizontalLegend";
+            this.color_horizontalLegend.Size = new System.Drawing.Size(436, 26);
+            this.color_horizontalLegend.TabIndex = 33;
             // 
             // LiveVisualizerSettings
             // 
@@ -233,5 +264,7 @@
         private System.Windows.Forms.LinkLabel linkLabel_UICredit1;
         private System.Windows.Forms.LinkLabel linkLabel_UICredit2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox checkBox_showAxisYSeparator;
+        private ColorPickerWithPreview color_horizontalLegend;
     }
 }
