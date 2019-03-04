@@ -22,7 +22,7 @@
         <wpf:CartesianChart Name="chart" Width="700" Hoverable="False" DataTooltip="{x:Null}" >
 
             <wpf:CartesianChart.Series>
-                <lvc:LineSeries Values="{Binding Strains}" PointGeometry="{x:Null}" Fill="{Binding FillColor}" />
+                <lvc:LineSeries Name="LineSeries" Values="{Binding Strains}" PointGeometry="{x:Null}" Fill="{Binding ChartColor}" />
 
             </wpf:CartesianChart.Series>
             <wpf:CartesianChart.AxisX>
