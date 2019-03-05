@@ -6,7 +6,7 @@ namespace LiveVisualizer
     internal static class ConfigEntrys
     {
         public const string Prefix = "LiveVisualizer_";
-        public static readonly ConfigEntry Enable = new ConfigEntry($"{Prefix}Enable", false);
+        public static readonly ConfigEntry Enable = new ConfigEntry($"{Prefix}Enable", true);
         public static readonly ConfigEntry Font = new ConfigEntry($"{Prefix}Font", "Arial");
         public static readonly ConfigEntry ChartColor = new ConfigEntry($"{Prefix}ChartColor", "102;255;178;227");//66FFB2E3
         public static readonly ConfigEntry ChartProgressColor = new ConfigEntry($"{Prefix}ChartProgressColor", "178;255;178;227");//B2FFB2E3
