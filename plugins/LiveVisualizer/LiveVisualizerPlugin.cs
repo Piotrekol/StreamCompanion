@@ -138,8 +138,8 @@ namespace LiveVisualizer
 
             var strains = new Dictionary<int, double>(300);
 
-            //Total time refers to beatmap time, not song total time
-            var mapLength = mapSearchResult.BeatmapsFound[0].TotalTime;
+            //Length refers to beatmap time, not song total time
+            var mapLength = workingBeatmap.Length;
 
             if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko))
             {
