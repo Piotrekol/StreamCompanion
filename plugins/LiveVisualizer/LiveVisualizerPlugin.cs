@@ -136,17 +136,13 @@ namespace LiveVisualizer
                 mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
 
             var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-
-            if (ppCalculator == null)
-                return;
-
-
+            
             var strains = new Dictionary<int, double>(300);
 
             //Total time refers to beatmap time, not song total time
             var mapLength = mapSearchResult.BeatmapsFound[0].TotalTime;
 
-            if (playMode != PlayMode.OsuMania)
+            if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko ))
             {
                 var strainLength = 5000;
                 var interval = 1500;
