@@ -26,7 +26,7 @@ namespace TcpSocketDataSender
                 _tcpClient.Connect(IPAddress.Parse(ServerIp), ServerPort);
                 _writer = new BinaryWriter(_tcpClient.GetStream());
             }
-            catch (SocketException)
+            catch (Exception e) when (e is SocketException || e is InvalidOperationException)
             {
                 //No server avaliable, or it is busy/full.
                 return Connected = false;

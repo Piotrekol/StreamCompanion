@@ -12,7 +12,12 @@ namespace osu_StreamCompanion.Code.Helpers
 {
     public static class BeatmapHelpers
     {
-
+        public static double SafeGetDouble(this SQLiteDataReader reader, int colIndex)
+        {
+            if (!reader.IsDBNull(colIndex))
+                return reader.GetDouble(colIndex);
+            return double.NaN;
+        }
         public static void Read(this Beatmap beatmap, SQLiteDataReader reader)
         {
             int i = 1;
@@ -46,7 +51,10 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.ThreadId = reader.GetInt32(i); i++;
             /*beatmap.MapRating =*/ reader.GetInt32(i); i++;
             beatmap.Offset = (short)reader.GetInt32(i); i++;
-            beatmap.StackLeniency = (float)reader.GetDouble(i); i++;
+
+            var stackLeniency = reader.SafeGetDouble(i); i++;
+            beatmap.StackLeniency = double.IsNaN(stackLeniency) ? 0 : (float)stackLeniency;//TODO: (CollectionManager) StackLeniency has to be nullable
+
             beatmap.PlayMode = (PlayMode)reader.GetByte(i); i++;
             beatmap.Source = reader.GetString(i); i++;
             beatmap.AudioOffset = (short)reader.GetInt32(i); i++;

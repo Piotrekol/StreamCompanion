@@ -143,5 +143,12 @@ namespace OsuMemoryEventSource
             logger?.Log("task aborted", LogLevel.Debug);
             return default(T);
         }
+
+
+        public static string GetMapMd5Safe(this IOsuMemoryReader reader)
+        {
+            var mapHash = reader.GetMapMd5();
+            return Helpers.IsMD5(mapHash) ? mapHash : null;
+        }
     }
 }

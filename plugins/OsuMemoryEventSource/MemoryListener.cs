@@ -1,9 +1,9 @@
-﻿using OsuMemoryDataProvider;
+﻿using CollectionManager.Enums;
+using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
-using CollectionManager.Enums;
 
 namespace OsuMemoryEventSource
 {
@@ -19,6 +19,7 @@ namespace OsuMemoryEventSource
         private OsuMemoryStatus _currentStatus = OsuMemoryStatus.Unknown;
         private string _lastMapString = "-";
         private string _currentMapString = "";
+        private string _lastMapHash = "";
         private MemoryDataProcessor _memoryDataProcessor;
         public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettingsHandler _settings;
@@ -27,7 +28,7 @@ namespace OsuMemoryEventSource
         {
             _memoryDataProcessor = new MemoryDataProcessor(songsFolderLocation);
         }
-        
+
         public void Tick(IOsuMemoryReader reader, bool sendEvents)
         {
             int num;
@@ -44,22 +45,23 @@ namespace OsuMemoryEventSource
                 _currentMapString = reader.GetSongString();
                 OsuStatus status = _currentStatus.Convert();
                 var gameMode = reader.ReadSongSelectGameMode();
+                var mapHash = reader.GetMapMd5Safe();
+                var mapHashDiffers = mapHash != null && _lastMapHash != null && _lastMapHash != mapHash;
+
                 if (sendEvents &&
                     (_lastMapId != _currentMapId ||
                     _lastStatus != _currentStatus ||
                     _currentMapString != _lastMapString ||
-                     gameMode != _lastGameMode)
+                     gameMode != _lastGameMode ||
+                     mapHashDiffers)
                     )
                 {
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
                     _lastGameMode = gameMode;
+                    _lastMapHash = mapHash;
 
-                    var mapHash = reader.GetMapMd5();
-
-                    if (!Helpers.IsMD5(mapHash))
-                        mapHash = null;
 
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
