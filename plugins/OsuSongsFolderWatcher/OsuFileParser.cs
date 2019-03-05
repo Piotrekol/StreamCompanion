@@ -159,7 +159,15 @@ namespace OsuSongsFolderWatcher
                         map.Mp3Name = val.Value;
                         break;
                     case "AudioLeadIn":
-                        map.AudioOffset = Convert.ToInt16(val.Value, CultureInfo.InvariantCulture);
+                        try
+                        {
+                            map.AudioOffset = Convert.ToInt16(val.Value, CultureInfo.InvariantCulture);
+                        }
+                        catch (OverflowException)
+                        {
+                            map.AudioOffset = 0;
+                        }
+
                         break;
                     case "PreviewTime":
                         map.PreviewTime = Convert.ToInt32(val.Value, CultureInfo.InvariantCulture);
