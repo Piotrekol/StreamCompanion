@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BeatmapHelpers.cs" />
     <Compile Include="DataTypes\Beatmap.cs" />
     <Compile Include="DataTypes\ConfigEntry.cs" />
     <Compile Include="DataTypes\Enums.cs" />

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
-using System.IO;
 using osu.Framework.Audio.Track;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Beatmaps;
@@ -12,6 +10,9 @@ using osu.Game.Rulesets.Catch;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Taiko;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace PpCalculator
 {
@@ -22,6 +23,9 @@ namespace PpCalculator
     {
         private readonly Beatmap beatmap;
         public int RulesetID => beatmap.BeatmapInfo.RulesetID;
+        public double Length => beatmap.HitObjects.Any() ? beatmap.HitObjects.Last().StartTime : 0;
+
+        public string BackgroundFile => beatmap.Metadata.BackgroundFile;
         /// <summary>
         /// Constructs a new <see cref="ProcessorWorkingBeatmap"/> from a .osu file.
         /// </summary>
@@ -32,7 +36,7 @@ namespace PpCalculator
         {
         }
 
-        private ProcessorWorkingBeatmap(Beatmap beatmap, int? beatmapId = null)
+        internal ProcessorWorkingBeatmap(Beatmap beatmap, int? beatmapId = null)
             : base(beatmap.BeatmapInfo)
         {
             this.beatmap = beatmap;

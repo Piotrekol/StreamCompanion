@@ -26,8 +26,11 @@ namespace StreamCompanionTypes.DataTypes
 
     public class TokenWithFormat : Token
     {
-        public TokenWithFormat(object value, TokenType type = TokenType.Normal, string format = null) : base(value, type)
+        private readonly object _defaultValue;
+
+        public TokenWithFormat(object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null) : base(value, type)
         {
+            _defaultValue = defaultValue;
             Format = format;
             Value = base.Value;
         }
@@ -49,6 +52,10 @@ namespace StreamCompanionTypes.DataTypes
             }
         }
 
+        public void Reset()
+        {
+            Value = _defaultValue;
+        }
         public string Format { get; set; }
         public string FormatedValue { get; set; }
     }

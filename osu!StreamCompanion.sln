@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Taiko", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Osu", "submodules\osu\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj", "{330603A4-F36B-4073-82D3-41A95A6D35B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveVisualizer", "plugins\LiveVisualizer\LiveVisualizer.csproj", "{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -381,6 +383,18 @@ Global
 		{330603A4-F36B-4073-82D3-41A95A6D35B2}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{330603A4-F36B-4073-82D3-41A95A6D35B2}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{330603A4-F36B-4073-82D3-41A95A6D35B2}.Remote debug|x86.Build.0 = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Debug|x86.Build.0 = Debug|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Release|x86.ActiveCfg = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Release|x86.Build.0 = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -409,6 +423,7 @@ Global
 		{4CEEFDDB-FBDE-4E4A-BD01-019AD6E16EDF} = {DDE5F7B5-68C3-4143-8726-0BB91B83EED3}
 		{A86B0A57-2968-460A-982D-4251FF02498A} = {DDE5F7B5-68C3-4143-8726-0BB91B83EED3}
 		{330603A4-F36B-4073-82D3-41A95A6D35B2} = {DDE5F7B5-68C3-4143-8726-0BB91B83EED3}
+		{6FB20D7D-F84A-41DE-B086-DA920C7B5E86} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}

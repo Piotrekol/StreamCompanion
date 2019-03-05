@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-using System.IO;
-using CollectionManager.DataTypes;
-using StreamCompanionTypes;
+﻿using System.IO;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
-using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
-namespace BeatmapPpReplacements
+namespace StreamCompanionTypes
 {
     public static class BeatmapHelpers
     {
@@ -31,6 +28,21 @@ namespace BeatmapPpReplacements
                 dir = Path.Combine(dir, "Songs\\");
             }
             return dir;
+        }
+
+        public static string FullOsuFileLocation(this Beatmap beatmap, ISettingsHandler settings)
+        {
+            return beatmap.FullOsuFileLocation(GetFullSongsLocation(settings));
+        }
+
+        public static bool IsValidBeatmap(this Beatmap beatmap, ISettingsHandler settings, out string fullFileLocation)
+        {
+            fullFileLocation = beatmap.FullOsuFileLocation(settings);
+
+            if (!File.Exists(fullFileLocation)) return false;
+            FileInfo file = new FileInfo(fullFileLocation);
+
+            return file.Length != 0;
         }
     }
 }

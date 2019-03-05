@@ -25,7 +25,7 @@ namespace PpCalculator
 
         public virtual int Score { get; set; }
 
-        private string[] _Mods { get; set; } = { "--" };
+        private string[] _Mods { get; set; } = null;
 
         public virtual string[] Mods
         {
@@ -57,6 +57,26 @@ namespace PpCalculator
         protected string LastMods { get; set; } = null;
         protected bool ResetPerformanceCalculator { get; set; }
 
+        public double Calculate(double startTime, double endTime = double.NaN, Dictionary<string, double> categoryAttribs = null)
+        {
+
+            var orginalWorkingBeatmap = WorkingBeatmap;
+            var tempMap = new Beatmap();
+            tempMap.HitObjects.AddRange(WorkingBeatmap.Beatmap.HitObjects.Where(h => h.StartTime >= startTime && h.StartTime <= endTime));
+            tempMap.ControlPointInfo = WorkingBeatmap.Beatmap.ControlPointInfo;
+            tempMap.BeatmapInfo = WorkingBeatmap.BeatmapInfo;
+
+            WorkingBeatmap = new ProcessorWorkingBeatmap(tempMap);
+
+            ResetPerformanceCalculator = true;
+            var result = Calculate(null, categoryAttribs);
+
+            WorkingBeatmap = orginalWorkingBeatmap;
+
+            ResetPerformanceCalculator = true;
+
+            return result;
+        }
 
         public double Calculate(double? time = null, Dictionary<string, double> categoryAttribs = null)
         {
@@ -107,7 +127,16 @@ namespace PpCalculator
             if (time.HasValue)
                 pp = PerformanceCalculator.Calculate(time.Value, categoryAttribs);
             else
-                pp = PerformanceCalculator.Calculate(categoryAttribs);
+            {
+                try
+                {
+                    pp = PerformanceCalculator.Calculate(categoryAttribs);
+                }
+                catch (InvalidOperationException)
+                {
+                    pp = -1;
+                }
+            }
 
             return pp;
         }
