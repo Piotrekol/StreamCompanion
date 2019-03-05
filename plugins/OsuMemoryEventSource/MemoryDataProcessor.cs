@@ -1,7 +1,6 @@
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using Newtonsoft.Json;
-using osu.Framework.Extensions.IEnumerableExtensions;
 using OsuMemoryDataProvider;
 using PpCalculator;
 using StreamCompanionTypes.DataTypes;
@@ -9,7 +8,6 @@ using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace OsuMemoryEventSource
@@ -164,7 +162,10 @@ namespace OsuMemoryEventSource
 
         private void ResetTokens()
         {
-            replacements2.ForEach(r => r.Value.Reset());
+            foreach (var tokenkv in replacements2)
+            {
+                tokenkv.Value.Reset();
+            }
         }
         private void SendData(bool emptyPatterns = false)
         {
