@@ -160,6 +160,9 @@ namespace LiveVisualizer
 
                     if (double.IsNaN(strain) || strain < 0)
                         strain = 0;
+                    else if (strain > 2000)
+                        strain = 2000;//lets not freeze everything with aspire/fancy 100* maps
+
                     strains.Add(time, strain);
                     time += interval;
                 }
