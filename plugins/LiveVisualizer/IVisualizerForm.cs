@@ -39,6 +39,7 @@ namespace LiveVisualizer
 
         bool ShowAxisYSeparator { get; set; }
         string AxisYSeparatorColor { get; set; }
+        double AxisYStep { get; set; }
     }
 
     public interface IWpfChartConfiguration

@@ -44,5 +44,6 @@ namespace LiveVisualizer
         public string Font { get; set; }
         public bool ShowAxisYSeparator { get; set; }
         public string AxisYSeparatorColor { get; set; }
+        public double AxisYStep { get; set; } = 100;
     }
 }

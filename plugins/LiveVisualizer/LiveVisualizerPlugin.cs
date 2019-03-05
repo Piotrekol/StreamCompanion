@@ -97,8 +97,7 @@ namespace LiveVisualizer
                     ChartCutoffsSet.Add(cutoff);
                 }
 
-                if (_visualizerData.Strains.Any())
-                    _visualizerData.MaxYValue = getMaxY(_visualizerData.Strains.Max());
+                SetAxisValues();
             }
         }
 
@@ -136,13 +135,13 @@ namespace LiveVisualizer
                 mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
 
             var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-            
+
             var strains = new Dictionary<int, double>(300);
 
             //Total time refers to beatmap time, not song total time
             var mapLength = mapSearchResult.BeatmapsFound[0].TotalTime;
 
-            if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko ))
+            if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko))
             {
                 var strainLength = 5000;
                 var interval = 1500;
@@ -168,18 +167,29 @@ namespace LiveVisualizer
 
             _visualizerData.TotalTime = mapLength;
 
+
+
             _visualizerData.Strains = strains.Select(s => s.Value).AsChartValues();
 
-            if (strains.Any())
-                _visualizerData.MaxYValue = getMaxY(_visualizerData.Strains.Max());
+            SetAxisValues();
 
             var imageLocation = Path.Combine(mapSearchResult.BeatmapsFound[0]
                 .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), workingBeatmap.BackgroundFile ?? "");
 
             _visualizerData.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
 
+        }
 
-
+        private void SetAxisValues()
+        {
+            if (_visualizerData.Strains.Any())
+            {
+                var strainsMax = _visualizerData.Strains.Max();
+                _visualizerData.MaxYValue = getMaxY(strainsMax);
+                _visualizerData.AxisYStep = GetAxisYStep(double.IsNaN(_visualizerData.MaxYValue)
+                    ? strainsMax
+                    : _visualizerData.MaxYValue);
+            }
         }
 
         public override List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
@@ -233,7 +243,22 @@ namespace LiveVisualizer
                         return cutoff;
                 }
 
-            return double.NaN;//auto size
+            return Math.Ceiling(maxValue);
+        }
+
+        private double GetAxisYStep(double maxYValue)
+        {
+            if (double.IsNaN(maxYValue) || maxYValue <= 0)
+                return 100;
+
+            if (maxYValue < 10)
+                maxYValue += 10;
+            return RoundOff((int)(maxYValue / 3.1));
+
+            int RoundOff(int num)
+            {
+                return ((int)Math.Ceiling(num / 10.0)) * 10;
+            }
         }
 
         public override void Dispose()

@@ -52,7 +52,7 @@
                         </Style>
                     </lvc:Axis.Style>
                     <lvc:Axis.Separator>
-                        <lvc:Separator Name="AxisYSeparator" StrokeThickness="1" StrokeDashArray="1" IsEnabled="{Binding ShowAxisYSeparator}" Step="100">
+                        <lvc:Separator Name="AxisYSeparator" StrokeThickness="1" StrokeDashArray="1" IsEnabled="{Binding ShowAxisYSeparator}" Step="{Binding AxisYStep}" >
                             <!--Here, see the IsEnabled => false-->
                             <lvc:Separator.Stroke>
                                 <SolidColorBrush Color="{Binding AxisYSeparatorColor}" />
