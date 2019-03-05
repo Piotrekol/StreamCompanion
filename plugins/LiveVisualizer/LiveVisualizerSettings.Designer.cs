@@ -30,6 +30,8 @@
         {
             this.checkBox_enable = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
+            this.checkBox_showAxisYSeparator = new System.Windows.Forms.CheckBox();
             this.linkLabel_UICredit2 = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
             this.linkLabel_UICredit1 = new System.Windows.Forms.LinkLabel();
@@ -40,10 +42,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_chartCutoffs = new System.Windows.Forms.TextBox();
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
-            this.checkBox_showAxisYSeparator = new System.Windows.Forms.CheckBox();
             this.color_chartProgress = new LiveVisualizer.ColorPickerWithPreview();
             this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
             this.panel1.SuspendLayout();
             this.panel_manualChart.SuspendLayout();
             this.SuspendLayout();
@@ -60,11 +60,11 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.linkLabel_UICredit2);
+            this.panel1.Controls.Add(this.linkLabel_UICredit1);
             this.panel1.Controls.Add(this.color_horizontalLegend);
             this.panel1.Controls.Add(this.checkBox_showAxisYSeparator);
-            this.panel1.Controls.Add(this.linkLabel_UICredit2);
             this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.linkLabel_UICredit1);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.comboBox_font);
@@ -74,13 +74,40 @@
             this.panel1.Controls.Add(this.color_chartPrimary);
             this.panel1.Location = new System.Drawing.Point(0, 28);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(443, 254);
+            this.panel1.Size = new System.Drawing.Size(650, 254);
             this.panel1.TabIndex = 1;
+            // 
+            // color_horizontalLegend
+            // 
+            this.color_horizontalLegend.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_horizontalLegend.LabelDesigner.AutoSize = true;
+            this.color_horizontalLegend.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_horizontalLegend.LabelDesigner.Name = "Label";
+            this.color_horizontalLegend.LabelDesigner.Size = new System.Drawing.Size(115, 13);
+            this.color_horizontalLegend.LabelDesigner.TabIndex = 1;
+            this.color_horizontalLegend.LabelDesigner.Text = "Horizontal legend color";
+            this.color_horizontalLegend.Location = new System.Drawing.Point(4, 68);
+            this.color_horizontalLegend.Name = "color_horizontalLegend";
+            this.color_horizontalLegend.Size = new System.Drawing.Size(436, 26);
+            this.color_horizontalLegend.TabIndex = 33;
+            // 
+            // checkBox_showAxisYSeparator
+            // 
+            this.checkBox_showAxisYSeparator.AutoSize = true;
+            this.checkBox_showAxisYSeparator.Location = new System.Drawing.Point(8, 123);
+            this.checkBox_showAxisYSeparator.Name = "checkBox_showAxisYSeparator";
+            this.checkBox_showAxisYSeparator.Size = new System.Drawing.Size(136, 17);
+            this.checkBox_showAxisYSeparator.TabIndex = 32;
+            this.checkBox_showAxisYSeparator.Text = "Show horizontal legend";
+            this.checkBox_showAxisYSeparator.UseVisualStyleBackColor = true;
             // 
             // linkLabel_UICredit2
             // 
             this.linkLabel_UICredit2.AutoSize = true;
-            this.linkLabel_UICredit2.Location = new System.Drawing.Point(188, 211);
+            this.linkLabel_UICredit2.Location = new System.Drawing.Point(217, 211);
             this.linkLabel_UICredit2.Name = "linkLabel_UICredit2";
             this.linkLabel_UICredit2.Size = new System.Drawing.Size(48, 13);
             this.linkLabel_UICredit2.TabIndex = 31;
@@ -91,7 +118,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(162, 211);
+            this.label4.Location = new System.Drawing.Point(191, 211);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(25, 13);
             this.label4.TabIndex = 30;
@@ -100,7 +127,7 @@
             // linkLabel_UICredit1
             // 
             this.linkLabel_UICredit1.AutoSize = true;
-            this.linkLabel_UICredit1.Location = new System.Drawing.Point(99, 211);
+            this.linkLabel_UICredit1.Location = new System.Drawing.Point(128, 211);
             this.linkLabel_UICredit1.Name = "linkLabel_UICredit1";
             this.linkLabel_UICredit1.Size = new System.Drawing.Size(62, 13);
             this.linkLabel_UICredit1.TabIndex = 29;
@@ -113,9 +140,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(5, 211);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(95, 13);
+            this.label3.Size = new System.Drawing.Size(122, 13);
             this.label3.TabIndex = 27;
-            this.label3.Text = "UI design made by";
+            this.label3.Text = "Initial UI design made by";
             // 
             // label2
             // 
@@ -132,7 +159,7 @@
             this.comboBox_font.FormattingEnabled = true;
             this.comboBox_font.Location = new System.Drawing.Point(71, 99);
             this.comboBox_font.Name = "comboBox_font";
-            this.comboBox_font.Size = new System.Drawing.Size(152, 21);
+            this.comboBox_font.Size = new System.Drawing.Size(139, 21);
             this.comboBox_font.TabIndex = 25;
             // 
             // panel_manualChart
@@ -170,16 +197,6 @@
             this.checkBox_autosizeChart.Text = "Autosize chart value height based on max value";
             this.checkBox_autosizeChart.UseVisualStyleBackColor = true;
             // 
-            // checkBox_showAxisYSeparator
-            // 
-            this.checkBox_showAxisYSeparator.AutoSize = true;
-            this.checkBox_showAxisYSeparator.Location = new System.Drawing.Point(8, 123);
-            this.checkBox_showAxisYSeparator.Name = "checkBox_showAxisYSeparator";
-            this.checkBox_showAxisYSeparator.Size = new System.Drawing.Size(136, 17);
-            this.checkBox_showAxisYSeparator.TabIndex = 32;
-            this.checkBox_showAxisYSeparator.Text = "Show horizontal legend";
-            this.checkBox_showAxisYSeparator.UseVisualStyleBackColor = true;
-            // 
             // color_chartProgress
             // 
             this.color_chartProgress.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
@@ -214,23 +231,6 @@
             this.color_chartPrimary.Size = new System.Drawing.Size(436, 26);
             this.color_chartPrimary.TabIndex = 0;
             // 
-            // color_horizontalLegend
-            // 
-            this.color_horizontalLegend.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_horizontalLegend.LabelDesigner.AutoSize = true;
-            this.color_horizontalLegend.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_horizontalLegend.LabelDesigner.Name = "Label";
-            this.color_horizontalLegend.LabelDesigner.Size = new System.Drawing.Size(115, 13);
-            this.color_horizontalLegend.LabelDesigner.TabIndex = 1;
-            this.color_horizontalLegend.LabelDesigner.Text = "Horizontal legend color";
-            this.color_horizontalLegend.Location = new System.Drawing.Point(4, 68);
-            this.color_horizontalLegend.Name = "color_horizontalLegend";
-            this.color_horizontalLegend.Size = new System.Drawing.Size(436, 26);
-            this.color_horizontalLegend.TabIndex = 33;
-            // 
             // LiveVisualizerSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -238,7 +238,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkBox_enable);
             this.Name = "LiveVisualizerSettings";
-            this.Size = new System.Drawing.Size(443, 282);
+            this.Size = new System.Drawing.Size(650, 282);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel_manualChart.ResumeLayout(false);
