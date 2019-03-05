@@ -57,10 +57,8 @@ namespace PpCalculator
         protected string LastMods { get; set; } = null;
         protected bool ResetPerformanceCalculator { get; set; }
 
-        protected virtual bool calculatingPartOfBeatmap { get; set; }
         public double Calculate(double startTime, double endTime = double.NaN, Dictionary<string, double> categoryAttribs = null)
         {
-            calculatingPartOfBeatmap = true;
 
             var orginalWorkingBeatmap = WorkingBeatmap;
             var tempMap = new Beatmap();
@@ -76,7 +74,6 @@ namespace PpCalculator
             WorkingBeatmap = orginalWorkingBeatmap;
 
             ResetPerformanceCalculator = true;
-            calculatingPartOfBeatmap = false;
 
             return result;
         }
@@ -135,7 +132,7 @@ namespace PpCalculator
                 {
                     pp = PerformanceCalculator.Calculate(categoryAttribs);
                 }
-                catch (InvalidOperationException) when (calculatingPartOfBeatmap)
+                catch (InvalidOperationException)
                 {
                     pp = -1;
                 }
