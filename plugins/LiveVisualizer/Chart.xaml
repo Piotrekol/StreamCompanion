@@ -26,7 +26,7 @@
 
             </wpf:CartesianChart.Series>
             <wpf:CartesianChart.AxisX>
-                <wpf:Axis IsMerged="True" FontSize="0" Foreground="Transparent">
+                <wpf:Axis IsMerged="True"  Foreground="Transparent">
                     <wpf:Axis.Separator>
                         <wpf:Separator StrokeThickness="1" StrokeDashArray="2" IsEnabled="False">
                             <!--Here, see the IsEnabled => false-->
@@ -38,7 +38,7 @@
                 </wpf:Axis>
             </wpf:CartesianChart.AxisX>
             <wpf:CartesianChart.AxisY>
-                <lvc:Axis IsMerged="True"  FontSize="0" MaxValue="{Binding MaxYValue}" MinValue="0">
+                <lvc:Axis IsMerged="True"  MaxValue="{Binding MaxYValue}" MinValue="0">
                     <lvc:Axis.Style>
                         <Style TargetType="lvc:Axis">
                             <Style.Triggers>
