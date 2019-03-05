@@ -220,7 +220,9 @@ namespace LiveVisualizer
                         _visualizerData.Hit50 = (ushort)_hit50Token.Value;
                         _visualizerData.HitMiss = (ushort)_hitMissToken.Value;
                         _visualizerData.CurrentTime = (double)_timeToken.Value * 1000;
-                        var progress = 700 * (_visualizerData.CurrentTime / _visualizerData.TotalTime);
+
+                        var normalizedCurrentTime = _visualizerData.CurrentTime < 0 ? 0 : _visualizerData.CurrentTime;
+                        var progress = 700 * (normalizedCurrentTime / _visualizerData.TotalTime);
                         _visualizerData.PixelMapProgress = progress < 700 ? progress : 700;
                     }
                 }
