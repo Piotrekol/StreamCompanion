@@ -1,4 +1,4 @@
-﻿using CollectionManager.Annotations;
+using CollectionManager.Annotations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,9 +13,10 @@ namespace StreamCompanionTypes.DataTypes
 {
     public class OutputPattern : EventArgs, INotifyPropertyChanged, ICloneable
     {
+        //TODO: instead of manually adding these each time new live token is created expose static Tokens prop for plugins to add to.
         private static readonly List<string> _memoryFormatTokens = new List<string>
         {
-            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!CurrentMaxCombo!", "!PpIfMapEndsNow!", "!PpIfRestFced!", "!AccIfRestFced!", "!PlayerHp!"
+            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!CurrentMaxCombo!", "!PlayerHp!", "!PpIfMapEndsNow!", "!AimPpIfMapEndsNow!", "!SpeedPpIfMapEndsNow!", "!AccIfRestFced!", "!StrainPpIfMapEndsNow!", "!PpIfRestFced!"
         };
         [IgnoreDataMember]
         public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
