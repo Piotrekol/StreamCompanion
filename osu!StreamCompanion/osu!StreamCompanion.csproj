@@ -76,10 +76,6 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CollectionManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\CollectionManager.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -308,6 +304,10 @@
     <ProjectReference Include="..\StreamCompanionTypes\StreamCompanionTypes.csproj">
       <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
       <Name>StreamCompanionTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\submodules\CollectionManager\CollectionManagerDll\CollectionManagerDll.csproj">
+      <Project>{533ab47a-d1b5-45db-a37e-f053fa3699c4}</Project>
+      <Name>CollectionManagerDll</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
