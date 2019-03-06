@@ -108,7 +108,7 @@ namespace LiveVisualizer
         {
             if (enable)
             {
-                if (_visualizerWindow == null)
+                if (_visualizerWindow == null || !_visualizerWindow.IsLoaded)
                     _visualizerWindow = new MainWindow(_visualizerData);
 
                 _visualizerWindow.Show();
