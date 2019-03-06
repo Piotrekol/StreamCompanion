@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using CollectionManager.DataTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
-using Beatmap = OppaiSharp.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -116,34 +115,7 @@ namespace osu_StreamCompanion.Code.Helpers
             //file is not locked
             return false;
         }
-
-        public static Beatmap GetOppaiSharpBeatmap(string mapLocation)
-        {
-            bool retry = true;
-            Beatmap beatmap = null;
-            do
-            {
-                try
-                {
-                    using (var stream = new FileStream(mapLocation, FileMode.Open, FileAccess.Read))
-                    {
-                        using (var reader = new StreamReader(stream))
-                        {
-                            beatmap = Beatmap.Read(reader);
-                            retry = false;
-                        }
-                    }
-                }
-                catch
-                {
-                    if (!File.Exists(mapLocation))
-                        return null;
-                }
-            } while (retry);
-
-            return beatmap;
-        }
-
+        
         public static bool SafeHasExited(this Process process)
         {
 

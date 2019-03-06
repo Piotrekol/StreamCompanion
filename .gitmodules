@@ -1,7 +1,3 @@
-[submodule "submodules/OppaiSharp"]
-	path = submodules/OppaiSharp
-	url = https://github.com/Piotrekol/OppaiSharp
-	branch = BeatmapCutting
 [submodule "submodules/osu"]
 	path = submodules/osu
 	url = https://github.com/ppy/osu

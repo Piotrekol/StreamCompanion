@@ -16,8 +16,6 @@ https://osu.ppy.sh/u/Piotrekol
 https://twitch.tv/Piotrekol
 Libraries used:
 CollectionManager by Piotrekol
-OppaiSharp by HoLLy-HaCKeR
-oppai-ng by Francesco149
 SQLite
 Newtonsoft.Json by JamesNK
 
