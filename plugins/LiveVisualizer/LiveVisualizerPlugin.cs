@@ -182,7 +182,7 @@ namespace LiveVisualizer
 
         private void SetAxisValues()
         {
-            if (_visualizerData.Strains.Any())
+            if (_visualizerData.Strains != null && _visualizerData.Strains.Any())
             {
                 var strainsMax = _visualizerData.Strains.Max();
                 _visualizerData.MaxYValue = getMaxY(strainsMax);
