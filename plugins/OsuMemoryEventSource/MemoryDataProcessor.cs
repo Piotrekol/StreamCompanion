@@ -88,7 +88,7 @@ namespace OsuMemoryEventSource
                     map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-                    var mods = map.Mods?.Mods ?? Mods.Omod;
+                    var mods = map.Mods?.WorkingMods ?? "";
 
                     _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
                         (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
@@ -96,7 +96,7 @@ namespace OsuMemoryEventSource
                     CopyPatterns(map.FormatedStrings);
                 }
                 else
-                    _rawData.SetCurrentMap(null, Mods.Omod, null, PlayMode.Osu);
+                    _rawData.SetCurrentMap(null, "", null, PlayMode.Osu);
             }
         }
 

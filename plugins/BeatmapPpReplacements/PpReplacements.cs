@@ -20,7 +20,7 @@ namespace BeatmapPpReplacements
         private PpCalculator.PpCalculator _ppCalculator = null;
 
         private ISettingsHandler _settings;
-        private Mods _lastMods;
+        private string _lastShortMods = "";
         private string _lastModsStr = "None";
         private List<IModParser> _modParsers;
         private IModParser ModParser => _modParsers[0];
@@ -82,7 +82,7 @@ namespace BeatmapPpReplacements
                 !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)
                 )
                 return ret;
-            
+
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
 
@@ -102,10 +102,8 @@ namespace BeatmapPpReplacements
 
             ret["GameMode"] = new TokenWithFormat(playMode.ToString());
 
-            Mods mods = Mods.Omod;
+            string mods = "";
 
-
-            
             if (playMode == PlayMode.OsuMania)
             {
                 ret["1 000 000PP"] = new TokenWithFormat(GetPp(_ppCalculator, 0, mods, 1_000_000), format: PpFormat);
@@ -131,14 +129,14 @@ namespace BeatmapPpReplacements
             string modsStr;
             if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
             {
-                mods = (map.Mods?.Mods ?? Mods.Omod);
-                modsStr = map.Mods?.ShownMods ?? "NM";
-                _lastMods = mods;
+                mods = map.Mods?.WorkingMods ?? "";
+                modsStr = map.Mods?.ShownMods ?? "";
+                _lastShortMods = mods;
                 _lastModsStr = modsStr;
             }
             else
             {
-                mods = _lastMods;
+                mods = _lastShortMods;
                 modsStr = _lastModsStr;
             }
 
@@ -166,12 +164,12 @@ namespace BeatmapPpReplacements
 
             return ret;
         }
-        private double GetPp(PpCalculator.PpCalculator ppCalculator, double acc, Mods mods = Mods.Omod, int score = 0)
+        private double GetPp(PpCalculator.PpCalculator ppCalculator, double acc, string mods = "", int score = 0)
         {
             ppCalculator.Accuracy = acc;
             ppCalculator.Score = score;
 
-            _ppCalculator.Mods = mods.ToString().Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            _ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             try
             {
                 return ppCalculator.Calculate();

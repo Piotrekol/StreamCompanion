@@ -30,7 +30,7 @@ namespace PpCalculator
         public virtual string[] Mods
         {
             get => _Mods;
-            set { _Mods = value?.Where(v => v != "Au" && v != "Sv2" && v != "Omod").ToArray(); }
+            set { _Mods = value?.Where(v => v != "AU" && v != "SV2" && v != "RL").ToArray(); }
         }
 
         public virtual int Misses { get; set; }

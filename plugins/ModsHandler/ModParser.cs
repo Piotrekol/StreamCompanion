@@ -7,12 +7,12 @@ namespace ModsHandler
     public class ModParser : CollectionManager.Modules.ModParser.ModParser, IModule, IModParser, ISettingsProvider
     {
         private readonly SettingNames _names = SettingNames.Instance;
-   
+
         private ISettingsHandler _settings;
         private ModParserSettings _modParserSettings;
         public bool Started { get; set; }
         public string SettingGroup { get; } = "Map matching";
-        
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -33,10 +33,11 @@ namespace ModsHandler
 
             var useShortMod = !_settings?.Get<bool>(_names.UseLongMods) ?? true;
 
-            var mods = new ModsEx(useShortMod);
-            mods.Mods = GetModsFromInt(modsEnum);
-            mods.LongMods = GetModsFromEnum(modsEnum, false);
-            mods.ShortMods = GetModsFromEnum(modsEnum, true);
+            var mods = new ModsEx(useShortMod,
+                mods: GetModsFromInt(modsEnum),
+                shortMods: GetModsFromEnum(modsEnum, true),
+                longMods: GetModsFromEnum(modsEnum, false)
+            );
 
             return mods;
         }
