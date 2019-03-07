@@ -25,12 +25,12 @@ namespace PpCalculator
 
         public virtual int Score { get; set; }
 
-        private string[] _Mods { get; set; } = null;
+        private string[] _Mods { get; set; }
 
         public virtual string[] Mods
         {
             get => _Mods;
-            set { _Mods = value?.Where(v => v != "AU" && v != "SV2" && v != "RL").ToArray(); }
+            set => _Mods = value;
         }
 
         public virtual int Misses { get; set; }

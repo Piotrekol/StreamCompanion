@@ -15,7 +15,21 @@ namespace StreamCompanionTypes.DataTypes
         }
 
         public readonly Mods Mods;
-        private readonly string ShortMods;
+        private string _shortMods;
+        private string _filteredShortMods;
+        private string ShortMods
+        {
+            get => _shortMods;
+            set
+            {
+                _shortMods = value;
+                _filteredShortMods = value
+                    .Replace("AU", "")
+                    .Replace("SV2", "")
+                    .Replace("RL", "")
+                    .Replace("CO", "DS"); //Coop is named Dual Stages in osu!lazer
+            }
+        }
         private readonly string LongMods;
         /// <summary>
         /// Mods value shown to user
@@ -25,6 +39,6 @@ namespace StreamCompanionTypes.DataTypes
         /// <summary>
         /// Mods used for processing (eg. pp calculation)
         /// </summary>
-        public string WorkingMods => Mods == Mods.Omod ? "" : ShortMods;
+        public string WorkingMods => Mods == Mods.Omod ? "" : _filteredShortMods;
     }
 }
