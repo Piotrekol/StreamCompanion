@@ -33,7 +33,7 @@ namespace ModsHandler
             _modParser.Start(null);
             return (Mods)modsEnum;
         }
-        public string GetModsFromEnum(int modsEnum)
+        public ModsEx GetModsFromEnum(int modsEnum)
         {
             return _modParser.GetModsFromEnum(modsEnum);
         }
@@ -76,7 +76,7 @@ namespace ModsHandler
             if (map.FoundBeatmaps)
             {
                 var foundMap = map.BeatmapsFound[0];
-                var mods = map.Mods?.Item1 ?? Mods.Omod;
+                var mods = map.Mods?.Mods ?? Mods.Omod;
                 var c = _difficultyCalculator.ApplyMods(foundMap, mods);
 
                 if ((mods & Mods.Nc) != 0)
@@ -88,7 +88,7 @@ namespace ModsHandler
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
                 return new Tokens
                 {
-                    {"mods", new TokenWithFormat( map.Mods?.Item2 )},
+                    {"mods", new TokenWithFormat( map.Mods?.ShownMods )},
                     {"mAR", new TokenWithFormat( Math.Round(c["AR"], 1))},
                     {"mCS", new TokenWithFormat( Math.Round(c["CS"], 1))},
                     {"mOD", new TokenWithFormat( Math.Round(c["OD"], 1))},

@@ -1,4 +1,5 @@
 ﻿using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace ModsHandler
@@ -26,12 +27,20 @@ namespace ModsHandler
                 ShortNoModText = noneText;
         }
 
-        public string GetModsFromEnum(int modsEnum)
+        public ModsEx GetModsFromEnum(int modsEnum)
         {
             UpdateNoModText();
-            var shortMod = !_settings?.Get<bool>(_names.UseLongMods) ?? true;
-            return GetModsFromEnum(modsEnum, shortMod);
+
+            var useShortMod = !_settings?.Get<bool>(_names.UseLongMods) ?? true;
+
+            var mods = new ModsEx(useShortMod);
+            mods.Mods = GetModsFromInt(modsEnum);
+            mods.LongMods = GetModsFromEnum(modsEnum, false);
+            mods.ShortMods = GetModsFromEnum(modsEnum, true);
+
+            return mods;
         }
+
         public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;

@@ -13,7 +13,7 @@ namespace StreamCompanionTypes.DataTypes
         public List<OutputPattern> FormatedStrings = new List<OutputPattern>();
         public bool FoundBeatmaps => _beatmapsFound.Count > 0;
         public string MapSearchString => _searchArgs.Raw;
-        public Tuple<Mods, string> Mods = null;
+        public ModsEx Mods = null;
         public OsuStatus Action => _searchArgs.Status;
         public PlayMode? PlayMode => _searchArgs.PlayMode;
         public string EventSource { get; set; }

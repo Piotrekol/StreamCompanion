@@ -38,7 +38,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         public MapSearchResult FindMapData(MapSearchArgs searchArgs)
         {
             MapSearchResult mapSearchResult = null;
-            Tuple<Mods, string> foundMods = null;
+            ModsEx foundMods = null;
             for (int i = 0; i < _mapDataFinders.Count; i++)
             {
                 if ((_mapDataFinders[i].SearchModes & searchArgs.Status) == 0)

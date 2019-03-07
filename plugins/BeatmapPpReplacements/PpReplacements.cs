@@ -10,7 +10,7 @@ using System.IO;
 
 namespace BeatmapPpReplacements
 {
-    public class PpReplacements : IPlugin, IMapDataReplacements, ISettings
+    public class PpReplacements : IPlugin, IMapDataReplacements, ISettings, IModParserGetter
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -22,6 +22,8 @@ namespace BeatmapPpReplacements
         private ISettingsHandler _settings;
         private Mods _lastMods;
         private string _lastModsStr = "None";
+        private List<IModParser> _modParsers;
+        private IModParser ModParser => _modParsers[0];
         public bool Started { get; set; }
 
         public string Description { get; } = "";
@@ -129,8 +131,8 @@ namespace BeatmapPpReplacements
             string modsStr;
             if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
             {
-                mods = (map.Mods?.Item1 ?? Mods.Omod);
-                modsStr = map.Mods?.Item2 ?? "NM";
+                mods = (map.Mods?.Mods ?? Mods.Omod);
+                modsStr = map.Mods?.ShownMods ?? "NM";
                 _lastMods = mods;
                 _lastModsStr = modsStr;
             }
@@ -192,5 +194,9 @@ namespace BeatmapPpReplacements
             this._settings = settings;
         }
 
+        public void SetModParserHandle(List<IModParser> modParser)
+        {
+            _modParsers = modParser;
+        }
     }
 }

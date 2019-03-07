@@ -88,7 +88,7 @@ namespace OsuMemoryEventSource
                     map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-                    var mods = map.Mods?.Item1 ?? Mods.Omod;
+                    var mods = map.Mods?.Mods ?? Mods.Omod;
 
                     _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
                         (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));

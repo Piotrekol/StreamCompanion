@@ -1,7 +1,9 @@
-﻿namespace StreamCompanionTypes.Interfaces
+﻿using StreamCompanionTypes.DataTypes;
+
+namespace StreamCompanionTypes.Interfaces
 {
      public interface IModParser
      {
-         string GetModsFromEnum(int modsEnum);
+         ModsEx GetModsFromEnum(int modsEnum);
      }
 }

@@ -59,6 +59,7 @@
     <Compile Include="DataTypes\LogLevel.cs" />
     <Compile Include="DataTypes\MapSearchArgs.cs" />
     <Compile Include="DataTypes\MapSearchResult.cs" />
+    <Compile Include="DataTypes\ModsEx.cs" />
     <Compile Include="DataTypes\OutputPattern.cs" />
     <Compile Include="DataTypes\SettingUpdated.cs" />
     <Compile Include="DataTypes\Token.cs" />

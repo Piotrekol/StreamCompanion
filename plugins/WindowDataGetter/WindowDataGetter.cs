@@ -33,9 +33,9 @@ namespace WindowDataGetter
                 var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.EventSource!="Msn")
                 {
-                    nowPlaying += string.Format(" [{0}] {1}", foundMap.DiffName, map.Mods?.Item2 ?? "");
+                    nowPlaying += string.Format(" [{0}] {1}", foundMap.DiffName, map.Mods?.ShownMods ?? "");
                     nowPlaying += string.Format(Environment.NewLine + "NoMod:{0:##.###}", foundMap.StarsNomod);
-                    var mods = map.Mods?.Item1 ?? Mods.Omod;
+                    var mods = map.Mods?.Mods ?? Mods.Omod;
                     nowPlaying += string.Format(" Modded: {0:##.###}", foundMap.Stars(PlayMode.Osu, mods));
                 }
                 _mainwindowHandle.NowPlaying = nowPlaying;

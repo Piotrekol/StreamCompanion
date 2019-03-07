@@ -48,7 +48,7 @@ namespace ModImageGenerator
                 if (map.FoundBeatmaps)
                 {
                     var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
-                    string mods = map.Mods?.Item2 ?? "";
+                    string mods = map.Mods?.ShownMods ?? "";
                     using (Bitmap img = _imageGenerator.GenerateImage(mods.Split(',')))
                     {
                         try
