@@ -111,6 +111,7 @@
     <Compile Include="Code\Core\Savers\FileSaver.cs" />
     <Compile Include="Code\Core\Savers\MainSaver.cs" />
     <Compile Include="Code\Helpers\Exceptions.cs" />
+    <Compile Include="Code\Helpers\GetDotNetVersion.cs" />
     <Compile Include="Code\Misc\ImpatientWebClient.cs">
       <SubType>Component</SubType>
     </Compile>

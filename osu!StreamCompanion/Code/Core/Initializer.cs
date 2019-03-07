@@ -2,6 +2,7 @@
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
+using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Modules.CommandsPreview;
 using osu_StreamCompanion.Code.Modules.Donation;
@@ -207,22 +208,30 @@ namespace osu_StreamCompanion.Code.Core
 
             foreach (var file in files)
             {
-
-                var asm = Assembly.LoadFile(Path.Combine(PluginsLocation, file));
-                
-                foreach (var type in asm.GetTypes())
+                try
                 {
-                    if (type.GetInterfaces().Contains(typeof(IPlugin)))
+                    var asm = Assembly.LoadFile(Path.Combine(PluginsLocation, file));
+
+                    foreach (var type in asm.GetTypes())
                     {
-                        if (!type.IsAbstract)
+                        if (type.GetInterfaces().Contains(typeof(IPlugin)))
                         {
-                            assemblies.Add(asm);
+                            if (!type.IsAbstract)
+                            {
+                                assemblies.Add(asm);
 
-                            var p = Activator.CreateInstance(type) as IPlugin;
-                            plugins.Add(p);
-
+                                var p = Activator.CreateInstance(type) as IPlugin;
+                                plugins.Add(p);
+                            }
                         }
                     }
+                }
+                catch (BadImageFormatException e)
+                {
+                    e.Data.Add("PluginsLocation", PluginsLocation);
+                    e.Data.Add("file", file);
+                    e.Data.Add("netFramework", GetDotNetVersion.Get45PlusFromRegistry());
+                    _logger.Log(e, LogLevel.Error);
                 }
             }
 

@@ -135,6 +135,7 @@ namespace osu_StreamCompanion
         {
             try
             {
+                ex.Data.Add("netFramework", GetDotNetVersion.Get45PlusFromRegistry());
 #if !DEBUG
                 var ravenClient = SentryLogger.RavenClient;
                 ravenClient.Release = ScVersion;
