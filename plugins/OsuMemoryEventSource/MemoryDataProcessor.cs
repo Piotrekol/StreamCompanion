@@ -9,6 +9,7 @@ using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using StreamCompanionTypes;
 
 namespace OsuMemoryEventSource
 {
@@ -83,9 +84,9 @@ namespace OsuMemoryEventSource
 
                 OutputPatterns.Clear();
 
-                if (map.FoundBeatmaps)
+                if (map.FoundBeatmaps && 
+                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
-                    var mapLocation = map.BeatmapsFound[0].FullOsuFileLocation(_songsFolderLocation);
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.Item1 ?? Mods.Omod;
 
