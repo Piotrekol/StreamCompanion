@@ -23,7 +23,7 @@ namespace LiveVisualizer
         public MainWindow(IWpfVisualizerData data)
         {
             InitializeComponent();
-
+            
             this.DataContext = data;
 
             this.frameholder.Content = new Chart(data, nameof(IWpfVisualizerData.ChartColor), false);
@@ -33,6 +33,15 @@ namespace LiveVisualizer
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
+        }
+
+        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var data = (IWpfVisualizerData) DataContext;
+            if (e.HeightChanged)
+                data.WindowHeight = e.NewSize.Height;
+            if (e.WidthChanged)
+                data.WindowWidth = e.NewSize.Width;
         }
     }
 }

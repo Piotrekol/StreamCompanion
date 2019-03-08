@@ -33,14 +33,16 @@
             this.button_change = new System.Windows.Forms.Button();
             this.numericUpDown_alpha = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_alpha)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel_colorPreview
             // 
             this.panel_colorPreview.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel_colorPreview.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panel_colorPreview.Location = new System.Drawing.Point(213, 0);
+            this.panel_colorPreview.Location = new System.Drawing.Point(84, 0);
             this.panel_colorPreview.Name = "panel_colorPreview";
             this.panel_colorPreview.Size = new System.Drawing.Size(25, 25);
             this.panel_colorPreview.TabIndex = 0;
@@ -57,7 +59,7 @@
             // 
             // button_change
             // 
-            this.button_change.Location = new System.Drawing.Point(132, 1);
+            this.button_change.Location = new System.Drawing.Point(3, 1);
             this.button_change.Name = "button_change";
             this.button_change.Size = new System.Drawing.Size(75, 23);
             this.button_change.TabIndex = 2;
@@ -67,7 +69,7 @@
             // 
             // numericUpDown_alpha
             // 
-            this.numericUpDown_alpha.Location = new System.Drawing.Point(283, 3);
+            this.numericUpDown_alpha.Location = new System.Drawing.Point(154, 3);
             this.numericUpDown_alpha.Maximum = new decimal(new int[] {
             255,
             0,
@@ -81,24 +83,35 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(242, 7);
+            this.label1.Location = new System.Drawing.Point(113, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(37, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Alpha:";
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.numericUpDown_alpha);
+            this.panel1.Controls.Add(this.panel_colorPreview);
+            this.panel1.Controls.Add(this.button_change);
+            this.panel1.Location = new System.Drawing.Point(297, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(210, 26);
+            this.panel1.TabIndex = 5;
+            // 
             // ColorPickerWithPreview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.numericUpDown_alpha);
-            this.Controls.Add(this.button_change);
             this.Controls.Add(this.Label);
-            this.Controls.Add(this.panel_colorPreview);
+            this.Controls.Add(this.panel1);
             this.Name = "ColorPickerWithPreview";
             this.Size = new System.Drawing.Size(507, 26);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_alpha)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -111,5 +124,6 @@
         public System.Windows.Forms.Label Label;
         private System.Windows.Forms.NumericUpDown numericUpDown_alpha;
         public System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel1;
     }
 }

@@ -1,4 +1,4 @@
-﻿using LiveCharts;
+using LiveCharts;
 using System;
 using System.ComponentModel;
 
@@ -41,6 +41,10 @@ namespace LiveVisualizer
         string AxisYSeparatorColor { get; set; }
         double AxisYStep { get; set; }
         bool DisableChartAnimations { get; set; }
+
+        double WindowHeight { get; set; }
+        double WindowWidth { get; set; }
+        bool EnableResizing { get; set; }
     }
 
     public interface IWpfChartConfiguration

@@ -46,5 +46,8 @@ namespace LiveVisualizer
         public string AxisYSeparatorColor { get; set; }
         public double AxisYStep { get; set; } = 100;
         public bool DisableChartAnimations { get; set; } = false;
+        public double WindowHeight { get; set; } = 350;
+        public double WindowWidth { get; set; } = 700;
+        public bool EnableResizing { get; set; }
     }
 }

@@ -19,7 +19,7 @@
                 <Setter Property="LineSmoothness" Value="1"></Setter>
             </Style> 
         </Grid.Resources>
-        <wpf:CartesianChart Name="chart" Width="700" Hoverable="False" DataTooltip="{x:Null}" DisableAnimations="{Binding DisableChartAnimations}">
+        <wpf:CartesianChart Name="chart" Width="{Binding WindowWidth}" Hoverable="False" DataTooltip="{x:Null}" DisableAnimations="{Binding DisableChartAnimations}">
 
             <wpf:CartesianChart.Series>
                 <lvc:LineSeries Name="LineSeries" Values="{Binding Strains}" PointGeometry="{x:Null}" Fill="{Binding ChartColor}" />

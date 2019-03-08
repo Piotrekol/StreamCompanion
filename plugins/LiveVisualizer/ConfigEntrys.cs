@@ -15,5 +15,11 @@ namespace LiveVisualizer
         public static readonly ConfigEntry ShowAxisYSeparator = new ConfigEntry($"{Prefix}ShowAxisYSeparator", true);
         public static readonly ConfigEntry AxisYSeparatorColor = new ConfigEntry($"{Prefix}AxisYSeparatorColor", "102;255;178;227");
 
+
+        public static readonly ConfigEntry EnableResizing = new ConfigEntry($"{Prefix}EnableResizing", false);
+        public static readonly ConfigEntry WindowWidth = new ConfigEntry($"{Prefix}WindowWidth", 700d);
+        public static readonly ConfigEntry WindowHeight = new ConfigEntry($"{Prefix}WindowHeight", 350d);
+
+
     }
 }

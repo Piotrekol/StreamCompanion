@@ -7,6 +7,7 @@ using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -61,11 +62,29 @@ namespace LiveVisualizer
                 ChartCutoffsSet.Add(cutoff);
             }
 
+            _visualizerData.WindowWidth = Settings.Get<double>(ConfigEntrys.WindowWidth);
+            _visualizerData.WindowHeight = Settings.Get<double>(ConfigEntrys.WindowHeight);
+            _visualizerData.EnableResizing = Settings.Get<bool>(ConfigEntrys.EnableResizing);
+            
             EnableVisualizer(Settings.Get<bool>(ConfigEntrys.Enable));
 
             Settings.SettingUpdated += SettingUpdated;
+            _visualizerData.PropertyChanged += VisualizerDataOnPropertyChanged;
 
             Task.Run(() => { UpdateLiveTokens(); });
+        }
+
+        private void VisualizerDataOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IWpfVisualizerData.WindowHeight):
+                    Settings.Add(ConfigEntrys.WindowHeight.Name, _visualizerData.WindowHeight, true);
+                    break;
+                case nameof(IWpfVisualizerData.WindowWidth):
+                    Settings.Add(ConfigEntrys.WindowWidth.Name, _visualizerData.WindowWidth, true);
+                    break;
+            }
         }
 
         private void SettingUpdated(object sender, SettingUpdated e)
@@ -87,6 +106,16 @@ namespace LiveVisualizer
 
             else if (e.Name == ConfigEntrys.AxisYSeparatorColor.Name)
                 _visualizerData.AxisYSeparatorColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.AxisYSeparatorColor);
+
+            else if (e.Name == ConfigEntrys.WindowWidth.Name)
+                _visualizerData.WindowWidth = Settings.Get<double>(ConfigEntrys.WindowWidth);
+
+            else if (e.Name == ConfigEntrys.WindowHeight.Name)
+                _visualizerData.WindowHeight = Settings.Get<double>(ConfigEntrys.WindowHeight);
+
+            else if (e.Name == ConfigEntrys.EnableResizing.Name)
+                _visualizerData.EnableResizing = Settings.Get<bool>(ConfigEntrys.EnableResizing);
+
 
             else if (e.Name == ConfigEntrys.ManualAxisCutoffs.Name || e.Name == ConfigEntrys.AutoSizeAxisY.Name)
             {
@@ -111,7 +140,10 @@ namespace LiveVisualizer
                 if (_visualizerWindow == null || !_visualizerWindow.IsLoaded)
                     _visualizerWindow = new MainWindow(_visualizerData);
 
+                _visualizerWindow.Width = _visualizerData.WindowWidth;
+                _visualizerWindow.Height = _visualizerData.WindowHeight;
                 _visualizerWindow.Show();
+
             }
             else
             {
@@ -224,8 +256,8 @@ namespace LiveVisualizer
                         _visualizerData.CurrentTime = (double)_timeToken.Value * 1000;
 
                         var normalizedCurrentTime = _visualizerData.CurrentTime < 0 ? 0 : _visualizerData.CurrentTime;
-                        var progress = 700 * (normalizedCurrentTime / _visualizerData.TotalTime);
-                        _visualizerData.PixelMapProgress = progress < 700 ? progress : 700;
+                        var progress = _visualizerData.WindowWidth * (normalizedCurrentTime / _visualizerData.TotalTime);
+                        _visualizerData.PixelMapProgress = progress < _visualizerData.WindowWidth ? progress : _visualizerData.WindowWidth;
                     }
                 }
                 catch

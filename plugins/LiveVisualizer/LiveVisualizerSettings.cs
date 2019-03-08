@@ -49,6 +49,11 @@ namespace LiveVisualizer
 
             checkBox_showAxisYSeparator.Checked = _settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
 
+            numericUpDown_windowHeight.Value = (decimal)_settings.Get<double>(ConfigEntrys.WindowHeight);
+            numericUpDown_windowWidth.Value = (decimal)_settings.Get<double>(ConfigEntrys.WindowWidth);
+            checkBox_enableWindowRezising.Checked = _settings.Get<bool>(ConfigEntrys.EnableResizing);
+
+
 
             color_chartPrimary.ColorChanged += Color_chartPrimary_ColorChanged;
             color_chartProgress.ColorChanged += ColorChartProgressOnColorChanged;
@@ -59,6 +64,26 @@ namespace LiveVisualizer
             comboBox_font.SelectedValueChanged += ComboBoxFontOnSelectedValueChanged;
             textBox_chartCutoffs.TextChanged += textBox_chartCutoffs_TextChanged;
             checkBox_showAxisYSeparator.CheckedChanged += checkBox_showAxisYSeparator_CheckedChanged;
+
+            numericUpDown_windowHeight.ValueChanged+=NumericUpDownWindowHeightOnValueChanged;
+            numericUpDown_windowWidth.ValueChanged+=NumericUpDownWindowWidthOnValueChanged;
+            checkBox_enableWindowRezising.CheckedChanged+=CheckBoxEnableWindowRezisingOnCheckedChanged;
+
+        }
+
+        private void CheckBoxEnableWindowRezisingOnCheckedChanged(object sender, EventArgs e)
+        {
+            _settings.Add(ConfigEntrys.EnableResizing.Name, checkBox_enableWindowRezising.Checked, true);
+        }
+
+        private void NumericUpDownWindowWidthOnValueChanged(object sender, EventArgs e)
+        {
+            _settings.Add(ConfigEntrys.WindowWidth.Name, (double)numericUpDown_windowWidth.Value, true);
+        }
+
+        private void NumericUpDownWindowHeightOnValueChanged(object sender, EventArgs e)
+        {
+            _settings.Add(ConfigEntrys.WindowHeight.Name, (double)numericUpDown_windowHeight.Value, true);
         }
 
         private void ColorHorizontalLegendOnColorChanged(object sender, Color e)
