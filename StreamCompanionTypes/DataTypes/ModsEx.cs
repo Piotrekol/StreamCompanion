@@ -27,7 +27,8 @@ namespace StreamCompanionTypes.DataTypes
                     .Replace("AU", "")
                     .Replace("SV2", "")
                     .Replace("RL", "")
-                    .Replace("CO", "DS"); //Coop is named Dual Stages in osu!lazer
+                    .Replace("CO", "DS") //Coop is named Dual Stages in osu!lazer
+                    .Replace("TD", ""); //ppy/osu#4441
             }
         }
         private readonly string LongMods;
