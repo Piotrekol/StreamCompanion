@@ -163,6 +163,8 @@ namespace LiveVisualizer
                 }
             }
 
+            _visualizerData.DisableChartAnimations = strains.Count >= 400; //10min+ maps
+
             _lastMapLocation = mapLocation;
 
             _visualizerData.TotalTime = mapLength;
