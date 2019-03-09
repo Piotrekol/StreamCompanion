@@ -63,6 +63,8 @@ namespace PpCalculator
             var orginalWorkingBeatmap = WorkingBeatmap;
             var tempMap = new Beatmap();
             tempMap.HitObjects.AddRange(WorkingBeatmap.Beatmap.HitObjects.Where(h => h.StartTime >= startTime && h.StartTime <= endTime));
+            if (tempMap.HitObjects.Count <= 1)
+                return -1;
             tempMap.ControlPointInfo = WorkingBeatmap.Beatmap.ControlPointInfo;
             tempMap.BeatmapInfo = WorkingBeatmap.BeatmapInfo;
 
@@ -99,6 +101,8 @@ namespace PpCalculator
 
                 PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo);
 
+                ScoreInfo.Mods = mods;
+
                 createPerformanceCalculator = true;
             }
 
@@ -110,10 +114,10 @@ namespace PpCalculator
             var score = Score;
             var accuracy = GetAccuracy(statistics);
 
+
             ScoreInfo.Accuracy = accuracy;
             ScoreInfo.MaxCombo = maxCombo;
             ScoreInfo.Statistics = statistics;
-            ScoreInfo.Mods = mods;
             ScoreInfo.TotalScore = score;
 
             if (createPerformanceCalculator)
