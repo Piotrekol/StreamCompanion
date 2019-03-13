@@ -27,7 +27,7 @@ namespace LiveVisualizer
         private TokenWithFormat _hit50Token;
         private TokenWithFormat _hitMissToken;
         private TokenWithFormat _timeToken;
-        private List<KeyValuePair<string, Token>> LiveTokens
+        private List<KeyValuePair<string, Token>> Tokens
         {
             get => _liveTokens;
             set
@@ -65,7 +65,7 @@ namespace LiveVisualizer
             _visualizerData.WindowWidth = Settings.Get<double>(ConfigEntrys.WindowWidth);
             _visualizerData.WindowHeight = Settings.Get<double>(ConfigEntrys.WindowHeight);
             _visualizerData.EnableResizing = Settings.Get<bool>(ConfigEntrys.EnableResizing);
-            
+
             EnableVisualizer(Settings.Get<bool>(ConfigEntrys.Enable));
 
             Settings.SettingUpdated += SettingUpdated;
@@ -201,7 +201,8 @@ namespace LiveVisualizer
 
             _visualizerData.TotalTime = mapLength;
 
-
+            _visualizerData.Title = Tokens.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
+            _visualizerData.Artist = Tokens.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
 
             _visualizerData.Strains = strains.Select(s => s.Value).AsChartValues();
 
@@ -229,14 +230,8 @@ namespace LiveVisualizer
         public override List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
             //TODO: UHH... would be nice to have better way of sharing this data (instead of relying on Tokens with magic strings and blind value casts)
-            LiveTokens = replacements.Where(r => r.Value.Type == TokenType.Live).ToList();
-
-            if (_visualizerData == null)
-                return null;
-
-            _visualizerData.Title = replacements.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
-            _visualizerData.Artist = replacements.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
-
+            Tokens = replacements.ToList();
+            
             return null;
         }
 
@@ -246,7 +241,7 @@ namespace LiveVisualizer
             {
                 try
                 {
-                    if (LiveTokens != null)
+                    if (Tokens != null)
                     {
                         //Blind casts :/
                         _visualizerData.Pp = Math.Round((double)_ppToken.Value);
