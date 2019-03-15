@@ -9,10 +9,11 @@
         Title="osu!StreamCompanion - LiveVisualizer" 
         Height="{Binding Path=WindowHeight, Mode=TwoWay}" Width="{Binding Path=WindowWidth, Mode=TwoWay}" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
-        Background="Black"
+        Background="{Binding BackgroundColor}"
         SizeChanged="MainWindow_OnSizeChanged"
         MinHeight="350"
         MinWidth="500"
+        AllowsTransparency="True"
         >
     <Window.Style>
         <Style TargetType="Window">
@@ -39,7 +40,7 @@
             </Border.Background>
 
         </Border>
-        <Rectangle Fill="#66000000"/>
+        <Rectangle Fill="{Binding ImageDimColor}"/>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -54,7 +55,6 @@
                 <TextBlock Name="Artist" Text="{Binding Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="10 0 10 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
             </Viewbox>
         </Grid>
-
 
         <Rectangle Grid.Row="1" Fill="#141414"/>
         <Frame Name="frameholder" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding WindowWidth}"/>

@@ -41,9 +41,12 @@ namespace LiveVisualizer
             checkBox_autosizeChart.Checked = _settings.Get<bool>(ConfigEntrys.AutoSizeAxisY);
             panel_manualChart.Enabled = !checkBox_autosizeChart.Checked;
 
-            color_chartPrimary.Color = ColorHelpers.GetColor(_settings, ConfigEntrys.ChartColor);
-            color_chartProgress.Color = ColorHelpers.GetColor(_settings, ConfigEntrys.ChartProgressColor);
-            color_horizontalLegend.Color = ColorHelpers.GetColor(_settings, ConfigEntrys.AxisYSeparatorColor);
+            BindColorPicker(color_chartPrimary, ConfigEntrys.ChartColor);
+            BindColorPicker(color_chartProgress, ConfigEntrys.ChartProgressColor);
+            BindColorPicker(color_horizontalLegend, ConfigEntrys.AxisYSeparatorColor);
+            BindColorPicker(color_background, ConfigEntrys.Background);
+            BindColorPicker(color_imageDimming, ConfigEntrys.ImageDimming);
+            
 
             textBox_chartCutoffs.Text = _settings.Get<string>(ConfigEntrys.ManualAxisCutoffs);
 
@@ -53,11 +56,7 @@ namespace LiveVisualizer
             numericUpDown_windowWidth.Value = (decimal)_settings.Get<double>(ConfigEntrys.WindowWidth);
             checkBox_enableWindowRezising.Checked = _settings.Get<bool>(ConfigEntrys.EnableResizing);
 
-
-
-            color_chartPrimary.ColorChanged += Color_chartPrimary_ColorChanged;
-            color_chartProgress.ColorChanged += ColorChartProgressOnColorChanged;
-            color_horizontalLegend.ColorChanged += ColorHorizontalLegendOnColorChanged;
+            
 
             checkBox_enable.CheckedChanged += CheckBoxEnableOnCheckedChanged;
             checkBox_autosizeChart.CheckedChanged += checkBox_autosizeChart_CheckedChanged;
@@ -65,10 +64,16 @@ namespace LiveVisualizer
             textBox_chartCutoffs.TextChanged += textBox_chartCutoffs_TextChanged;
             checkBox_showAxisYSeparator.CheckedChanged += checkBox_showAxisYSeparator_CheckedChanged;
 
-            numericUpDown_windowHeight.ValueChanged+=NumericUpDownWindowHeightOnValueChanged;
-            numericUpDown_windowWidth.ValueChanged+=NumericUpDownWindowWidthOnValueChanged;
-            checkBox_enableWindowRezising.CheckedChanged+=CheckBoxEnableWindowRezisingOnCheckedChanged;
+            numericUpDown_windowHeight.ValueChanged += NumericUpDownWindowHeightOnValueChanged;
+            numericUpDown_windowWidth.ValueChanged += NumericUpDownWindowWidthOnValueChanged;
+            checkBox_enableWindowRezising.CheckedChanged += CheckBoxEnableWindowRezisingOnCheckedChanged;
 
+        }
+
+        private void BindColorPicker(ColorPickerWithPreview cp, ConfigEntry configEntry)
+        {
+            cp.Color = ColorHelpers.GetColor(_settings, configEntry);
+            cp.ColorChanged += (sender, color) => ColorHelpers.SaveColor(_settings, configEntry, color);
         }
 
         private void CheckBoxEnableWindowRezisingOnCheckedChanged(object sender, EventArgs e)
@@ -86,26 +91,11 @@ namespace LiveVisualizer
             _settings.Add(ConfigEntrys.WindowHeight.Name, (double)numericUpDown_windowHeight.Value, true);
         }
 
-        private void ColorHorizontalLegendOnColorChanged(object sender, Color e)
-        {
-            ColorHelpers.SaveColor(_settings, ConfigEntrys.AxisYSeparatorColor, e);
-        }
-
         private void ComboBoxFontOnSelectedValueChanged(object sender, EventArgs e)
         {
             _settings.Add(ConfigEntrys.Font.Name, (string)comboBox_font.SelectedValue, true);
         }
-
-        private void ColorChartProgressOnColorChanged(object sender, Color e)
-        {
-            ColorHelpers.SaveColor(_settings, ConfigEntrys.ChartProgressColor, e);
-        }
-
-        private void Color_chartPrimary_ColorChanged(object sender, Color e)
-        {
-            ColorHelpers.SaveColor(_settings, ConfigEntrys.ChartColor, e);
-        }
-
+        
         private void CheckBoxEnableOnCheckedChanged(object sender, EventArgs e)
         {
             var enabled = checkBox_enable.Checked;
@@ -135,7 +125,6 @@ namespace LiveVisualizer
         private void linkLabel_UICredit1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://osu.ppy.sh/users/9173653");
-
         }
 
         private void linkLabel_UICredit2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

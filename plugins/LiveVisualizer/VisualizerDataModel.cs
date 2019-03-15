@@ -49,5 +49,7 @@ namespace LiveVisualizer
         public double WindowHeight { get; set; } = 350;
         public double WindowWidth { get; set; } = 700;
         public bool EnableResizing { get; set; }
+        public string BackgroundColor { get; set; }
+        public string ImageDimColor { get; set; }
     }
 }

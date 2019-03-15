@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ConfigEntry = StreamCompanionTypes.DataTypes.ConfigEntry;
 
 namespace LiveVisualizer
 {
@@ -50,9 +51,11 @@ namespace LiveVisualizer
             base.Start(logger);
             _visualizerData = new VisualizerDataModel();
 
-            _visualizerData.ChartColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartColor);
-            _visualizerData.ChartProgressColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartProgressColor);
-            _visualizerData.AxisYSeparatorColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.AxisYSeparatorColor);
+            _visualizerData.ChartColor = GetColor(ConfigEntrys.ChartColor);
+            _visualizerData.ChartProgressColor = GetColor(ConfigEntrys.ChartProgressColor);
+            _visualizerData.AxisYSeparatorColor = GetColor(ConfigEntrys.AxisYSeparatorColor);
+            _visualizerData.BackgroundColor = GetColor(ConfigEntrys.Background);
+            _visualizerData.ImageDimColor = GetColor(ConfigEntrys.ImageDimming);
 
             _visualizerData.ShowAxisYSeparator = Settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
             _visualizerData.Font = Settings.Get<string>(ConfigEntrys.Font);
@@ -90,10 +93,10 @@ namespace LiveVisualizer
         private void SettingUpdated(object sender, SettingUpdated e)
         {
             if (e.Name == ConfigEntrys.ChartProgressColor.Name)
-                _visualizerData.ChartProgressColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartProgressColor);
+                _visualizerData.ChartProgressColor = GetColor(ConfigEntrys.ChartProgressColor);
 
             else if (e.Name == ConfigEntrys.ChartColor.Name)
-                _visualizerData.ChartColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.ChartColor);
+                _visualizerData.ChartColor = GetColor(ConfigEntrys.ChartColor);
 
             else if (e.Name == ConfigEntrys.Font.Name)
                 _visualizerData.Font = Settings.Get<string>(ConfigEntrys.Font);
@@ -105,7 +108,7 @@ namespace LiveVisualizer
                 _visualizerData.ShowAxisYSeparator = Settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
 
             else if (e.Name == ConfigEntrys.AxisYSeparatorColor.Name)
-                _visualizerData.AxisYSeparatorColor = "#" + ColorHelpers.GetArgbColor(Settings, ConfigEntrys.AxisYSeparatorColor);
+                _visualizerData.AxisYSeparatorColor = GetColor(ConfigEntrys.AxisYSeparatorColor);
 
             else if (e.Name == ConfigEntrys.WindowWidth.Name)
                 _visualizerData.WindowWidth = Settings.Get<double>(ConfigEntrys.WindowWidth);
@@ -116,7 +119,12 @@ namespace LiveVisualizer
             else if (e.Name == ConfigEntrys.EnableResizing.Name)
                 _visualizerData.EnableResizing = Settings.Get<bool>(ConfigEntrys.EnableResizing);
 
+            else if (e.Name == ConfigEntrys.Background.Name)
+                _visualizerData.BackgroundColor = GetColor(ConfigEntrys.Background);
 
+            else if (e.Name == ConfigEntrys.ImageDimming.Name)
+                _visualizerData.ImageDimColor = GetColor(ConfigEntrys.ImageDimming);
+            
             else if (e.Name == ConfigEntrys.ManualAxisCutoffs.Name || e.Name == ConfigEntrys.AutoSizeAxisY.Name)
             {
                 ChartCutoffsSet.Clear();
@@ -129,6 +137,8 @@ namespace LiveVisualizer
                 SetAxisValues();
             }
         }
+        private string GetColor(ConfigEntry configEntry)
+            => "#" + ColorHelpers.GetArgbColor(Settings, configEntry);
 
         private IEnumerable<int> GetManualAxisCutoffs()
         => Settings.Get<string>(ConfigEntrys.ManualAxisCutoffs).Split(';').Select(v => int.TryParse(v, out int num) ? num : 0);
@@ -231,7 +241,7 @@ namespace LiveVisualizer
         {
             //TODO: UHH... would be nice to have better way of sharing this data (instead of relying on Tokens with magic strings and blind value casts)
             Tokens = replacements.ToList();
-            
+
             return null;
         }
 

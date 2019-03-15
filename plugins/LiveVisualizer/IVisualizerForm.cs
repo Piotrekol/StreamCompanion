@@ -45,10 +45,9 @@ namespace LiveVisualizer
         double WindowHeight { get; set; }
         double WindowWidth { get; set; }
         bool EnableResizing { get; set; }
-    }
 
-    public interface IWpfChartConfiguration
-    {
+        string BackgroundColor { get; set; }
+        string ImageDimColor { get; set; }
 
     }
 }
