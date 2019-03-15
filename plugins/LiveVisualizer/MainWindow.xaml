@@ -38,9 +38,8 @@
             <Border.Background>
                 <ImageBrush ImageSource="{Binding ImageLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Stretch="UniformToFill"/>
             </Border.Background>
-
         </Border>
-        <Rectangle Fill="{Binding ImageDimColor}"/>
+        <Border CornerRadius="30,30,0,0" Name="Border2" Background="{Binding ImageDimColor}"/>
 
         <Grid>
             <Grid.RowDefinitions>
