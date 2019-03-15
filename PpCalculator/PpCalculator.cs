@@ -57,11 +57,11 @@ namespace PpCalculator
         protected string LastMods { get; set; } = null;
         protected bool ResetPerformanceCalculator { get; set; }
 
-        public double Calculate(double startTime = double.MinValue, Dictionary<string, double> categoryAttribs = null, double endTime = double.MaxValue)
+        public double Calculate(double startTime, double endTime = double.NaN, Dictionary<string, double> categoryAttribs = null)
         {
+
             var orginalWorkingBeatmap = WorkingBeatmap;
             var tempMap = new Beatmap();
-            
             tempMap.HitObjects.AddRange(WorkingBeatmap.Beatmap.HitObjects.Where(h => h.StartTime >= startTime && h.StartTime <= endTime));
             if (tempMap.HitObjects.Count <= 1)
                 return -1;
@@ -71,7 +71,7 @@ namespace PpCalculator
             WorkingBeatmap = new ProcessorWorkingBeatmap(tempMap);
 
             ResetPerformanceCalculator = true;
-            var result = _Calculate(categoryAttribs);
+            var result = Calculate(null, categoryAttribs);
 
             WorkingBeatmap = orginalWorkingBeatmap;
 
@@ -80,7 +80,7 @@ namespace PpCalculator
             return result;
         }
 
-        private double _Calculate(Dictionary<string, double> categoryAttribs = null)
+        public double Calculate(double? time = null, Dictionary<string, double> categoryAttribs = null)
         {
             if (WorkingBeatmap == null)
                 return -1d;
@@ -120,8 +120,7 @@ namespace PpCalculator
             ScoreInfo.Statistics = statistics;
             ScoreInfo.TotalScore = score;
 
-            //TODO: temp override
-            if (true || createPerformanceCalculator)
+            if (createPerformanceCalculator)
             {
                 PerformanceCalculator = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo);
                 ResetPerformanceCalculator = false;
@@ -129,13 +128,18 @@ namespace PpCalculator
 
             double pp;
 
-            try
+            if (time.HasValue)
+                pp = PerformanceCalculator.Calculate(time.Value, categoryAttribs);
+            else
             {
-                pp = PerformanceCalculator.Calculate(categoryAttribs);
-            }
-            catch (InvalidOperationException)
-            {
-                pp = -1;
+                try
+                {
+                    pp = PerformanceCalculator.Calculate(categoryAttribs);
+                }
+                catch (InvalidOperationException)
+                {
+                    pp = -1;
+                }
             }
 
             return pp;

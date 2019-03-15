@@ -183,7 +183,7 @@ namespace LiveVisualizer
                     if (token.IsCancellationRequested)
                         return;
                     var a = new Dictionary<string, double>();
-                    var strain = ppCalculator.Calculate(time, a, time + strainLength);
+                    var strain = ppCalculator.Calculate(time, time + strainLength, a);
 
                     if (double.IsNaN(strain) || strain < 0)
                         strain = 0;
@@ -231,7 +231,7 @@ namespace LiveVisualizer
         {
             //TODO: UHH... would be nice to have better way of sharing this data (instead of relying on Tokens with magic strings and blind value casts)
             Tokens = replacements.ToList();
-
+            
             return null;
         }
 

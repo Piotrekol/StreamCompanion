@@ -18,7 +18,7 @@ namespace OsuMemoryEventSource
         private Beatmap _currentBeatmap = null;
         private string _currentMods;
         private string _currentOsuFileLocation = null;
-
+        
 
         private PpCalculator.PpCalculator _ppCalculator = null;
 
@@ -43,7 +43,7 @@ namespace OsuMemoryEventSource
 
             _ppCalculator.PreProcess(osuFileLocation);
         }
-
+        
 
         public double PPIfRestFCed()
         {
@@ -66,7 +66,7 @@ namespace OsuMemoryEventSource
 
             _ppCalculator.Combo = newMaxCombo;
 
-            var pp = _ppCalculator.Calculate();
+            var pp = _ppCalculator.Calculate(null);
 
 
             return pp;
@@ -96,7 +96,7 @@ namespace OsuMemoryEventSource
                     _ppCalculator.Misses = Play.CMiss;
                     _ppCalculator.Combo = Play.MaxCombo;
                     _ppCalculator.Score = Play.Score;
-                    var pp = _ppCalculator.Calculate(categoryAttribs: attribs, endTime: Play.Time);
+                    var pp = _ppCalculator.Calculate(Play.Time, attribs);
 
                     switch (_currentBeatmap.PlayMode)
                     {
