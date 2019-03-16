@@ -14,35 +14,32 @@
             <Style TargetType="lvc:LineSeries">
                 <Setter Property="StrokeThickness" Value="0"></Setter>
                 <Setter Property="Stroke" Value="White"></Setter>
-                <Setter Property="Fill" Value="{Binding FillColor}"></Setter>
                 <Setter Property="PointGeometrySize" Value="0"></Setter>
                 <Setter Property="LineSmoothness" Value="1"></Setter>
-            </Style> 
+            </Style>
         </Grid.Resources>
-        <wpf:CartesianChart Name="chart" Width="{Binding WindowWidth}" Hoverable="False" DataTooltip="{x:Null}" DisableAnimations="{Binding DisableChartAnimations}">
+        <wpf:CartesianChart Name="chart" Width="{Binding Configuration.WindowWidth}" Hoverable="False" DataTooltip="{x:Null}" DisableAnimations="{Binding Display.DisableChartAnimations}">
 
             <wpf:CartesianChart.Series>
-                <lvc:LineSeries Name="LineSeries" Values="{Binding Strains}" PointGeometry="{x:Null}" Fill="{Binding ChartColor}" />
-
+                <lvc:LineSeries Name="LineSeries" Values="{Binding Display.Strains}" PointGeometry="{x:Null}"/>
             </wpf:CartesianChart.Series>
             <wpf:CartesianChart.AxisX>
                 <wpf:Axis IsMerged="True"  Foreground="Transparent">
                     <wpf:Axis.Separator>
-                        <wpf:Separator StrokeThickness="1" StrokeDashArray="2" IsEnabled="False">
-                            <!--Here, see the IsEnabled => false-->
+                        <wpf:Separator StrokeThickness="1" StrokeDashArray="2">
                             <wpf:Separator.Stroke>
-                                <SolidColorBrush Color="{Binding FillColor}" />
+                                <SolidColorBrush Color="Transparent" />
                             </wpf:Separator.Stroke>
                         </wpf:Separator>
                     </wpf:Axis.Separator>
                 </wpf:Axis>
             </wpf:CartesianChart.AxisX>
             <wpf:CartesianChart.AxisY>
-                <lvc:Axis IsMerged="True"  MaxValue="{Binding MaxYValue}" MinValue="0">
+                <lvc:Axis IsMerged="True"  MaxValue="{Binding Configuration.MaxYValue}" MinValue="0">
                     <lvc:Axis.Style>
                         <Style TargetType="lvc:Axis">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ShowAxisYSeparator}" Value="False">
+                                <DataTrigger Binding="{Binding Configuration.ShowAxisYSeparator}" Value="False">
                                     <Setter Property="Foreground" Value="Transparent"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -52,10 +49,9 @@
                         </Style>
                     </lvc:Axis.Style>
                     <lvc:Axis.Separator>
-                        <lvc:Separator Name="AxisYSeparator" StrokeThickness="1" StrokeDashArray="1" IsEnabled="{Binding ShowAxisYSeparator}" Step="{Binding AxisYStep}" >
-                            <!--Here, see the IsEnabled => false-->
+                        <lvc:Separator Name="AxisYSeparator" StrokeThickness="1" StrokeDashArray="1" Step="{Binding Configuration.AxisYStep}" IsEnabled="True" >
                             <lvc:Separator.Stroke>
-                                <SolidColorBrush Color="{Binding AxisYSeparatorColor}" />
+                                <SolidColorBrush Color="{Binding Configuration.AxisYSeparatorColor}" />
                             </lvc:Separator.Stroke>
                         </lvc:Separator>
                     </lvc:Axis.Separator>

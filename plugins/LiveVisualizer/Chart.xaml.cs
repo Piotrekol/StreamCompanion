@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using Separator = LiveCharts.Wpf.Separator;
 
 namespace LiveVisualizer
@@ -23,7 +24,10 @@ namespace LiveVisualizer
 
             var binding = new Binding(bindingName);
             binding.Source = data;
-            LineSeries.SetBinding(Series.FillProperty, binding);
+
+            var solidColorBrush = new SolidColorBrush();
+            BindingOperations.SetBinding(solidColorBrush, SolidColorBrush.ColorProperty, binding);
+            LineSeries.Fill = solidColorBrush;
 
             if (isProgressChart)
             {   //Disable drawing of AxisY separator

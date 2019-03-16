@@ -13,6 +13,7 @@ namespace LiveVisualizer
     public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataGetter, ISettings, IMapDataParser, ISettingsProvider, IDisposable
     {
         protected ISettingsHandler Settings;
+        protected IWpfVisualizerData VisualizerData;
 
         private CancellationTokenSource _cts = new CancellationTokenSource();
         public string SettingGroup { get; } = "Visualizer";
@@ -63,7 +64,7 @@ namespace LiveVisualizer
         {
             if (_liveVisualizerSettings == null || _liveVisualizerSettings.IsDisposed)
             {
-                _liveVisualizerSettings = new LiveVisualizerSettings(Settings);
+                _liveVisualizerSettings = new LiveVisualizerSettings(Settings, VisualizerData.Configuration);
             }
 
             return _liveVisualizerSettings;

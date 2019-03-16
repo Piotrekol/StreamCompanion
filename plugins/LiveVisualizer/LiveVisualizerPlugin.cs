@@ -1,5 +1,6 @@
 ﻿using CollectionManager.Enums;
 using LiveCharts.Helpers;
+using Newtonsoft.Json;
 using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -18,8 +19,6 @@ namespace LiveVisualizer
 {
     public class LiveVisualizerPlugin : LiveVisualizerPluginBase
     {
-        private IWpfVisualizerData _visualizerData;
-        private SortedSet<int> ChartCutoffsSet = new SortedSet<int>();
         private MainWindow _visualizerWindow;
 
         private List<KeyValuePair<string, Token>> _liveTokens;
@@ -49,109 +48,58 @@ namespace LiveVisualizer
         public override void Start(ILogger logger)
         {
             base.Start(logger);
-            _visualizerData = new VisualizerDataModel();
+            VisualizerData = new VisualizerDataModel();
 
-            _visualizerData.ChartColor = GetColor(ConfigEntrys.ChartColor);
-            _visualizerData.ChartProgressColor = GetColor(ConfigEntrys.ChartProgressColor);
-            _visualizerData.AxisYSeparatorColor = GetColor(ConfigEntrys.AxisYSeparatorColor);
-            _visualizerData.BackgroundColor = GetColor(ConfigEntrys.Background);
-            _visualizerData.ImageDimColor = GetColor(ConfigEntrys.ImageDimming);
+            LoadConfiguration();
+            
+            EnableVisualizer(VisualizerData.Configuration.Enable);
 
-            _visualizerData.ShowAxisYSeparator = Settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
-            _visualizerData.Font = Settings.Get<string>(ConfigEntrys.Font);
-
-            foreach (var cutoff in GetManualAxisCutoffs())
-            {
-                ChartCutoffsSet.Add(cutoff);
-            }
-
-            _visualizerData.WindowWidth = Settings.Get<double>(ConfigEntrys.WindowWidth);
-            _visualizerData.WindowHeight = Settings.Get<double>(ConfigEntrys.WindowHeight);
-            _visualizerData.EnableResizing = Settings.Get<bool>(ConfigEntrys.EnableResizing);
-
-            EnableVisualizer(Settings.Get<bool>(ConfigEntrys.Enable));
-
-            Settings.SettingUpdated += SettingUpdated;
-            _visualizerData.PropertyChanged += VisualizerDataOnPropertyChanged;
+            VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
 
             Task.Run(() => { UpdateLiveTokens(); });
         }
 
-        private void VisualizerDataOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void VisualizerConfigurationPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case nameof(IWpfVisualizerData.WindowHeight):
-                    Settings.Add(ConfigEntrys.WindowHeight.Name, _visualizerData.WindowHeight, true);
+                case nameof(IVisualizerConfiguration.Enable):
+                    EnableVisualizer(VisualizerData.Configuration.Enable);
                     break;
-                case nameof(IWpfVisualizerData.WindowWidth):
-                    Settings.Add(ConfigEntrys.WindowWidth.Name, _visualizerData.WindowWidth, true);
+                case nameof(IVisualizerConfiguration.AutoSizeAxisY):
+                case nameof(IVisualizerConfiguration.ChartCutoffsSet):
+                    SetAxisValues();
                     break;
+
             }
+            SaveConfiguration();
         }
 
-        private void SettingUpdated(object sender, SettingUpdated e)
+        private void SaveConfiguration()
         {
-            if (e.Name == ConfigEntrys.ChartProgressColor.Name)
-                _visualizerData.ChartProgressColor = GetColor(ConfigEntrys.ChartProgressColor);
-
-            else if (e.Name == ConfigEntrys.ChartColor.Name)
-                _visualizerData.ChartColor = GetColor(ConfigEntrys.ChartColor);
-
-            else if (e.Name == ConfigEntrys.Font.Name)
-                _visualizerData.Font = Settings.Get<string>(ConfigEntrys.Font);
-
-            else if (e.Name == ConfigEntrys.Enable.Name)
-                EnableVisualizer(Settings.Get<bool>(ConfigEntrys.Enable));
-
-            else if (e.Name == ConfigEntrys.ShowAxisYSeparator.Name)
-                _visualizerData.ShowAxisYSeparator = Settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
-
-            else if (e.Name == ConfigEntrys.AxisYSeparatorColor.Name)
-                _visualizerData.AxisYSeparatorColor = GetColor(ConfigEntrys.AxisYSeparatorColor);
-
-            else if (e.Name == ConfigEntrys.WindowWidth.Name)
-                _visualizerData.WindowWidth = Settings.Get<double>(ConfigEntrys.WindowWidth);
-
-            else if (e.Name == ConfigEntrys.WindowHeight.Name)
-                _visualizerData.WindowHeight = Settings.Get<double>(ConfigEntrys.WindowHeight);
-
-            else if (e.Name == ConfigEntrys.EnableResizing.Name)
-                _visualizerData.EnableResizing = Settings.Get<bool>(ConfigEntrys.EnableResizing);
-
-            else if (e.Name == ConfigEntrys.Background.Name)
-                _visualizerData.BackgroundColor = GetColor(ConfigEntrys.Background);
-
-            else if (e.Name == ConfigEntrys.ImageDimming.Name)
-                _visualizerData.ImageDimColor = GetColor(ConfigEntrys.ImageDimming);
-            
-            else if (e.Name == ConfigEntrys.ManualAxisCutoffs.Name || e.Name == ConfigEntrys.AutoSizeAxisY.Name)
-            {
-                ChartCutoffsSet.Clear();
-
-                foreach (var cutoff in GetManualAxisCutoffs())
-                {
-                    ChartCutoffsSet.Add(cutoff);
-                }
-
-                SetAxisValues();
-            }
+            var serializedConfig = JsonConvert.SerializeObject(VisualizerData.Configuration);
+            Settings.Add(ConfigEntrys.LiveVisualizerConfig.Name, serializedConfig, false);
         }
-        private string GetColor(ConfigEntry configEntry)
-            => "#" + ColorHelpers.GetArgbColor(Settings, configEntry);
 
-        private IEnumerable<int> GetManualAxisCutoffs()
-        => Settings.Get<string>(ConfigEntrys.ManualAxisCutoffs).Split(';').Select(v => int.TryParse(v, out int num) ? num : 0);
+        private void LoadConfiguration()
+        {
+            var config = Settings.Get<string>(ConfigEntrys.LiveVisualizerConfig);
 
+            if (config == ConfigEntrys.LiveVisualizerConfig.Default<string>())
+                return;
+
+            VisualizerData.Configuration = JsonConvert.DeserializeObject<VisualizerConfiguration>(config);
+        }
+        
         private void EnableVisualizer(bool enable)
         {
             if (enable)
             {
                 if (_visualizerWindow == null || !_visualizerWindow.IsLoaded)
-                    _visualizerWindow = new MainWindow(_visualizerData);
+                    _visualizerWindow = new MainWindow(VisualizerData);
 
-                _visualizerWindow.Width = _visualizerData.WindowWidth;
-                _visualizerWindow.Height = _visualizerData.WindowHeight;
+                _visualizerWindow.Width = VisualizerData.Configuration.WindowWidth;
+                _visualizerWindow.Height = VisualizerData.Configuration.WindowHeight;
                 _visualizerWindow.Show();
 
             }
@@ -164,7 +112,7 @@ namespace LiveVisualizer
 
         protected override void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token)
         {
-            if (_visualizerData == null ||
+            if (VisualizerData == null ||
                 !mapSearchResult.FoundBeatmaps ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
                 mapLocation == _lastMapLocation
@@ -205,35 +153,35 @@ namespace LiveVisualizer
                 }
             }
 
-            _visualizerData.DisableChartAnimations = strains.Count >= 400; //10min+ maps
+            VisualizerData.Display.DisableChartAnimations = strains.Count >= 400; //10min+ maps
 
             _lastMapLocation = mapLocation;
 
-            _visualizerData.TotalTime = mapLength;
+            VisualizerData.Display.TotalTime = mapLength;
 
-            _visualizerData.Title = Tokens.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
-            _visualizerData.Artist = Tokens.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
+            VisualizerData.Display.Title = Tokens.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
+            VisualizerData.Display.Artist = Tokens.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
 
-            _visualizerData.Strains = strains.Select(s => s.Value).AsChartValues();
+            VisualizerData.Display.Strains = strains.Select(s => s.Value).AsChartValues();
 
             SetAxisValues();
 
             var imageLocation = Path.Combine(mapSearchResult.BeatmapsFound[0]
                 .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), workingBeatmap.BackgroundFile ?? "");
 
-            _visualizerData.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
+            VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
 
         }
 
         private void SetAxisValues()
         {
-            if (_visualizerData.Strains != null && _visualizerData.Strains.Any())
+            if (VisualizerData.Display.Strains != null && VisualizerData.Display.Strains.Any())
             {
-                var strainsMax = _visualizerData.Strains.Max();
-                _visualizerData.MaxYValue = getMaxY(strainsMax);
-                _visualizerData.AxisYStep = GetAxisYStep(double.IsNaN(_visualizerData.MaxYValue)
+                var strainsMax = VisualizerData.Display.Strains.Max();
+                VisualizerData.Configuration.MaxYValue = getMaxY(strainsMax);
+                VisualizerData.Configuration.AxisYStep = GetAxisYStep(double.IsNaN(VisualizerData.Configuration.MaxYValue)
                     ? strainsMax
-                    : _visualizerData.MaxYValue);
+                    : VisualizerData.Configuration.MaxYValue);
             }
         }
 
@@ -254,15 +202,17 @@ namespace LiveVisualizer
                     if (Tokens != null)
                     {
                         //Blind casts :/
-                        _visualizerData.Pp = Math.Round((double)_ppToken.Value);
-                        _visualizerData.Hit100 = (ushort)_hit100Token.Value;
-                        _visualizerData.Hit50 = (ushort)_hit50Token.Value;
-                        _visualizerData.HitMiss = (ushort)_hitMissToken.Value;
-                        _visualizerData.CurrentTime = (double)_timeToken.Value * 1000;
+                        VisualizerData.Display.Pp = Math.Round((double)_ppToken.Value);
+                        VisualizerData.Display.Hit100 = (ushort)_hit100Token.Value;
+                        VisualizerData.Display.Hit50 = (ushort)_hit50Token.Value;
+                        VisualizerData.Display.HitMiss = (ushort)_hitMissToken.Value;
+                        VisualizerData.Display.CurrentTime = (double)_timeToken.Value * 1000;
 
-                        var normalizedCurrentTime = _visualizerData.CurrentTime < 0 ? 0 : _visualizerData.CurrentTime;
-                        var progress = _visualizerData.WindowWidth * (normalizedCurrentTime / _visualizerData.TotalTime);
-                        _visualizerData.PixelMapProgress = progress < _visualizerData.WindowWidth ? progress : _visualizerData.WindowWidth;
+                        var normalizedCurrentTime = VisualizerData.Display.CurrentTime < 0 ? 0 : VisualizerData.Display.CurrentTime;
+                        var progress = VisualizerData.Configuration.WindowWidth * (normalizedCurrentTime / VisualizerData.Display.TotalTime);
+                        VisualizerData.Display.PixelMapProgress = progress < VisualizerData.Configuration.WindowWidth
+                            ? progress
+                            : VisualizerData.Configuration.WindowWidth;
                     }
                 }
                 catch
@@ -274,11 +224,11 @@ namespace LiveVisualizer
             }
         }
 
-        private bool AutomaticAxisControlIsEnabled => Settings.Get<bool>(ConfigEntrys.AutoSizeAxisY);
+        private bool AutomaticAxisControlIsEnabled => VisualizerData.Configuration.AutoSizeAxisY;
         private double getMaxY(double maxValue)
         {
             if (!AutomaticAxisControlIsEnabled)
-                foreach (var cutoff in ChartCutoffsSet)
+                foreach (var cutoff in VisualizerData.Configuration.ChartCutoffsSet)
                 {
                     if (maxValue < cutoff)
                         return cutoff;
@@ -304,7 +254,6 @@ namespace LiveVisualizer
 
         public override void Dispose()
         {
-            Settings.SettingUpdated -= SettingUpdated;
             base.Dispose();
         }
     }

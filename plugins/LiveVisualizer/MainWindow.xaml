@@ -7,18 +7,20 @@
         mc:Ignorable="d" 
         d:DesignHeight="350" d:DesignWidth="700"
         Title="osu!StreamCompanion - LiveVisualizer" 
-        Height="{Binding Path=WindowHeight, Mode=TwoWay}" Width="{Binding Path=WindowWidth, Mode=TwoWay}" 
+        Height="{Binding Path=Configuration.WindowHeight, Mode=TwoWay}" Width="{Binding Path=Configuration.WindowWidth, Mode=TwoWay}" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
-        Background="{Binding BackgroundColor}"
         SizeChanged="MainWindow_OnSizeChanged"
         MinHeight="350"
         MinWidth="500"
         AllowsTransparency="True"
         >
+    <Window.Background>
+        <SolidColorBrush Color="{Binding Path=Configuration.BackgroundColor}"></SolidColorBrush>
+    </Window.Background>
     <Window.Style>
         <Style TargetType="Window">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding EnableResizing}" Value="True">
+                <DataTrigger Binding="{Binding Configuration.EnableResizing}" Value="True">
                     <Setter Property="WindowStyle" Value="SingleBorderWindow"></Setter>
                     <Setter Property="ResizeMode" Value="CanResize"></Setter>
                 </DataTrigger>
@@ -36,10 +38,14 @@
         </Grid.RowDefinitions>
         <Border CornerRadius="30,30,0,0" Name="Border">
             <Border.Background>
-                <ImageBrush ImageSource="{Binding ImageLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="{Binding Display.ImageLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Stretch="UniformToFill"/>
             </Border.Background>
         </Border>
-        <Border CornerRadius="30,30,0,0" Name="Border2" Background="{Binding ImageDimColor}"/>
+        <Border CornerRadius="30,30,0,0" Name="Border2">
+            <Border.Background>
+                <SolidColorBrush Color="{Binding Configuration.ImageDimColor}"></SolidColorBrush>
+            </Border.Background>
+        </Border>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -48,16 +54,16 @@
             </Grid.RowDefinitions>
 
             <Viewbox Grid.Row="0" MaxHeight="30"  >
-                <TextBlock Name="Title" Text="{Binding Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FFE8E8E8" Margin="10 0 10 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
+                <TextBlock Name="Title" Text="{Binding Display.Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FFE8E8E8" Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0"/>
             </Viewbox>
             <Viewbox Grid.Row="1" >
-                <TextBlock Name="Artist" Text="{Binding Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="10 0 10 0" FontFamily="{Binding Font}" Padding="0 0 0 0"/>
+                <TextBlock Name="Artist" Text="{Binding Display.Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0"/>
             </Viewbox>
         </Grid>
 
         <Rectangle Grid.Row="1" Fill="#141414"/>
-        <Frame Name="frameholder" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding WindowWidth}"/>
-        <Frame Name="frameholderTimer" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding PixelMapProgress}"/>
+        <Frame Name="frameholder" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Configuration.WindowWidth}"/>
+        <Frame Name="frameholderTimer" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}"/>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -68,8 +74,8 @@
                     <ColumnDefinition Width="1.5*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Name="PPData" Text="{Binding Pp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{Binding Font}"/>
-                <Label Name="PP" Grid.Column="1" Content="pp" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Left" FontFamily="{Binding Font}"/>
+                <TextBlock Name="PPData" Text="{Binding Display.Pp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{Binding Configuration.Font}"/>
+                <Label Name="PP" Grid.Column="1" Content="pp" FontSize="50" Foreground="#d6d0d1" VerticalAlignment="Center" HorizontalAlignment="Left" FontFamily="{Binding Configuration.Font}"/>
             </Grid>
 
             <Grid Grid.Column="1">
@@ -78,12 +84,12 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Name="hundreds" Content="100" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Font}"/>
-                <Label Name="hundredsData" Content="{Binding Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Font}"/>
-                <Label Name="fifties" Grid.Column="1" Content="50" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Font}"/>
-                <Label Name="fiftieData" Grid.Column="1" Content="{Binding Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Font}"/>
-                <Label Name="miss" Grid.Column="2" Content="MISS" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Font}"/>
-                <Label Name="missData" Grid.Column="2" Content="{Binding HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1" Margin="0 60 0 0 " FontFamily="{Binding Font}" />
+                <Label Name="hundreds" Content="100" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Configuration.Font}"/>
+                <Label Name="hundredsData" Content="{Binding Display.Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Configuration.Font}"/>
+                <Label Name="fifties" Grid.Column="1" Content="50" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Configuration.Font}"/>
+                <Label Name="fiftieData" Grid.Column="1" Content="{Binding Display.Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Configuration.Font}"/>
+                <Label Name="miss" Grid.Column="2" Content="MISS" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Configuration.Font}"/>
+                <Label Name="missData" Grid.Column="2" Content="{Binding Display.HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1" Margin="0 60 0 0 " FontFamily="{Binding Configuration.Font}" />
             </Grid>
         </Grid>
     </Grid>

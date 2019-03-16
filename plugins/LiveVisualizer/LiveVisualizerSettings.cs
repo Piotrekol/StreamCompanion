@@ -1,21 +1,26 @@
 ﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows.Forms;
+using MColor = System.Windows.Media.Color;
+using DColor = System.Drawing.Color;
 
 namespace LiveVisualizer
 {
     public partial class LiveVisualizerSettings : UserControl
     {
         private readonly ISettingsHandler _settings;
+        private readonly IVisualizerConfiguration _configuration;
 
-        public LiveVisualizerSettings(ISettingsHandler settings)
+        public LiveVisualizerSettings(ISettingsHandler settings, IVisualizerConfiguration configuration)
         {
             _settings = settings;
+            _configuration = configuration;
 
             InitializeComponent();
 
@@ -25,7 +30,7 @@ namespace LiveVisualizer
                 var fontNames = fontsCollection.Families.Select(f => f.Name).ToList();
                 comboBox_font.DataSource = fontNames;
 
-                var desiredFont = _settings.Get<string>(ConfigEntrys.Font);
+                var desiredFont = _configuration.Font;
 
                 var font = fontNames.Contains(desiredFont)
                     ? desiredFont
@@ -35,28 +40,27 @@ namespace LiveVisualizer
             }
 
 
-            checkBox_enable.Checked = _settings.Get<bool>(ConfigEntrys.Enable);
+            checkBox_enable.Checked = _configuration.Enable;
             panel1.Enabled = checkBox_enable.Checked;
 
-            checkBox_autosizeChart.Checked = _settings.Get<bool>(ConfigEntrys.AutoSizeAxisY);
+            checkBox_autosizeChart.Checked = _configuration.AutoSizeAxisY;
             panel_manualChart.Enabled = !checkBox_autosizeChart.Checked;
 
-            BindColorPicker(color_chartPrimary, ConfigEntrys.ChartColor);
-            BindColorPicker(color_chartProgress, ConfigEntrys.ChartProgressColor);
-            BindColorPicker(color_horizontalLegend, ConfigEntrys.AxisYSeparatorColor);
-            BindColorPicker(color_background, ConfigEntrys.Background);
-            BindColorPicker(color_imageDimming, ConfigEntrys.ImageDimming);
-            
+            BindColorPicker(color_chartPrimary, () => _configuration.ChartColor, color => _configuration.ChartColor = color);
+            BindColorPicker(color_chartProgress, () => _configuration.ChartProgressColor, color => _configuration.ChartProgressColor = color);
+            BindColorPicker(color_horizontalLegend, () => _configuration.AxisYSeparatorColor, color => _configuration.AxisYSeparatorColor = color);
+            BindColorPicker(color_background, () => _configuration.BackgroundColor, color => _configuration.BackgroundColor = color);
+            BindColorPicker(color_imageDimming, () => _configuration.ImageDimColor, color => _configuration.ImageDimColor = color);
 
-            textBox_chartCutoffs.Text = _settings.Get<string>(ConfigEntrys.ManualAxisCutoffs);
+            textBox_chartCutoffs.Text = string.Join(";", _configuration.ChartCutoffsSet);
 
-            checkBox_showAxisYSeparator.Checked = _settings.Get<bool>(ConfigEntrys.ShowAxisYSeparator);
+            checkBox_showAxisYSeparator.Checked = _configuration.ShowAxisYSeparator;
 
-            numericUpDown_windowHeight.Value = (decimal)_settings.Get<double>(ConfigEntrys.WindowHeight);
-            numericUpDown_windowWidth.Value = (decimal)_settings.Get<double>(ConfigEntrys.WindowWidth);
-            checkBox_enableWindowRezising.Checked = _settings.Get<bool>(ConfigEntrys.EnableResizing);
+            numericUpDown_windowHeight.Value = (decimal)_configuration.WindowHeight;
+            numericUpDown_windowWidth.Value = (decimal) _configuration.WindowWidth;
+            checkBox_enableWindowRezising.Checked = _configuration.EnableResizing;
 
-            
+
 
             checkBox_enable.CheckedChanged += CheckBoxEnableOnCheckedChanged;
             checkBox_autosizeChart.CheckedChanged += checkBox_autosizeChart_CheckedChanged;
@@ -70,36 +74,37 @@ namespace LiveVisualizer
 
         }
 
-        private void BindColorPicker(ColorPickerWithPreview cp, ConfigEntry configEntry)
+        private void BindColorPicker(ColorPickerWithPreview cp, Func<MColor> getter, Action<MColor> setter)
         {
-            cp.Color = ColorHelpers.GetColor(_settings, configEntry);
-            cp.ColorChanged += (sender, color) => ColorHelpers.SaveColor(_settings, configEntry, color);
-        }
+            cp.Color = DColor.FromArgb(getter().A, getter().R, getter().G, getter().B);
 
+            cp.ColorChanged += (sender, color) => setter(MColor.FromArgb(color.A, color.R, color.G, color.B));
+        }
         private void CheckBoxEnableWindowRezisingOnCheckedChanged(object sender, EventArgs e)
         {
-            _settings.Add(ConfigEntrys.EnableResizing.Name, checkBox_enableWindowRezising.Checked, true);
+            _configuration.EnableResizing = checkBox_enableWindowRezising.Checked;
         }
 
         private void NumericUpDownWindowWidthOnValueChanged(object sender, EventArgs e)
         {
-            _settings.Add(ConfigEntrys.WindowWidth.Name, (double)numericUpDown_windowWidth.Value, true);
+            _configuration.WindowWidth = (double)numericUpDown_windowWidth.Value;
         }
 
         private void NumericUpDownWindowHeightOnValueChanged(object sender, EventArgs e)
         {
-            _settings.Add(ConfigEntrys.WindowHeight.Name, (double)numericUpDown_windowHeight.Value, true);
+            _configuration.WindowHeight = (double)numericUpDown_windowHeight.Value;
         }
 
         private void ComboBoxFontOnSelectedValueChanged(object sender, EventArgs e)
         {
-            _settings.Add(ConfigEntrys.Font.Name, (string)comboBox_font.SelectedValue, true);
+            _configuration.Font = (string)comboBox_font.SelectedValue;
         }
-        
+
         private void CheckBoxEnableOnCheckedChanged(object sender, EventArgs e)
         {
             var enabled = checkBox_enable.Checked;
-            _settings.Add(ConfigEntrys.Enable.Name, enabled, true);
+
+            _configuration.Enable = enabled;
 
             panel1.Enabled = enabled;
         }
@@ -107,19 +112,20 @@ namespace LiveVisualizer
         private void checkBox_autosizeChart_CheckedChanged(object sender, EventArgs e)
         {
             var enabled = checkBox_autosizeChart.Checked;
-            _settings.Add(ConfigEntrys.AutoSizeAxisY.Name, enabled, true);
+
+            _configuration.AutoSizeAxisY = enabled;
 
             panel_manualChart.Enabled = !enabled;
         }
 
         private void textBox_chartCutoffs_TextChanged(object sender, EventArgs e)
         {
-            _settings.Add(ConfigEntrys.ManualAxisCutoffs.Name, textBox_chartCutoffs.Text, true);
+            _configuration.ChartCutoffsSet = new SortedSet<int>(textBox_chartCutoffs.Text.Split(';').Select(v => int.TryParse(v, out int num) ? num : 0));
         }
 
         private void checkBox_showAxisYSeparator_CheckedChanged(object sender, EventArgs e)
         {
-            _settings.Add(ConfigEntrys.ShowAxisYSeparator.Name, checkBox_showAxisYSeparator.Checked, true);
+            _configuration.ShowAxisYSeparator = checkBox_showAxisYSeparator.Checked;
         }
 
         private void linkLabel_UICredit1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

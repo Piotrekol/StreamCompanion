@@ -41,6 +41,9 @@
     <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PropertyChanged, Version=2.6.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
@@ -49,6 +52,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xaml" />
@@ -74,7 +78,9 @@
       <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="ConfigEntrys.cs" />
-    <Compile Include="IVisualizerForm.cs" />
+    <Compile Include="Models\Interfaces\IVisualizerConfiguration.cs" />
+    <Compile Include="Models\Interfaces\IVisualizerDisplayData.cs" />
+    <Compile Include="Models\Interfaces\IWpfVisualizerData.cs" />
     <Compile Include="LiveVisualizerPlugin.cs" />
     <Compile Include="LiveVisualizerPluginBase.cs" />
     <Compile Include="LiveVisualizerSettings.cs">
@@ -86,6 +92,8 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\VisualizerConfiguration.cs" />
+    <Compile Include="Models\VisualizerDisplayData.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -93,7 +101,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="VisualizerDataModel.cs" />
+    <Compile Include="Models\VisualizerDataModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
