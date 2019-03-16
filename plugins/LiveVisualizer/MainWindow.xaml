@@ -13,10 +13,13 @@
         MinHeight="350"
         MinWidth="500"
         AllowsTransparency="True"
+        WindowStyle="None"
+        ResizeMode="NoResize"
         >
     <Window.Background>
         <SolidColorBrush Color="{Binding Path=Configuration.BackgroundColor}"></SolidColorBrush>
     </Window.Background>
+    <!--
     <Window.Style>
         <Style TargetType="Window">
             <Style.Triggers>
@@ -31,6 +34,7 @@
             </Style.Setters>
         </Style>
     </Window.Style>
+    -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>

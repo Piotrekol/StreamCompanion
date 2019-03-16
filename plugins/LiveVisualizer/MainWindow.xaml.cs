@@ -20,6 +20,7 @@ namespace LiveVisualizer
     /// </summary>
     public partial class MainWindow : Window
     {
+        //TODO: Resizing of transparent wpf window is not supported natively.(xaml)
         public MainWindow(IWpfVisualizerData data)
         {
             InitializeComponent();
