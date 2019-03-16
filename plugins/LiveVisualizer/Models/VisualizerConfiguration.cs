@@ -24,6 +24,6 @@ namespace LiveVisualizer
         public bool EnableResizing { get; set; } = false;
         public Color BackgroundColor { get; set; } = Color.FromArgb(255, 0, 0, 0);
         public Color ImageDimColor { get; set; } = Color.FromArgb(102, 0, 0, 0);
-        public SortedSet<int> ChartCutoffsSet { get; set; } = new SortedSet<int>(new[] { 30, 60, 100, 200, 350 });
+        public SortedSet<int> ChartCutoffsSet { get; set; } = new SortedSet<int>();
     }
 }

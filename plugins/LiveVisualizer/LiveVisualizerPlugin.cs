@@ -86,7 +86,10 @@ namespace LiveVisualizer
             var config = Settings.Get<string>(ConfigEntrys.LiveVisualizerConfig);
 
             if (config == ConfigEntrys.LiveVisualizerConfig.Default<string>())
+            {
+                VisualizerData.Configuration.ChartCutoffsSet = new SortedSet<int>(new[] { 30, 60, 100, 200, 350 });
                 return;
+            }
 
             VisualizerData.Configuration = JsonConvert.DeserializeObject<VisualizerConfiguration>(config);
         }
