@@ -1,6 +1,6 @@
 [submodule "submodules/osu"]
 	path = submodules/osu
-	url = https://github.com/ppy/osu
+	url = https://github.com/Piotrekol/osu
 [submodule "submodules/CollectionManager"]
 	path = submodules/CollectionManager
 	url = https://github.com/Piotrekol/CollectionManager
