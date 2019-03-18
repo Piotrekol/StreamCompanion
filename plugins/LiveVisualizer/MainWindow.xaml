@@ -12,7 +12,7 @@
         SizeChanged="MainWindow_OnSizeChanged"
         MinHeight="350"
         MinWidth="500"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         WindowStyle="None"
         ResizeMode="NoResize"
         >
