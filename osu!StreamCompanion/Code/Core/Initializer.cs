@@ -147,10 +147,11 @@ namespace osu_StreamCompanion.Code.Core
 
             _logger.Log("==========", LogLevel.Advanced);
 
-            foreach (var plugin in plugins)
-            {
-                LoadPlugin(plugin);
-            }
+            var sortedPlugins = SortPlugins(plugins);
+
+            LoadPlugins(sortedPlugins[0]);
+            LoadPlugins(sortedPlugins[1]);
+            
             _logger.Log("==========", LogLevel.Advanced);
 
             ProritizePluginsUsage();
@@ -183,6 +184,38 @@ namespace osu_StreamCompanion.Code.Core
             {
                 if (finder is IModule && !(finder is IPlugin))
                     _mapDataFinders.Add(finder);
+            }
+        }
+
+        /// <summary>
+        /// Creates plugin dictionary with defines plugin loading order
+        /// </summary>
+        /// <param name="plugins"></param>
+        /// <returns></returns>
+        public Dictionary<int, List<IPlugin>> SortPlugins(List<IPlugin> plugins)
+        {
+            var dict = new Dictionary<int, List<IPlugin>>
+            {
+                { 0, new List<IPlugin>() },
+                { 1, new List<IPlugin>() }
+            };
+
+            foreach (var plugin in plugins)
+            {
+                if (plugin is IOsuEventSource)
+                    dict[1].Add(plugin);
+                else
+                    dict[0].Add(plugin);
+            }
+
+            return dict;
+        }
+
+        private void LoadPlugins(List<IPlugin> plugins)
+        {
+            foreach (var plugin in plugins)
+            {
+                LoadPlugin(plugin);
             }
         }
         private void LoadPlugin(IPlugin plugin)
