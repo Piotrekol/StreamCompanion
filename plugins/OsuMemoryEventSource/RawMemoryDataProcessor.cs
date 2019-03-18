@@ -18,7 +18,7 @@ namespace OsuMemoryEventSource
         private Beatmap _currentBeatmap = null;
         private string _currentMods;
         private string _currentOsuFileLocation = null;
-        
+
 
         private PpCalculator.PpCalculator _ppCalculator = null;
 
@@ -28,7 +28,10 @@ namespace OsuMemoryEventSource
         public void SetCurrentMap(Beatmap beatmap, string mods, string osuFileLocation, PlayMode playMode)
         {
             if (beatmap == null)
+            {
+                _ppCalculator = null;
                 return;
+            }
 
             _currentBeatmap = beatmap;
             _currentMods = mods;
@@ -43,31 +46,37 @@ namespace OsuMemoryEventSource
 
             _ppCalculator.PreProcess(osuFileLocation);
         }
-        
+
 
         public double PPIfRestFCed()
         {
+            double pp = double.NaN;
+
             if (_ppCalculator == null || _currentBeatmap.PlayMode == PlayMode.OsuMania)
-                return double.NaN;
+                return pp;
 
-            if (Play.Time <= 0)
+            try
             {
-                _ppCalculator.Goods = 0;
-                _ppCalculator.Mehs = 0;
-                _ppCalculator.Combo = null;
-                _ppCalculator.PercentCombo = 100;
-                _accIfRestFced = 100;
-                return _ppCalculator.Calculate();//fc pp
+                if (Play.Time <= 0)
+                {
+                    _ppCalculator.Goods = 0;
+                    _ppCalculator.Mehs = 0;
+                    _ppCalculator.Combo = null;
+                    _ppCalculator.PercentCombo = 100;
+                    _accIfRestFced = 100;
+                    return _ppCalculator.Calculate(); //fc pp
+                }
+
+                var comboLeft = _ppCalculator.GetMaxCombo(Play.Time);
+
+                var newMaxCombo = Math.Max(Play.MaxCombo, comboLeft + Play.Combo);
+
+                _ppCalculator.Combo = newMaxCombo;
+
+                pp = _ppCalculator.Calculate(null);
+
             }
-
-            var comboLeft = _ppCalculator.GetMaxCombo(Play.Time);
-
-            var newMaxCombo = Math.Max(Play.MaxCombo, comboLeft + Play.Combo);
-
-            _ppCalculator.Combo = newMaxCombo;
-
-            var pp = _ppCalculator.Calculate(null);
-
+            catch { }
 
             return pp;
 

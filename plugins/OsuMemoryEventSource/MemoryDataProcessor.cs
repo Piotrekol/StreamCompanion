@@ -84,8 +84,9 @@ namespace OsuMemoryEventSource
 
                 OutputPatterns.Clear();
 
-                if (map.FoundBeatmaps && 
-                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+                if (map.FoundBeatmaps &&
+                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation) &&
+                    (map.Action & (OsuStatus.Playing | OsuStatus.Watching)) != 0)
                 {
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.WorkingMods ?? "";
