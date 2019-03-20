@@ -1,4 +1,4 @@
-﻿using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,6 +24,7 @@ namespace LiveVisualizer
 
             InitializeComponent();
 
+            label_oneScreenWarning.Visible = Screen.AllScreens.Length <= 1;
 
             using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
             {
@@ -57,7 +58,7 @@ namespace LiveVisualizer
             checkBox_showAxisYSeparator.Checked = _configuration.ShowAxisYSeparator;
 
             numericUpDown_windowHeight.Value = (decimal)_configuration.WindowHeight;
-            numericUpDown_windowWidth.Value = (decimal) _configuration.WindowWidth;
+            numericUpDown_windowWidth.Value = (decimal)_configuration.WindowWidth;
             checkBox_enableWindowRezising.Checked = _configuration.EnableResizing;
 
 
