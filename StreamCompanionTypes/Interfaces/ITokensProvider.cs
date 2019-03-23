@@ -7,7 +7,7 @@ namespace StreamCompanionTypes.Interfaces
     {
         /// <summary>
         /// Tokens should get updated upon calling this method<para/>
-        /// Use static <see cref="Tokens.GetToken"/> to generate and update tokens
+        /// Use static <see cref="Tokens.CreateTokenGetter"/> to create method for generating and updating tokens
         /// </summary>
         /// <param name="map"></param>
         void CreateTokens(MapSearchResult map);
