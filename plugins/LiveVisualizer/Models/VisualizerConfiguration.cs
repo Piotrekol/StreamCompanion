@@ -24,6 +24,8 @@ namespace LiveVisualizer
         public bool EnableResizing { get; set; } = false;
         public Color BackgroundColor { get; set; } = Color.FromArgb(255, 0, 0, 0);
         public Color ImageDimColor { get; set; } = Color.FromArgb(102, 0, 0, 0);
+        public Color TitleTextColor { get; set; } = Color.FromArgb(255, 232, 232, 232);
+        public Color ArtistTextColor { get; set; } = Color.FromArgb(255, 203, 203, 203);
         public SortedSet<int> ChartCutoffsSet { get; set; } = new SortedSet<int>();
     }
 }

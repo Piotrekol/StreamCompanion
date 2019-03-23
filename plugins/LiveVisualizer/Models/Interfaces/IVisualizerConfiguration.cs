@@ -20,12 +20,15 @@ namespace LiveVisualizer
         double WindowWidth { get; set; }
         bool EnableResizing { get; set; }
 
+        SortedSet<int> ChartCutoffsSet { get; set; }
+
         Color ChartColor { get; set; }
         Color ChartProgressColor { get; set; }
         Color AxisYSeparatorColor { get; set; }
         Color FillColor { get; set; }
         Color BackgroundColor { get; set; }
         Color ImageDimColor { get; set; }
-        SortedSet<int> ChartCutoffsSet { get; set; }
+        Color TitleTextColor { get; set; }
+        Color ArtistTextColor { get; set; }
     }
 }

@@ -58,10 +58,18 @@
             </Grid.RowDefinitions>
 
             <Viewbox Grid.Row="0" MaxHeight="30"  >
-                <TextBlock Name="Title" Text="{Binding Display.Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FFE8E8E8" Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0"/>
+                <TextBlock Name="Title" Text="{Binding Display.Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{Binding Configuration.TitleTextColor}"></SolidColorBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
             </Viewbox>
             <Viewbox Grid.Row="1" >
-                <TextBlock Name="Artist" Text="{Binding Display.Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Foreground="#FFCBCBCB" Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0"/>
+                <TextBlock Name="Artist" Text="{Binding Display.Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{Binding Configuration.ArtistTextColor}"></SolidColorBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
             </Viewbox>
         </Grid>
 

@@ -53,6 +53,10 @@ namespace LiveVisualizer
             BindColorPicker(color_background, () => _configuration.BackgroundColor, color => _configuration.BackgroundColor = color);
             BindColorPicker(color_imageDimming, () => _configuration.ImageDimColor, color => _configuration.ImageDimColor = color);
 
+            BindColorPicker(color_textArtist, () => _configuration.ArtistTextColor, color => _configuration.ArtistTextColor = color);
+            BindColorPicker(color_textTitle, () => _configuration.TitleTextColor, color => _configuration.TitleTextColor = color);
+
+
             textBox_chartCutoffs.Text = string.Join(";", _configuration.ChartCutoffsSet);
 
             checkBox_showAxisYSeparator.Checked = _configuration.ShowAxisYSeparator;
