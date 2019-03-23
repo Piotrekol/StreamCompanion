@@ -31,11 +31,6 @@
             this.checkBox_enable = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox_chartColors = new System.Windows.Forms.GroupBox();
-            this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_chartProgress = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_imageDimming = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_background = new LiveVisualizer.ColorPickerWithPreview();
             this.checkBox_enableWindowRezising = new System.Windows.Forms.CheckBox();
             this.numericUpDown_windowHeight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_windowWidth = new System.Windows.Forms.NumericUpDown();
@@ -53,14 +48,22 @@
             this.textBox_chartCutoffs = new System.Windows.Forms.TextBox();
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
             this.label_oneScreenWarning = new System.Windows.Forms.Label();
-            this.color_textArtist = new LiveVisualizer.ColorPickerWithPreview();
+            this.numericUpDown_chartHeight = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             this.color_textTitle = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_textArtist = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_chartProgress = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_imageDimming = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_background = new LiveVisualizer.ColorPickerWithPreview();
             this.panel1.SuspendLayout();
             this.groupBox_chartColors.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_windowWidth)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel_manualChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // checkBox_enable
@@ -75,6 +78,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.numericUpDown_chartHeight);
             this.panel1.Controls.Add(this.groupBox_chartColors);
             this.panel1.Controls.Add(this.checkBox_enableWindowRezising);
             this.panel1.Controls.Add(this.numericUpDown_windowHeight);
@@ -106,91 +111,6 @@
             this.groupBox_chartColors.TabIndex = 42;
             this.groupBox_chartColors.TabStop = false;
             this.groupBox_chartColors.Text = "Chart colors";
-            // 
-            // color_chartPrimary
-            // 
-            this.color_chartPrimary.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_chartPrimary.LabelDesigner.AutoSize = true;
-            this.color_chartPrimary.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_chartPrimary.LabelDesigner.Name = "Label";
-            this.color_chartPrimary.LabelDesigner.Size = new System.Drawing.Size(68, 13);
-            this.color_chartPrimary.LabelDesigner.TabIndex = 1;
-            this.color_chartPrimary.LabelDesigner.Text = "Primary chart";
-            this.color_chartPrimary.Location = new System.Drawing.Point(6, 19);
-            this.color_chartPrimary.Name = "color_chartPrimary";
-            this.color_chartPrimary.Size = new System.Drawing.Size(290, 26);
-            this.color_chartPrimary.TabIndex = 0;
-            // 
-            // color_chartProgress
-            // 
-            this.color_chartProgress.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_chartProgress.LabelDesigner.AutoSize = true;
-            this.color_chartProgress.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_chartProgress.LabelDesigner.Name = "Label";
-            this.color_chartProgress.LabelDesigner.Size = new System.Drawing.Size(75, 13);
-            this.color_chartProgress.LabelDesigner.TabIndex = 1;
-            this.color_chartProgress.LabelDesigner.Text = "Chart progress";
-            this.color_chartProgress.Location = new System.Drawing.Point(6, 51);
-            this.color_chartProgress.Name = "color_chartProgress";
-            this.color_chartProgress.Size = new System.Drawing.Size(290, 26);
-            this.color_chartProgress.TabIndex = 1;
-            // 
-            // color_imageDimming
-            // 
-            this.color_imageDimming.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_imageDimming.LabelDesigner.AutoSize = true;
-            this.color_imageDimming.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_imageDimming.LabelDesigner.Name = "Label";
-            this.color_imageDimming.LabelDesigner.Size = new System.Drawing.Size(77, 13);
-            this.color_imageDimming.LabelDesigner.TabIndex = 1;
-            this.color_imageDimming.LabelDesigner.Text = "Image dimming";
-            this.color_imageDimming.Location = new System.Drawing.Point(6, 147);
-            this.color_imageDimming.Name = "color_imageDimming";
-            this.color_imageDimming.Size = new System.Drawing.Size(290, 26);
-            this.color_imageDimming.TabIndex = 40;
-            // 
-            // color_horizontalLegend
-            // 
-            this.color_horizontalLegend.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_horizontalLegend.LabelDesigner.AutoSize = true;
-            this.color_horizontalLegend.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_horizontalLegend.LabelDesigner.Name = "Label";
-            this.color_horizontalLegend.LabelDesigner.Size = new System.Drawing.Size(89, 13);
-            this.color_horizontalLegend.LabelDesigner.TabIndex = 1;
-            this.color_horizontalLegend.LabelDesigner.Text = "Horizontal legend";
-            this.color_horizontalLegend.Location = new System.Drawing.Point(6, 83);
-            this.color_horizontalLegend.Name = "color_horizontalLegend";
-            this.color_horizontalLegend.Size = new System.Drawing.Size(290, 26);
-            this.color_horizontalLegend.TabIndex = 33;
-            // 
-            // color_background
-            // 
-            this.color_background.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_background.LabelDesigner.AutoSize = true;
-            this.color_background.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_background.LabelDesigner.Name = "Label";
-            this.color_background.LabelDesigner.Size = new System.Drawing.Size(65, 13);
-            this.color_background.LabelDesigner.TabIndex = 1;
-            this.color_background.LabelDesigner.Text = "Background";
-            this.color_background.Location = new System.Drawing.Point(6, 115);
-            this.color_background.Name = "color_background";
-            this.color_background.Size = new System.Drawing.Size(290, 26);
-            this.color_background.TabIndex = 39;
             // 
             // checkBox_enableWindowRezising
             // 
@@ -382,22 +302,36 @@
             this.label_oneScreenWarning.Text = "WARNING: In order for window to work in OBS while osu! is in fullscreen \r\nwith on" +
     "e screen you have to use game capture, NOT window capture!";
             // 
-            // color_textArtist
+            // numericUpDown_chartHeight
             // 
-            this.color_textArtist.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            this.numericUpDown_chartHeight.Location = new System.Drawing.Point(82, 314);
+            this.numericUpDown_chartHeight.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numericUpDown_chartHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_chartHeight.Name = "numericUpDown_chartHeight";
+            this.numericUpDown_chartHeight.Size = new System.Drawing.Size(66, 20);
+            this.numericUpDown_chartHeight.TabIndex = 43;
+            this.numericUpDown_chartHeight.Value = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
             // 
+            // label6
             // 
-            // 
-            this.color_textArtist.LabelDesigner.AutoSize = true;
-            this.color_textArtist.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_textArtist.LabelDesigner.Name = "Label";
-            this.color_textArtist.LabelDesigner.Size = new System.Drawing.Size(50, 13);
-            this.color_textArtist.LabelDesigner.TabIndex = 1;
-            this.color_textArtist.LabelDesigner.Text = "Artist text";
-            this.color_textArtist.Location = new System.Drawing.Point(302, 19);
-            this.color_textArtist.Name = "color_textArtist";
-            this.color_textArtist.Size = new System.Drawing.Size(290, 26);
-            this.color_textArtist.TabIndex = 41;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 316);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(67, 13);
+            this.label6.TabIndex = 44;
+            this.label6.Text = "Chart height:";
             // 
             // color_textTitle
             // 
@@ -415,6 +349,108 @@
             this.color_textTitle.Name = "color_textTitle";
             this.color_textTitle.Size = new System.Drawing.Size(290, 26);
             this.color_textTitle.TabIndex = 42;
+            // 
+            // color_textArtist
+            // 
+            this.color_textArtist.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_textArtist.LabelDesigner.AutoSize = true;
+            this.color_textArtist.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_textArtist.LabelDesigner.Name = "Label";
+            this.color_textArtist.LabelDesigner.Size = new System.Drawing.Size(50, 13);
+            this.color_textArtist.LabelDesigner.TabIndex = 1;
+            this.color_textArtist.LabelDesigner.Text = "Artist text";
+            this.color_textArtist.Location = new System.Drawing.Point(302, 19);
+            this.color_textArtist.Name = "color_textArtist";
+            this.color_textArtist.Size = new System.Drawing.Size(290, 26);
+            this.color_textArtist.TabIndex = 41;
+            // 
+            // color_chartPrimary
+            // 
+            this.color_chartPrimary.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_chartPrimary.LabelDesigner.AutoSize = true;
+            this.color_chartPrimary.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_chartPrimary.LabelDesigner.Name = "Label";
+            this.color_chartPrimary.LabelDesigner.Size = new System.Drawing.Size(68, 13);
+            this.color_chartPrimary.LabelDesigner.TabIndex = 1;
+            this.color_chartPrimary.LabelDesigner.Text = "Primary chart";
+            this.color_chartPrimary.Location = new System.Drawing.Point(6, 19);
+            this.color_chartPrimary.Name = "color_chartPrimary";
+            this.color_chartPrimary.Size = new System.Drawing.Size(290, 26);
+            this.color_chartPrimary.TabIndex = 0;
+            // 
+            // color_chartProgress
+            // 
+            this.color_chartProgress.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_chartProgress.LabelDesigner.AutoSize = true;
+            this.color_chartProgress.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_chartProgress.LabelDesigner.Name = "Label";
+            this.color_chartProgress.LabelDesigner.Size = new System.Drawing.Size(75, 13);
+            this.color_chartProgress.LabelDesigner.TabIndex = 1;
+            this.color_chartProgress.LabelDesigner.Text = "Chart progress";
+            this.color_chartProgress.Location = new System.Drawing.Point(6, 51);
+            this.color_chartProgress.Name = "color_chartProgress";
+            this.color_chartProgress.Size = new System.Drawing.Size(290, 26);
+            this.color_chartProgress.TabIndex = 1;
+            // 
+            // color_imageDimming
+            // 
+            this.color_imageDimming.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_imageDimming.LabelDesigner.AutoSize = true;
+            this.color_imageDimming.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_imageDimming.LabelDesigner.Name = "Label";
+            this.color_imageDimming.LabelDesigner.Size = new System.Drawing.Size(77, 13);
+            this.color_imageDimming.LabelDesigner.TabIndex = 1;
+            this.color_imageDimming.LabelDesigner.Text = "Image dimming";
+            this.color_imageDimming.Location = new System.Drawing.Point(6, 147);
+            this.color_imageDimming.Name = "color_imageDimming";
+            this.color_imageDimming.Size = new System.Drawing.Size(290, 26);
+            this.color_imageDimming.TabIndex = 40;
+            // 
+            // color_horizontalLegend
+            // 
+            this.color_horizontalLegend.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_horizontalLegend.LabelDesigner.AutoSize = true;
+            this.color_horizontalLegend.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_horizontalLegend.LabelDesigner.Name = "Label";
+            this.color_horizontalLegend.LabelDesigner.Size = new System.Drawing.Size(89, 13);
+            this.color_horizontalLegend.LabelDesigner.TabIndex = 1;
+            this.color_horizontalLegend.LabelDesigner.Text = "Horizontal legend";
+            this.color_horizontalLegend.Location = new System.Drawing.Point(6, 83);
+            this.color_horizontalLegend.Name = "color_horizontalLegend";
+            this.color_horizontalLegend.Size = new System.Drawing.Size(290, 26);
+            this.color_horizontalLegend.TabIndex = 33;
+            // 
+            // color_background
+            // 
+            this.color_background.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_background.LabelDesigner.AutoSize = true;
+            this.color_background.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_background.LabelDesigner.Name = "Label";
+            this.color_background.LabelDesigner.Size = new System.Drawing.Size(65, 13);
+            this.color_background.LabelDesigner.TabIndex = 1;
+            this.color_background.LabelDesigner.Text = "Background";
+            this.color_background.Location = new System.Drawing.Point(6, 115);
+            this.color_background.Name = "color_background";
+            this.color_background.Size = new System.Drawing.Size(290, 26);
+            this.color_background.TabIndex = 39;
             // 
             // LiveVisualizerSettings
             // 
@@ -434,6 +470,7 @@
             this.panel2.PerformLayout();
             this.panel_manualChart.ResumeLayout(false);
             this.panel_manualChart.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -468,5 +505,7 @@
         private System.Windows.Forms.Label label_oneScreenWarning;
         private ColorPickerWithPreview color_textTitle;
         private ColorPickerWithPreview color_textArtist;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericUpDown_chartHeight;
     }
 }

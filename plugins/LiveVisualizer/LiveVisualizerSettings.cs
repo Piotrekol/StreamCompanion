@@ -63,6 +63,8 @@ namespace LiveVisualizer
 
             numericUpDown_windowHeight.Value = (decimal)_configuration.WindowHeight;
             numericUpDown_windowWidth.Value = (decimal)_configuration.WindowWidth;
+            numericUpDown_chartHeight.Value = (decimal)_configuration.ChartHeight;
+
             checkBox_enableWindowRezising.Checked = _configuration.EnableResizing;
 
 
@@ -75,8 +77,15 @@ namespace LiveVisualizer
 
             numericUpDown_windowHeight.ValueChanged += NumericUpDownWindowHeightOnValueChanged;
             numericUpDown_windowWidth.ValueChanged += NumericUpDownWindowWidthOnValueChanged;
+            numericUpDown_chartHeight.ValueChanged += NumericUpDownChartHeightOnValueChanged;
+
             checkBox_enableWindowRezising.CheckedChanged += CheckBoxEnableWindowRezisingOnCheckedChanged;
 
+        }
+
+        private void NumericUpDownChartHeightOnValueChanged(object sender, EventArgs e)
+        {
+            _configuration.ChartHeight = (double)numericUpDown_chartHeight.Value;
         }
 
         private void BindColorPicker(ColorPickerWithPreview cp, Func<MColor> getter, Action<MColor> setter)

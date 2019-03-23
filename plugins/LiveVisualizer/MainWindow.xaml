@@ -74,8 +74,8 @@
         </Grid>
 
         <Rectangle Grid.Row="1" Fill="#141414"/>
-        <Frame Name="frameholder" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Configuration.WindowWidth}"/>
-        <Frame Name="frameholderTimer" Height="150" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}"/>
+        <Frame Name="frameholder" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Configuration.WindowWidth}"/>
+        <Frame Name="frameholderTimer" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}"/>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

@@ -22,6 +22,7 @@ namespace LiveVisualizer
         public double WindowHeight { get; set; } = 350;
         public double WindowWidth { get; set; } = 700;
         public bool EnableResizing { get; set; } = false;
+        public double ChartHeight { get; set; } = 150;
         public Color BackgroundColor { get; set; } = Color.FromArgb(255, 0, 0, 0);
         public Color ImageDimColor { get; set; } = Color.FromArgb(102, 0, 0, 0);
         public Color TitleTextColor { get; set; } = Color.FromArgb(255, 232, 232, 232);

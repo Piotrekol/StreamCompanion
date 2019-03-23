@@ -19,6 +19,7 @@ namespace LiveVisualizer
         double WindowHeight { get; set; }
         double WindowWidth { get; set; }
         bool EnableResizing { get; set; }
+        double ChartHeight { get; set; }
 
         SortedSet<int> ChartCutoffsSet { get; set; }
 
