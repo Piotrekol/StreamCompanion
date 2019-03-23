@@ -16,7 +16,7 @@ namespace BeatmapPpReplacements
         private readonly SettingNames _names = SettingNames.Instance;
 
         private const string PpFormat = "{0:0.00}";
-        private Tokens.TokenGetter _tokenGetter;
+        private Tokens.TokenSetter _tokenGetter;
 
         private PpCalculator.PpCalculator _ppCalculator = null;
 
@@ -35,7 +35,7 @@ namespace BeatmapPpReplacements
 
         public void Start(ILogger logger)
         {
-            _tokenGetter = Tokens.CreateTokenGetter(Name);
+            _tokenGetter = Tokens.CreateTokenSetter(Name);
             Started = true;
         }
 

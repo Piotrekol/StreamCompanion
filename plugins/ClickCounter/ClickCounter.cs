@@ -23,7 +23,7 @@ namespace ClickCounter
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
         private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
-        private Tokens.TokenGetter _tokenGetter;
+        private Tokens.TokenSetter _tokenGetter;
 
         public string SettingGroup { get; } = "Click counter";
 
@@ -258,7 +258,7 @@ namespace ClickCounter
                 _keysPerX.Start();
             }
 
-            _tokenGetter = Tokens.CreateTokenGetter(Name);
+            _tokenGetter = Tokens.CreateTokenSetter(Name);
             Started = true;
 
         }

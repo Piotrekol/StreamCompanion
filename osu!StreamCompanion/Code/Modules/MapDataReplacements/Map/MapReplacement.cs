@@ -14,12 +14,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
-        private Tokens.TokenGetter _tokenGetter;
+        private Tokens.TokenSetter _tokenGetter;
         public bool Started { get; set; }
 
         public void Start(ILogger logger)
         {
-            _tokenGetter = Tokens.CreateTokenGetter("MapReplacements");
+            _tokenGetter = Tokens.CreateTokenSetter("MapReplacements");
             Started = true;
         }
 

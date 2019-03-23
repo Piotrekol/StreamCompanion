@@ -36,7 +36,6 @@ namespace StreamCompanionTypes.DataTypes
         internal Token(object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null)
         {
             Debug.Assert(!(value is Token));
-            Debug.Assert(!(value is TokenWithFormat));
 
             Format = format;
             _defaultValue = defaultValue;
@@ -53,12 +52,5 @@ namespace StreamCompanionTypes.DataTypes
             return (Token)this.MemberwiseClone();
         }
     }
-
-    //TODO: Remove this someday
-    public class TokenWithFormat : Token
-    {
-        internal TokenWithFormat(object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null) : base(value, type, format, defaultValue)
-        {
-        }
-    }
+    
 }

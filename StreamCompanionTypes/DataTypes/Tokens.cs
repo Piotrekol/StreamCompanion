@@ -23,7 +23,7 @@ namespace StreamCompanionTypes.DataTypes
         /// <summary>
         /// Returns existing token instance with updated value or creates new instance it if it doesn't exist
         /// </summary>
-        internal static Token GetToken(string pluginName, string tokenName, object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null)
+        internal static Token SetToken(string pluginName, string tokenName, object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null)
         {
             Token token;
 
@@ -42,15 +42,15 @@ namespace StreamCompanionTypes.DataTypes
             return token;
         }
         
-        public static TokenGetter CreateTokenGetter(string pluginName)
+        public static TokenSetter CreateTokenSetter(string pluginName)
         {
-            return (tokenName, value, type, format, defaultValue) => GetToken(pluginName, tokenName, value, type, format, defaultValue);
+            return (tokenName, value, type, format, defaultValue) => SetToken(pluginName, tokenName, value, type, format, defaultValue);
         }
         
         /// <summary>
-        /// <inheritdoc cref="GetToken"/>
+        /// <inheritdoc cref="Tokens.SetToken"/>
         /// </summary>
-        public delegate Token TokenGetter(string tokenName, object value, TokenType type = TokenType.Normal,
+        public delegate Token TokenSetter(string tokenName, object value, TokenType type = TokenType.Normal,
             string format = null, object defaultValue = null);
     }
 }

@@ -8,7 +8,14 @@ namespace PlaysReplacements
     {
         private int Plays, Retrys;
         public bool Started { get; set; }
-        public void Start(ILogger logger) { Started = true; }
+        private Tokens.TokenSetter _tokenGetter;
+
+        public void Start(ILogger logger)
+        {
+            _tokenGetter = Tokens.CreateTokenSetter(Name);
+
+            Started = true;
+        }
         private string lastMapSearchString = "";
 
         public string Description { get; } = "";
@@ -17,7 +24,7 @@ namespace PlaysReplacements
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public Tokens CreateTokens(MapSearchResult map)
+        public void CreateTokens(MapSearchResult map)
         {
             if (map.Action == OsuStatus.Playing)
             {
@@ -28,11 +35,8 @@ namespace PlaysReplacements
                 lastMapSearchString = map.MapSearchString;
             }
 
-            return new Tokens
-            {
-                { "Plays", new Token(Plays)},
-                { "Retrys", new Token(Retrys)}
-            };
+            _tokenGetter("Plays", Plays);
+            _tokenGetter("Retrys", Retrys);
         }
 
     }

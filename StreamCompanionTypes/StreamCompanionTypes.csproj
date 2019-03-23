@@ -76,7 +76,7 @@
     <Compile Include="Interfaces\IMainWindowUpdater.cs" />
     <Compile Include="Interfaces\IMapDataFinder.cs" />
     <Compile Include="Interfaces\IMapDataParser.cs" />
-    <Compile Include="Interfaces\IMapDataReplacements.cs" />
+    <Compile Include="Interfaces\ITokensProvider.cs" />
     <Compile Include="Interfaces\IMapDataStorer.cs" />
     <Compile Include="Interfaces\IModParser.cs" />
     <Compile Include="Interfaces\IModParserGetter.cs" />
