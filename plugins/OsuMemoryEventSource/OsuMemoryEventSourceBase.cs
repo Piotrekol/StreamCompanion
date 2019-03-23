@@ -15,7 +15,7 @@ namespace OsuMemoryEventSource
         protected SettingNames _names = SettingNames.Instance;
 
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
-        internal static Tokens.TokenSetter TokenGetter;
+        internal static Tokens.TokenSetter TokenSetter;
 
         public OsuStatus SearchModes { get; } = OsuStatus.Playing;
         public string SearcherName { get; } = "Memory";
@@ -46,7 +46,7 @@ namespace OsuMemoryEventSource
         public virtual void Start(ILogger logger)
         {
             Logger = logger;
-            TokenGetter = Tokens.CreateTokenSetter(Name);
+            TokenSetter = Tokens.CreateTokenSetter(Name);
 
             OsuMemoryDataProvider.DataProvider.Initalize();
             _memoryReader = OsuMemoryDataProvider.DataProvider.Instance;

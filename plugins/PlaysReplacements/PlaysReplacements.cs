@@ -8,11 +8,11 @@ namespace PlaysReplacements
     {
         private int Plays, Retrys;
         public bool Started { get; set; }
-        private Tokens.TokenSetter _tokenGetter;
+        private Tokens.TokenSetter _tokenSetter;
 
         public void Start(ILogger logger)
         {
-            _tokenGetter = Tokens.CreateTokenSetter(Name);
+            _tokenSetter = Tokens.CreateTokenSetter(Name);
 
             Started = true;
         }
@@ -35,8 +35,8 @@ namespace PlaysReplacements
                 lastMapSearchString = map.MapSearchString;
             }
 
-            _tokenGetter("Plays", Plays);
-            _tokenGetter("Retrys", Retrys);
+            _tokenSetter("Plays", Plays);
+            _tokenSetter("Retrys", Retrys);
         }
 
     }

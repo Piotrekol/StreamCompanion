@@ -11,7 +11,6 @@ namespace StreamCompanionTypes.DataTypes
             GroupName = groupName;
         }
         
-
         public string GroupName { get; set; }
 
         /// <summary>

@@ -14,19 +14,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
-        private Tokens.TokenSetter _tokenGetter;
+        private Tokens.TokenSetter _tokenSetter;
         public bool Started { get; set; }
 
         public void Start(ILogger logger)
         {
-            _tokenGetter = Tokens.CreateTokenSetter("MapReplacements");
+            _tokenSetter = Tokens.CreateTokenSetter("MapReplacements");
             Started = true;
         }
 
         public void CreateTokens(MapSearchResult map)
         {
             Dictionary<string, object> dict;
-            var OsuFileLocationToken = _tokenGetter("OsuFileLocation", null);
+            var OsuFileLocationToken = _tokenSetter("OsuFileLocation", null);
             if (map.FoundBeatmaps)
             {
                 dict = map.BeatmapsFound[0].GetTokens();
@@ -52,7 +52,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 
             foreach (var token in dict)
             {
-                _tokenGetter(token.Key, token.Value);
+                _tokenSetter(token.Key, token.Value);
             }
 
         }

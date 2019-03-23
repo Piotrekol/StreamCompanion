@@ -24,7 +24,7 @@ namespace OsuMemoryEventSource
         private List<OutputPattern> OutputPatterns = new List<OutputPattern>();
         private ISettingsHandler _settings;
 
-        private Tokens.TokenSetter _tokenGetter => OsuMemoryEventSourceBase.TokenGetter;
+        private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         private enum InterpolatedValueName
         {
             PpIfMapEndsNow,
@@ -240,21 +240,21 @@ namespace OsuMemoryEventSource
 
         private void InitLiveTokens()
         {
-            liveTokens["acc"] = _tokenGetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["300"] = _tokenGetter("300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0);
-            liveTokens["100"] = _tokenGetter("100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0);
-            liveTokens["50"] = _tokenGetter("50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0);
-            liveTokens["miss"] = _tokenGetter("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0);
-            liveTokens["time"] = _tokenGetter("time", 0d, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["combo"] = _tokenGetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0);
-            liveTokens["CurrentMaxCombo"] = _tokenGetter("CurrentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0);
-            liveTokens["PlayerHp"] = _tokenGetter("PlayerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["PpIfMapEndsNow"] = _tokenGetter("PpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["AimPpIfMapEndsNow"] = _tokenGetter("AimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["SpeedPpIfMapEndsNow"] = _tokenGetter("SpeedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["AccPpIfMapEndsNow"] = _tokenGetter("AccPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["StrainPpIfMapEndsNow"] = _tokenGetter("StrainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
-            liveTokens["PpIfRestFced"] = _tokenGetter("PpIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["acc"] = _tokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["300"] = _tokenSetter("300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0);
+            liveTokens["100"] = _tokenSetter("100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0);
+            liveTokens["50"] = _tokenSetter("50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0);
+            liveTokens["miss"] = _tokenSetter("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0);
+            liveTokens["time"] = _tokenSetter("time", 0d, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["combo"] = _tokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0);
+            liveTokens["CurrentMaxCombo"] = _tokenSetter("CurrentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0);
+            liveTokens["PlayerHp"] = _tokenSetter("PlayerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["PpIfMapEndsNow"] = _tokenSetter("PpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["AimPpIfMapEndsNow"] = _tokenSetter("AimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["SpeedPpIfMapEndsNow"] = _tokenSetter("SpeedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["AccPpIfMapEndsNow"] = _tokenSetter("AccPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["StrainPpIfMapEndsNow"] = _tokenSetter("StrainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["PpIfRestFced"] = _tokenSetter("PpIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d);
         }
 
         private void PrepareTimeToken(int readPlayTime)

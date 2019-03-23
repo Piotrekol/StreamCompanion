@@ -15,7 +15,7 @@ namespace ModsHandler
     {
         private readonly ModParser _modParser = new ModParser();
         private readonly DifficultyCalculator _difficultyCalculator = new DifficultyCalculator();
-        private Tokens.TokenSetter _tokenGetter;
+        private Tokens.TokenSetter _tokenSetter;
 
         public bool Started { get; set; }
 
@@ -28,7 +28,7 @@ namespace ModsHandler
 
         public void Start(ILogger logger)
         {
-            _tokenGetter = Tokens.CreateTokenSetter(Name);
+            _tokenSetter = Tokens.CreateTokenSetter(Name);
             Started = true;
         }
 
@@ -90,15 +90,15 @@ namespace ModsHandler
                 }
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
 
-                _tokenGetter("mods", map.Mods?.ShownMods);
-                _tokenGetter("mAR", Math.Round(c["AR"], 1));
-                _tokenGetter("mCS", Math.Round(c["CS"], 1));
-                _tokenGetter("mOD", Math.Round(c["OD"], 1));
-                _tokenGetter("mHP", c["HP"], format: "{0:0.##}");
-                _tokenGetter("mStars", Math.Round(foundMap.Stars(PlayMode.Osu, mods), 2));
-                _tokenGetter("mBpm", bpm);
-                _tokenGetter("mMaxBpm", c["MaxBpm"], format: "{0:0}");
-                _tokenGetter("mMinBpm", c["MinBpm"], format: "{0:0}");
+                _tokenSetter("mods", map.Mods?.ShownMods);
+                _tokenSetter("mAR", Math.Round(c["AR"], 1));
+                _tokenSetter("mCS", Math.Round(c["CS"], 1));
+                _tokenSetter("mOD", Math.Round(c["OD"], 1));
+                _tokenSetter("mHP", c["HP"], format: "{0:0.##}");
+                _tokenSetter("mStars", Math.Round(foundMap.Stars(PlayMode.Osu, mods), 2));
+                _tokenSetter("mBpm", bpm);
+                _tokenSetter("mMaxBpm", c["MaxBpm"], format: "{0:0}");
+                _tokenSetter("mMinBpm", c["MinBpm"], format: "{0:0}");
             }
             else
             {
