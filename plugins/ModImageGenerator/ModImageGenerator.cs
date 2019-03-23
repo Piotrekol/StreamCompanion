@@ -11,7 +11,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace ModImageGenerator
 {
-    class ModImageGenerator : IPlugin, IMapDataReplacements, ISettingsProvider, ISaveRequester
+    class ModImageGenerator : IPlugin, ITokensProvider, ISettingsProvider, ISaveRequester
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
@@ -40,7 +40,7 @@ namespace ModImageGenerator
             _imageGenerator.SetSaveHandle(_saver);
         }
 
-        public Tokens GetMapReplacements(MapSearchResult map)
+        public Tokens CreateTokens(MapSearchResult map)
         {
 
             if (_settings.Get<bool>(_names.EnableModImages))

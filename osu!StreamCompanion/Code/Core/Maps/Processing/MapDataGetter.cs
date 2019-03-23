@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Misc;
@@ -15,7 +16,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly List<IMapDataFinder> _mapDataFinders;
         private readonly List<IMapDataParser> _mapDataParsers;
         private readonly List<IMapDataGetter> _mapDataGetters;
-        private List<IMapDataReplacements> _mapDataReplacementsGetters;
+        private List<ITokensProvider> _mapDataReplacementsGetters;
 
         private readonly MainSaver _saver;
         private ILogger _logger;
@@ -23,7 +24,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly SettingNames _names = SettingNames.Instance;
 
         public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataGetter> mapDataGetters,
-            List<IMapDataParser> mapDataParsers, List<IMapDataReplacements> mapDataReplacementsGetters,
+            List<IMapDataParser> mapDataParsers, List<ITokensProvider> mapDataReplacementsGetters,
             MainSaver saver, ILogger logger, Settings settings)
         {
             _mapDataFinders = mapDataFinders;
@@ -72,8 +73,15 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         public void ProcessMapResult(MapSearchResult mapSearchResult)
         {
-            var mapReplacements = GetMapReplacements(mapSearchResult);
-            mapSearchResult.FormatedStrings = GetMapPatterns(mapReplacements, mapSearchResult.Action);
+            CreateMapReplacements(mapSearchResult);
+
+            var tokens = new Tokens();
+            foreach (var token in Tokens.AllTokens)
+            {
+                tokens.Add(token.Key,token.Value);
+            }
+
+            mapSearchResult.FormatedStrings = GetMapPatterns(tokens, mapSearchResult.Action);
 
 
             if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
@@ -81,23 +89,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             SetNewMap(mapSearchResult);
         }
 
-        private Tokens GetMapReplacements(MapSearchResult mapSearchResult)
+        private void CreateMapReplacements(MapSearchResult mapSearchResult)
         {
-            var ret = new Tokens();
             foreach (var mapDataReplacementsGetter in _mapDataReplacementsGetters)
             {
-                var temp = mapDataReplacementsGetter.GetMapReplacements(mapSearchResult);
-                if (temp?.Count > 0)
-                {
-                    foreach (var t in temp)
-                    {
-                        if (ret.ContainsKey(t.Key))
-                            continue;
-                        ret.Add(t.Key, t.Value);
-                    }
-                }
+                mapDataReplacementsGetter.CreateTokens(mapSearchResult);
             }
-            return ret;
         }
 
         private void SaveMapStrings(List<OutputPattern> patterns, OsuStatus status)

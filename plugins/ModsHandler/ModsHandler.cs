@@ -10,7 +10,7 @@ using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace ModsHandler
 {
-    public class ModsHandler : IPlugin, IModParser, ISettingsProvider, IDifficultyCalculator, IMapDataReplacements
+    public class ModsHandler : IPlugin, IModParser, ISettingsProvider, IDifficultyCalculator, ITokensProvider
     {
         private readonly ModParser _modParser = new ModParser();
         private readonly DifficultyCalculator _difficultyCalculator = new DifficultyCalculator();
@@ -70,7 +70,7 @@ namespace ModsHandler
             return retMap;
         }
         
-        public Tokens GetMapReplacements(MapSearchResult map)
+        public Tokens CreateTokens(MapSearchResult map)
         {
             Tokens dict;
             if (map.FoundBeatmaps)

@@ -9,7 +9,7 @@ using StreamCompanionTypes.Interfaces;
 namespace OsuMemoryEventSource
 {
     public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataGetter,
-         IOsuEventSource, IHighFrequencyDataSender, IModParserGetter, ISqliteUser, ISettings, IMapDataReplacements
+         IOsuEventSource, IHighFrequencyDataSender, IModParserGetter, ISqliteUser, ISettings, ITokensProvider
     {
         protected SettingNames _names = SettingNames.Instance;
 
@@ -74,7 +74,7 @@ namespace OsuMemoryEventSource
             Started = true;
         }
 
-        public Tokens GetMapReplacements(MapSearchResult map)
+        public Tokens CreateTokens(MapSearchResult map)
         {
             return Started ? _memoryListener.Tokens : null;
         }

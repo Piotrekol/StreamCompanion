@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace PlaysReplacements
 {
-    public class PlaysReplacements : IPlugin, IMapDataReplacements
+    public class PlaysReplacements : IPlugin, ITokensProvider
     {
         private int Plays, Retrys;
         public bool Started { get; set; }
@@ -17,7 +17,7 @@ namespace PlaysReplacements
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public Tokens GetMapReplacements(MapSearchResult map)
+        public Tokens CreateTokens(MapSearchResult map)
         {
             if (map.Action == OsuStatus.Playing)
             {

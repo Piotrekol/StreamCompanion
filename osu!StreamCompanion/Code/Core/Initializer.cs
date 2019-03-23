@@ -48,7 +48,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<IMapDataFinder> _mapDataFinders = new List<IMapDataFinder>();
         private readonly List<IMapDataParser> _mapDataParsers = new List<IMapDataParser>();
         private readonly List<IMapDataGetter> _mapDataGetters = new List<IMapDataGetter>();
-        private readonly List<IMapDataReplacements> _mapDataReplacementSetters = new List<IMapDataReplacements>();
+        private readonly List<ITokensProvider> _mapDataReplacementSetters = new List<ITokensProvider>();
 
         private readonly List<IOsuEventSource> _osuEventSources = new List<IOsuEventSource>();
         private readonly List<IHighFrequencyDataHandler> _highFrequencyDataHandlers = new List<IHighFrequencyDataHandler>(
@@ -391,7 +391,7 @@ namespace osu_StreamCompanion.Code.Core
                 SettingsProvider.SetSettingsListHandle(SettingsList);
             }
 
-            var mapDataReplacements = module as IMapDataReplacements;
+            var mapDataReplacements = module as ITokensProvider;
             if (mapDataReplacements != null)
             {
                 _mapDataReplacementSetters.Add(mapDataReplacements);
