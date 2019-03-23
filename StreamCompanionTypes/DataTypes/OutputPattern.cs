@@ -133,10 +133,7 @@ namespace StreamCompanionTypes.DataTypes
                         replacement = "";
                     else
                     {
-                        if (r.Value is TokenWithFormat tok)
-                            replacement = tok.FormatedValue;
-                        else
-                            replacement = r.Value.Value.ToString();
+                        replacement = r.Value.FormatedValue;
                     }
 
                     toFormat = toFormat.Replace($"!{r.Key}!", replacement, StringComparison.InvariantCultureIgnoreCase);

@@ -72,9 +72,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
 
             foreach (var replacement in replacements)
             {
-                var value = replacement.Value is TokenWithFormat tok
-                    ? tok.FormatedValue
-                    : replacement.Value.Value?.ToString();
+                var value = replacement.Value.FormatedValue;
 
                 string key = "T" + replacement.Key.Replace("!", "");
                 if (p.Controls.ContainsKey(key))
