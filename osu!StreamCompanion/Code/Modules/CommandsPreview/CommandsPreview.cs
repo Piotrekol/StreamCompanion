@@ -1,17 +1,35 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using Newtonsoft.Json;
 using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace osu_StreamCompanion.Code.Modules.CommandsPreview
 {
-    public class CommandsPreview : IModule, IMapDataParser, ISettingsProvider
+    public class CommandsPreview : IModule, IMapDataParser, ISettingsProvider, IDisposable
     {
         public bool Started { get; set; }
+        private CommandsPreviewSettings _commandsPreviewSettings;
+        private ISettingsHandler _settings;
+        private Dictionary<string, string> tokenFormats;
         public void Start(ILogger logger)
-        { Started = true; }
+        {
+            tokenFormats = JsonConvert.DeserializeObject<Dictionary<string, string>>(_settings.Get<string>(SettingNames.Instance.TokenFormats));
+
+            Tokens.AllTokensChanged += (sender, args) =>
+            {
+                //This isn't ideal place to handle this, but it will do for now
+                AdjustTokenFormats(Tokens.AllTokens);
+            };
+
+            Started = true;
+        }
 
         public List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
@@ -21,9 +39,22 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             return null;
         }
 
+        private void AdjustTokenFormats(Dictionary<string, Token> tokensDictionary)
+        {
+            if (tokenFormats.Count == 0)
+                return;
+
+            foreach (var tokenkv in tokensDictionary)
+            {
+                if (tokenFormats.ContainsKey(tokenkv.Key))
+                    tokenkv.Value.Format = tokenFormats[tokenkv.Key];
+            }
+        }
+
         public string SettingGroup { get; } = "Commands Preview";
         public void SetSettingsHandle(ISettingsHandler settings)
         {
+            _settings = settings;
         }
 
         public void Free()
@@ -31,14 +62,24 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             _commandsPreviewSettings.Dispose();
         }
 
-        private CommandsPreviewSettings _commandsPreviewSettings;
         public UserControl GetUiSettings()
         {
             if (_commandsPreviewSettings == null || _commandsPreviewSettings.IsDisposed)
             {
                 _commandsPreviewSettings = new CommandsPreviewSettings();
+
+                _commandsPreviewSettings.Add(Tokens.AllTokens);
             }
             return _commandsPreviewSettings;
+        }
+
+        public void Dispose()
+        {
+            var tokenFormats = Tokens.AllTokens.ToDictionary(k => k.Key, t => t.Value.Format);
+            _settings.Add(SettingNames.Instance.TokenFormats.Name, JsonConvert.SerializeObject(tokenFormats));
+            _settings.Save();
+            _commandsPreviewSettings?.Dispose();
+
         }
     }
 }

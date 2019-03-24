@@ -1,5 +1,6 @@
 ﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,26 +12,32 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
 {
     public partial class CommandsPreviewSettings : UserControl
     {
-        private int _numberOfElements;
-
+        private Task UpdateTask;
+        private CancellationTokenSource _cts = new CancellationTokenSource();
         public CommandsPreviewSettings()
         {
             InitializeComponent();
-
-            new Task(UpdateLiveTokens).Start();
-
+            
+            UpdateTask = new Task(UpdateLiveTokens);
+            UpdateTask.Start();
         }
 
+        public new void Dispose()
+        {
+            _cts.Cancel();
+            base.Dispose();
+        }
         private void UpdateLiveTokens()
         {
             while (true)
             {
-                if (liveTokens != null)
+                if (liveTokens != null && this.IsHandleCreated)
                     try
                     {
-                        BeginInvoke((MethodInvoker) (() => { ProcessReplacements(liveTokens, 200); }));
+                        BeginInvoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
+                        _cts.Token.ThrowIfCancellationRequested();
                     }
-                    catch
+                    catch(Exception e)
                     {
                         return;
                     }
@@ -46,7 +53,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         }
 
         private List<KeyValuePair<string, Token>> liveTokens = null;
-        public void Add(Tokens replacements)
+        public void Add(Dictionary<string, Token> replacements)
         {
             if (InvokeRequired)
             {
@@ -58,96 +65,141 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             var normal = replacements.Where(t => t.Value.Type == TokenType.Normal);
             var live = replacements.Where(t => t.Value.Type == TokenType.Live).ToList();
 
-            AddHeader("Live tokens (avaliable only when playing or watching)");
-            ProcessReplacements(live, 200);
+            var size = AddHeader("Live tokens (avaliable only when playing or watching)", 20);
+            size.Height += 25;
+            size += ProcessReplacements(live, 5, size.Height);
 
-            AddHeader("Regular tokens");
-            ProcessReplacements(normal);
+            size.Height += 5;
+            size += AddHeader("Regular tokens", size.Height);
+            size += ProcessReplacements(normal, 5, size.Height);
 
             liveTokens = live;
+            label_ListedNum.Text = replacements.Count.ToString();
         }
 
-        private void ProcessReplacements(IEnumerable<KeyValuePair<string, Token>> replacements, int valueStartX = 105)
+        private Size ProcessReplacements(IEnumerable<KeyValuePair<string, Token>> replacements, int xPosition = 30, int yPosition = 30)
         {
+            var replacementsCopy = replacements.ToDictionary(k => k.Key, v => v.Value);
+            var startYPosition = yPosition;
 
-            foreach (var replacement in replacements)
+            List<int> lineWidths = new List<int>();
+            //first iteration - create labels and buttons
+            Size buttonRect = new Size();
+            foreach (var tokenKv in replacementsCopy)
             {
-                var value = replacement.Value.FormatedValue;
+                buttonRect = AddEditTextBox(tokenKv.Value, tokenKv.Key, xPosition, yPosition);
 
-                string key = "T" + replacement.Key.Replace("!", "");
-                if (p.Controls.ContainsKey(key))
-                {
-                    p.Controls[key].Text = value;
-                }
-                else
-                {
-                    AddSet($"!{replacement.Key}!", value, valueStartX);
-                    label_ListedNum.Text = _numberOfElements.ToString();
-                }
+                string labelName = "L" + tokenKv.Key;
+                var labelRect = AddLabel(labelName, tokenKv.Key, buttonRect.Width + xPosition, yPosition + 2);
+                lineWidths.Add(labelRect.Width + buttonRect.Width);
+
+                yPosition += Math.Max(labelRect.Height, buttonRect.Height);
+                AddSeparator(tokenKv.Key, yPosition);
             }
-        }
 
-        private void AddHeader(string headerText)
-        {
-            if (p.Controls.ContainsKey("L" + headerText))
-                return;
+            var maxLabelWidth = lineWidths.Count>0 ? lineWidths.Max() : 0;
 
-            Label label = new Label
+            yPosition = startYPosition;
+
+            //second iteration - create value fields 
+            foreach (var tokenKv in replacementsCopy)
             {
-                Location = new Point(10, p.Controls[p.Controls.Count - 1].Location.Y + 15),
-                Name = "L" + headerText.Replace("!", ""),
-                Text = headerText,
-                Size = new Size(500, 13)
-            };
-            p.Controls.Add(label);
-            AddSeparator(p.Controls[p.Controls.Count - 1].Location.Y + 13);
-
-            //label = new Label
-            //{
-            //    Location = new Point(10, p.Controls[p.Controls.Count - 1].Location.Y + 15),
-            //    Name = "LSpacer" + headerText.Replace("!", ""),
-            //    Text = string.Empty,
-            //    Size = new Size(200, 13)
-            //};
-            //p.Controls.Add(label);
-        }
-        private void AddSet(string key, string value, int valueStartX)
-        {
-            if (Controls.ContainsKey("L" + key.Replace("!", "")))
-            {
-                return;
+                string labelName = "V" + tokenKv.Key;
+                var labelRect = AddLabel(labelName, tokenKv.Value.FormatedValue, maxLabelWidth + 10, yPosition + 2);
+                lineWidths.Add(labelRect.Width);
+                yPosition += Math.Max(labelRect.Height, buttonRect.Height);
             }
-            Label label = new Label
-            {
-                Location = new Point(10, p.Controls[p.Controls.Count - 2].Location.Y + 15),
-                Name = "L" + key.Replace("!", ""),
-                Text = key,
-                Size = new Size(valueStartX - 10, 13)
-            };
-            p.Controls.Add(label);
-            Label label2 = new Label
-            {
-                Location = new Point(valueStartX, p.Controls[p.Controls.Count - 1].Location.Y),
-                Name = "T" + key.Replace("!", ""),
-                Text = value,
-                Size = new Size(480, 13)
-            };
-            p.Controls.Add(label2);
-            AddSeparator(p.Controls[p.Controls.Count - 1].Location.Y + 13);
 
-            _numberOfElements++;
+
+            return new Size(lineWidths.Count > 0 ? lineWidths.Max() : 0, yPosition- startYPosition);
         }
-        private void AddSeparator(int yPos)
+
+        private (Size Size, T Control, bool AlreadyExisted) AddControl<T>(string name, string text, int xPosition, int yPosition, bool autosize = true, int width = 20, int height = 20) where T : Control, new()
         {
-            var label3 = new Label
+            T control;
+            bool alreadyExisted = false;
+            if (p.Controls.ContainsKey(name))
             {
-                Location = new Point(14, yPos),
-                Name = "separator" + yPos,
-                BorderStyle = BorderStyle.Fixed3D,
-                Size = new Size(560, 2),
-                Text = ""
-            };
-            p.Controls.Add(label3);
+                control = (T)p.Controls[name];
+                alreadyExisted = true;
+            }
+            else
+            {
+                control = new T
+                {
+                    Location = new Point(xPosition, yPosition),
+                    Name = name,
+                    Size = new Size(width, height),
+                    AutoSize = autosize,
+                };
+                p.Controls.Add(control);
+            }
+
+            if (control.Text != text)
+            {
+                control.Text = text;
+            }
+
+            return (control.Size, control, alreadyExisted);
+        }
+
+        private Size AddEditTextBox(Token token, string name, int xPosition, int yPosition)
+        {
+            var ret = AddControl<TextBox>($"T{name}", token.Format, xPosition, yPosition);
+            if (!ret.AlreadyExisted)
+            {
+                ret.Control.Size = new Size(100, 20);
+                ret.Control.TextChanged += (sender, args) =>
+                {
+                    token.Format = ret.Control.Text;
+                    p.Controls["V" + name].Text = token.FormatedValue;
+                };
+            }
+
+            return ret.Control.Size;
+        }
+
+        private Size AddLabel(string name, string text, int xPosition, int yPosition)
+        {
+            return AddControl<Label>(name, text, xPosition, yPosition).Size;
+        }
+
+        private Size AddHeader(string headerText, int yPosition, int width = 500)
+        {
+            var controlName = "L" + headerText;
+            Label label;
+            Size separatorSize;
+            if (p.Controls.ContainsKey(controlName))
+            {
+                label = (Label)p.Controls[controlName];
+                label.Width = width;
+                separatorSize = p.Controls[$"S{controlName}"].Size;
+            }
+            else
+            {
+                label = new Label
+                {
+                    Location = new Point(2, yPosition),
+                    Name = controlName,
+                    Text = headerText,
+                    Size = new Size(width, 13)
+                };
+                p.Controls.Add(label);
+                separatorSize = AddSeparator(controlName, yPosition + label.Height + 1);
+            }
+
+            return new Size(label.Width, label.Height + separatorSize.Height);
+        }
+
+        private Size AddSeparator(string name, int yPos)
+        {
+            var ret = AddControl<Label>($"S{name}", "", 2, yPos, false, 660, 2);
+            if (!ret.AlreadyExisted)
+            {
+                ret.Control.BorderStyle = BorderStyle.Fixed3D;
+            }
+            
+            return ret.Control.Size;
         }
 
 

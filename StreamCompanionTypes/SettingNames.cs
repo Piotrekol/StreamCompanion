@@ -13,6 +13,9 @@ namespace StreamCompanionTypes
         public readonly ConfigEntry Console = new ConfigEntry("console", false);
         public readonly ConfigEntry LoadingRawBeatmaps = new ConfigEntry("LoadingRawBeatmaps", false);
         public readonly ConfigEntry LastRunVersion = new ConfigEntry("LastRunVersion", "N/A");
+        public readonly ConfigEntry TokenFormats = new ConfigEntry("TokenFormats", "{}");
+
+
 
         //ClickCounter 
         public readonly ConfigEntry KeyList = new ConfigEntry("keyList", new List<string>());
