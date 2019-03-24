@@ -10,16 +10,23 @@ using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
-    class MapReplacement : IModule, IMapDataReplacements, ISettings
+    class MapReplacement : IModule, ITokensProvider, ISettings
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
+        private Tokens.TokenSetter _tokenSetter;
         public bool Started { get; set; }
-        public void Start(ILogger logger) { Started = true; }
-        
-        public Tokens GetMapReplacements(MapSearchResult map)
+
+        public void Start(ILogger logger)
         {
-            Tokens dict;
+            _tokenSetter = Tokens.CreateTokenSetter("MapReplacements");
+            Started = true;
+        }
+
+        public void CreateTokens(MapSearchResult map)
+        {
+            Dictionary<string, object> dict;
+            var OsuFileLocationToken = _tokenSetter("OsuFileLocation", null);
             if (map.FoundBeatmaps)
             {
                 dict = map.BeatmapsFound[0].GetTokens();
@@ -27,23 +34,27 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
                 var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
                 var customSongsLocation = _settings.Get<string>(_names.SongsFolderLocation);
                 if (string.IsNullOrWhiteSpace(osuLocation))
-                    dict.Add("OsuFileLocation", new Token(null));
+                    OsuFileLocationToken.Value = null;
                 else
                 {
                     string baseDirectory = customSongsLocation == _names.SongsFolderLocation.Default<string>()
                         ? Path.Combine(osuLocation, "Songs")
                         : customSongsLocation;
-                    dict.Add("OsuFileLocation", new Token(Path.Combine(baseDirectory, map.BeatmapsFound[0].Dir,
-                        map.BeatmapsFound[0].OsuFileName)));
+                    OsuFileLocationToken.Value = Path.Combine(baseDirectory, map.BeatmapsFound[0].Dir,
+                        map.BeatmapsFound[0].OsuFileName);
                 }
             }
             else
             {
                 dict = ((Beatmap)null).GetTokens(true);
-                dict.Add("OsuFileLocation", new Token(null));
+                OsuFileLocationToken.Value = null;
             }
 
-            return dict;
+            foreach (var token in dict)
+            {
+                _tokenSetter(token.Key, token.Value);
+            }
+
         }
         public void SetSettingsHandle(ISettingsHandler settings)
         {

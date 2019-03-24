@@ -11,7 +11,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace ModImageGenerator
 {
-    class ModImageGenerator : IPlugin, IMapDataReplacements, ISettingsProvider, ISaveRequester
+    class ModImageGenerator : IPlugin, ITokensProvider, ISettingsProvider, ISaveRequester
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
@@ -38,11 +38,12 @@ namespace ModImageGenerator
             _imageDeployer.CreateReadMe();
             _imageGenerator = new ImageGenerator(_settings, @"Images");
             _imageGenerator.SetSaveHandle(_saver);
+
+            Started = true;
         }
 
-        public Tokens GetMapReplacements(MapSearchResult map)
+        public void CreateTokens(MapSearchResult map)
         {
-
             if (_settings.Get<bool>(_names.EnableModImages))
             {
                 if (map.FoundBeatmaps)
@@ -62,8 +63,6 @@ namespace ModImageGenerator
                     }
                 }
             }
-
-            return null;
         }
 
         public string SettingGroup { get; } = "Mod Image";

@@ -5,15 +5,18 @@ using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace ModsHandler
 {
-    public class ModsHandler : IPlugin, IModParser, ISettingsProvider, IDifficultyCalculator, IMapDataReplacements
+    public class ModsHandler : IPlugin, IModParser, ISettingsProvider, IDifficultyCalculator, ITokensProvider
     {
         private readonly ModParser _modParser = new ModParser();
         private readonly DifficultyCalculator _difficultyCalculator = new DifficultyCalculator();
+        private Tokens.TokenSetter _tokenSetter;
+
         public bool Started { get; set; }
 
 
@@ -25,6 +28,7 @@ namespace ModsHandler
 
         public void Start(ILogger logger)
         {
+            _tokenSetter = Tokens.CreateTokenSetter(Name);
             Started = true;
         }
 
@@ -70,9 +74,9 @@ namespace ModsHandler
             return retMap;
         }
         
-        public Tokens GetMapReplacements(MapSearchResult map)
+        public void CreateTokens(MapSearchResult map)
         {
-            Tokens dict;
+
             if (map.FoundBeatmaps)
             {
                 var foundMap = map.BeatmapsFound[0];
@@ -84,35 +88,24 @@ namespace ModsHandler
                     mods -= Mods.Nc;
                     mods |= Mods.Dt;
                 }
-
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
-                return new Tokens
-                {
-                    {"mods", new TokenWithFormat( map.Mods?.ShownMods )},
-                    {"mAR", new TokenWithFormat( Math.Round(c["AR"], 1))},
-                    {"mCS", new TokenWithFormat( Math.Round(c["CS"], 1))},
-                    {"mOD", new TokenWithFormat( Math.Round(c["OD"], 1))},
-                    {"mHP", new TokenWithFormat( c["HP"], format:"{0:0.##}" )},
-                    {"mStars", new TokenWithFormat( Math.Round(foundMap.Stars(PlayMode.Osu, mods), 2))},
-                    {"mBpm", new TokenWithFormat(bpm )},
-                    {"mMaxBpm", new TokenWithFormat(c["MaxBpm"], format:"{0:0}")},
-                    {"mMinBpm", new TokenWithFormat(c["MinBpm"], format:"{0:0}")},
-                };
+
+                _tokenSetter("mods", map.Mods?.ShownMods);
+                _tokenSetter("mAR", Math.Round(c["AR"], 1));
+                _tokenSetter("mCS", Math.Round(c["CS"], 1));
+                _tokenSetter("mOD", Math.Round(c["OD"], 1));
+                _tokenSetter("mHP", c["HP"], format: "{0:0.##}");
+                _tokenSetter("mStars", Math.Round(foundMap.Stars(PlayMode.Osu, mods), 2));
+                _tokenSetter("mBpm", bpm);
+                _tokenSetter("mMaxBpm", c["MaxBpm"], format: "{0:0}");
+                _tokenSetter("mMinBpm", c["MinBpm"], format: "{0:0}");
             }
             else
             {
-                return new Tokens
+                foreach (var tokenkv in Tokens.AllTokens.Where(t => t.Value.PluginName == Name))
                 {
-                    {"mods", new Token(null)},
-                    {"mAR", new Token(null)},
-                    {"mCS", new Token(null)},
-                    {"mOD", new Token(null)},
-                    {"mHP", new Token(null)},
-                    {"mStars", new Token(null)},
-                    {"mBpm", new Token(null)},
-                    {"mMaxBpm", new Token(null)},
-                    {"mMinBpm", new Token(null)},
-                };
+                    tokenkv.Value.Reset();
+                }
             }
         }
     }

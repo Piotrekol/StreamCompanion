@@ -29,11 +29,13 @@ namespace StreamCompanionTypes.DataTypes
         private readonly object _defaultValue;
         public string Format { get; set; }
         public string FormatedValue { get; set; }
-
-        public Token(object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null)
+        /// <summary>
+        /// Name of the plugin that created this token
+        /// </summary>
+        public string PluginName { get; set; }
+        internal Token(object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null)
         {
             Debug.Assert(!(value is Token));
-            Debug.Assert(!(value is TokenWithFormat));
 
             Format = format;
             _defaultValue = defaultValue;
@@ -50,12 +52,5 @@ namespace StreamCompanionTypes.DataTypes
             return (Token)this.MemberwiseClone();
         }
     }
-
-    //TODO: Remove this someday
-    public class TokenWithFormat : Token
-    {
-        public TokenWithFormat(object value, TokenType type = TokenType.Normal, string format = null, object defaultValue = null) : base(value, type, format, defaultValue)
-        {
-        }
-    }
+    
 }

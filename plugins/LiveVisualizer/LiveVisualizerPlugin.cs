@@ -1,4 +1,4 @@
-﻿using CollectionManager.Enums;
+using CollectionManager.Enums;
 using LiveCharts.Helpers;
 using Newtonsoft.Json;
 using PpCalculator;
@@ -22,21 +22,21 @@ namespace LiveVisualizer
         private MainWindow _visualizerWindow;
 
         private List<KeyValuePair<string, Token>> _liveTokens;
-        private TokenWithFormat _ppToken;
-        private TokenWithFormat _hit100Token;
-        private TokenWithFormat _hit50Token;
-        private TokenWithFormat _hitMissToken;
-        private TokenWithFormat _timeToken;
+        private Token _ppToken;
+        private Token _hit100Token;
+        private Token _hit50Token;
+        private Token _hitMissToken;
+        private Token _timeToken;
         private List<KeyValuePair<string, Token>> Tokens
         {
             get => _liveTokens;
             set
             {
-                _ppToken = (TokenWithFormat)value.FirstOrDefault(t => t.Key == "PpIfMapEndsNow").Value;
-                _hit100Token = (TokenWithFormat)value.FirstOrDefault(t => t.Key == "100").Value;
-                _hit50Token = (TokenWithFormat)value.FirstOrDefault(t => t.Key == "50").Value;
-                _hitMissToken = (TokenWithFormat)value.FirstOrDefault(t => t.Key == "miss").Value;
-                _timeToken = (TokenWithFormat)value.FirstOrDefault(t => t.Key == "time").Value;
+                _ppToken = value.FirstOrDefault(t => t.Key == "PpIfMapEndsNow").Value;
+                _hit100Token = value.FirstOrDefault(t => t.Key == "100").Value;
+                _hit50Token = value.FirstOrDefault(t => t.Key == "50").Value;
+                _hitMissToken = value.FirstOrDefault(t => t.Key == "miss").Value;
+                _timeToken = value.FirstOrDefault(t => t.Key == "time").Value;
 
                 _liveTokens = value;
             }
@@ -51,7 +51,7 @@ namespace LiveVisualizer
             VisualizerData = new VisualizerDataModel();
 
             LoadConfiguration();
-            
+
             EnableVisualizer(VisualizerData.Configuration.Enable);
 
             VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
@@ -93,7 +93,7 @@ namespace LiveVisualizer
 
             VisualizerData.Configuration = JsonConvert.DeserializeObject<VisualizerConfiguration>(config);
         }
-        
+
         private void EnableVisualizer(bool enable)
         {
             if (enable)
@@ -205,15 +205,15 @@ namespace LiveVisualizer
                     if (Tokens != null)
                     {
                         //Blind casts :/
-                        VisualizerData.Display.Pp = Math.Round((double)_ppToken.Value);
-                        VisualizerData.Display.Hit100 = (ushort)_hit100Token.Value;
-                        VisualizerData.Display.Hit50 = (ushort)_hit50Token.Value;
-                        VisualizerData.Display.HitMiss = (ushort)_hitMissToken.Value;
-                        VisualizerData.Display.CurrentTime = (double)_timeToken.Value * 1000;
+                    VisualizerData.Display.Pp = Math.Round((double)_ppToken.Value);
+                    VisualizerData.Display.Hit100 = (ushort)_hit100Token.Value;
+                    VisualizerData.Display.Hit50 = (ushort)_hit50Token.Value;
+                    VisualizerData.Display.HitMiss = (ushort)_hitMissToken.Value;
+                    VisualizerData.Display.CurrentTime = (double)_timeToken.Value * 1000;
 
-                        var normalizedCurrentTime = VisualizerData.Display.CurrentTime < 0 ? 0 : VisualizerData.Display.CurrentTime;
-                        var progress = VisualizerData.Configuration.WindowWidth * (normalizedCurrentTime / VisualizerData.Display.TotalTime);
-                        VisualizerData.Display.PixelMapProgress = progress < VisualizerData.Configuration.WindowWidth
+                    var normalizedCurrentTime = VisualizerData.Display.CurrentTime < 0 ? 0 : VisualizerData.Display.CurrentTime;
+                    var progress = VisualizerData.Configuration.WindowWidth * (normalizedCurrentTime / VisualizerData.Display.TotalTime);
+                    VisualizerData.Display.PixelMapProgress = progress < VisualizerData.Configuration.WindowWidth
                             ? progress
                             : VisualizerData.Configuration.WindowWidth;
                     }

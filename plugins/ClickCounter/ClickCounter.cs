@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using StreamCompanionTypes;
+﻿using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace ClickCounter
 {
-    public class ClickCounter : IPlugin, ISettingsProvider, ISaveRequester, IDisposable, IMapDataReplacements, IHighFrequencyDataSender
+    public class ClickCounter : IPlugin, ISettingsProvider, ISaveRequester, IDisposable, ITokensProvider, IHighFrequencyDataSender
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
@@ -23,6 +23,7 @@ namespace ClickCounter
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
         private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
+        private Tokens.TokenSetter _tokenSetter;
 
         public string SettingGroup { get; } = "Click counter";
 
@@ -115,7 +116,7 @@ namespace ClickCounter
 
                     var name = _filenames[args.VKCode].Replace(".txt", "");
                     UpdateValue(name, _keyCount[args.VKCode].ToString());
-                    
+
                     _keyPressed[args.VKCode] = false;
                     _keysPerX?.AddToKeys();
                 }
@@ -248,7 +249,6 @@ namespace ClickCounter
 
         public void Start(ILogger logger)
         {
-            Started = true;
             _logger = logger;
             if (_settings.Get<bool>(_names.ResetKeysOnRestart))
                 ResetKeys();
@@ -257,6 +257,9 @@ namespace ClickCounter
             {
                 _keysPerX.Start();
             }
+
+            _tokenSetter = Tokens.CreateTokenSetter(Name);
+            Started = true;
 
         }
 
@@ -282,18 +285,16 @@ namespace ClickCounter
             UnHookAll();
             SaveKeysToSettings();
         }
-        
-        public Tokens GetMapReplacements(MapSearchResult map)
+
+        public void CreateTokens(MapSearchResult map)
         {
-            var ret = new Tokens();
             for (int i = 0; i < _keyList.Count; i++)
             {
-                ret[$"{_filenames[_keyList[i]]}"] = new Token(_keyCount[_keyList[i]]);
+                _tokenSetter($"{_filenames[_keyList[i]]}", _keyCount[_keyList[i]]);
             }
 
-            ret["M1"] = new Token(_rightMouseCount);
-            ret["M2"] = new Token(_leftMouseCount);
-            return ret;
+            _tokenSetter("M1", _rightMouseCount);
+            _tokenSetter("M2", _leftMouseCount);
         }
 
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)

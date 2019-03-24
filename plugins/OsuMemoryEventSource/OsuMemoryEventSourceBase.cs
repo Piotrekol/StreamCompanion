@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
@@ -9,11 +10,12 @@ using StreamCompanionTypes.Interfaces;
 namespace OsuMemoryEventSource
 {
     public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataGetter,
-         IOsuEventSource, IHighFrequencyDataSender, IModParserGetter, ISqliteUser, ISettings, IMapDataReplacements
+         IOsuEventSource, IHighFrequencyDataSender, IModParserGetter, ISqliteUser, ISettings, ITokensProvider
     {
         protected SettingNames _names = SettingNames.Instance;
 
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
+        internal static Tokens.TokenSetter TokenSetter;
 
         public OsuStatus SearchModes { get; } = OsuStatus.Playing;
         public string SearcherName { get; } = "Memory";
@@ -44,6 +46,7 @@ namespace OsuMemoryEventSource
         public virtual void Start(ILogger logger)
         {
             Logger = logger;
+            TokenSetter = Tokens.CreateTokenSetter(Name);
 
             OsuMemoryDataProvider.DataProvider.Initalize();
             _memoryReader = OsuMemoryDataProvider.DataProvider.Instance;
@@ -70,13 +73,13 @@ namespace OsuMemoryEventSource
             _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent?.Invoke(this, args);
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
             _memoryListener.SetSettingsHandle(_settings);
-
+            
             Started = true;
         }
 
-        public Tokens GetMapReplacements(MapSearchResult map)
+        public void CreateTokens(MapSearchResult map)
         {
-            return Started ? _memoryListener.Tokens : null;
+            //No need to do anything, tokens are created in MemoryDataProcessor.InitLiveTokens() and are constantly updated(live)
         }
 
         public void SetNewMap(MapSearchResult map)
