@@ -247,6 +247,7 @@ namespace OsuMemoryEventSource
             liveTokens["miss"] = _tokenSetter("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0);
             liveTokens["time"] = _tokenSetter("time", 0d, TokenType.Live, "{0:0.00}", 0d);
             liveTokens["combo"] = _tokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0);
+            liveTokens["score"] = _tokenSetter("score", _rawData.Play.Score, TokenType.Live, "{0}", 0);
             liveTokens["CurrentMaxCombo"] = _tokenSetter("CurrentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0);
             liveTokens["PlayerHp"] = _tokenSetter("PlayerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d);
             liveTokens["PpIfMapEndsNow"] = _tokenSetter("PpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
@@ -274,6 +275,8 @@ namespace OsuMemoryEventSource
             liveTokens["miss"].Value = _rawData.Play.CMiss;
 
             liveTokens["combo"].Value = _rawData.Play.Combo;
+            liveTokens["score"].Value = _rawData.Play.Score;
+
             liveTokens["CurrentMaxCombo"].Value = _rawData.Play.MaxCombo;
             liveTokens["PlayerHp"].Value = _rawData.Play.Hp;
 
