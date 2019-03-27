@@ -6,7 +6,7 @@ namespace TcpSocketDataSender
     {
         public int FailedAttempts { get; private set; } = 0;
         private DateTime NextAllowedAttempt { get; set; } = DateTime.UtcNow;
-        
+
         public bool CanRetry => DateTime.UtcNow >= NextAllowedAttempt;
 
         public void AddFailedAttempt()
@@ -15,6 +15,8 @@ namespace TcpSocketDataSender
                 return;
 
             var blockTime = BackOffAlgorithm(FailedAttempts++);
+
+            FailedAttempts = FailedAttempts < 25 ? FailedAttempts : 25;
 
             NextAllowedAttempt = DateTime.UtcNow.AddSeconds(blockTime);
         }
