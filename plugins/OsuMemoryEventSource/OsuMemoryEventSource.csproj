@@ -72,7 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj">
+    <ProjectReference Include="..\..\submodules\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj">
       <Project>{d117800f-072d-4ae4-9679-3e2a129a1a3c}</Project>
       <Name>OsuMemoryDataProvider</Name>
     </ProjectReference>
