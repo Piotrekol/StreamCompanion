@@ -14,6 +14,7 @@ namespace OsuMemoryEventSource
     public class RawMemoryDataProcessor
     {
         public PlayContainer Play { get; set; } = new PlayContainer();
+        public int PlayTime { get; set; }
 
         private Beatmap _currentBeatmap = null;
         private string _currentMods;
@@ -57,7 +58,7 @@ namespace OsuMemoryEventSource
 
             try
             {
-                if (Play.Time <= 0)
+                if (PlayTime <= 0)
                 {
                     _ppCalculator.Goods = 0;
                     _ppCalculator.Mehs = 0;
@@ -67,7 +68,7 @@ namespace OsuMemoryEventSource
                     return _ppCalculator.Calculate(); //fc pp
                 }
 
-                var comboLeft = _ppCalculator.GetMaxCombo(Play.Time);
+                var comboLeft = _ppCalculator.GetMaxCombo((int)PlayTime);
 
                 var newMaxCombo = Math.Max(Play.MaxCombo, comboLeft + Play.Combo);
 
@@ -84,8 +85,7 @@ namespace OsuMemoryEventSource
         private string PlayDataToString(PlayContainer p)
         {
             return $"{p.C300}/{p.C100}/{p.C50}/{p.CMiss}|" +
-                   $"acc:{p.Acc},combo: {p.Combo},maxCombo {p.MaxCombo}|" +
-                   $"time: {p.Time}";
+                   $"acc:{p.Acc},combo: {p.Combo},maxCombo {p.MaxCombo}|";
         }
         public double StrainPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double AimPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
@@ -97,7 +97,7 @@ namespace OsuMemoryEventSource
         public double PPIfBeatmapWouldEndNow()
         {
 
-            if (_ppCalculator != null && Play.Time > 0)
+            if (_ppCalculator != null && PlayTime > 0)
                 try
                 {
                     _ppCalculator.Goods = Play.C100;
@@ -105,7 +105,7 @@ namespace OsuMemoryEventSource
                     _ppCalculator.Misses = Play.CMiss;
                     _ppCalculator.Combo = Play.MaxCombo;
                     _ppCalculator.Score = Play.Score;
-                    var pp = _ppCalculator.Calculate(Play.Time, attribs);
+                    var pp = _ppCalculator.Calculate(PlayTime, attribs);
 
                     switch (_currentBeatmap.PlayMode)
                     {

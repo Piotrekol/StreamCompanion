@@ -3,13 +3,13 @@ using CollectionManager.Enums;
 using Newtonsoft.Json;
 using OsuMemoryDataProvider;
 using PpCalculator;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using StreamCompanionTypes;
 
 namespace OsuMemoryEventSource
 {
@@ -121,8 +121,8 @@ namespace OsuMemoryEventSource
         {
             lock (_lockingObject)
             {
-
-                PrepareTimeToken(reader.ReadPlayTime());
+                _rawData.PlayTime = reader.ReadPlayTime();
+                PrepareTimeToken();
 
                 if (status != OsuStatus.Playing)
                 {
@@ -151,6 +151,8 @@ namespace OsuMemoryEventSource
                 _lastStatus = status;
 
                 reader.GetPlayData(_rawData.Play);
+
+
 
                 PrepareLiveTokens();
 
@@ -258,11 +260,11 @@ namespace OsuMemoryEventSource
             liveTokens["PpIfRestFced"] = _tokenSetter("PpIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d);
         }
 
-        private void PrepareTimeToken(int readPlayTime)
+        private void PrepareTimeToken()
         {
             double time = 0;
-            if (readPlayTime != 0)
-                time = readPlayTime / 1000d;
+            if (_rawData.PlayTime != 0)
+                time = _rawData.PlayTime / 1000d;
             liveTokens["time"].Value = time;
         }
         private void PrepareLiveTokens()

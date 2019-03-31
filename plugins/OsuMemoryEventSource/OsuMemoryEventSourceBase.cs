@@ -48,8 +48,7 @@ namespace OsuMemoryEventSource
             Logger = logger;
             TokenSetter = Tokens.CreateTokenSetter(Name);
 
-            OsuMemoryDataProvider.DataProvider.Initalize();
-            _memoryReader = OsuMemoryDataProvider.DataProvider.Instance;
+            _memoryReader = OsuMemoryReader.Instance;
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
 

@@ -39,9 +39,6 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="OsuMemoryDataProvider">
-      <HintPath>Dlls\OsuMemoryDataProvider.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -75,6 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj">
+      <Project>{d117800f-072d-4ae4-9679-3e2a129a1a3c}</Project>
+      <Name>OsuMemoryDataProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
       <Project>{3d97e9c4-a884-4664-a40c-f19c4533aa00}</Project>
       <Name>PpCalculator</Name>
@@ -137,7 +138,8 @@ copy "$(TargetDir)\System.Threading.Tasks.dll" "$(TargetDir)\..\$(ConfigurationN
 copy "$(TargetDir)\System.ValueTuple.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.ValueTuple.dll"
 
 copy "$(TargetDir)\OsuMemoryEventSource.dll" "$(TargetDir)\..\$(ConfigurationName)\OsuMemoryEventSource.dll"
-copy "$(TargetDir)\OsuMemoryDataProvider.dll" "$(TargetDir)\..\$(ConfigurationName)\OsuMemoryDataProvider.dll"
+copy "$(TargetDir)\ProcessMemoryDataFinder.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ProcessMemoryDataFinder.dll"
+copy "$(TargetDir)\OsuMemoryDataProvider.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\OsuMemoryDataProvider.dll"
 
 copy "$(TargetDir)\..\$(ConfigurationName)\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\"
 copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"</PostBuildEvent>

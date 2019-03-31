@@ -27,9 +27,6 @@ REM remove misc files
 rm ./Output/*.xml
 rm "./Output/StreamCompanion Updater.exe.config"
 
-REM plugin specific action..
-mv ./Output/Plugins/OsuMemoryDataProvider.dll ./Output/
-
 cd ..
 REM clean installer folder
 rm ./innoSetup/Output/*
