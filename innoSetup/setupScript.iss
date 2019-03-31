@@ -56,6 +56,9 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Fil
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall
 
+[InstallDelete]
+Type: files; Name: "{app}\OsuMemoryDataProvider.dll"
+
 [UninstallDelete]
 Type: files; Name: "{app}\StreamCompanionCache.db"
 Type: files; Name: "{app}\StreamCompanionCacheV2.db"
