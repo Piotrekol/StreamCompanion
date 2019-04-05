@@ -1,23 +1,36 @@
 ﻿using System;
-using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Interfaces;
 
 namespace LiveVisualizer
 {
-    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataGetter, ISettings, IMapDataParser, ISettingsProvider, IDisposable
+    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataGetter, IMapDataParser,
+        ISettingsProvider, IDisposable
     {
+        private CancellationTokenSource _cts = new CancellationTokenSource();
+        private LiveVisualizerSettings _liveVisualizerSettings;
+        private CancellationToken _token = CancellationToken.None;
         protected ISettingsHandler Settings;
         protected IWpfVisualizerData VisualizerData;
 
-        private CancellationTokenSource _cts = new CancellationTokenSource();
-        public string SettingGroup { get; } = "Visualizer";
-        private LiveVisualizerSettings _liveVisualizerSettings = null;
+        public virtual void Dispose()
+        {
+            _cts?.Dispose();
+            _liveVisualizerSettings?.Dispose();
+        }
+
+        public async void SetNewMap(MapSearchResult mapSearchResult)
+        {
+            CancelNewMapProcessing();
+
+            await Task.Run(() => ProcessNewMap(mapSearchResult, _token), _token);
+        }
+
+        public abstract List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
 
         public bool Started { get; set; }
 
@@ -30,20 +43,8 @@ namespace LiveVisualizer
 
         public virtual void Start(ILogger logger)
         {
+            _token = _cts.Token;
             Started = true;
-        }
-
-        public async void SetNewMap(MapSearchResult mapSearchResult)
-        {
-            _cts.Cancel();
-
-            _cts = new CancellationTokenSource();
-            var token = _cts.Token;
-
-            await Task.Run(() =>
-            {
-                ProcessNewMap(mapSearchResult, token);
-            });
         }
 
         public void SetSettingsHandle(ISettingsHandler settings)
@@ -51,10 +52,8 @@ namespace LiveVisualizer
             Settings = settings;
         }
 
-        public abstract List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
+        public string SettingGroup { get; } = "Visualizer";
 
-        protected abstract void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token);
-        
         public void Free()
         {
             _liveVisualizerSettings?.Dispose();
@@ -70,10 +69,14 @@ namespace LiveVisualizer
             return _liveVisualizerSettings;
         }
 
-        public virtual void Dispose()
+        private void CancelNewMapProcessing()
         {
-            _cts?.Dispose();
-            _liveVisualizerSettings?.Dispose();
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = new CancellationTokenSource();
+            _token = _cts.Token;
         }
+
+        protected abstract void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token);
     }
 }
