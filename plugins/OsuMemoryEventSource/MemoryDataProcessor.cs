@@ -8,6 +8,7 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -21,7 +22,7 @@ namespace OsuMemoryEventSource
         RawMemoryDataProcessor _rawData = new RawMemoryDataProcessor();
         private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
 
-        private List<OutputPattern> OutputPatterns = new List<OutputPattern>();
+        private BlockingCollection<OutputPattern> OutputPatterns = new BlockingCollection<OutputPattern>();
         private ISettingsHandler _settings;
 
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
@@ -106,7 +107,7 @@ namespace OsuMemoryEventSource
                 if ((map.Action & OsuStatus.ResultsScreen) != 0)
                     return;
 
-                OutputPatterns.Clear();
+                while (OutputPatterns.TryTake(out _)) { }
 
                 if (map.FoundBeatmaps &&
                     map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation) &&
