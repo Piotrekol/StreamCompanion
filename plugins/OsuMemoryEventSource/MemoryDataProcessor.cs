@@ -37,7 +37,8 @@ namespace OsuMemoryEventSource
         }
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
 
-        private Thread _workerThread;
+        private Thread _interpolatedValueWorkerThread;
+        private Thread _tokenWorkerThread;
 
         public MemoryDataProcessor(string songsFolderLocation, bool enablePpSmoothing = true)
         {
@@ -53,11 +54,33 @@ namespace OsuMemoryEventSource
 
             InitLiveTokens();
 
-            _workerThread = new Thread(ThreadWork);
-            _workerThread.Start();
+            _interpolatedValueWorkerThread = new Thread(InterpolatedValueThreadWork);
+            _interpolatedValueWorkerThread.Start();
+
+            _tokenWorkerThread = new Thread(TokenThreadWork);
+            _tokenWorkerThread.Start();
         }
 
-        public void ThreadWork()
+        public void TokenThreadWork()
+        {
+            try
+            {
+                while (true)
+                {
+                    _tokenTick.WaitOne();
+
+                    PrepareLiveTokens();
+                    SendData();
+
+                    _tokenTick.Reset();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+
+            }
+        }
+        public void InterpolatedValueThreadWork()
         {
             try
             {
@@ -117,15 +140,19 @@ namespace OsuMemoryEventSource
         }
 
         private bool _clearedLiveTokens = false;
+        private IOsuMemoryReader _reader;
+        private AutoResetEvent _tokenTick = new AutoResetEvent(false);
         public void Tick(OsuStatus status, IOsuMemoryReader reader)
         {
             lock (_lockingObject)
             {
+                if (!ReferenceEquals(_reader, reader))
+                    _reader = reader;
 
                 _rawData.PlayTime = reader.ReadPlayTime();
                 PrepareTimeToken();
                 liveTokens["status"].Value = _lastStatus;
-
+                
                 if (status != OsuStatus.Playing)
                 {
                     if (_clearLiveTokensAfterResultScreenExit && !_clearedLiveTokens && (status & OsuStatus.ResultsScreen) == 0)
@@ -143,22 +170,15 @@ namespace OsuMemoryEventSource
                 if (_lastStatus != OsuStatus.Playing)
                 {
                     Thread.Sleep(500);//Initial play delay
-                    //var readGamemode = reader.ReadPlayedGameMode();
-                    //var playMode = (PlayMode) (Enum.IsDefined(typeof(PlayMode), readGamemode) ? readGamemode : 0);
-                    //_rawData.SetPlayMode(playMode);
                 }
 
                 _clearedLiveTokens = false;
-
                 _lastStatus = status;
+
 
                 reader.GetPlayData(_rawData.Play);
 
-
-
-                PrepareLiveTokens();
-
-                SendData();
+                _tokenTick.Set();
             }
         }
 
@@ -307,7 +327,9 @@ namespace OsuMemoryEventSource
 
         public void Dispose()
         {
-            _workerThread?.Abort();
+            _interpolatedValueWorkerThread?.Abort();
+            _tokenWorkerThread.Abort();
+            _tokenTick.Dispose();
             _settings.SettingUpdated -= SettingUpdated;
         }
 
