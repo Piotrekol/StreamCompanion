@@ -43,6 +43,7 @@ namespace LiveVisualizer
 
             checkBox_enable.Checked = _configuration.Enable;
             panel1.Enabled = checkBox_enable.Checked;
+            checkBox_simulatePP.Checked = _configuration.SimulatePPWhenListening;
 
             checkBox_autosizeChart.Checked = _configuration.AutoSizeAxisY;
             panel_manualChart.Enabled = !checkBox_autosizeChart.Checked;
@@ -55,8 +56,7 @@ namespace LiveVisualizer
 
             BindColorPicker(color_textArtist, () => _configuration.ArtistTextColor, color => _configuration.ArtistTextColor = color);
             BindColorPicker(color_textTitle, () => _configuration.TitleTextColor, color => _configuration.TitleTextColor = color);
-
-
+            
             textBox_chartCutoffs.Text = string.Join(";", _configuration.ChartCutoffsSet);
 
             checkBox_showAxisYSeparator.Checked = _configuration.ShowAxisYSeparator;
@@ -80,7 +80,13 @@ namespace LiveVisualizer
             numericUpDown_chartHeight.ValueChanged += NumericUpDownChartHeightOnValueChanged;
 
             checkBox_enableWindowRezising.CheckedChanged += CheckBoxEnableWindowRezisingOnCheckedChanged;
+            checkBox_simulatePP.CheckedChanged+=CheckBoxSimulatePpOnCheckedChanged;
 
+        }
+
+        private void CheckBoxSimulatePpOnCheckedChanged(object sender, EventArgs e)
+        {
+            _configuration.SimulatePPWhenListening = checkBox_simulatePP.Checked;
         }
 
         private void NumericUpDownChartHeightOnValueChanged(object sender, EventArgs e)

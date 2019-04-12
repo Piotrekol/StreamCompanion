@@ -20,6 +20,8 @@ namespace LiveVisualizer
     public class LiveVisualizerPlugin : LiveVisualizerPluginBase
     {
         private MainWindow _visualizerWindow;
+        private PpCalculator.PpCalculator _ppCalculator;
+        private readonly object _ppCalculatorLock = new object();
 
         private List<KeyValuePair<string, Token>> _liveTokens;
         private Token _ppToken;
@@ -27,6 +29,7 @@ namespace LiveVisualizer
         private Token _hit50Token;
         private Token _hitMissToken;
         private Token _timeToken;
+        private Token _statusToken;
         private List<KeyValuePair<string, Token>> Tokens
         {
             get => _liveTokens;
@@ -37,6 +40,7 @@ namespace LiveVisualizer
                 _hit50Token = value.FirstOrDefault(t => t.Key == "50").Value;
                 _hitMissToken = value.FirstOrDefault(t => t.Key == "miss").Value;
                 _timeToken = value.FirstOrDefault(t => t.Key == "time").Value;
+                _statusToken = value.FirstOrDefault(t => t.Key == "status").Value;
 
                 _liveTokens = value;
             }
@@ -174,6 +178,10 @@ namespace LiveVisualizer
 
             VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
 
+            lock (_ppCalculatorLock)
+            {
+                _ppCalculator = ppCalculator;
+            }
         }
 
         private void SetAxisValues()
@@ -205,17 +213,39 @@ namespace LiveVisualizer
                     if (Tokens != null)
                     {
                         //Blind casts :/
-                    VisualizerData.Display.Pp = Math.Round((double)_ppToken.Value);
-                    VisualizerData.Display.Hit100 = (ushort)_hit100Token.Value;
-                    VisualizerData.Display.Hit50 = (ushort)_hit50Token.Value;
-                    VisualizerData.Display.HitMiss = (ushort)_hitMissToken.Value;
-                    VisualizerData.Display.CurrentTime = (double)_timeToken.Value * 1000;
+                        VisualizerData.Display.CurrentTime = (double)_timeToken.Value * 1000;
 
-                    var normalizedCurrentTime = VisualizerData.Display.CurrentTime < 0 ? 0 : VisualizerData.Display.CurrentTime;
-                    var progress = VisualizerData.Configuration.WindowWidth * (normalizedCurrentTime / VisualizerData.Display.TotalTime);
-                    VisualizerData.Display.PixelMapProgress = progress < VisualizerData.Configuration.WindowWidth
+                        var normalizedCurrentTime = VisualizerData.Display.CurrentTime < 0 ? 0 : VisualizerData.Display.CurrentTime;
+                        var progress = VisualizerData.Configuration.WindowWidth * (normalizedCurrentTime / VisualizerData.Display.TotalTime);
+                        VisualizerData.Display.PixelMapProgress = progress < VisualizerData.Configuration.WindowWidth
                             ? progress
                             : VisualizerData.Configuration.WindowWidth;
+
+                        var status = (OsuStatus)_statusToken.Value;
+                        if (VisualizerData.Configuration.SimulatePPWhenListening &&
+                            (status == OsuStatus.Editing || status == OsuStatus.Listening))
+                        {
+                            lock (_ppCalculatorLock)
+                            {
+                                if (_ppCalculator != null)
+                                {
+                                    _ppCalculator.Goods = null;
+                                    _ppCalculator.Mehs = null;
+                                    _ppCalculator.Misses = 0;
+                                    _ppCalculator.Accuracy = 100;
+                                    var pp = Math.Round(_ppCalculator.Calculate(0, VisualizerData.Display.CurrentTime));
+                                    VisualizerData.Display.Pp = pp < 0 ? 0 : pp;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            VisualizerData.Display.Pp = Math.Round((double)_ppToken.Value);
+                            VisualizerData.Display.Hit100 = (ushort)_hit100Token.Value;
+                            VisualizerData.Display.Hit50 = (ushort)_hit50Token.Value;
+                            VisualizerData.Display.HitMiss = (ushort)_hitMissToken.Value;
+
+                        }
                     }
                 }
                 catch
