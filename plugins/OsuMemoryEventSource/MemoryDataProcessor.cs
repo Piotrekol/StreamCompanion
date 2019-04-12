@@ -121,8 +121,10 @@ namespace OsuMemoryEventSource
         {
             lock (_lockingObject)
             {
+
                 _rawData.PlayTime = reader.ReadPlayTime();
                 PrepareTimeToken();
+                liveTokens["status"].Value = _lastStatus;
 
                 if (status != OsuStatus.Playing)
                 {
@@ -242,6 +244,7 @@ namespace OsuMemoryEventSource
 
         private void InitLiveTokens()
         {
+            liveTokens["status"] = _tokenSetter("status", OsuStatus.Null, TokenType.Live, "", OsuStatus.Null);
             liveTokens["acc"] = _tokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d);
             liveTokens["300"] = _tokenSetter("300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0);
             liveTokens["100"] = _tokenSetter("100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0);
@@ -269,7 +272,6 @@ namespace OsuMemoryEventSource
         }
         private void PrepareLiveTokens()
         {
-
             liveTokens["acc"].Value = _rawData.Play.Acc;
             liveTokens["300"].Value = _rawData.Play.C300;
             liveTokens["100"].Value = _rawData.Play.C100;
