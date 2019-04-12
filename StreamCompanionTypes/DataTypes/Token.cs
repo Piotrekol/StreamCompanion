@@ -32,7 +32,8 @@ namespace StreamCompanionTypes.DataTypes
 
                     if (FormatedValue.StartsWith("Eval:"))
                     {
-                        FormatedValue = Evaluate(FormatedValue.Substring(5, FormatedValue.Length - 5)).ToString(CultureInfo.InvariantCulture);
+                        var result = Evaluate(FormatedValue.Substring(5, FormatedValue.Length - 5));
+                        FormatedValue = result.ToString(CultureInfo.InvariantCulture);
                     }
 
                     FormatIsValid = formatIsValid;
@@ -101,7 +102,7 @@ namespace StreamCompanionTypes.DataTypes
                 table.Columns.Add("expression", typeof(string), expression);
                 DataRow row = table.NewRow();
                 table.Rows.Add(row);
-                return double.Parse((string)row["expression"], CultureInfo.InvariantCulture);
+                return double.Parse(((string)row["expression"]).Replace(',', '.'), CultureInfo.InvariantCulture);
             }
             catch
             {
