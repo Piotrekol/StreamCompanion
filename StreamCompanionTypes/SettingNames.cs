@@ -36,6 +36,7 @@ namespace StreamCompanionTypes
         //memory scanner
         public readonly ConfigEntry EnableMemoryScanner = new ConfigEntry("EnableMemoryScanner", true);
         public readonly ConfigEntry EnableMemoryPooling = new ConfigEntry("EnableMemoryPooling", true);
+        public readonly ConfigEntry MemoryPoolingFrequency = new ConfigEntry("MemoryPoolingFrequency", 33);
         //ingame overlay
         public readonly ConfigEntry EnableIngameOverlay = new ConfigEntry("EnableIngameOverlay", false);
 

@@ -56,6 +56,7 @@ namespace OsuMemoryEventSource
             bool memoryScannerIsEnabled = _settings.Get<bool>(_names.EnableMemoryScanner);
             MemoryPoolingIsEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
 
+            _poolingMsDelay = _settings.Get<int>(_names.MemoryPoolingFrequency);
             if (!memoryScannerIsEnabled)
                 return;
             if (isFallback)
