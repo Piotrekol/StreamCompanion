@@ -13,40 +13,51 @@ namespace StreamCompanionTypes.DataTypes
 {
     public class OutputPattern : EventArgs, INotifyPropertyChanged, ICloneable
     {
-        //TODO: instead of manually adding these each time new live token is created expose static Tokens prop for plugins to add to.
-        private static readonly List<string> _memoryFormatTokens = new List<string>
-        {
-            "!acc!", "!300!", "!100!", "!50!", "!miss!", "!time!", "!combo!", "!CurrentMaxCombo!", "!PlayerHp!", "!PpIfMapEndsNow!", "!AimPpIfMapEndsNow!", "!SpeedPpIfMapEndsNow!", "!AccIfRestFced!", "!StrainPpIfMapEndsNow!", "!PpIfRestFced!"
-        };
-        [IgnoreDataMember]
-        public ReadOnlyCollection<string> MemoryFormatTokens => _memoryFormatTokens.AsReadOnly();
-        private OsuStatus _saveEvent = OsuStatus.All;
-        private string _pattern = "Your pattern text";
+        private static readonly List<string> LiveTokenNames = new List<string>();
+
         private string _name;
+        private string _pattern = "Your pattern text";
+        private OsuStatus _saveEvent = OsuStatus.All;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [IgnoreDataMember]
         public Tokens Replacements;
+
+        [IgnoreDataMember]
+        public ReadOnlyCollection<string> MemoryFormatTokens => LiveTokenNames.AsReadOnly();
+
         [DisplayName("Name")]
         [JsonProperty(PropertyName = "Name")]
         public string Name
         {
-            get { return _name; }
+            get => _name;
             set
             {
-                if (value == _name) return;
+                if (value == _name)
+                {
+                    return;
+                }
+
                 _name = value;
                 OnPropertyChanged(nameof(Name));
             }
         }
+
         [JsonProperty(PropertyName = "Pattern")]
         [DisplayName("Pattern")]
         public string Pattern
         {
-            get { return _pattern; }
+            get => _pattern;
             set
             {
-                if (value == _pattern) return;
+                if (value == _pattern)
+                {
+                    return;
+                }
+
                 _pattern = value;
-                IsMemoryFormat = MemoryFormatTokens.Select(s=>s.ToLower()).Any(value.ToLower().Contains);
+                IsMemoryFormat = MemoryFormatTokens.Select(s => s.ToLower()).Any(value.ToLower().Contains);
                 OnPropertyChanged(nameof(Pattern));
             }
         }
@@ -70,6 +81,7 @@ namespace StreamCompanionTypes.DataTypes
                 }
             }
         }
+
         [JsonProperty(PropertyName = "ShowInOsu")]
         [Editable(false)]
         [DisplayName("Ingame")]
@@ -99,21 +111,29 @@ namespace StreamCompanionTypes.DataTypes
         [Browsable(false)]
         public OsuStatus SaveEvent
         {
-            get { return _saveEvent; }
+            get => _saveEvent;
             set
             {
-                if (value == _saveEvent) return;
+                if (value == _saveEvent)
+                {
+                    return;
+                }
+
                 _saveEvent = value;
                 OnPropertyChanged(nameof(SaveEvent));
                 OnPropertyChanged(nameof(SaveEventStr));
             }
         }
+
         [Browsable(false)]
         [IgnoreDataMember]
         [DisplayName("Memory format")]
         public bool IsMemoryFormat { get; private set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
@@ -125,12 +145,14 @@ namespace StreamCompanionTypes.DataTypes
         {
             if (Replacements != null)
             {
-                string toFormat = this.Pattern ?? "";
+                var toFormat = Pattern ?? "";
                 foreach (var r in Replacements)
                 {
                     string replacement;
                     if (r.Value.Value is null)
+                    {
                         replacement = "";
+                    }
                     else
                     {
                         replacement = r.Value.FormatedValue;
@@ -138,14 +160,20 @@ namespace StreamCompanionTypes.DataTypes
 
                     toFormat = toFormat.Replace($"!{r.Key}!", replacement, StringComparison.InvariantCultureIgnoreCase);
                 }
+
                 return toFormat;
             }
+
             return string.Empty;
         }
 
-        public object Clone()
+        internal static void AddLiveToken(string tokenName)
         {
-            return this.MemberwiseClone();
+            tokenName = $"!{tokenName}!";
+            if (!LiveTokenNames.Contains(tokenName))
+            {
+                LiveTokenNames.Add(tokenName);
+            }
         }
     }
 }

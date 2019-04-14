@@ -38,6 +38,10 @@ namespace StreamCompanionTypes.DataTypes
                 token = new Token(value, type, format, defaultValue);
                 token.PluginName = pluginName;
                 AllTokens[tokenName] = token;
+
+                if(type == TokenType.Live)
+                    OutputPattern.AddLiveToken(tokenName);
+
                 AllTokensChanged?.Invoke(null, EventArgs.Empty);
             }
 
