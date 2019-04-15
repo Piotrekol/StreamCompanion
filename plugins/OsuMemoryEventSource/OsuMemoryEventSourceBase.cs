@@ -38,6 +38,7 @@ namespace OsuMemoryEventSource
         protected static readonly object _lockingObject = new object();
         AutoResetEvent timerDisposed = new AutoResetEvent(false);
         private long _shouldTimerRun = 1;
+        private long _timerIsRunning = 0;
         private Timer _timer;
         private int _poolingMsDelay = 33;
 
@@ -92,6 +93,11 @@ namespace OsuMemoryEventSource
 
         protected void TimerTick()
         {
+            if (timerDisposed.WaitOne(1))
+            {
+                return;
+            }
+
             _memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
         }
         private void TimerCallback(object state)
@@ -161,7 +167,6 @@ namespace OsuMemoryEventSource
             lock (_lockingObject)
             {
                 timerDisposed.Set();
-                Thread.Sleep(200);
                 _timer?.Dispose();
                 _memoryListener?.Dispose();
             }

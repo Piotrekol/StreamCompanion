@@ -68,6 +68,9 @@ namespace OsuMemoryEventSource
             {
                 while (true)
                 {
+                    if (_tokenTick == null)
+                        return;
+
                     _tokenTick.WaitOne();
 
                     PrepareLiveTokens();
@@ -179,7 +182,7 @@ namespace OsuMemoryEventSource
 
                 reader.GetPlayData(_rawData.Play);
 
-                _tokenTick.Set();
+                _tokenTick?.Set();
             }
         }
 
@@ -330,7 +333,6 @@ namespace OsuMemoryEventSource
         {
             _interpolatedValueWorkerThread?.Abort();
             _tokenWorkerThread.Abort();
-            _tokenTick.Dispose();
             _settings.SettingUpdated -= SettingUpdated;
         }
 
