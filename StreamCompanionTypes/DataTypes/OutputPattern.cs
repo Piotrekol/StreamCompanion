@@ -13,7 +13,7 @@ namespace StreamCompanionTypes.DataTypes
 {
     public class OutputPattern : EventArgs, INotifyPropertyChanged, ICloneable
     {
-        private static readonly List<string> LiveTokenNames = new List<string>();
+        private static readonly ObservableCollection<string> LiveTokenNames = new ObservableCollection<string>();
 
         private string _name;
         private string _pattern = "Your pattern text";
@@ -24,8 +24,10 @@ namespace StreamCompanionTypes.DataTypes
         [IgnoreDataMember]
         public Tokens Replacements;
 
+        private static readonly ReadOnlyObservableCollection<string> ReadOnlyLiveTokenNames = new ReadOnlyObservableCollection<string>(LiveTokenNames);
+
         [IgnoreDataMember]
-        public ReadOnlyCollection<string> MemoryFormatTokens => LiveTokenNames.AsReadOnly();
+        public ReadOnlyObservableCollection<string> MemoryFormatTokens => ReadOnlyLiveTokenNames;
 
         [DisplayName("Name")]
         [JsonProperty(PropertyName = "Name")]
@@ -44,6 +46,7 @@ namespace StreamCompanionTypes.DataTypes
             }
         }
 
+        private static int counter = 0;
         [JsonProperty(PropertyName = "Pattern")]
         [DisplayName("Pattern")]
         public string Pattern
@@ -57,8 +60,19 @@ namespace StreamCompanionTypes.DataTypes
                 }
 
                 _pattern = value;
-                IsMemoryFormat = MemoryFormatTokens.Select(s => s.ToLower()).Any(value.ToLower().Contains);
+                SetMemoryFormat();
+               
                 OnPropertyChanged(nameof(Pattern));
+            }
+        }
+
+        private void SetMemoryFormat()
+        {
+            IsMemoryFormat = MemoryFormatTokens.Select(s => s.ToLower()).Any(_pattern.ToLower().Contains);
+            if (IsMemoryFormat)
+            {
+                counter++;
+                var a = 1;
             }
         }
 
@@ -129,6 +143,11 @@ namespace StreamCompanionTypes.DataTypes
         [IgnoreDataMember]
         [DisplayName("Memory format")]
         public bool IsMemoryFormat { get; private set; }
+        
+        public OutputPattern()
+        {
+            LiveTokenNames.CollectionChanged += (_, __) => SetMemoryFormat();
+        }
 
         public object Clone()
         {
