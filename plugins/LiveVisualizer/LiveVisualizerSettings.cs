@@ -66,7 +66,7 @@ namespace LiveVisualizer
             numericUpDown_windowHeight.Value = (decimal)_configuration.WindowHeight;
             numericUpDown_windowWidth.Value = (decimal)_configuration.WindowWidth;
             numericUpDown_chartHeight.Value = (decimal)_configuration.ChartHeight;
-            numericUpDown_bottomHeight.Value = decimal.Parse(_configuration.BottomHeight.Replace("*", ""));
+            numericUpDown_bottomHeight.Value = decimal.Parse(_configuration.BottomHeight.Replace("*", "").Replace(".",","));
 
 
             checkBox_enable.CheckedChanged += CheckBoxEnableOnCheckedChanged;
