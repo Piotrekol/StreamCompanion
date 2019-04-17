@@ -51,6 +51,8 @@
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
             this.label_oneScreenWarning = new System.Windows.Forms.Label();
             this.checkBox_enableRoundedCorners = new System.Windows.Forms.CheckBox();
+            this.numericUpDown_bottomHeight = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.color_textTitle = new LiveVisualizer.ColorPickerWithPreview();
             this.color_textArtist = new LiveVisualizer.ColorPickerWithPreview();
             this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
@@ -58,8 +60,6 @@
             this.color_imageDimming = new LiveVisualizer.ColorPickerWithPreview();
             this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
             this.color_background = new LiveVisualizer.ColorPickerWithPreview();
-            this.numericUpDown_bottomHeight = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).BeginInit();
             this.groupBox_chartColors.SuspendLayout();
@@ -169,7 +169,7 @@
             0,
             0});
             this.numericUpDown_windowHeight.Minimum = new decimal(new int[] {
-            350,
+            110,
             0,
             0,
             0});
@@ -349,6 +349,38 @@
             this.checkBox_enableRoundedCorners.Text = "Enable rounded corners";
             this.checkBox_enableRoundedCorners.UseVisualStyleBackColor = true;
             // 
+            // numericUpDown_bottomHeight
+            // 
+            this.numericUpDown_bottomHeight.DecimalPlaces = 7;
+            this.numericUpDown_bottomHeight.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericUpDown_bottomHeight.Location = new System.Drawing.Point(87, 293);
+            this.numericUpDown_bottomHeight.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDown_bottomHeight.Name = "numericUpDown_bottomHeight";
+            this.numericUpDown_bottomHeight.Size = new System.Drawing.Size(105, 20);
+            this.numericUpDown_bottomHeight.TabIndex = 47;
+            this.numericUpDown_bottomHeight.Value = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 295);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(75, 13);
+            this.label7.TabIndex = 48;
+            this.label7.Text = "Bottom height:";
+            // 
             // color_textTitle
             // 
             this.color_textTitle.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
@@ -467,38 +499,6 @@
             this.color_background.Name = "color_background";
             this.color_background.Size = new System.Drawing.Size(290, 26);
             this.color_background.TabIndex = 39;
-            // 
-            // numericUpDown_bottomHeight
-            // 
-            this.numericUpDown_bottomHeight.DecimalPlaces = 7;
-            this.numericUpDown_bottomHeight.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            131072});
-            this.numericUpDown_bottomHeight.Location = new System.Drawing.Point(87, 293);
-            this.numericUpDown_bottomHeight.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.numericUpDown_bottomHeight.Name = "numericUpDown_bottomHeight";
-            this.numericUpDown_bottomHeight.Size = new System.Drawing.Size(105, 20);
-            this.numericUpDown_bottomHeight.TabIndex = 47;
-            this.numericUpDown_bottomHeight.Value = new decimal(new int[] {
-            150,
-            0,
-            0,
-            0});
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 295);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(75, 13);
-            this.label7.TabIndex = 48;
-            this.label7.Text = "Bottom height:";
             // 
             // LiveVisualizerSettings
             // 

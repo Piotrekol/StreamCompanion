@@ -10,7 +10,7 @@
         Height="{Binding Path=Configuration.WindowHeight, Mode=TwoWay}" Width="{Binding Path=Configuration.WindowWidth, Mode=TwoWay}" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         SizeChanged="MainWindow_OnSizeChanged"
-        MinHeight="350"
+        MinHeight="110"
         MinWidth="500"
         AllowsTransparency="False"
         WindowStyle="None"
