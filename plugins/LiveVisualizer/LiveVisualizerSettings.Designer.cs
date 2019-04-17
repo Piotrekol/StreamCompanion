@@ -34,14 +34,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.numericUpDown_chartHeight = new System.Windows.Forms.NumericUpDown();
             this.groupBox_chartColors = new System.Windows.Forms.GroupBox();
-            this.color_textTitle = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_textArtist = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_chartProgress = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_imageDimming = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
-            this.color_background = new LiveVisualizer.ColorPickerWithPreview();
-            this.checkBox_enableWindowRezising = new System.Windows.Forms.CheckBox();
             this.numericUpDown_windowHeight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_windowWidth = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -59,6 +51,15 @@
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
             this.label_oneScreenWarning = new System.Windows.Forms.Label();
             this.checkBox_enableRoundedCorners = new System.Windows.Forms.CheckBox();
+            this.color_textTitle = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_textArtist = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_chartProgress = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_imageDimming = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
+            this.color_background = new LiveVisualizer.ColorPickerWithPreview();
+            this.numericUpDown_bottomHeight = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).BeginInit();
             this.groupBox_chartColors.SuspendLayout();
@@ -66,6 +67,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_windowWidth)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel_manualChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_bottomHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // checkBox_enable
@@ -80,12 +82,13 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.numericUpDown_bottomHeight);
             this.panel1.Controls.Add(this.checkBox_enableRoundedCorners);
             this.panel1.Controls.Add(this.checkBox_simulatePP);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.numericUpDown_chartHeight);
             this.panel1.Controls.Add(this.groupBox_chartColors);
-            this.panel1.Controls.Add(this.checkBox_enableWindowRezising);
             this.panel1.Controls.Add(this.numericUpDown_windowHeight);
             this.panel1.Controls.Add(this.numericUpDown_windowWidth);
             this.panel1.Controls.Add(this.label5);
@@ -113,7 +116,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 316);
+            this.label6.Location = new System.Drawing.Point(270, 243);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(67, 13);
             this.label6.TabIndex = 44;
@@ -121,7 +124,7 @@
             // 
             // numericUpDown_chartHeight
             // 
-            this.numericUpDown_chartHeight.Location = new System.Drawing.Point(82, 314);
+            this.numericUpDown_chartHeight.Location = new System.Drawing.Point(343, 239);
             this.numericUpDown_chartHeight.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -157,139 +160,9 @@
             this.groupBox_chartColors.TabStop = false;
             this.groupBox_chartColors.Text = "Chart colors";
             // 
-            // color_textTitle
-            // 
-            this.color_textTitle.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_textTitle.LabelDesigner.AutoSize = true;
-            this.color_textTitle.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_textTitle.LabelDesigner.Name = "Label";
-            this.color_textTitle.LabelDesigner.Size = new System.Drawing.Size(47, 13);
-            this.color_textTitle.LabelDesigner.TabIndex = 1;
-            this.color_textTitle.LabelDesigner.Text = "Title text";
-            this.color_textTitle.Location = new System.Drawing.Point(302, 51);
-            this.color_textTitle.Name = "color_textTitle";
-            this.color_textTitle.Size = new System.Drawing.Size(290, 26);
-            this.color_textTitle.TabIndex = 42;
-            // 
-            // color_textArtist
-            // 
-            this.color_textArtist.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_textArtist.LabelDesigner.AutoSize = true;
-            this.color_textArtist.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_textArtist.LabelDesigner.Name = "Label";
-            this.color_textArtist.LabelDesigner.Size = new System.Drawing.Size(50, 13);
-            this.color_textArtist.LabelDesigner.TabIndex = 1;
-            this.color_textArtist.LabelDesigner.Text = "Artist text";
-            this.color_textArtist.Location = new System.Drawing.Point(302, 19);
-            this.color_textArtist.Name = "color_textArtist";
-            this.color_textArtist.Size = new System.Drawing.Size(290, 26);
-            this.color_textArtist.TabIndex = 41;
-            // 
-            // color_chartPrimary
-            // 
-            this.color_chartPrimary.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_chartPrimary.LabelDesigner.AutoSize = true;
-            this.color_chartPrimary.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_chartPrimary.LabelDesigner.Name = "Label";
-            this.color_chartPrimary.LabelDesigner.Size = new System.Drawing.Size(68, 13);
-            this.color_chartPrimary.LabelDesigner.TabIndex = 1;
-            this.color_chartPrimary.LabelDesigner.Text = "Primary chart";
-            this.color_chartPrimary.Location = new System.Drawing.Point(6, 19);
-            this.color_chartPrimary.Name = "color_chartPrimary";
-            this.color_chartPrimary.Size = new System.Drawing.Size(290, 26);
-            this.color_chartPrimary.TabIndex = 0;
-            // 
-            // color_chartProgress
-            // 
-            this.color_chartProgress.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_chartProgress.LabelDesigner.AutoSize = true;
-            this.color_chartProgress.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_chartProgress.LabelDesigner.Name = "Label";
-            this.color_chartProgress.LabelDesigner.Size = new System.Drawing.Size(75, 13);
-            this.color_chartProgress.LabelDesigner.TabIndex = 1;
-            this.color_chartProgress.LabelDesigner.Text = "Chart progress";
-            this.color_chartProgress.Location = new System.Drawing.Point(6, 51);
-            this.color_chartProgress.Name = "color_chartProgress";
-            this.color_chartProgress.Size = new System.Drawing.Size(290, 26);
-            this.color_chartProgress.TabIndex = 1;
-            // 
-            // color_imageDimming
-            // 
-            this.color_imageDimming.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_imageDimming.LabelDesigner.AutoSize = true;
-            this.color_imageDimming.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_imageDimming.LabelDesigner.Name = "Label";
-            this.color_imageDimming.LabelDesigner.Size = new System.Drawing.Size(77, 13);
-            this.color_imageDimming.LabelDesigner.TabIndex = 1;
-            this.color_imageDimming.LabelDesigner.Text = "Image dimming";
-            this.color_imageDimming.Location = new System.Drawing.Point(6, 147);
-            this.color_imageDimming.Name = "color_imageDimming";
-            this.color_imageDimming.Size = new System.Drawing.Size(290, 26);
-            this.color_imageDimming.TabIndex = 40;
-            // 
-            // color_horizontalLegend
-            // 
-            this.color_horizontalLegend.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_horizontalLegend.LabelDesigner.AutoSize = true;
-            this.color_horizontalLegend.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_horizontalLegend.LabelDesigner.Name = "Label";
-            this.color_horizontalLegend.LabelDesigner.Size = new System.Drawing.Size(89, 13);
-            this.color_horizontalLegend.LabelDesigner.TabIndex = 1;
-            this.color_horizontalLegend.LabelDesigner.Text = "Horizontal legend";
-            this.color_horizontalLegend.Location = new System.Drawing.Point(6, 83);
-            this.color_horizontalLegend.Name = "color_horizontalLegend";
-            this.color_horizontalLegend.Size = new System.Drawing.Size(290, 26);
-            this.color_horizontalLegend.TabIndex = 33;
-            // 
-            // color_background
-            // 
-            this.color_background.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
-            // 
-            // 
-            // 
-            this.color_background.LabelDesigner.AutoSize = true;
-            this.color_background.LabelDesigner.Location = new System.Drawing.Point(3, 6);
-            this.color_background.LabelDesigner.Name = "Label";
-            this.color_background.LabelDesigner.Size = new System.Drawing.Size(65, 13);
-            this.color_background.LabelDesigner.TabIndex = 1;
-            this.color_background.LabelDesigner.Text = "Background";
-            this.color_background.Location = new System.Drawing.Point(6, 115);
-            this.color_background.Name = "color_background";
-            this.color_background.Size = new System.Drawing.Size(290, 26);
-            this.color_background.TabIndex = 39;
-            // 
-            // checkBox_enableWindowRezising
-            // 
-            this.checkBox_enableWindowRezising.AutoSize = true;
-            this.checkBox_enableWindowRezising.Location = new System.Drawing.Point(287, 290);
-            this.checkBox_enableWindowRezising.Name = "checkBox_enableWindowRezising";
-            this.checkBox_enableWindowRezising.Size = new System.Drawing.Size(173, 17);
-            this.checkBox_enableWindowRezising.TabIndex = 38;
-            this.checkBox_enableWindowRezising.Text = "Enable manual window resizing";
-            this.checkBox_enableWindowRezising.UseVisualStyleBackColor = true;
-            this.checkBox_enableWindowRezising.Visible = false;
-            // 
             // numericUpDown_windowHeight
             // 
-            this.numericUpDown_windowHeight.Location = new System.Drawing.Point(215, 288);
+            this.numericUpDown_windowHeight.Location = new System.Drawing.Point(466, 195);
             this.numericUpDown_windowHeight.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -311,7 +184,7 @@
             // 
             // numericUpDown_windowWidth
             // 
-            this.numericUpDown_windowWidth.Location = new System.Drawing.Point(143, 288);
+            this.numericUpDown_windowWidth.Location = new System.Drawing.Point(394, 195);
             this.numericUpDown_windowWidth.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -334,7 +207,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 290);
+            this.label5.Location = new System.Drawing.Point(258, 198);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(130, 13);
             this.label5.TabIndex = 35;
@@ -476,6 +349,157 @@
             this.checkBox_enableRoundedCorners.Text = "Enable rounded corners";
             this.checkBox_enableRoundedCorners.UseVisualStyleBackColor = true;
             // 
+            // color_textTitle
+            // 
+            this.color_textTitle.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_textTitle.LabelDesigner.AutoSize = true;
+            this.color_textTitle.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_textTitle.LabelDesigner.Name = "Label";
+            this.color_textTitle.LabelDesigner.Size = new System.Drawing.Size(47, 13);
+            this.color_textTitle.LabelDesigner.TabIndex = 1;
+            this.color_textTitle.LabelDesigner.Text = "Title text";
+            this.color_textTitle.Location = new System.Drawing.Point(302, 51);
+            this.color_textTitle.Name = "color_textTitle";
+            this.color_textTitle.Size = new System.Drawing.Size(290, 26);
+            this.color_textTitle.TabIndex = 42;
+            // 
+            // color_textArtist
+            // 
+            this.color_textArtist.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_textArtist.LabelDesigner.AutoSize = true;
+            this.color_textArtist.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_textArtist.LabelDesigner.Name = "Label";
+            this.color_textArtist.LabelDesigner.Size = new System.Drawing.Size(50, 13);
+            this.color_textArtist.LabelDesigner.TabIndex = 1;
+            this.color_textArtist.LabelDesigner.Text = "Artist text";
+            this.color_textArtist.Location = new System.Drawing.Point(302, 19);
+            this.color_textArtist.Name = "color_textArtist";
+            this.color_textArtist.Size = new System.Drawing.Size(290, 26);
+            this.color_textArtist.TabIndex = 41;
+            // 
+            // color_chartPrimary
+            // 
+            this.color_chartPrimary.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_chartPrimary.LabelDesigner.AutoSize = true;
+            this.color_chartPrimary.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_chartPrimary.LabelDesigner.Name = "Label";
+            this.color_chartPrimary.LabelDesigner.Size = new System.Drawing.Size(68, 13);
+            this.color_chartPrimary.LabelDesigner.TabIndex = 1;
+            this.color_chartPrimary.LabelDesigner.Text = "Primary chart";
+            this.color_chartPrimary.Location = new System.Drawing.Point(6, 19);
+            this.color_chartPrimary.Name = "color_chartPrimary";
+            this.color_chartPrimary.Size = new System.Drawing.Size(290, 26);
+            this.color_chartPrimary.TabIndex = 0;
+            // 
+            // color_chartProgress
+            // 
+            this.color_chartProgress.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_chartProgress.LabelDesigner.AutoSize = true;
+            this.color_chartProgress.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_chartProgress.LabelDesigner.Name = "Label";
+            this.color_chartProgress.LabelDesigner.Size = new System.Drawing.Size(75, 13);
+            this.color_chartProgress.LabelDesigner.TabIndex = 1;
+            this.color_chartProgress.LabelDesigner.Text = "Chart progress";
+            this.color_chartProgress.Location = new System.Drawing.Point(6, 51);
+            this.color_chartProgress.Name = "color_chartProgress";
+            this.color_chartProgress.Size = new System.Drawing.Size(290, 26);
+            this.color_chartProgress.TabIndex = 1;
+            // 
+            // color_imageDimming
+            // 
+            this.color_imageDimming.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_imageDimming.LabelDesigner.AutoSize = true;
+            this.color_imageDimming.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_imageDimming.LabelDesigner.Name = "Label";
+            this.color_imageDimming.LabelDesigner.Size = new System.Drawing.Size(77, 13);
+            this.color_imageDimming.LabelDesigner.TabIndex = 1;
+            this.color_imageDimming.LabelDesigner.Text = "Image dimming";
+            this.color_imageDimming.Location = new System.Drawing.Point(6, 147);
+            this.color_imageDimming.Name = "color_imageDimming";
+            this.color_imageDimming.Size = new System.Drawing.Size(290, 26);
+            this.color_imageDimming.TabIndex = 40;
+            // 
+            // color_horizontalLegend
+            // 
+            this.color_horizontalLegend.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_horizontalLegend.LabelDesigner.AutoSize = true;
+            this.color_horizontalLegend.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_horizontalLegend.LabelDesigner.Name = "Label";
+            this.color_horizontalLegend.LabelDesigner.Size = new System.Drawing.Size(89, 13);
+            this.color_horizontalLegend.LabelDesigner.TabIndex = 1;
+            this.color_horizontalLegend.LabelDesigner.Text = "Horizontal legend";
+            this.color_horizontalLegend.Location = new System.Drawing.Point(6, 83);
+            this.color_horizontalLegend.Name = "color_horizontalLegend";
+            this.color_horizontalLegend.Size = new System.Drawing.Size(290, 26);
+            this.color_horizontalLegend.TabIndex = 33;
+            // 
+            // color_background
+            // 
+            this.color_background.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_background.LabelDesigner.AutoSize = true;
+            this.color_background.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_background.LabelDesigner.Name = "Label";
+            this.color_background.LabelDesigner.Size = new System.Drawing.Size(65, 13);
+            this.color_background.LabelDesigner.TabIndex = 1;
+            this.color_background.LabelDesigner.Text = "Background";
+            this.color_background.Location = new System.Drawing.Point(6, 115);
+            this.color_background.Name = "color_background";
+            this.color_background.Size = new System.Drawing.Size(290, 26);
+            this.color_background.TabIndex = 39;
+            // 
+            // numericUpDown_bottomHeight
+            // 
+            this.numericUpDown_bottomHeight.DecimalPlaces = 7;
+            this.numericUpDown_bottomHeight.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numericUpDown_bottomHeight.Location = new System.Drawing.Point(87, 293);
+            this.numericUpDown_bottomHeight.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numericUpDown_bottomHeight.Name = "numericUpDown_bottomHeight";
+            this.numericUpDown_bottomHeight.Size = new System.Drawing.Size(105, 20);
+            this.numericUpDown_bottomHeight.TabIndex = 47;
+            this.numericUpDown_bottomHeight.Value = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 295);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(75, 13);
+            this.label7.TabIndex = 48;
+            this.label7.Text = "Bottom height:";
+            // 
             // LiveVisualizerSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -495,6 +519,7 @@
             this.panel2.PerformLayout();
             this.panel_manualChart.ResumeLayout(false);
             this.panel_manualChart.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_bottomHeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -522,7 +547,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_windowWidth;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDown_windowHeight;
-        private System.Windows.Forms.CheckBox checkBox_enableWindowRezising;
         private ColorPickerWithPreview color_background;
         private ColorPickerWithPreview color_imageDimming;
         private System.Windows.Forms.GroupBox groupBox_chartColors;
@@ -533,5 +557,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_chartHeight;
         private System.Windows.Forms.CheckBox checkBox_simulatePP;
         private System.Windows.Forms.CheckBox checkBox_enableRoundedCorners;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numericUpDown_bottomHeight;
     }
 }

@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Text;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Forms;
-using MColor = System.Windows.Media.Color;
 using DColor = System.Drawing.Color;
+using MColor = System.Windows.Media.Color;
 
 namespace LiveVisualizer
 {
@@ -57,7 +58,7 @@ namespace LiveVisualizer
 
             BindColorPicker(color_textArtist, () => _configuration.ArtistTextColor, color => _configuration.ArtistTextColor = color);
             BindColorPicker(color_textTitle, () => _configuration.TitleTextColor, color => _configuration.TitleTextColor = color);
-            
+
             textBox_chartCutoffs.Text = string.Join(";", _configuration.ChartCutoffsSet);
 
             checkBox_showAxisYSeparator.Checked = _configuration.ShowAxisYSeparator;
@@ -65,9 +66,7 @@ namespace LiveVisualizer
             numericUpDown_windowHeight.Value = (decimal)_configuration.WindowHeight;
             numericUpDown_windowWidth.Value = (decimal)_configuration.WindowWidth;
             numericUpDown_chartHeight.Value = (decimal)_configuration.ChartHeight;
-
-            checkBox_enableWindowRezising.Checked = _configuration.EnableResizing;
-
+            numericUpDown_bottomHeight.Value = decimal.Parse(_configuration.BottomHeight.Replace("*", ""));
 
 
             checkBox_enable.CheckedChanged += CheckBoxEnableOnCheckedChanged;
@@ -79,11 +78,15 @@ namespace LiveVisualizer
             numericUpDown_windowHeight.ValueChanged += NumericUpDownWindowHeightOnValueChanged;
             numericUpDown_windowWidth.ValueChanged += NumericUpDownWindowWidthOnValueChanged;
             numericUpDown_chartHeight.ValueChanged += NumericUpDownChartHeightOnValueChanged;
+            numericUpDown_bottomHeight.ValueChanged += NumericUpDownBottomHeightOnValueChanged;
 
-            checkBox_enableWindowRezising.CheckedChanged += CheckBoxEnableWindowRezisingOnCheckedChanged;
-            checkBox_simulatePP.CheckedChanged+=CheckBoxSimulatePpOnCheckedChanged;
-            checkBox_enableRoundedCorners.CheckedChanged+=CheckBoxEnableRoundedCornersOnCheckedChanged;
+            checkBox_simulatePP.CheckedChanged += CheckBoxSimulatePpOnCheckedChanged;
+            checkBox_enableRoundedCorners.CheckedChanged += CheckBoxEnableRoundedCornersOnCheckedChanged;
+        }
 
+        private void NumericUpDownBottomHeightOnValueChanged(object sender, EventArgs e)
+        {
+            _configuration.BottomHeight = numericUpDown_bottomHeight.Value.ToString(CultureInfo.InvariantCulture) + "*";
         }
 
         private void CheckBoxEnableRoundedCornersOnCheckedChanged(object sender, EventArgs e)
@@ -106,10 +109,6 @@ namespace LiveVisualizer
             cp.Color = DColor.FromArgb(getter().A, getter().R, getter().G, getter().B);
 
             cp.ColorChanged += (sender, color) => setter(MColor.FromArgb(color.A, color.R, color.G, color.B));
-        }
-        private void CheckBoxEnableWindowRezisingOnCheckedChanged(object sender, EventArgs e)
-        {
-            _configuration.EnableResizing = checkBox_enableWindowRezising.Checked;
         }
 
         private void NumericUpDownWindowWidthOnValueChanged(object sender, EventArgs e)

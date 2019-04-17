@@ -38,7 +38,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="{Binding Configuration.BottomHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid.RowDefinitions>
         <Border Name="Border">
             <Border.Style>
