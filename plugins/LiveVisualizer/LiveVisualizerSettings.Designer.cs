@@ -58,6 +58,7 @@
             this.textBox_chartCutoffs = new System.Windows.Forms.TextBox();
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
             this.label_oneScreenWarning = new System.Windows.Forms.Label();
+            this.checkBox_enableRoundedCorners = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).BeginInit();
             this.groupBox_chartColors.SuspendLayout();
@@ -79,6 +80,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkBox_enableRoundedCorners);
             this.panel1.Controls.Add(this.checkBox_simulatePP);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.numericUpDown_chartHeight);
@@ -101,7 +103,7 @@
             // checkBox_simulatePP
             // 
             this.checkBox_simulatePP.AutoSize = true;
-            this.checkBox_simulatePP.Location = new System.Drawing.Point(287, 219);
+            this.checkBox_simulatePP.Location = new System.Drawing.Point(149, 219);
             this.checkBox_simulatePP.Name = "checkBox_simulatePP";
             this.checkBox_simulatePP.Size = new System.Drawing.Size(151, 17);
             this.checkBox_simulatePP.TabIndex = 45;
@@ -464,6 +466,16 @@
             this.label_oneScreenWarning.Text = "WARNING: In order for window to work in OBS while osu! is in fullscreen \r\nwith on" +
     "e screen you have to use game capture, NOT window capture!";
             // 
+            // checkBox_enableRoundedCorners
+            // 
+            this.checkBox_enableRoundedCorners.AutoSize = true;
+            this.checkBox_enableRoundedCorners.Location = new System.Drawing.Point(306, 219);
+            this.checkBox_enableRoundedCorners.Name = "checkBox_enableRoundedCorners";
+            this.checkBox_enableRoundedCorners.Size = new System.Drawing.Size(139, 17);
+            this.checkBox_enableRoundedCorners.TabIndex = 46;
+            this.checkBox_enableRoundedCorners.Text = "Enable rounded corners";
+            this.checkBox_enableRoundedCorners.UseVisualStyleBackColor = true;
+            // 
             // LiveVisualizerSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,5 +532,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown numericUpDown_chartHeight;
         private System.Windows.Forms.CheckBox checkBox_simulatePP;
+        private System.Windows.Forms.CheckBox checkBox_enableRoundedCorners;
     }
 }

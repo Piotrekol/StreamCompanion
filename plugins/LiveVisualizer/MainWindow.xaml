@@ -1,4 +1,4 @@
-﻿<Window x:Class="LiveVisualizer.MainWindow"
+<Window x:Class="LiveVisualizer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -40,12 +40,30 @@
             <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border CornerRadius="30,30,0,0" Name="Border">
+        <Border Name="Border">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Configuration.EnableRoundedCorners}" Value="True">
+                            <Setter Property="CornerRadius" Value="30,30,0,0"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Border.Background>
                 <ImageBrush ImageSource="{Binding Display.ImageLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Stretch="UniformToFill"/>
             </Border.Background>
         </Border>
-        <Border CornerRadius="30,30,0,0" Name="Border2">
+        <Border  Name="Border2">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Configuration.EnableRoundedCorners}" Value="True">
+                            <Setter Property="CornerRadius" Value="30,30,0,0"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <Border.Background>
                 <SolidColorBrush Color="{Binding Configuration.ImageDimColor}"></SolidColorBrush>
             </Border.Background>

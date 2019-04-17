@@ -46,6 +46,7 @@ namespace LiveVisualizer
             checkBox_simulatePP.Checked = _configuration.SimulatePPWhenListening;
 
             checkBox_autosizeChart.Checked = _configuration.AutoSizeAxisY;
+            checkBox_enableRoundedCorners.Checked = _configuration.EnableRoundedCorners;
             panel_manualChart.Enabled = !checkBox_autosizeChart.Checked;
 
             BindColorPicker(color_chartPrimary, () => _configuration.ChartColor, color => _configuration.ChartColor = color);
@@ -81,7 +82,13 @@ namespace LiveVisualizer
 
             checkBox_enableWindowRezising.CheckedChanged += CheckBoxEnableWindowRezisingOnCheckedChanged;
             checkBox_simulatePP.CheckedChanged+=CheckBoxSimulatePpOnCheckedChanged;
+            checkBox_enableRoundedCorners.CheckedChanged+=CheckBoxEnableRoundedCornersOnCheckedChanged;
 
+        }
+
+        private void CheckBoxEnableRoundedCornersOnCheckedChanged(object sender, EventArgs e)
+        {
+            _configuration.EnableRoundedCorners = checkBox_enableRoundedCorners.Checked;
         }
 
         private void CheckBoxSimulatePpOnCheckedChanged(object sender, EventArgs e)

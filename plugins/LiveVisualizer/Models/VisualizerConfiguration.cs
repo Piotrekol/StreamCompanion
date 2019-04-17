@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Media;
 
@@ -15,6 +15,7 @@ namespace LiveVisualizer
         public Color FillColor { get; set; } = Color.FromArgb(178, 255, 178, 227);
         public bool Enable { get; set; } = true;
         public bool SimulatePPWhenListening { get; set; } = true;
+        public bool EnableRoundedCorners { get; set; } = true;
         public string Font { get; set; } = "Arial";
         public bool ShowAxisYSeparator { get; set; } = true;
         public Color AxisYSeparatorColor { get; set; } = Color.FromArgb(102, 255, 178, 227);

@@ -8,6 +8,7 @@ namespace LiveVisualizer
     {
         bool Enable { get; set; }
         bool SimulatePPWhenListening { get; set; }
+        bool EnableRoundedCorners { get; set; }
         string Font { get; set; }
         double FontsizeTitle { get; set; }
         double FontsizeArtist { get; set; }
