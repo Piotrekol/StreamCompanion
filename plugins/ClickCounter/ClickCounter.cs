@@ -1,13 +1,14 @@
-﻿using StreamCompanionTypes;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ClickCounter
 {
-    public class ClickCounter : IPlugin, ISettingsProvider, ISaveRequester, IDisposable, ITokensProvider, IHighFrequencyDataSender
+    public class ClickCounter : ApplicationContext,IPlugin, ISettingsProvider, ISaveRequester, IDisposable, ITokensProvider, IHighFrequencyDataSender
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
@@ -24,6 +25,7 @@ namespace ClickCounter
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
         private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
         private Tokens.TokenSetter _tokenSetter;
+        private Thread _hooksThread = null;
 
         public string SettingGroup { get; } = "Click counter";
 
@@ -32,12 +34,18 @@ namespace ClickCounter
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
-
-
         public void HookAll()
         {
-            HookKeyboard();
-            HookMouse();
+            _hooksThread = new Thread(() =>
+            {
+                HookKeyboard();
+                HookMouse();
+                Application.Run(this);
+            });
+            _hooksThread.IsBackground = false;
+            _hooksThread.Priority = ThreadPriority.Highest;
+            _hooksThread.Start();
+
         }
 
         private void HookKeyboard()
