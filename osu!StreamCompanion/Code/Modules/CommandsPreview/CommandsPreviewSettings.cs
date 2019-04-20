@@ -17,7 +17,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         public CommandsPreviewSettings()
         {
             InitializeComponent();
-            
+
             UpdateTask = new Task(UpdateLiveTokens);
             UpdateTask.Start();
         }
@@ -29,22 +29,22 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         }
         private void UpdateLiveTokens()
         {
-            while (true)
+            try
             {
-                if (liveTokens != null && this.IsHandleCreated)
-                    try
-                    {
+                while (true)
+                {
+                    if (liveTokens != null && this.IsHandleCreated)
+
                         BeginInvoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
-                        _cts.Token.ThrowIfCancellationRequested();
-                    }
-                    catch(Exception e)
-                    {
-                        return;
-                    }
 
 
+                    _cts.Token.ThrowIfCancellationRequested();
 
-                Thread.Sleep(11);
+                    Thread.Sleep(11);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
         public void Clear()
@@ -97,7 +97,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
                 AddSeparator(tokenKv.Key, yPosition);
             }
 
-            var maxLabelWidth = lineWidths.Count>0 ? lineWidths.Max() : 0;
+            var maxLabelWidth = lineWidths.Count > 0 ? lineWidths.Max() : 0;
 
             yPosition = startYPosition;
 
@@ -111,7 +111,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             }
 
 
-            return new Size(lineWidths.Count > 0 ? lineWidths.Max() : 0, yPosition- startYPosition);
+            return new Size(lineWidths.Count > 0 ? lineWidths.Max() : 0, yPosition - startYPosition);
         }
 
         private (Size Size, T Control, bool AlreadyExisted) AddControl<T>(string name, string text, int xPosition, int yPosition, bool autosize = true, int width = 20, int height = 20) where T : Control, new()
@@ -198,7 +198,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             {
                 ret.Control.BorderStyle = BorderStyle.Fixed3D;
             }
-            
+
             return ret.Control.Size;
         }
 
