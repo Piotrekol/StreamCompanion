@@ -102,20 +102,21 @@ namespace OsuMemoryEventSource
         }
         private void TimerCallback(object state)
         {
-            try
+            lock (_lockingObject)
             {
-                lock (_lockingObject)
+                try
+                {
                     TimerTick();
-            }
-            finally
-            {
-                RestartTimer(_poolingMsDelay);
+                }
+                finally
+                {
+                    RestartTimer(_poolingMsDelay);
+                }
             }
         }
 
         private void RestartTimer(int msDelay)
         {
-
             lock (_lockingObject)
             {
                 if (timerDisposed.WaitOne(1))
