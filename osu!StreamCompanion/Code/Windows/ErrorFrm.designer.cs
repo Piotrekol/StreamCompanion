@@ -30,7 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label_exitText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -51,21 +51,21 @@
             this.textBox1.Size = new System.Drawing.Size(515, 216);
             this.textBox1.TabIndex = 1;
             // 
-            // label2
+            // label_exitText
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 262);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(155, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "StreamCompanion will now exit.";
+            this.label_exitText.AutoSize = true;
+            this.label_exitText.Location = new System.Drawing.Point(12, 262);
+            this.label_exitText.Name = "label_exitText";
+            this.label_exitText.Size = new System.Drawing.Size(155, 13);
+            this.label_exitText.TabIndex = 2;
+            this.label_exitText.Text = "StreamCompanion will now exit.";
             // 
             // Error
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(543, 284);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label_exitText);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Name = "Error";
@@ -79,6 +79,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label_exitText;
     }
 }

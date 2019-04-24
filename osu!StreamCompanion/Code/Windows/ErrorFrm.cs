@@ -20,10 +20,13 @@ namespace osu_StreamCompanion.Code.Windows
             get { return true; }
         }
 
-        public Error(String Message)
+        public Error(string Message, string exitText)
         {
             InitializeComponent();
             this.textBox1.Text = Message;
+
+            if(!string.IsNullOrEmpty(exitText))
+                this.label_exitText.Text = exitText;
         }
 
         private void button_message_Click(object sender, EventArgs e)
