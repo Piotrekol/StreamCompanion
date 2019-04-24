@@ -27,7 +27,12 @@ namespace LiveVisualizer
         {
             CancelNewMapProcessing();
 
-            await Task.Run(() => ProcessNewMap(mapSearchResult, _token), _token);
+            try
+            {
+                await Task.Run(() => ProcessNewMap(mapSearchResult, _token), _token);
+            }
+            catch (TaskCanceledException)
+            { }
         }
 
         public abstract List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
