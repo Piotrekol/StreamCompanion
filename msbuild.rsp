@@ -1,0 +1,3 @@
+#Appveyor msbuild response file
+
+/p:DefineConstants="WITHSENTRY"
