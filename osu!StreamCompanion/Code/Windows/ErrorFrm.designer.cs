@@ -35,20 +35,19 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(201, 13);
+            this.label1.Size = new System.Drawing.Size(518, 46);
             this.label1.TabIndex = 0;
             this.label1.Text = "Whoops! This error was sent to Piotrekol.";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(16, 30);
+            this.textBox1.Location = new System.Drawing.Point(16, 57);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(515, 216);
+            this.textBox1.Size = new System.Drawing.Size(515, 189);
             this.textBox1.TabIndex = 1;
             // 
             // label_exitText

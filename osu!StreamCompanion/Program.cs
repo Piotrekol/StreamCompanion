@@ -18,7 +18,7 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v190424.19";
+        public static string ScVersion ="v190425.19";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 
@@ -124,7 +124,7 @@ namespace osu_StreamCompanion
             }
             else
             {
-#if DEBUG
+#if !DEBUG
                 throw (Exception)e.ExceptionObject;
 #endif
                 Exception ex = null;
@@ -138,36 +138,40 @@ namespace osu_StreamCompanion
                 HandleException(ex);
             }
         }
-
-        private static (bool ForceQuit, bool SendReport, string Message) GetErrorData()
+        
+        private static (bool SendReport, string Message) GetErrorData()
         {
-            if (Exceptions.Count <= 4)
-                return (false, true, $"{errorNotificationFormat} {willAttemptToRun} {messageWasSent}");
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
+            bool sendReport = false;
 
-            return (false, false, $"{errorNotificationFormat} {willAttemptToRun} {messageWasNotSent}");
+#if WITHSENTRY
+            sendReport = true;
+#endif
+
+            if (sendReport)
+                return (true, $"{errorNotificationFormat} {needToExit} {messageWasSent}");
+
+            return (false, $"{errorNotificationFormat} {needToExit} {privateBuildMessageNotSent}");
+
+            // ReSharper restore ConditionIsAlwaysTrueOrFalse
         }
 
         private static string errorNotificationFormat = @"There was unhandled problem with a program";
         private static string needToExit = @"and it needs to exit.";
-        private static string willAttemptToRun = @"but it will attempt to run.";
+
         private static string messageWasSent = "Error report was sent to Piotrekol.";
-        private static string messageWasNotSent = "Any further errors will !not! be sent to Piotrekol until StreamCompanion restarts.";
-        
-        private static List<Exception> Exceptions { get; set; }
+        private static string privateBuildMessageNotSent = "This is private build, so error report WAS NOT SENT.";
+
         public static void HandleException(Exception ex)
         {
-            bool shouldQuit = true;
             try
             {
-                ex.Data["ExceptionCount"] = Exceptions.Count;
-                Exceptions.Add(ex);
 
                 ex.Data.Add("netFramework", GetDotNetVersion.Get45PlusFromRegistry());
 
                 var errorConsensus = GetErrorData();
-                shouldQuit = errorConsensus.ForceQuit;
 
-#if DEBUG
+#if WITHSENTRY
                 if (errorConsensus.SendReport)
                 {
                     var ravenClient = SentryLogger.RavenClient;
@@ -176,22 +180,20 @@ namespace osu_StreamCompanion
                     ravenClient.Capture(sentryEvent);
                 }
 #endif
+
                 MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                var form = new Error(ex.Message + Environment.NewLine + ex.StackTrace, !errorConsensus.ForceQuit ? "StreamCompanion will attempt to run" : null);
+                var form = new Error(ex.Message + Environment.NewLine + ex.StackTrace, null);
                 form.ShowDialog();
             }
             finally
             {
-                if (shouldQuit)
+                try
                 {
-                    try
-                    {
-                        SafeQuit();
-                    }
-                    catch
-                    {
-                        _initializer.ExitThread();
-                    }
+                    SafeQuit();
+                }
+                catch
+                {
+                    _initializer.ExitThread();
                 }
             }
         }
