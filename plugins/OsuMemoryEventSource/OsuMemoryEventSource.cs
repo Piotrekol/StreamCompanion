@@ -83,7 +83,7 @@ namespace OsuMemoryEventSource
             Logger?.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
 
             Mods eMods = result.Mods?.Mods ?? Mods.Omod;
-            if (mapId > 2000000 || mapId < 0 || Helpers.IsInvalidCombination(eMods))
+            if (mapId > 200_000_000 || mapId < 0 || Helpers.IsInvalidCombination(eMods))
             {
                 Logger?.Log("Sanity check tiggered - invalidating last result", LogLevel.Advanced);
                 result.Mods = null;
