@@ -11,7 +11,7 @@ using Mods = CollectionManager.DataTypes.Mods;
 
 namespace OsuMemoryEventSource
 {
-    public class RawMemoryDataProcessor
+    public class LivePerformanceCalculator
     {
         public PlayContainer Play { get; set; } = new PlayContainer();
         public int PlayTime { get; set; }

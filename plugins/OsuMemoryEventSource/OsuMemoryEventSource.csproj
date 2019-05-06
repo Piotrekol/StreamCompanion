@@ -65,7 +65,7 @@
       <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="MemoryDataProcessor.cs" />
-    <Compile Include="RawMemoryDataProcessor.cs" />
+    <Compile Include="LivePerformanceCalculator.cs" />
     <Compile Include="MemoryListener.cs" />
     <Compile Include="OsuMemoryEventSource.cs" />
     <Compile Include="OsuMemoryEventSourceBase.cs" />

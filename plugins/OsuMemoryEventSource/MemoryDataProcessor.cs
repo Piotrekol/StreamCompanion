@@ -19,7 +19,7 @@ namespace OsuMemoryEventSource
         private readonly string _songsFolderLocation;
         private readonly object _lockingObject = new object();
         private OsuStatus _lastStatus = OsuStatus.Null;
-        RawMemoryDataProcessor _rawData = new RawMemoryDataProcessor();
+        LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
         private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
 
         private BlockingCollection<OutputPattern> OutputPatterns = new BlockingCollection<OutputPattern>();
