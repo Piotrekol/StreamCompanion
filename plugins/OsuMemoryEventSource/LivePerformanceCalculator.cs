@@ -135,5 +135,29 @@ namespace OsuMemoryEventSource
             return double.NaN;
         }
 
+        public double NoChokePp()
+        {
+            double pp = double.NaN;
+
+            if (_ppCalculator == null || _currentBeatmap.PlayMode == PlayMode.OsuMania)
+                return pp;
+
+            try
+            {
+                _ppCalculator.Goods = Play.C100;
+                _ppCalculator.Mehs = Play.C50;
+                _ppCalculator.Misses = 0;
+                _ppCalculator.Combo = null;
+                _ppCalculator.PercentCombo = 100;
+                _ppCalculator.Score = Play.Score;
+                pp = _ppCalculator.Calculate(PlayTime, null);
+
+
+            }
+            catch { }
+
+            return pp;
+        }
+
     }
 }
