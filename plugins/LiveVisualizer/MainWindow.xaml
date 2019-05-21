@@ -1,23 +1,23 @@
 ﻿<Window x:Class="LiveVisualizer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:LiveVisualizer"
-        mc:Ignorable="d" 
+        mc:Ignorable="d"
         d:DesignHeight="350" d:DesignWidth="700"
-        Title="osu!StreamCompanion - LiveVisualizer" 
-        Height="{Binding Path=Configuration.WindowHeight, Mode=TwoWay}" Width="{Binding Path=Configuration.WindowWidth, Mode=TwoWay}" 
-        MouseLeftButtonDown="Window_MouseLeftButtonDown" 
+        Title="osu!StreamCompanion - LiveVisualizer"
+        Height="{Binding Path=Configuration.WindowHeight, Mode=TwoWay}"
+        Width="{Binding Path=Configuration.WindowWidth, Mode=TwoWay}"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
         SizeChanged="MainWindow_OnSizeChanged"
         MinHeight="110"
         MinWidth="500"
         AllowsTransparency="False"
         WindowStyle="None"
-        ResizeMode="NoResize"
-        >
+        ResizeMode="NoResize">
     <Window.Background>
-        <SolidColorBrush Color="{Binding Path=Configuration.BackgroundColor}"></SolidColorBrush>
+        <SolidColorBrush Color="{Binding Path=Configuration.BackgroundColor}" />
     </Window.Background>
     <!--
     <Window.Style>
@@ -37,90 +37,140 @@
     -->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="{Binding Configuration.BottomHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <RowDefinition Height="2*" />
+            <RowDefinition
+                Height="{Binding Configuration.BottomHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid.RowDefinitions>
         <Border Name="Border">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Configuration.EnableRoundedCorners}" Value="True">
-                            <Setter Property="CornerRadius" Value="30,30,0,0"></Setter>
+                            <Setter Property="CornerRadius" Value="30,30,0,0" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
             <Border.Background>
-                <ImageBrush ImageSource="{Binding Display.ImageLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Stretch="UniformToFill"/>
+                <ImageBrush
+                    ImageSource="{Binding Display.ImageLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    Stretch="UniformToFill" />
             </Border.Background>
         </Border>
-        <Border  Name="Border2">
+        <Border Name="Border2">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Configuration.EnableRoundedCorners}" Value="True">
-                            <Setter Property="CornerRadius" Value="30,30,0,0"></Setter>
+                            <Setter Property="CornerRadius" Value="30,30,0,0" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
             <Border.Background>
-                <SolidColorBrush Color="{Binding Configuration.ImageDimColor}"></SolidColorBrush>
+                <SolidColorBrush Color="{Binding Configuration.ImageDimColor}" />
             </Border.Background>
         </Border>
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="{Binding Configuration.ArtistContainerHeight}" />
             </Grid.RowDefinitions>
 
-            <Viewbox Grid.Row="0" MaxHeight="30"  >
-                <TextBlock Name="Title" Text="{Binding Display.Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0">
+            <Viewbox Grid.Row="0" MaxHeight="{Binding Configuration.TitleContainerHeight}">
+                <TextBlock Name="Title"
+                           Text="{Binding Display.Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0">
                     <TextBlock.Foreground>
-                        <SolidColorBrush Color="{Binding Configuration.TitleTextColor}"></SolidColorBrush>
+                        <SolidColorBrush Color="{Binding Configuration.TitleTextColor}" />
                     </TextBlock.Foreground>
                 </TextBlock>
             </Viewbox>
-            <Viewbox Grid.Row="1" >
-                <TextBlock Name="Artist" Text="{Binding Display.Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0">
+            <Viewbox Grid.Row="1">
+                <TextBlock Name="Artist"
+                           Text="{Binding Display.Artist, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0">
                     <TextBlock.Foreground>
-                        <SolidColorBrush Color="{Binding Configuration.ArtistTextColor}"></SolidColorBrush>
+                        <SolidColorBrush Color="{Binding Configuration.ArtistTextColor}" />
                     </TextBlock.Foreground>
                 </TextBlock>
             </Viewbox>
         </Grid>
 
-        <Frame Name="frameholder" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Configuration.WindowWidth}"/>
-        <Frame Name="frameholderTimer" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}"/>
-        
-        <Rectangle Grid.Row="1" Fill="#141414"/>
+        <Frame Name="frameholder" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom"
+               HorizontalAlignment="Left" Width="{Binding Configuration.WindowWidth}" />
+        <Frame Name="frameholderTimer" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom"
+               HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}" />
+
+        <Rectangle Grid.Row="1" Fill="#141414" />
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <Grid Margin="0 30 0 0">
+            <Grid Margin="{Binding Configuration.MarginPP}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.5*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Name="PPData" Text="{Binding Display.Pp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" FontSize="50" Foreground="#d6d0d1"  HorizontalAlignment="Right" FontFamily="{Binding Configuration.Font}"/>
-                <Label Name="PP" Grid.Column="1" Content="pp" FontSize="50" Foreground="#d6d0d1" HorizontalAlignment="Left" FontFamily="{Binding Configuration.Font}"/>
+                <TextBlock Name="PPData" Text="{Binding Display.Pp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           Grid.Column="0" FontSize="{Binding Configuration.FontSizePP}" Foreground="#d6d0d1"
+                           HorizontalAlignment="Right" FontFamily="{Binding Configuration.Font}" />
+                <Label Name="PP" Grid.Column="1" Content="pp" FontSize="{Binding Configuration.FontSizePP}"
+                       Foreground="#d6d0d1" HorizontalAlignment="Left" FontFamily="{Binding Configuration.Font}" />
             </Grid>
 
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Label Name="hundreds" Content="100" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Configuration.Font}"/>
-                <Label Name="hundredsData" Content="{Binding Display.Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Configuration.Font}"/>
-                <Label Name="fifties" Grid.Column="1" Content="50" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Configuration.Font}"/>
-                <Label Name="fiftieData" Grid.Column="1" Content="{Binding Display.Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1"  Margin="0 60 0 0" FontFamily="{Binding Configuration.Font}"/>
-                <Label Name="miss" Grid.Column="2" Content="MISS" HorizontalAlignment="Center" FontSize="30" Foreground="#FF817E7F" Margin="0 15 0 0 " FontFamily="{Binding Configuration.Font}"/>
-                <Label Name="missData" Grid.Column="2" Content="{Binding Display.HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" FontSize="30" Foreground="#d6d0d1" Margin="0 60 0 0 " FontFamily="{Binding Configuration.Font}" />
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Name="hundreds" Content="100" HorizontalAlignment="Center"
+                           FontSize="{Binding Configuration.FontSizePPText}" Foreground="#FF817E7F"
+                           FontFamily="{Binding Configuration.Font}" />
+                    <Label Grid.Row="1" Name="hundredsData"
+                           Content="{Binding Display.Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           HorizontalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
+                           Foreground="#d6d0d1" Margin="0 0 0 0" FontFamily="{Binding Configuration.Font}" />
+
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Name="fifties" Grid.Column="1" Content="50" HorizontalAlignment="Center"
+                           FontSize="{Binding Configuration.FontSizePPText}" Foreground="#FF817E7F"
+                           FontFamily="{Binding Configuration.Font}" />
+                    <Label Grid.Row="1" Name="fiftieData" Grid.Column="1"
+                           Content="{Binding Display.Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           HorizontalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
+                           Foreground="#d6d0d1" FontFamily="{Binding Configuration.Font}" />
+
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Name="miss" Grid.Column="2" Content="MISS" HorizontalAlignment="Center"
+                           FontSize="{Binding Configuration.FontSizePPText}" Foreground="#FF817E7F"
+                           FontFamily="{Binding Configuration.Font}" />
+                    <Label Grid.Row="1" Name="missData" Grid.Column="2"
+                           Content="{Binding Display.HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           HorizontalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
+                           Foreground="#d6d0d1" FontFamily="{Binding Configuration.Font}" />
+
+                </Grid>
+
+
             </Grid>
         </Grid>
     </Grid>

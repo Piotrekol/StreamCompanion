@@ -11,8 +11,13 @@ namespace LiveVisualizer
         bool EnableRoundedCorners { get; set; }
         string BottomHeight { get; set; }
         string Font { get; set; }
-        double FontsizeTitle { get; set; }
-        double FontsizeArtist { get; set; }
+        string TitleContainerHeight { get; set; }
+        string ArtistContainerHeight { get; set; }
+        double FontSizePPText { get; set; }
+        double FontSizePP { get; set; }
+        string MarginPP { get; set; }
+        double FontSizePPHits { get; set; }
+
         double MaxYValue { get; set; }
 
         bool ShowAxisYSeparator { get; set; }

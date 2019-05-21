@@ -16,8 +16,15 @@ namespace LiveVisualizer
         public bool Enable { get; set; } = true;
         public bool SimulatePPWhenListening { get; set; } = true;
         public bool EnableRoundedCorners { get; set; } = true;
-        public string BottomHeight { get; set; } = "1*";
+        public string BottomHeight { get; set; } = "0.55*";
         public string Font { get; set; } = "Arial";
+        public string TitleContainerHeight { get; set; } = "30";
+        public string ArtistContainerHeight { get; set; } = "20";
+        public double FontSizePP { get; set; } = 50;
+        public string MarginPP { get; set; } = "0 10 0 0";
+        public double FontSizePPText { get; set; } = 30;
+        public double FontSizePPHits { get; set; } = 30;
+
         public bool ShowAxisYSeparator { get; set; } = true;
         public Color AxisYSeparatorColor { get; set; } = Color.FromArgb(102, 255, 178, 227);
         public double AxisYStep { get; set; } = 100;
