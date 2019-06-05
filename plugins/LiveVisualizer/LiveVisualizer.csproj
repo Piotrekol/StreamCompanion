@@ -183,6 +183,7 @@ copy "$(TargetDir)\LiveVisualizer.dll" "$(TargetDir)\..\$(ConfigurationName)\Liv
 copy "$(TargetDir)\LiveCharts.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\LiveCharts.dll"
 copy "$(TargetDir)\LiveCharts.Wpf.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\LiveCharts.Wpf.dll"
 
+mkdir "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls"
 copy "$(TargetDir)\..\$(ConfigurationName)\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\"
 copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"</PostBuildEvent>
   </PropertyGroup>

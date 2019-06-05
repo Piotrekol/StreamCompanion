@@ -141,6 +141,7 @@ copy "$(TargetDir)\OsuMemoryEventSource.dll" "$(TargetDir)\..\$(ConfigurationNam
 copy "$(TargetDir)\ProcessMemoryDataFinder.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ProcessMemoryDataFinder.dll"
 copy "$(TargetDir)\OsuMemoryDataProvider.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\OsuMemoryDataProvider.dll"
 
+mkdir "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls"
 copy "$(TargetDir)\..\$(ConfigurationName)\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\"
 copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"</PostBuildEvent>
   </PropertyGroup>

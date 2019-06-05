@@ -99,7 +99,9 @@ copy "$(TargetDir)\System.ValueTuple.dll" "$(TargetDir)\..\$(ConfigurationName)\
 
 copy "$(TargetDir)\BeatmapPpReplacements.dll" "$(TargetDir)\..\$(ConfigurationName)\BeatmapPpReplacements.dll"
 
+mkdir "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls"
 copy "$(TargetDir)\..\$(ConfigurationName)\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\"
-copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"</PostBuildEvent>
+copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
