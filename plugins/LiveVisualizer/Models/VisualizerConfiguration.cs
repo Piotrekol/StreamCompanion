@@ -16,7 +16,7 @@ namespace LiveVisualizer
         public bool Enable { get; set; } = true;
         public bool SimulatePPWhenListening { get; set; } = true;
         public bool EnableRoundedCorners { get; set; } = true;
-        public string BottomHeight { get; set; } = "0.55*";
+        public string BottomHeight { get; set; } = "0.65*";
         public string Font { get; set; } = "Arial";
         public string TitleContainerHeight { get; set; } = "30";
         public string ArtistContainerHeight { get; set; } = "20";
