@@ -1,6 +1,6 @@
-﻿namespace TcpSocketDataSender
+﻿namespace WebSocketDataSender
 {
-    partial class TcpSocketSettings
+    partial class WebSocketSettings
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox_EnableTcpOutput = new System.Windows.Forms.CheckBox();
+            this.checkBox_EnableWebSocketOutput = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // checkBox_EnableTcpOutput
+            // checkBox_EnableWebSocketOutput
             // 
-            this.checkBox_EnableTcpOutput.AutoSize = true;
-            this.checkBox_EnableTcpOutput.Location = new System.Drawing.Point(4, 2);
-            this.checkBox_EnableTcpOutput.Name = "checkBox_EnableTcpOutput";
-            this.checkBox_EnableTcpOutput.Size = new System.Drawing.Size(169, 17);
-            this.checkBox_EnableTcpOutput.TabIndex = 0;
-            this.checkBox_EnableTcpOutput.Text = "Enable TCP output of patterns";
-            this.checkBox_EnableTcpOutput.UseVisualStyleBackColor = true;
+            this.checkBox_EnableWebSocketOutput.AutoSize = true;
+            this.checkBox_EnableWebSocketOutput.Location = new System.Drawing.Point(4, 2);
+            this.checkBox_EnableWebSocketOutput.Name = "checkBox_EnableWebSocketOutput";
+            this.checkBox_EnableWebSocketOutput.Size = new System.Drawing.Size(236, 17);
+            this.checkBox_EnableWebSocketOutput.TabIndex = 1;
+            this.checkBox_EnableWebSocketOutput.Text = "Enable WebSocketServer output of patterns";
+            this.checkBox_EnableWebSocketOutput.UseVisualStyleBackColor = true;
             // 
-            // TcpSocketSettings
+            // WebSocketSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.checkBox_EnableTcpOutput);
-            this.Name = "TcpSocketSettings";
+            this.Controls.Add(this.checkBox_EnableWebSocketOutput);
+            this.Name = "WebSocketSettings";
             this.Size = new System.Drawing.Size(591, 20);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -55,6 +55,6 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox_EnableTcpOutput;
+        private System.Windows.Forms.CheckBox checkBox_EnableWebSocketOutput;
     }
 }
