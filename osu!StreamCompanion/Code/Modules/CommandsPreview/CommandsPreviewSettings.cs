@@ -39,8 +39,11 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
 
 
                     _cts.Token.ThrowIfCancellationRequested();
-
+#if DEBUG
+                    Thread.Sleep(250);
+#else
                     Thread.Sleep(11);
+#endif
                 }
             }
             catch (Exception)
