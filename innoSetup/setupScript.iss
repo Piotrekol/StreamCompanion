@@ -28,7 +28,6 @@ SetupIconFile=..\osu!StreamCompanion\Resources\compiled.ico
 Compression=lzma
 SolidCompression=yes
 AppMutex=Global\{{2c6fc9bd-4e26-42d3-acfa-0a4d846d7e9e}
-PrivilegesRequired=lowest
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
