@@ -1,4 +1,4 @@
-﻿using osu_StreamCompanion.Code.Core.Loggers;
+using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace osu_StreamCompanion.Code.Core
@@ -151,7 +152,7 @@ namespace osu_StreamCompanion.Code.Core
 
             LoadPlugins(sortedPlugins[0]);
             LoadPlugins(sortedPlugins[1]);
-            
+
             _logger.Log("==========", LogLevel.Advanced);
 
             ProritizePluginsUsage();
@@ -265,6 +266,22 @@ namespace osu_StreamCompanion.Code.Core
                     e.Data.Add("file", file);
                     e.Data.Add("netFramework", GetDotNetVersion.Get45PlusFromRegistry());
                     _logger.Log(e, LogLevel.Error);
+                }
+                catch (COMException)
+                {
+                    if (file.Contains("osuOverlayPlugin"))
+                    {
+                        var nl = Environment.NewLine;
+                        MessageBox.Show("Since SC version 190426.18, osu! overlay plugin started being falsely detected as virus" + nl + nl
+                                        + "If you don't use it it is advised to just remove it from SC plugins folder (search for osuOverlayPlugin.dll and osuOverlay.dll inside SC folder)." + nl + nl
+                                        + "However if you do use it, add these to your antivirus exceptions." + nl + nl + nl
+
+                                        + "osu! overlay will NOT be loaded until you resolve this manually.", "StreamCompanion - WARNING", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
