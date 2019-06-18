@@ -283,6 +283,13 @@ namespace osu_StreamCompanion.Code.Core
                         throw;
                     }
                 }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(
+                        "StreamCompanion could not load any of the plugins because of not enough permissions." + Environment.NewLine + Environment.NewLine
+                            + "Please reinstall StreamCompanion.", "StreamCompanion - ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Program.SafeQuit();
+                }
             }
 
             return plugins;
