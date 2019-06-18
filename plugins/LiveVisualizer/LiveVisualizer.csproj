@@ -78,7 +78,7 @@
       <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="ConfigEntrys.cs" />
-    <Compile Include="Math.cs" />
+    <Compile Include="MathExtensions.cs" />
     <Compile Include="Models\Interfaces\IVisualizerConfiguration.cs" />
     <Compile Include="Models\Interfaces\IVisualizerDisplayData.cs" />
     <Compile Include="Models\Interfaces\IWpfVisualizerData.cs" />
