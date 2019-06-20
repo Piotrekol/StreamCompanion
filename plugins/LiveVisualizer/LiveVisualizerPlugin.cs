@@ -60,7 +60,7 @@ namespace LiveVisualizer
 
             VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
 
-            Task.Run(() => { UpdateLiveTokens(); });
+            Task.Run(async () => { await UpdateLiveTokens(); });
         }
 
         private void VisualizerConfigurationPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -204,10 +204,15 @@ namespace LiveVisualizer
             return null;
         }
 
-        private void UpdateLiveTokens()
+        private async Task UpdateLiveTokens()
         {
             while (true)
             {
+                while (!VisualizerData.Configuration.Enable)
+                {
+                    await Task.Delay(500);
+                }
+                    
                 try
                 {
                     if (Tokens != null)
