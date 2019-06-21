@@ -19,11 +19,11 @@ namespace PpCalculator
 
         
 
-        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IBeatmap beatmap, int countMiss, int? countMeh, int? countGood)
+        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood)
         {
             int countGreat;
 
-            var totalResultCount = beatmap.HitObjects.Count;
+            var totalResultCount = hitObjects.Count;
 
             if (countMeh != null || countGood != null)
             {
