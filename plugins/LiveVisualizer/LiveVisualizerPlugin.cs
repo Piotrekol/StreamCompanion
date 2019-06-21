@@ -137,13 +137,14 @@ namespace LiveVisualizer
 
             //Length refers to beatmap time, not song total time
             var mapLength = workingBeatmap.Length;
+            var strainLength = 5000;
+            var interval = 1500;
+            int time = 0;
 
             if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko))
             {
                 ppCalculator.Mods = mapSearchResult.Mods?.WorkingMods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                var strainLength = 5000;
-                var interval = 1500;
-                int time = 0;
+               
                 while (time + strainLength / 2 < mapLength)
                 {
                     if (token.IsCancellationRequested)
@@ -157,6 +158,14 @@ namespace LiveVisualizer
                         strain = 2000;//lets not freeze everything with aspire/fancy 100* maps
 
                     strains.Add(time, strain);
+                    time += interval;
+                }
+            }
+            else
+            {
+                while (time + strainLength / 2 < mapLength)
+                {
+                    strains.Add(time, 50);
                     time += interval;
                 }
             }
