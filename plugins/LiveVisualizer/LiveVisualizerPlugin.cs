@@ -47,7 +47,7 @@ namespace LiveVisualizer
         }
 
         private string _lastMapLocation = string.Empty;
-
+        private ModsEx _lastMods = null;
 
         public override void Start(ILogger logger)
         {
@@ -122,7 +122,7 @@ namespace LiveVisualizer
             if (VisualizerData == null ||
                 !mapSearchResult.FoundBeatmaps ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
-                mapLocation == _lastMapLocation
+                ( mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods )
             )
                 return;
 
@@ -140,6 +140,7 @@ namespace LiveVisualizer
 
             if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko))
             {
+                ppCalculator.Mods = mapSearchResult.Mods?.WorkingMods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 var strainLength = 5000;
                 var interval = 1500;
                 int time = 0;
@@ -163,6 +164,7 @@ namespace LiveVisualizer
             VisualizerData.Display.DisableChartAnimations = strains.Count >= 400; //10min+ maps
 
             _lastMapLocation = mapLocation;
+            _lastMods = mapSearchResult.Mods;
 
             VisualizerData.Display.TotalTime = mapLength;
 
@@ -212,7 +214,7 @@ namespace LiveVisualizer
                 {
                     await Task.Delay(500);
                 }
-                    
+
                 try
                 {
                     if (Tokens != null)
