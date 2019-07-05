@@ -1,7 +1,6 @@
 using CollectionManager.Annotations;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -46,7 +45,6 @@ namespace StreamCompanionTypes.DataTypes
             }
         }
 
-        private static int counter = 0;
         [JsonProperty(PropertyName = "Pattern")]
         [DisplayName("Pattern")]
         public string Pattern
@@ -69,11 +67,6 @@ namespace StreamCompanionTypes.DataTypes
         private void SetMemoryFormat()
         {
             IsMemoryFormat = MemoryFormatTokens.Select(s => s.ToLower()).Any(_pattern.ToLower().Contains);
-            if (IsMemoryFormat)
-            {
-                counter++;
-                var a = 1;
-            }
         }
 
         [Editable(false)]
