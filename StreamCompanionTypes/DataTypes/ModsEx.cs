@@ -1,8 +1,9 @@
-﻿using CollectionManager.DataTypes;
+﻿using System.Collections.Generic;
+using CollectionManager.DataTypes;
 
 namespace StreamCompanionTypes.DataTypes
 {
-    public class ModsEx
+    public class ModsEx : IEqualityComparer<ModsEx>
     {
         private readonly bool _showShortMod;
 
@@ -41,5 +42,27 @@ namespace StreamCompanionTypes.DataTypes
         /// Mods used for processing (eg. pp calculation)
         /// </summary>
         public string WorkingMods => Mods == Mods.Omod ? "" : _filteredShortMods;
+
+        public bool Equals(ModsEx x, ModsEx y)
+        {
+            if (
+                (x == null && y != null) ||
+                (x != null && y == null)
+            )
+                return false;
+
+            if (x == null && y == null)
+            {
+                return true;
+            }
+
+            return
+                x.Mods == y.Mods && x._showShortMod == y._showShortMod;
+        }
+
+        public int GetHashCode(ModsEx obj)
+        {
+            return base.GetHashCode();
+        }
     }
 }

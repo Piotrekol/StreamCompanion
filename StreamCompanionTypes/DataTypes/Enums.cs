@@ -13,7 +13,6 @@ namespace StreamCompanionTypes.DataTypes
         Editing = 1 << 4,
         ResultsScreen = 1 << 5,
 
-        Listening2 = Listening | ResultsScreen,
         All = Listening | Playing | FalsePlaying | Watching | Editing | ResultsScreen,
     };
 

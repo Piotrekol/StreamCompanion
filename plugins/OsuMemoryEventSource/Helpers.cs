@@ -65,7 +65,7 @@ namespace OsuMemoryEventSource
                     return OsuStatus.Editing;
 
                 case OsuMemoryStatus.ResultsScreen:
-                    return OsuStatus.Listening2;
+                    return OsuStatus.ResultsScreen;
                 case OsuMemoryStatus.MainMenu:
                 case OsuMemoryStatus.SongSelect:
                 case OsuMemoryStatus.SongSelectEdit:

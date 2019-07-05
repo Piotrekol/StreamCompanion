@@ -42,26 +42,21 @@ namespace OsuSongsFolderWatcher
                 dir = Path.Combine(dir, "Songs\\");
             }
 
-            if (dir != "")
+            if (Directory.Exists(dir))
             {
-                if (Directory.Exists(dir))
-                {
-                    _watcher = new FileSystemWatcher(dir, "*.osu");
-                    _watcher.Created += Watcher_FileCreated;
-                    _watcher.IncludeSubdirectories = true;
-                    _watcher.EnableRaisingEvents = true;
-                    _consumerThread = new Thread(ConsumerTask);
-                    _consumerThread.Start();
-                }
-                else
-                {
-                    MessageBox.Show($"Could not find osu! songs directory at \"{dir}\"" + Environment.NewLine +
-                                    "This is most likely caused by moved or incorrectly detected osu! songs directory" + Environment.NewLine +
-                                    "Set osu! path manually in settings for StreamCompanion to be able to provide data for newly loaded songs"
-                        , "StreamCompanion - New songs watcher error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    
-                    _logger.Log($"Could not find osu! songs directory, tried: \"{dir}\" & setting value was: \"{_settings.Get<string>(_names.SongsFolderLocation)}\"", LogLevel.Error);
-                }
+                _watcher = new FileSystemWatcher(dir, "*.osu");
+                _watcher.Created += Watcher_FileCreated;
+                _watcher.IncludeSubdirectories = true;
+                _watcher.EnableRaisingEvents = true;
+                _consumerThread = new Thread(ConsumerTask);
+                _consumerThread.Start();
+            }
+            else
+            {
+                MessageBox.Show($"Could not find osu! songs directory at \"{dir}\"" + Environment.NewLine +
+                                "This is most likely caused by moved or incorrectly detected osu! songs directory" + Environment.NewLine +
+                                "Set osu! path manually in settings for StreamCompanion to be able to provide data for newly loaded songs"
+                    , "StreamCompanion - New songs watcher error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

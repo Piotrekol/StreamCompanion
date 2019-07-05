@@ -68,7 +68,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
                 bool isPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
                 int counter = 0;
-                MapSearchArgs searchArgs;
+                MapSearchArgs memorySearchArgs;
+                MapSearchArgs msnSearchArgs;
                 MapSearchResult searchResult;
                 var memorySearchFailed = false;
                 while (true)
@@ -81,20 +82,21 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     counter++;
                     if (isPoolingEnabled)
                     {
+
                         //Here we prioritize Memory events over MSN/other.
-                        if (TasksMemory.TryPop(out searchArgs))
+                        if (TasksMemory.TryPop(out memorySearchArgs))
                         {
-                            if (searchArgs.MapId == 0 && string.IsNullOrEmpty(searchArgs.MapHash))
+                            if (memorySearchArgs.MapId == 0 && string.IsNullOrEmpty(memorySearchArgs.MapHash))
                             {
                                 memorySearchFailed = true;
                             }
                             else
                             {
-                                searchResult = _mainMapDataGetter.FindMapData(searchArgs);
+                                searchResult = _mainMapDataGetter.FindMapData(memorySearchArgs);
                                 if (searchResult.FoundBeatmaps)
                                 {
                                     memorySearchFailed = false;
-                                    searchResult.EventSource = searchArgs.SourceName;
+                                    searchResult.EventSource = memorySearchArgs.SourceName;
                                     _mainMapDataGetter.ProcessMapResult(searchResult);
                                 }
                                 else
@@ -103,10 +105,16 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         }
                         if (memorySearchFailed)
                         {
-                            if (TasksMsn.TryPop(out searchArgs))
+                            if (TasksMsn.TryPop(out msnSearchArgs))
                             {
-                                searchResult = _mainMapDataGetter.FindMapData(searchArgs);
-                                searchResult.EventSource = searchArgs.SourceName;
+                                var status = memorySearchArgs?.Status ?? OsuStatus.Null;
+
+                                msnSearchArgs.Status = status != OsuStatus.Null 
+                                    ? status 
+                                    : msnSearchArgs.Status;
+
+                                searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
+                                searchResult.EventSource = msnSearchArgs.SourceName;
                                 _mainMapDataGetter.ProcessMapResult(searchResult);
                             }
                         }
@@ -114,10 +122,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     else
                     {
                         //Use MSN/other events only
-                        if (TasksMsn.TryPop(out searchArgs))
+                        if (TasksMsn.TryPop(out msnSearchArgs))
                         {
-                            searchResult = _mainMapDataGetter.FindMapData(searchArgs);
-                            searchResult.EventSource = searchArgs.SourceName;
+                            searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
+                            searchResult.EventSource = msnSearchArgs.SourceName;
                             _mainMapDataGetter.ProcessMapResult(searchResult);
                         }
                     }

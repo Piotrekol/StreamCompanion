@@ -47,7 +47,7 @@ namespace LiveVisualizer
         }
 
         private string _lastMapLocation = string.Empty;
-
+        private ModsEx _lastMods = null;
 
         public override void Start(ILogger logger)
         {
@@ -60,7 +60,7 @@ namespace LiveVisualizer
 
             VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
 
-            Task.Run(() => { UpdateLiveTokens(); });
+            Task.Run(async () => { await UpdateLiveTokens(); });
         }
 
         private void VisualizerConfigurationPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -122,7 +122,7 @@ namespace LiveVisualizer
             if (VisualizerData == null ||
                 !mapSearchResult.FoundBeatmaps ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
-                mapLocation == _lastMapLocation
+                ( mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods )
             )
                 return;
 
@@ -137,12 +137,14 @@ namespace LiveVisualizer
 
             //Length refers to beatmap time, not song total time
             var mapLength = workingBeatmap.Length;
+            var strainLength = 5000;
+            var interval = 1500;
+            int time = 0;
 
             if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko))
             {
-                var strainLength = 5000;
-                var interval = 1500;
-                int time = 0;
+                ppCalculator.Mods = mapSearchResult.Mods?.WorkingMods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+               
                 while (time + strainLength / 2 < mapLength)
                 {
                     if (token.IsCancellationRequested)
@@ -159,10 +161,19 @@ namespace LiveVisualizer
                     time += interval;
                 }
             }
+            else
+            {
+                while (time + strainLength / 2 < mapLength)
+                {
+                    strains.Add(time, 50);
+                    time += interval;
+                }
+            }
 
             VisualizerData.Display.DisableChartAnimations = strains.Count >= 400; //10min+ maps
 
             _lastMapLocation = mapLocation;
+            _lastMods = mapSearchResult.Mods;
 
             VisualizerData.Display.TotalTime = mapLength;
 
@@ -204,10 +215,15 @@ namespace LiveVisualizer
             return null;
         }
 
-        private void UpdateLiveTokens()
+        private async Task UpdateLiveTokens()
         {
             while (true)
             {
+                while (!VisualizerData.Configuration.Enable)
+                {
+                    await Task.Delay(500);
+                }
+
                 try
                 {
                     if (Tokens != null)

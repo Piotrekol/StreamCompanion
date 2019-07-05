@@ -17,9 +17,9 @@ namespace PpCalculator
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>
             hitObjects.OfType<Hit>().Count();
         
-        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IBeatmap beatmap, int countMiss, int? countMeh, int? countGood)
+        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood)
         {
-            var totalResultCount = GetMaxCombo(beatmap);
+            var totalResultCount = GetMaxCombo(hitObjects);
 
             int countGreat;
 

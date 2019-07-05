@@ -110,7 +110,12 @@ namespace PpCalculator
 
             var beatmapMaxCombo = GetMaxCombo(PlayableBeatmap);
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
-            var statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap, Misses, Mehs, Goods);
+            Dictionary<HitResult, int> statistics;
+            if (time.HasValue)
+                statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap.HitObjects.Where(h => h.StartTime < time).ToList(), Misses, Mehs, Goods);
+            else
+                statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap.HitObjects, Misses, Mehs, Goods);
+
             var score = Score;
             var accuracy = GetAccuracy(statistics);
 
@@ -182,7 +187,7 @@ namespace PpCalculator
 
         protected abstract int GetMaxCombo(IReadOnlyList<HitObject> hitObjects);
 
-        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IBeatmap beatmap, int countMiss, int? countMeh, int? countGood);
+        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood);
 
         protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 

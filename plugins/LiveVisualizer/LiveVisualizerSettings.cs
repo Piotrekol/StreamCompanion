@@ -1,4 +1,3 @@
-using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -6,7 +5,6 @@ using System.Diagnostics;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Windows.Forms;
 using DColor = System.Drawing.Color;
 using MColor = System.Windows.Media.Color;
@@ -63,10 +61,10 @@ namespace LiveVisualizer
 
             checkBox_showAxisYSeparator.Checked = _configuration.ShowAxisYSeparator;
 
-            numericUpDown_windowHeight.Value = (decimal)_configuration.WindowHeight;
-            numericUpDown_windowWidth.Value = (decimal)_configuration.WindowWidth;
-            numericUpDown_chartHeight.Value = (decimal)_configuration.ChartHeight;
-            numericUpDown_bottomHeight.Value = decimal.Parse(_configuration.BottomHeight.Replace("*", "").Replace(".",","));
+            numericUpDown_windowHeight.Value = ((decimal)_configuration.WindowHeight).Clamp(numericUpDown_windowHeight.Minimum, numericUpDown_windowHeight.Maximum);
+            numericUpDown_windowWidth.Value = ((decimal)_configuration.WindowWidth).Clamp(numericUpDown_windowWidth.Minimum, numericUpDown_windowWidth.Maximum);
+            numericUpDown_chartHeight.Value = ((decimal)_configuration.ChartHeight).Clamp(numericUpDown_chartHeight.Minimum, numericUpDown_chartHeight.Maximum);
+            numericUpDown_bottomHeight.Value = decimal.Parse(_configuration.BottomHeight.Replace("*", "").Replace(".", ",")).Clamp(numericUpDown_bottomHeight.Minimum, numericUpDown_bottomHeight.Maximum);
 
 
             checkBox_enable.CheckedChanged += CheckBoxEnableOnCheckedChanged;
