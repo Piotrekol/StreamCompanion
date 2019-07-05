@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -65,7 +65,7 @@ namespace WebSocketDataSender
 
             webSocketServer = new WebSocketServer(IPAddress.Loopback);
             webSocketServer.ReuseAddress = true;
-            
+
             webSocketServer.AddWebSocketService("/StreamCompanion/LiveData/Stream", () => new StreamDataProvider(_liveDataContainer));
             webSocketServer.AddWebSocketService("/StreamCompanion/MapData/Stream", () => new StreamDataProvider(_mapDataContainer));
 
@@ -103,13 +103,25 @@ namespace WebSocketDataSender
             public async Task SendLoop()
             {
                 string lastSentData = string.Empty;
+                var counter = 0;
                 while (true)
                 {
                     await Task.Delay(33);
                     if (lastSentData != DataContainer.Data)
                     {
-                        await Send(DataContainer.Data);
                         lastSentData = DataContainer.Data;
+                        await Send(lastSentData);
+                    }
+
+                    //check for connection status every ~50s
+                    if (counter++ == 1500)
+                    {
+                        if (State == WebSocketState.Closed)
+                        {
+                            return;
+                        }
+
+                        counter = 0;
                     }
                 }
             }
