@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace OsuMemoryEventSource
 {
@@ -47,7 +47,15 @@ namespace OsuMemoryEventSource
         public void Set(double value)
         {
             if (double.IsNaN(value))
+            {
                 value = 0;
+            }
+
+            if (double.IsNaN(Current))
+            {
+                Current = 0;
+            }
+
             _currentPosition = 0;
             _orginalValue = Current;
             _finalValue = value;
