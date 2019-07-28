@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!StreamCompanion", "osu!StreamCompanion\osu!StreamCompanion.csproj", "{86251162-A899-4498-BF7F-6F18D6C624EA}"
 EndProject
@@ -64,6 +64,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuMemoryDataProvider", "submodules\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj", "{D117800F-072D-4AE4-9679-3E2A129A1A3C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessMemoryDataFinder", "submodules\ProcessMemoryDataFinder\ProcessMemoryDataFinder\ProcessMemoryDataFinder.csproj", "{9960D641-300A-432C-AA04-C351A99B9ADB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketDataSender", "plugins\WebSocketDataSender\WebSocketDataSender.csproj", "{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -411,6 +413,18 @@ Global
 		{9960D641-300A-432C-AA04-C351A99B9ADB}.Remote debug|Any CPU.Build.0 = Release|Any CPU
 		{9960D641-300A-432C-AA04-C351A99B9ADB}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{9960D641-300A-432C-AA04-C351A99B9ADB}.Remote debug|x86.Build.0 = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Debug|x86.Build.0 = Debug|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Release|x86.ActiveCfg = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Release|x86.Build.0 = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -441,6 +455,7 @@ Global
 		{533AB47A-D1B5-45DB-A37E-F053FA3699C4} = {B0951F6C-E0DC-4242-A32E-0B48711AF12D}
 		{D117800F-072D-4AE4-9679-3E2A129A1A3C} = {B0951F6C-E0DC-4242-A32E-0B48711AF12D}
 		{9960D641-300A-432C-AA04-C351A99B9ADB} = {B0951F6C-E0DC-4242-A32E-0B48711AF12D}
+		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}
