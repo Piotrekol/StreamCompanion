@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\Debug\Plugins\</OutputPath>
+    <OutputPath>bin\Debug_temp\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\Release\Plugins\</OutputPath>
+    <OutputPath>bin\Release_temp\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -63,6 +63,7 @@
     <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
       <Project>{2B90289D-8C11-4D91-8A41-C5C99620E537}</Project>
       <Name>StreamCompanionTypes</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -74,4 +75,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "$(TargetDir)\..\$(ConfigurationName)"
+mkdir "$(TargetDir)\..\$(ConfigurationName)\Dlls"
+
+copy "$(TargetDir)\WebSocketDataSender.dll" "$(TargetDir)\..\$(ConfigurationName)\WebSocketDataSender.dll"
+copy "$(TargetDir)\websocket-sharp.clone.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\websocket-sharp.clone.dll"
+
+mkdir "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls"
+copy "$(TargetDir)\..\$(ConfigurationName)\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\"
+copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
