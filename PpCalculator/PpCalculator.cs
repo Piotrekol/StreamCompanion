@@ -106,15 +106,14 @@ namespace PpCalculator
                 createPerformanceCalculator = true;
             }
 
+            IReadOnlyList<HitObject> hitObjects = time.HasValue
+                ? PlayableBeatmap.HitObjects.Where(h => h.StartTime <= time).ToList()
+                : PlayableBeatmap.HitObjects;
 
+            int beatmapMaxCombo = GetMaxCombo(hitObjects);
 
-            var beatmapMaxCombo = GetMaxCombo(PlayableBeatmap);
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
-            Dictionary<HitResult, int> statistics;
-            if (time.HasValue)
-                statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap.HitObjects.Where(h => h.StartTime < time).ToList(), Misses, Mehs, Goods);
-            else
-                statistics = GenerateHitResults(Accuracy / 100, PlayableBeatmap.HitObjects, Misses, Mehs, Goods);
+            var statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods);
 
             var score = Score;
             var accuracy = GetAccuracy(statistics);
@@ -175,15 +174,17 @@ namespace PpCalculator
                 return -1;
 
             if (fromTime.HasValue)
-                return GetMaxCombo(PlayableBeatmap, fromTime.Value);
+                return GetComboFromTime(PlayableBeatmap, fromTime.Value);
 
             return GetMaxCombo(PlayableBeatmap);
         }
 
         protected int GetMaxCombo(IBeatmap beatmap) => GetMaxCombo(beatmap.HitObjects);
 
-        protected int GetMaxCombo(IBeatmap beatmap, int fromTime) =>
+        protected int GetComboFromTime(IBeatmap beatmap, int fromTime) =>
             GetMaxCombo(beatmap.HitObjects.Where(h => h.StartTime > fromTime).ToList());
+        protected int GetComboToTime(IBeatmap beatmap, int toTime) =>
+            GetMaxCombo(beatmap.HitObjects.Where(h => h.StartTime < toTime).ToList());
 
         protected abstract int GetMaxCombo(IReadOnlyList<HitObject> hitObjects);
 
