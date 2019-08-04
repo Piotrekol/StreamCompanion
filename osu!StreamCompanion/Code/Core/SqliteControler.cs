@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
 using System.Threading;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -12,7 +13,19 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteControler : ISqliteControler
     {
         private readonly SqliteConnector _sqlConnector;
-        private Dictionary<string, int> _md5List;
+        private Dictionary<int, MapIdMd5Pair> _beatmapChecksums;
+
+        private class MapIdMd5Pair
+        {
+            public int MapId { get; }
+            public string Md5 { get; }
+
+            public MapIdMd5Pair(int mapId, string md5)
+            {
+                MapId = mapId;
+                Md5 = md5;
+            }
+        }
         public SqliteControler(SqliteConnector sqLiteConnector)
         {
             _sqlConnector = sqLiteConnector;
@@ -43,20 +56,26 @@ namespace osu_StreamCompanion.Code.Core
         {
             lock (_sqlConnector)
             {
-                string sql = "SELECT Md5, MapId FROM (SELECT Md5, MapId FROM `withID` UNION SELECT Md5, MapId FROM `withoutID`)";
+                string sql = "SELECT Md5, MapId, BeatmapChecksum FROM (SELECT Md5, MapId, BeatmapChecksum FROM `withID` UNION SELECT Md5, MapId, BeatmapChecksum FROM `withoutID`)";
                 var reader = _sqlConnector.Query(sql);
-                _md5List = new Dictionary<string, int>();
+                _beatmapChecksums = new Dictionary<int, MapIdMd5Pair>();
                 while (reader.Read())
                 {
                     var hash = reader.GetString(0);
                     var mapId = reader.GetInt32(1);
-                    if (_md5List.ContainsKey(hash))
+                    var checksum = reader.GetInt32(2);
+                    if (_beatmapChecksums.ContainsKey(checksum))
                     {
-                        //On collision delete both entrys.
-                        _sqlConnector.RemoveBeatmap(hash);
+                        var ex = new AccessViolationException("uh, oh... beatmap checksum collision");
+                        ex.Data.Add("mapId", mapId);
+                        ex.Data.Add("hash", hash);
+                        throw ex;
+                        //_beatmapChecksums.Remove(checksum);
                     }
                     else
-                        _md5List.Add(hash, mapId);
+                    {
+                        _beatmapChecksums.Add(checksum, new MapIdMd5Pair(mapId, hash));
+                    }
                 }
                 reader.Dispose();
                 _sqlConnector.StartMassStoring();
@@ -84,14 +103,17 @@ namespace osu_StreamCompanion.Code.Core
             {
                 if (_sqlConnector.MassInsertIsActive)
                 {
-                    var hash = beatmap.Md5;
-                    if (_md5List.ContainsKey(hash))
+                    var hashcode = beatmap.GetHashCode();
+                    if (_beatmapChecksums.ContainsKey(hashcode))
                     {
-                        if (_md5List[hash] == beatmap.MapId)
-                            return; //no need to save same data.
-                        else
-                        {//We need to first remove old entry
-                            _sqlConnector.RemoveBeatmap(beatmap.Md5);
+                        return;
+                    }
+                    else
+                    {
+                        var existingEntry = _beatmapChecksums.FirstOrDefault(x => x.Value.Md5 == beatmap.Md5);
+                        if (!existingEntry.Equals(default(KeyValuePair<int, MapIdMd5Pair>)))
+                        {
+                            _beatmapChecksums.Remove(existingEntry.Key);
                         }
                     }
                 }
@@ -111,7 +133,6 @@ namespace osu_StreamCompanion.Code.Core
                 _sqlConnector.StoreTempBeatmap(beatmap);
             }
         }
-
 
         /// <summary>
         /// 
