@@ -16,9 +16,11 @@ namespace LiveVisualizer
         private CancellationToken _token = CancellationToken.None;
         protected ISettingsHandler Settings;
         protected IWpfVisualizerData VisualizerData;
+        private bool _disposed = false;
 
         public virtual void Dispose()
         {
+            _disposed = true;
             _cts?.Dispose();
             _liveVisualizerSettings?.Dispose();
         }
@@ -32,7 +34,8 @@ namespace LiveVisualizer
                 await Task.Run(() => ProcessNewMap(mapSearchResult, _token), _token);
             }
             catch (TaskCanceledException)
-            { }
+            {
+            }
         }
 
         public abstract List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
@@ -76,6 +79,11 @@ namespace LiveVisualizer
 
         private void CancelNewMapProcessing()
         {
+            if (_disposed)
+            {
+                return;
+            }
+
             _cts.Cancel();
             _cts.Dispose();
             _cts = new CancellationTokenSource();
