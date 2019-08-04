@@ -291,7 +291,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@Circles", DbType.Int32).Value = beatmap.Circles;
             _insertSql.Parameters.Add("@Sliders", DbType.Int32).Value = beatmap.Sliders;
             _insertSql.Parameters.Add("@Spinners", DbType.Int32).Value = beatmap.Spinners;
-            _insertSql.Parameters.Add("@EditDate", DbType.DateTime).Value = beatmap.EditDate ?? DateTime.Now;
+            _insertSql.Parameters.Add("@EditDate", DbType.DateTime).Value = beatmap.EditDate ?? DateTime.MinValue;
             _insertSql.Parameters.Add("@ApproachRate", DbType.Double).Value = beatmap.ApproachRate;
             _insertSql.Parameters.Add("@CircleSize", DbType.Double).Value = beatmap.CircleSize;
             _insertSql.Parameters.Add("@HpDrainRate", DbType.Double).Value = beatmap.HpDrainRate;
@@ -320,7 +320,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@DisableSb", DbType.Boolean).Value = beatmap.DisableSb;
             _insertSql.Parameters.Add("@BgDim", DbType.Int16).Value = beatmap.BgDim;
             _insertSql.Parameters.Add("@Somestuff", DbType.Int16).Value = beatmap.Somestuff;
-            _insertSql.Parameters.Add("@VideoDir", DbType.String).Value = beatmap.VideoDir ?? " ";
+            _insertSql.Parameters.Add("@VideoDir", DbType.String).Value = beatmap.VideoDir ?? string.Empty;
             _insertSql.Parameters.Add("@StarsOsu", DbType.Binary).Value = beatmap.SerializeStars();
             _insertSql.Parameters.Add("@BeatmapChecksum", DbType.Int32).Value = beatmap.GetHashCode();
         }
