@@ -107,27 +107,19 @@ namespace OsuMemoryEventSource
         }
 
         private readonly object _lockingObject = new object();
-        private bool _isScanning = false;
-        private bool _memoryReached = false;
-        private int lastFoundId = -1;
-        private string lastMapString = "----";
         public void GotMemory(int mapId, OsuStatus status, string mapString)
         {
             if (!this.IsHandleCreated) return;
             lock (_lockingObject)
             {
-                lastFoundId = mapId;
-                lastMapString = mapString;
                 if (CurrentMap.BelongsToSet(mapId) && status == OsuStatus.Playing)
                 {
-                    _memoryReached = true;
 
                     this.BeginInvoke((MethodInvoker)delegate
                    {
                        SetCalibrationText("Searching. It can take up to 20 seconds.");
                        this.button_Next.Enabled = false;
                    });
-                    _isScanning = true;
                     var everythingIsOk = Helpers.ExecWithTimeout(token =>
                     {
                         Thread.Sleep(2000);
@@ -143,7 +135,6 @@ namespace OsuMemoryEventSource
 
                     _settings.Add(_names.EnableMemoryScanner.Name, everythingIsOk);
                     _settings.Add(_names.EnableMemoryPooling.Name, everythingIsOk);
-                    _isScanning = false;
 
                     this.BeginInvoke((MethodInvoker)delegate
                    {

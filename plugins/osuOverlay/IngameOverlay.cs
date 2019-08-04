@@ -75,7 +75,7 @@ namespace osuOverlay
                     Thread.Sleep(2000);
                 }
             }
-            catch (ThreadAbortException ex)
+            catch (ThreadAbortException)
             {
             }
         }

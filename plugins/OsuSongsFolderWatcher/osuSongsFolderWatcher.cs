@@ -86,7 +86,7 @@ namespace OsuSongsFolderWatcher
                     Thread.Sleep(5);
                 }
             }
-            catch (ThreadAbortException ex)
+            catch (ThreadAbortException)
             {
                 return;
             }

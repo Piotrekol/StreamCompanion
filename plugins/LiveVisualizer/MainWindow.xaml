@@ -79,7 +79,7 @@
             </Grid.RowDefinitions>
 
             <Viewbox Grid.Row="0" MaxHeight="{Binding Configuration.TitleContainerHeight}">
-                <TextBlock Name="Title"
+                <TextBlock Name="BeatmapTitle"
                            Text="{Binding Display.Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                            Margin="10 0 10 0" FontFamily="{Binding Configuration.Font}" Padding="0 0 0 0">
                     <TextBlock.Foreground>

@@ -38,7 +38,6 @@ namespace OsuMemoryEventSource
         protected static readonly object _lockingObject = new object();
         AutoResetEvent timerDisposed = new AutoResetEvent(false);
         private long _shouldTimerRun = 1;
-        private long _timerIsRunning = 0;
         private Timer _timer;
         private int _poolingMsDelay = 33;
 

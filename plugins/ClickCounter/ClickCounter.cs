@@ -288,7 +288,7 @@ namespace ClickCounter
             _saver = saver;
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             UnHookAll();
             SaveKeysToSettings();
