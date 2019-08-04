@@ -245,6 +245,22 @@ namespace osu_StreamCompanion.Code.Core
             sql = string.Format("DELETE FROM withoutID WHERE Md5 = '{0}'", hash);
             NonQuery(sql);
         }
+
+        public void RemoveBeatmaps(IList<string> hashes)
+        {
+            var strHashes = new StringBuilder();
+            foreach (var hash in hashes)
+            {
+                strHashes.AppendFormat("'{0}',", hash);
+            }
+
+            var sql = string.Format("DELETE FROM withID WHERE Md5 IN ({0})", strHashes.ToString().TrimEnd(new[] { ',' }));
+            NonQuery(sql);
+
+            sql = string.Format("DELETE FROM withoutID WHERE Md5 IN ({0})", strHashes.ToString().TrimEnd(new[] { ',' }));
+            NonQuery(sql);
+
+        }
         public void StoreBeatmap(Beatmap beatmap)
         {
             string sql;

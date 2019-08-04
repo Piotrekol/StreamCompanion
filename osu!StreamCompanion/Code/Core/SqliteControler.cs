@@ -19,7 +19,7 @@ namespace osu_StreamCompanion.Code.Core
         {
             public int MapId { get; }
             public string Md5 { get; }
-
+            public bool Found { get; set; }
             public MapIdMd5Pair(int mapId, string md5)
             {
                 MapId = mapId;
@@ -49,6 +49,7 @@ namespace osu_StreamCompanion.Code.Core
         {
             return _sqlConnector.Query(query);
         }
+
         /// <summary>
         /// Used for inserting beatmaps/invoking a large number of (no result)queries at once instead of one-by-one with is way slower.
         /// </summary>
@@ -97,6 +98,7 @@ namespace osu_StreamCompanion.Code.Core
                 _sqlConnector.StartMassStoring();
             }
         }
+
         /// <summary>
         /// Used for commiting Queued queries in MassStoring
         /// </summary>
@@ -104,9 +106,16 @@ namespace osu_StreamCompanion.Code.Core
         {
             lock (_sqlConnector)
             {
+                var deletedBeatmaps = _beatmapChecksums.Where(x => !x.Value.Found).ToList();
+                if (deletedBeatmaps.Any())
+                {
+                    _sqlConnector.RemoveBeatmaps(deletedBeatmaps.Select(x => x.Value.Md5).ToList());
+                }
+
                 _sqlConnector.EndMassStoring();
             }
         }
+
         /// <summary>
         /// Used for inserting beatmap data to SQL table.
         /// When adding large amount of beatmaps it is advised to use MassStoring to speed up adding.
@@ -122,6 +131,7 @@ namespace osu_StreamCompanion.Code.Core
                     var hashcode = beatmap.GetHashCode();
                     if (_beatmapChecksums.ContainsKey(hashcode))
                     {
+                        _beatmapChecksums[hashcode].Found = true;
                         return;
                     }
                     else
@@ -135,8 +145,8 @@ namespace osu_StreamCompanion.Code.Core
                 }
                 _sqlConnector.StoreBeatmap(beatmap);
             }
-
         }
+
         /// <summary>
         /// Used for inserting temporary beatmap data to sql table.
         /// Data stored this way won't be preserved on the following application runs
