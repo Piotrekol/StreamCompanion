@@ -64,18 +64,18 @@ namespace MSNEventSource
             }
             if (isFalsePlay)
             {
-                _logger.Log(">ignoring second MSN string...", LogLevel.Advanced);
+                _logger?.Log(">ignoring second MSN string...", LogLevel.Advanced);
             }
             else
             {
                 _lastMsnString = osuStatus["raw"];
-                _logger.Log("", LogLevel.Advanced);
+                _logger?.Log("", LogLevel.Advanced);
                 string result = ">Got ";
                 foreach (var v in osuStatus)
                 {
                     if (v.Key != "raw") result = result + $"{v.Key}: \"{v.Value}\" ";
                 }
-                _logger.Log(result, LogLevel.Basic);
+                _logger?.Log(result, LogLevel.Basic);
 
                 var searchArgs = new MapSearchArgs("Msn")
                 {
