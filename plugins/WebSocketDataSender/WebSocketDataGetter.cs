@@ -55,7 +55,7 @@ namespace WebSocketDataSender
         }
 
         private WebSocketServer webSocketServer;
-        public async void Start(ILogger logger)
+        public void Start(ILogger logger)
         {
             Started = true;
             if (!_settings.Get<bool>(Enabled))

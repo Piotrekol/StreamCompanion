@@ -16,7 +16,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly MainMapDataGetter _mainMapDataGetter;
         private readonly List<IOsuEventSource> _osuEventSources;
         private ISettingsHandler _settings;
-        private string _lastMsnString = "";
         private Thread ConsumerThread;
         private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
         private ConcurrentStack<MapSearchArgs> TasksMemory = new ConcurrentStack<MapSearchArgs>();
@@ -132,9 +131,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     Thread.Sleep(5);
                 }
             }
-            catch (ThreadAbortException ex)
+            catch (ThreadAbortException)
             {
-                //Console.WriteLine("Consumer thread aborted");
             }
             finally
             {

@@ -18,7 +18,7 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v190425.19";
+        public static string ScVersion ="v190804.14";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 
@@ -32,7 +32,9 @@ namespace osu_StreamCompanion
             string mutexId = string.Format("Global\\{{{0}}}", appGuid);
 
             if (AllowMultiInstance)
+#pragma warning disable 162
                 Run();
+#pragma warning restore 162
             else
                 using (var mutex = new Mutex(false, mutexId))
                 {
@@ -127,6 +129,7 @@ namespace osu_StreamCompanion
 #if DEBUG
                 throw (Exception)e.ExceptionObject;
 #endif
+#pragma warning disable 162
                 Exception ex = null;
                 try
                 {
@@ -136,6 +139,7 @@ namespace osu_StreamCompanion
                 {
                 }
                 HandleException(ex);
+#pragma warning restore 162
             }
         }
         

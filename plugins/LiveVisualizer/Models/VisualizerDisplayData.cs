@@ -5,7 +5,9 @@ namespace LiveVisualizer
 {
     public class VisualizerDisplayData : IVisualizerDisplayData
     {
+#pragma warning disable 0067
         public event PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore 0067
         public ChartValues<double> Strains { get; set; }
 
         public string Title { get; set; }

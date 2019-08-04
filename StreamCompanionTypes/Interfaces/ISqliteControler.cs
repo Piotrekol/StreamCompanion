@@ -23,12 +23,12 @@ namespace StreamCompanionTypes.Interfaces
         /// <summary>
         /// Used for inserting beatmaps/invoking a large number of (no result)queries at once instead of one-by-one with is way slower.
         /// </summary>
-        void StartMassStoring();
+        new void StartMassStoring();
 
         /// <summary>
         /// Used for commiting Queued queries in MassStoring
         /// </summary>
-        void EndMassStoring();
+        new void EndMassStoring();
 
         /// <summary>
         /// Used for inserting beatmap data to SQL table.
@@ -36,7 +36,7 @@ namespace StreamCompanionTypes.Interfaces
         /// When MassStoring is active, only new maps are queried to Sqlite 
         /// </summary>
         /// <param name="beatmap">Beatmap to insert</param>
-        void StoreBeatmap(Beatmap beatmap);
+        new void StoreBeatmap(Beatmap beatmap);
 
         /// <summary>
         /// Used for inserting temporary beatmap data to sql table.
@@ -68,9 +68,9 @@ namespace StreamCompanionTypes.Interfaces
         /// <returns>Beatmap object with filled or not map data</returns>
         Beatmap GetBeatmap(string artist, string title, string diff, string raw);
 
-        void Dispose();
-        void StoreBeatmap(CollectionManager.DataTypes.Beatmap beatmap);
-        CollectionManager.DataTypes.Beatmap GetByHash(string hash);
-        CollectionManager.DataTypes.Beatmap GetByMapId(int mapId);
+        new void Dispose();
+        new void StoreBeatmap(CollectionManager.DataTypes.Beatmap beatmap);
+        new CollectionManager.DataTypes.Beatmap GetByHash(string hash);
+        new CollectionManager.DataTypes.Beatmap GetByMapId(int mapId);
     }
 }

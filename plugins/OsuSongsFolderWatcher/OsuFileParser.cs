@@ -211,7 +211,7 @@ namespace OsuSongsFolderWatcher
                 {
                     filename = filename.Remove(idx + 1);
                 }
-                catch (ArgumentOutOfRangeException e)
+                catch (ArgumentOutOfRangeException)
                 {
                     //TODO: create unit test for this function to figure out why does this still break from time to time
                 }
@@ -250,7 +250,7 @@ namespace OsuSongsFolderWatcher
                     }
                     tryCount = 5;
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     if (tryCount < 2)
                         Thread.Sleep(1000);
@@ -326,7 +326,7 @@ namespace OsuSongsFolderWatcher
                     sectionStarts.Add(LastSectionPostion);
                 } while (LastSectionPostion != -1);
             }
-            catch (IndexOutOfRangeException e)
+            catch (IndexOutOfRangeException)
             {
                 Console.WriteLine("There was a problem with processing new beatmap. | {0}", string.Join("+", lines.ToArray()));
             }

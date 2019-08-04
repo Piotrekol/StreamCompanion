@@ -20,11 +20,7 @@ namespace OsuMemoryEventSource
         private string _currentMods;
         private string _currentOsuFileLocation = null;
 
-
         private PpCalculator.PpCalculator _ppCalculator = null;
-
-        private double _accIfRestFced = double.NaN;
-
 
         public void SetCurrentMap(Beatmap beatmap, string mods, string osuFileLocation, PlayMode playMode)
         {
@@ -64,7 +60,6 @@ namespace OsuMemoryEventSource
                     _ppCalculator.Mehs = 0;
                     _ppCalculator.Combo = null;
                     _ppCalculator.PercentCombo = 100;
-                    _accIfRestFced = 100;
                     return _ppCalculator.Calculate(); //fc pp
                 }
 

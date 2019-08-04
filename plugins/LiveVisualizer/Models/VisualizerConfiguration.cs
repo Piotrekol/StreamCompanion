@@ -6,7 +6,10 @@ namespace LiveVisualizer
 {
     public class VisualizerConfiguration : IVisualizerConfiguration
     {
+#pragma warning disable 0067
         public event PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore 0067
+
         public double FontsizeTitle { get; set; } = 15;
         public double FontsizeArtist { get; set; } = 15;
         public Color ChartColor { get; set; } = Color.FromArgb(102, 255, 178, 227);
