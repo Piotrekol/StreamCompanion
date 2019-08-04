@@ -37,7 +37,7 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.Circles = (short)reader.GetInt32(i); i++;
             beatmap.Sliders = (short)reader.GetInt32(i); i++;
             beatmap.Spinners = (short)reader.GetInt32(i); i++;
-            beatmap.EditDate = reader.GetDateTime(i); i++;
+            beatmap.EditDate = reader.GetDateTime(i).ToUniversalTime(); i++;
             beatmap.ApproachRate = (float)reader.GetDouble(i); i++;
             beatmap.CircleSize = (float)reader.GetDouble(i); i++;
             beatmap.HpDrainRate = (float)reader.GetDouble(i); i++;
@@ -60,10 +60,10 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.AudioOffset = (short)reader.GetInt32(i); i++;
             beatmap.LetterBox = reader.GetString(i); i++;
             beatmap.Played = reader.GetBoolean(i); i++;
-            beatmap.LastPlayed = reader.GetDateTime(i); i++;
+            beatmap.LastPlayed = reader.GetDateTime(i).ToUniversalTime(); i++;
             beatmap.IsOsz2 = reader.GetBoolean(i); i++;
             beatmap.Dir = reader.GetString(i); i++;
-            beatmap.LastSync = reader.GetDateTime(i); i++;
+            beatmap.LastSync = reader.GetDateTime(i).ToUniversalTime(); i++;
             beatmap.DisableHitsounds = reader.GetBoolean(i); i++;
             beatmap.DisableSkin = reader.GetBoolean(i); i++;
             beatmap.DisableSb = reader.GetBoolean(i); i++;
