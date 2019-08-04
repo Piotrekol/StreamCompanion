@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using CollectionManager.DataTypes;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
@@ -69,7 +71,6 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.DisableSb = reader.GetBoolean(i); i++;
             beatmap.BgDim = reader.GetInt16(i); i++;
             beatmap.Somestuff = reader.GetInt16(i); i++;
-            beatmap.VideoDir = reader.GetString(i); i++;
             beatmap.DeSerializeStars((byte[])reader.GetValue(i));
         }
 
@@ -89,12 +90,12 @@ namespace osu_StreamCompanion.Code.Helpers
         {
             using (MemoryStream mStream = new MemoryStream())
             {
-                mStream.WriteAll(bm.ModPpStars.Count);
+                mStream.WriteAll(bm.ModPpStars.Count());
                 foreach (var stars in bm.ModPpStars)
                 {
                     var vals = bm.ModPpStars[stars.Key];
                     mStream.WriteAll((byte)stars.Key);
-                    mStream.WriteAll(vals.Count);
+                    mStream.WriteAll(vals.Count());
 
                     foreach (var val in vals)
                     {
@@ -117,7 +118,7 @@ namespace osu_StreamCompanion.Code.Helpers
                 {
                     var key = (PlayMode)_binaryReader.ReadInt32();
                     if (!bm.ModPpStars.ContainsKey(key))
-                        bm.ModPpStars.Add(key, new Dictionary<int, double>());
+                        bm.ModPpStars.Add(key, new StarRating());
                     var dict = bm.ModPpStars[key];
                     var starsCount = _binaryReader.ReadInt32();
                     for (int j = 0; j < starsCount; j++)
