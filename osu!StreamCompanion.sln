@@ -59,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Osu", "su
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveVisualizer", "plugins\LiveVisualizer\LiveVisualizer.csproj", "{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionManagerDll", "submodules\CollectionManager\CollectionManagerDll\CollectionManagerDll.csproj", "{533AB47A-D1B5-45DB-A37E-F053FA3699C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollectionManagerDll", "submodules\CollectionManager\CollectionManagerDll\CollectionManagerDll.csproj", "{533AB47A-D1B5-45DB-A37E-F053FA3699C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuMemoryDataProvider", "submodules\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj", "{D117800F-072D-4AE4-9679-3E2A129A1A3C}"
 EndProject
@@ -385,10 +385,10 @@ Global
 		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Release|x86.ActiveCfg = Release|Any CPU
 		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Release|x86.Build.0 = Release|Any CPU
-		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|Any CPU.ActiveCfg = Remote Debug|Any CPU
-		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|Any CPU.Build.0 = Remote Debug|Any CPU
-		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|x86.ActiveCfg = Remote Debug|Any CPU
-		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|x86.Build.0 = Remote Debug|Any CPU
+		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{533AB47A-D1B5-45DB-A37E-F053FA3699C4}.Remote debug|x86.Build.0 = Release|Any CPU
 		{D117800F-072D-4AE4-9679-3E2A129A1A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D117800F-072D-4AE4-9679-3E2A129A1A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D117800F-072D-4AE4-9679-3E2A129A1A3C}.Debug|x86.ActiveCfg = Debug|Any CPU
