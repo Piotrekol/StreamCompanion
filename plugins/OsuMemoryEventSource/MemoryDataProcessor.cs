@@ -69,15 +69,19 @@ namespace OsuMemoryEventSource
             {
                 while (true)
                 {
-                    if (_tokenTick == null)
+                    if (_tokenTick == null || _tokenCallbackTick == null)
                         return;
 
-                    _tokenTick.WaitOne();
+                    if (_tokenTick.WaitOne(1))
+                    {
+                        _tokenCallbackTick.Reset();
+                        PrepareLiveTokens();
+                        SendData();
 
-                    PrepareLiveTokens();
-                    SendData();
+                        _tokenTick.Reset();
+                    }
 
-                    _tokenTick.Reset();
+                    _tokenCallbackTick.Set();
                 }
             }
             catch (ThreadAbortException)
@@ -147,17 +151,17 @@ namespace OsuMemoryEventSource
         private bool _clearedLiveTokens = false;
         private IOsuMemoryReader _reader;
         private AutoResetEvent _tokenTick = new AutoResetEvent(false);
+        private AutoResetEvent _tokenCallbackTick = new AutoResetEvent(true);
         public void Tick(OsuStatus status, IOsuMemoryReader reader)
         {
             lock (_lockingObject)
             {
+                _tokenCallbackTick.WaitOne();
                 if (!ReferenceEquals(_reader, reader))
                     _reader = reader;
 
-                _rawData.PlayTime = reader.ReadPlayTime();
-                PrepareTimeToken();
                 liveTokens["status"].Value = _lastStatus;
-                
+
                 if (status != OsuStatus.Playing)
                 {
                     if (_clearLiveTokensAfterResultScreenExit && !_clearedLiveTokens && (status & OsuStatus.ResultsScreen) == 0)
@@ -168,7 +172,8 @@ namespace OsuMemoryEventSource
                         _clearedLiveTokens = true;
                     }
 
-
+                    _rawData.PlayTime = reader.ReadPlayTime();
+                    PrepareTimeToken();
                     return;
                 }
 
@@ -182,6 +187,9 @@ namespace OsuMemoryEventSource
 
 
                 reader.GetPlayData(_rawData.Play);
+
+                _rawData.PlayTime = reader.ReadPlayTime();
+                PrepareTimeToken();
 
                 _tokenTick?.Set();
             }
@@ -309,7 +317,6 @@ namespace OsuMemoryEventSource
 
             liveTokens["CurrentMaxCombo"].Value = _rawData.Play.MaxCombo;
             liveTokens["PlayerHp"].Value = _rawData.Play.Hp;
-
 
             InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Set(_rawData.PPIfBeatmapWouldEndNow());
             InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);

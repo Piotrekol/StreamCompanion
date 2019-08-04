@@ -106,26 +106,30 @@ namespace OsuMemoryEventSource
                     _ppCalculator.Combo = Play.MaxCombo;
                     _ppCalculator.Score = Play.Score;
                     var pp = _ppCalculator.Calculate(PlayTime, attribs);
-
-                    switch (_currentBeatmap.PlayMode)
+                    if (!double.IsInfinity(pp))
                     {
-                        case PlayMode.Taiko:
-                        case PlayMode.OsuMania:
-                            StrainPPIfBeatmapWouldEndNow = attribs["Strain"];
-                            AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
-                            AimPPIfBeatmapWouldEndNow = double.NaN;
-                            SpeedPPIfBeatmapWouldEndNow = double.NaN;
-                            break;
-                        default:
-                            AimPPIfBeatmapWouldEndNow = attribs["Aim"];
-                            SpeedPPIfBeatmapWouldEndNow = attribs["Speed"];
-                            AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
-                            break;
+                        switch (_currentBeatmap.PlayMode)
+                        {
+                            case PlayMode.Taiko:
+                            case PlayMode.OsuMania:
+                                StrainPPIfBeatmapWouldEndNow = attribs["Strain"];
+                                AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
+                                AimPPIfBeatmapWouldEndNow = double.NaN;
+                                SpeedPPIfBeatmapWouldEndNow = double.NaN;
+                                break;
+                            default:
+                                AimPPIfBeatmapWouldEndNow = attribs["Aim"];
+                                SpeedPPIfBeatmapWouldEndNow = attribs["Speed"];
+                                AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
+                                break;
+                        }
+
+                        attribs.Clear();
+
+                        return pp;
                     }
 
                     attribs.Clear();
-
-                    return pp;
                 }
                 catch { }
             AimPPIfBeatmapWouldEndNow = double.NaN;
@@ -152,7 +156,10 @@ namespace OsuMemoryEventSource
                 _ppCalculator.Score = Play.Score;
                 pp = _ppCalculator.Calculate(PlayTime, null);
 
-
+                if (double.IsInfinity(pp))
+                {
+                    pp = Double.NaN;
+                }
             }
             catch { }
 
