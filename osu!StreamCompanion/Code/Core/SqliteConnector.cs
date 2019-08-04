@@ -75,6 +75,11 @@ namespace osu_StreamCompanion.Code.Core
             }
         }
 
+        public void ResetDatabase()
+        {
+            CloseConnection();
+            Init(true);
+        }
         private void Init(bool reset = false)
         {
             CreateFile(DbFilename, reset);
@@ -210,6 +215,10 @@ namespace osu_StreamCompanion.Code.Core
         private void CloseConnection()
         {
             _mDbConnection.Close();
+            _mDbConnection.Dispose();
+            //SQLiteConnection depends on GC for closing db file handles...
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
         public void Dispose()
         {
@@ -312,8 +321,8 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@BgDim", DbType.Int16).Value = beatmap.BgDim;
             _insertSql.Parameters.Add("@Somestuff", DbType.Int16).Value = beatmap.Somestuff;
             _insertSql.Parameters.Add("@VideoDir", DbType.String).Value = beatmap.VideoDir ?? " ";
-            _insertSql.Parameters.Add("@StarsOsu", DbType.Binary).Value = beatmap.SerializeStars(); 
-            _insertSql.Parameters.Add("@BeatmapChecksum", DbType.Int32).Value = beatmap.GetHashCode(); 
+            _insertSql.Parameters.Add("@StarsOsu", DbType.Binary).Value = beatmap.SerializeStars();
+            _insertSql.Parameters.Add("@BeatmapChecksum", DbType.Int32).Value = beatmap.GetHashCode();
         }
         public Beatmap GetBeatmap(int mapId)
         {

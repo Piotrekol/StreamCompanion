@@ -57,7 +57,23 @@ namespace osu_StreamCompanion.Code.Core
             lock (_sqlConnector)
             {
                 string sql = "SELECT Md5, MapId, BeatmapChecksum FROM (SELECT Md5, MapId, BeatmapChecksum FROM `withID` UNION SELECT Md5, MapId, BeatmapChecksum FROM `withoutID`)";
-                var reader = _sqlConnector.Query(sql);
+                SQLiteDataReader reader;
+                try
+                {
+                    reader = _sqlConnector.Query(sql);
+                }
+                catch (SQLiteException e)
+                {
+                    if (e.ResultCode == SQLiteErrorCode.Corrupt)
+                    {
+                        _sqlConnector.ResetDatabase();
+                        StartMassStoring();
+                        return;
+                    }
+
+                    throw;
+                }
+
                 _beatmapChecksums = new Dictionary<int, MapIdMd5Pair>();
                 while (reader.Read())
                 {
