@@ -40,12 +40,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         {
             var result = new MapSearchResult(searchArgs);
             Beatmap beatmap = null;
-            if (searchArgs.MapId > 0)
-                beatmap = _sqliteControler.GetBeatmap(searchArgs.MapId);
 
-            if(!IsValidBeatmap(beatmap) && !string.IsNullOrEmpty(searchArgs.MapHash))
+            if (!string.IsNullOrEmpty(searchArgs.MapHash))
                 beatmap = _sqliteControler.GetBeatmap(searchArgs.MapHash);
 
+            if (!IsValidBeatmap(beatmap) && searchArgs.MapId > 0)
+                beatmap = _sqliteControler.GetBeatmap(searchArgs.MapId);
 
             if (!IsValidBeatmap(beatmap))
             {
