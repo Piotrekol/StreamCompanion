@@ -83,11 +83,28 @@ namespace osu_StreamCompanion.Code.Core
                     var checksum = reader.GetInt32(2);
                     if (_beatmapChecksums.ContainsKey(checksum))
                     {
-                        var ex = new AccessViolationException("uh, oh... beatmap checksum collision");
-                        ex.Data.Add("mapId", mapId);
-                        ex.Data.Add("hash", hash);
-                        throw ex;
-                        //_beatmapChecksums.Remove(checksum);
+                        //REALLY..? I don't think so.
+                        var map1 = _sqlConnector.GetBeatmap(hash);
+                        var map2 = _sqlConnector.GetBeatmap(_beatmapChecksums[checksum].Md5);
+                        var map1Checksum = map1.GetHashCode();
+                        var map2Checksum = map2.GetHashCode();
+                        if (map1Checksum == map2Checksum)
+                        {
+                            //:( fair enough
+                            var ex = new SQLiteException(SQLiteErrorCode.Constraint, "uh, oh... beatmap checksum collision");
+                            ex.Data.Add("mapId1", map1.MapId);
+                            ex.Data.Add("hash1", map1.Md5);
+                            ex.Data.Add("mapId2", map2.MapId);
+                            ex.Data.Add("hash2", map2.Md5);
+                            throw ex;
+                        }
+
+                        _beatmapChecksums.Remove(map1Checksum);
+                        _beatmapChecksums.Remove(map2Checksum);
+
+                        _beatmapChecksums.Add(map1Checksum, new MapIdMd5Pair(map1.MapId, map1.Md5));
+                        _beatmapChecksums.Add(map2Checksum, new MapIdMd5Pair(map2.MapId, map2.Md5));
+
                     }
                     else
                     {
