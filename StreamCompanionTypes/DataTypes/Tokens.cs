@@ -39,7 +39,7 @@ namespace StreamCompanionTypes.DataTypes
                 token.PluginName = pluginName;
                 AllTokens[tokenName] = token;
 
-                if(type == TokenType.Live)
+                if ((type & TokenType.Live) != 0)
                     OutputPattern.AddLiveToken(tokenName);
 
                 AllTokensChanged?.Invoke(null, EventArgs.Empty);
