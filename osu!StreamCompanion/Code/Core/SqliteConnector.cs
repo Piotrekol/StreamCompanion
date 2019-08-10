@@ -16,13 +16,14 @@ namespace osu_StreamCompanion.Code.Core
         private readonly ILogger _logger;
         private SQLiteConnection _mDbConnection;
         private string DbFilename = "StreamCompanionCacheV2.db";
-        private int _schemaVersion = 5;
+        private int _schemaVersion = 6;
         /*
          * v1 - caching improvments, cfg table struct change
          * v2 - forcing db reload due to possibility of malformed data saved from v1(duplicated maps across tables)
          * v3 - StackLeniency beatmap field is now nullable because of 2018 aspire maps entries.
          * v4 - Added beatmapChecksum column
          * v5 - removed Md5 Unique constrain, Added (Dir,osuFileName) unique index, removed VideoDir column
+         * v6 - checksum is now a string due to massive problems with GetHashCode collisions with huge amounts of beatmaps
              */
         private SQLiteCommand _insertSql;
         private SQLiteTransaction _transation;
@@ -64,7 +65,7 @@ namespace osu_StreamCompanion.Code.Core
             _logger = logger;
 
             _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "StarsOsu", "BeatmapChecksum" });
-            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "BLOB", "INTEGER" });
+            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "BLOB", "VARCHAR" });
             _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL" });
             try
             {
@@ -128,17 +129,11 @@ namespace osu_StreamCompanion.Code.Core
             if (recteate)
             {
                 NonQuery("DROP TABLE IF EXISTS `cfg`;");
-                NonQuery("DROP TABLE IF EXISTS `Temp`;");
                 NonQuery("DROP TABLE IF EXISTS `withoutID`;");
                 NonQuery("DROP TABLE IF EXISTS `withID`;");
 
 
                 string sql = "CREATE  TABLE IF NOT EXISTS withoutID " + _tableStruct.GetTableDef();
-                NonQuery(sql);
-
-                sql = "DROP TABLE IF EXISTS Temp";
-                NonQuery(sql);
-                sql = "CREATE TABLE IF NOT EXISTS Temp " + _tableStruct.GetTableDef();
                 NonQuery(sql);
 
                 sql = "CREATE  TABLE IF NOT EXISTS withID " + _tableStruct.GetTableDef();
@@ -150,9 +145,15 @@ namespace osu_StreamCompanion.Code.Core
 
                 NonQuery("CREATE UNIQUE INDEX \"MapLocationIndex1\" ON \"withID\" (\r\n\t\"Dir\",\r\n\t\"OsuFileName\"\r\n)");
                 NonQuery("CREATE UNIQUE INDEX \"MapLocationIndex2\" ON \"withoutID\" (\r\n\t\"Dir\",\r\n\t\"OsuFileName\"\r\n)");
-                NonQuery("CREATE UNIQUE INDEX \"MapLocationIndex3\" ON \"Temp\" (\r\n\t\"Dir\",\r\n\t\"OsuFileName\"\r\n)");
+                NonQuery("CREATE UNIQUE INDEX \"BeatmapChecksumIndex1\" ON \"withID\" (\r\n\t\"BeatmapChecksum\")");
+                NonQuery("CREATE UNIQUE INDEX \"BeatmapChecksumIndex2\" ON \"withoutID\" (\r\n\t\"BeatmapChecksum\")");
                 NonQuery("CREATE INDEX \"MapIdIndex1\" ON \"WithId\"(\r\n\"MapId\"\r\n)");
             }
+
+            NonQuery("DROP TABLE IF EXISTS `Temp`;");
+            NonQuery("CREATE TABLE IF NOT EXISTS Temp " + _tableStruct.GetTableDef());
+            NonQuery("CREATE UNIQUE INDEX \"MapLocationIndex3\" ON \"Temp\" (\r\n\t\"Dir\",\r\n\t\"OsuFileName\"\r\n)");
+
         }
 
         public void NonQuery(string query)
@@ -246,18 +247,18 @@ namespace osu_StreamCompanion.Code.Core
             NonQuery(sql);
         }
 
-        public void RemoveBeatmaps(IList<string> hashes)
+        public void RemoveBeatmaps(IList<string> checksums)
         {
             var strHashes = new StringBuilder();
-            foreach (var hash in hashes)
+            foreach (var hash in checksums)
             {
                 strHashes.AppendFormat("'{0}',", hash);
             }
 
-            var sql = string.Format("DELETE FROM withID WHERE Md5 IN ({0})", strHashes.ToString().TrimEnd(new[] { ',' }));
+            var sql = string.Format("DELETE FROM withID WHERE BeatmapChecksum IN ({0})", strHashes.ToString().TrimEnd(','));
             NonQuery(sql);
 
-            sql = string.Format("DELETE FROM withoutID WHERE Md5 IN ({0})", strHashes.ToString().TrimEnd(new[] { ',' }));
+            sql = string.Format("DELETE FROM withoutID WHERE BeatmapChecksum IN ({0})", strHashes.ToString().TrimEnd(','));
             NonQuery(sql);
 
         }
@@ -337,7 +338,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@BgDim", DbType.Int16).Value = beatmap.BgDim;
             _insertSql.Parameters.Add("@Somestuff", DbType.Int16).Value = beatmap.Somestuff;
             _insertSql.Parameters.Add("@StarsOsu", DbType.Binary).Value = beatmap.SerializeStars();
-            _insertSql.Parameters.Add("@BeatmapChecksum", DbType.Int32).Value = beatmap.GetHashCode();
+            _insertSql.Parameters.Add("@BeatmapChecksum", DbType.String).Value = beatmap.GetChecksum();
         }
         public Beatmap GetBeatmap(int mapId)
         {

@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteControler : ISqliteControler
     {
         private readonly SqliteConnector _sqlConnector;
-        private Dictionary<int, MapIdMd5Pair> _beatmapChecksums;
+        private Dictionary<string, MapIdMd5Pair> _beatmapChecksums;
 
         private class MapIdMd5Pair
         {
@@ -75,19 +75,19 @@ namespace osu_StreamCompanion.Code.Core
                     throw;
                 }
 
-                _beatmapChecksums = new Dictionary<int, MapIdMd5Pair>();
+                _beatmapChecksums = new Dictionary<string, MapIdMd5Pair>();
                 while (reader.Read())
                 {
                     var hash = reader.GetString(0);
                     var mapId = reader.GetInt32(1);
-                    var checksum = reader.GetInt32(2);
+                    var checksum = reader.GetString(2);
                     if (_beatmapChecksums.ContainsKey(checksum))
                     {
                         //REALLY..? I don't think so.
                         var map1 = _sqlConnector.GetBeatmap(hash);
                         var map2 = _sqlConnector.GetBeatmap(_beatmapChecksums[checksum].Md5);
-                        var map1Checksum = map1.GetHashCode();
-                        var map2Checksum = map2.GetHashCode();
+                        var map1Checksum = map1.GetChecksum();
+                        var map2Checksum = map2.GetChecksum();
                         if (map1Checksum == map2Checksum)
                         {
                             //:( fair enough
@@ -96,6 +96,7 @@ namespace osu_StreamCompanion.Code.Core
                             ex.Data.Add("hash1", map1.Md5);
                             ex.Data.Add("mapId2", map2.MapId);
                             ex.Data.Add("hash2", map2.Md5);
+                            ex.Data.Add("checksum", map1Checksum);
                             throw ex;
                         }
 
@@ -126,7 +127,7 @@ namespace osu_StreamCompanion.Code.Core
                 var deletedBeatmaps = _beatmapChecksums.Where(x => !x.Value.Found).ToList();
                 if (deletedBeatmaps.Any())
                 {
-                    _sqlConnector.RemoveBeatmaps(deletedBeatmaps.Select(x => x.Value.Md5).ToList());
+                    _sqlConnector.RemoveBeatmaps(deletedBeatmaps.Select(x => x.Key).ToList());
                 }
 
                 _sqlConnector.EndMassStoring();
@@ -145,16 +146,16 @@ namespace osu_StreamCompanion.Code.Core
             {
                 if (_sqlConnector.MassInsertIsActive)
                 {
-                    var hashcode = beatmap.GetHashCode();
-                    if (_beatmapChecksums.ContainsKey(hashcode))
+                    var checksum = beatmap.GetChecksum();
+                    if (_beatmapChecksums.ContainsKey(checksum))
                     {
-                        _beatmapChecksums[hashcode].Found = true;
+                        _beatmapChecksums[checksum].Found = true;
                         return;
                     }
                     else
                     {
                         var existingEntry = _beatmapChecksums.FirstOrDefault(x => x.Value.Md5 == beatmap.Md5);
-                        if (!existingEntry.Equals(default(KeyValuePair<int, MapIdMd5Pair>)))
+                        if (!existingEntry.Equals(default(KeyValuePair<string, MapIdMd5Pair>)))
                         {
                             _beatmapChecksums.Remove(existingEntry.Key);
                         }
