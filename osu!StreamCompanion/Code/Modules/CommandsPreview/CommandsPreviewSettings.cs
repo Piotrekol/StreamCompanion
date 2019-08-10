@@ -64,9 +64,9 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
                 return;
             }
 
-
-            var normal = replacements.Where(t => t.Value.Type == TokenType.Normal);
-            var live = replacements.Where(t => t.Value.Type == TokenType.Live).ToList();
+            var notHidden = replacements.Where(x => (x.Value.Type & TokenType.Hidden) == 0).ToList();
+            var normal = notHidden.Where(t => t.Value.Type == TokenType.Normal);
+            var live = notHidden.Where(t => t.Value.Type == TokenType.Live).ToList();
 
             var size = AddHeader("Live tokens (avaliable only when playing or watching)", 20);
             size.Height += 25;
@@ -77,7 +77,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             size += ProcessReplacements(normal, 5, size.Height);
 
             liveTokens = live;
-            label_ListedNum.Text = replacements.Count.ToString();
+            label_ListedNum.Text = notHidden.Count.ToString();
         }
 
         private Size ProcessReplacements(IEnumerable<KeyValuePair<string, Token>> replacements, int xPosition = 30, int yPosition = 30)

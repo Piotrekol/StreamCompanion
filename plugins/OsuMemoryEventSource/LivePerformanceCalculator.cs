@@ -15,6 +15,7 @@ namespace OsuMemoryEventSource
     {
         public PlayContainer Play { get; set; } = new PlayContainer();
         public int PlayTime { get; set; }
+        public List<int> HitErrors { get; set; }
 
         private Beatmap _currentBeatmap = null;
         private string _currentMods;

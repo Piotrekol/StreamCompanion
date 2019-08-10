@@ -10,6 +10,7 @@ using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace OsuMemoryEventSource
@@ -35,6 +36,7 @@ namespace OsuMemoryEventSource
             StrainPpIfMapEndsNow,
             PpIfRestFced,
             NoChokePp,
+            UnstableRate,
 
         }
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
@@ -187,6 +189,7 @@ namespace OsuMemoryEventSource
 
 
                 reader.GetPlayData(_rawData.Play);
+                _rawData.HitErrors = reader.HitErrors() ?? new List<int>();
 
                 _rawData.PlayTime = reader.ReadPlayTime();
                 PrepareTimeToken();
@@ -275,6 +278,7 @@ namespace OsuMemoryEventSource
             }
         }
 
+        private Token HitErrors;
         private void InitLiveTokens()
         {
             liveTokens["status"] = _tokenSetter("status", OsuStatus.Null, TokenType.Live, "", OsuStatus.Null);
@@ -295,6 +299,8 @@ namespace OsuMemoryEventSource
             liveTokens["StrainPpIfMapEndsNow"] = _tokenSetter("StrainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d);
             liveTokens["PpIfRestFced"] = _tokenSetter("PpIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d);
             liveTokens["NoChokePp"] = _tokenSetter("NoChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d);
+            liveTokens["UnstableRate"] = _tokenSetter("UnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d);
+            HitErrors = _tokenSetter("HitErrors", new List<int>(), TokenType.Live | TokenType.Hidden, defaultValue: new List<int>());
         }
 
         private void PrepareTimeToken()
@@ -325,6 +331,8 @@ namespace OsuMemoryEventSource
             InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Set(_rawData.StrainPPIfBeatmapWouldEndNow);
             InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
             InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
+            InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
+            HitErrors.Value = HitErrors;
 
             liveTokens["PpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current;
             liveTokens["AimPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current;
@@ -333,6 +341,26 @@ namespace OsuMemoryEventSource
             liveTokens["StrainPpIfMapEndsNow"].Value = InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current;
             liveTokens["PpIfRestFced"].Value = InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
             liveTokens["NoChokePp"].Value = InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
+            liveTokens["UnstableRate"].Value = InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
+
+        }
+
+        private double UnstableRate(List<int> hitErrors)
+        {
+            if (hitErrors.Count == 0)
+                return 0;
+
+            double sum = hitErrors.Sum();
+
+            double avarage = sum / hitErrors.Count;
+            double variance = 0;
+
+            foreach (var hit in hitErrors)
+            {
+                variance += Math.Pow(hit - avarage, 2);
+            }
+
+            return Math.Sqrt(variance / hitErrors.Count) * 10;
         }
 
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
