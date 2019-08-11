@@ -347,7 +347,7 @@ namespace OsuMemoryEventSource
 
         private double UnstableRate(List<int> hitErrors)
         {
-            if (hitErrors.Count == 0)
+            if (hitErrors.Count == 0 || hitErrors.Any(x => x > 10000))
                 return 0;
 
             double sum = hitErrors.Sum();
