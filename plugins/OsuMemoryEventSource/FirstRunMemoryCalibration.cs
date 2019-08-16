@@ -45,13 +45,13 @@ namespace OsuMemoryEventSource
 
         };
 
-        private IOsuMemoryReader memoryReader ;
+        private IOsuMemoryReader memoryReader;
         private readonly ISettingsHandler _settings;
         private readonly SettingNames _names = SettingNames.Instance;
         private Map _currentMap;
         private int ExpectedMods = 89;//HRNFDTHD 
         Random rnd = new Random();
-
+        private volatile bool Passed = false;
         private Map CurrentMap
         {
             get { return _currentMap; }
@@ -66,17 +66,18 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public FirstRunMemoryCalibration(IOsuMemoryReader reader,ISettingsHandler settings)
+        public FirstRunMemoryCalibration(IOsuMemoryReader reader, ISettingsHandler settings)
         {
             memoryReader = reader;
             _settings = settings;
-            
+
             InitializeComponent();
             this.pictureBox1.Image = GetStreamCompanionLogo();
-            _settings.Add(_names.EnableMemoryScanner.Name, false);
-            _settings.Add(_names.EnableMemoryPooling.Name, false);
+
             CurrentMap = _maps[rnd.Next(0, _maps.Count)];
 
+            _settings.Add(_names.EnableMemoryScanner.Name, true);
+            _settings.Add(_names.EnableMemoryPooling.Name, true);
         }
 
         public void SetRandomMap(bool notSame = true)
@@ -129,12 +130,13 @@ namespace OsuMemoryEventSource
 
                         if (mods == ExpectedMods)
                             return true;
-                        
+
                         return false;
                     }, 20000);
 
                     _settings.Add(_names.EnableMemoryScanner.Name, everythingIsOk);
                     _settings.Add(_names.EnableMemoryPooling.Name, everythingIsOk);
+                    Passed = everythingIsOk;
 
                     this.BeginInvoke((MethodInvoker)delegate
                    {
@@ -166,6 +168,9 @@ namespace OsuMemoryEventSource
 
         private void button_Next_Click(object sender, EventArgs e)
         {
+            _settings.Add(_names.EnableMemoryScanner.Name, Passed);
+            _settings.Add(_names.EnableMemoryPooling.Name, Passed);
+
             this.OnCompleted(status.Ok);
         }
 
