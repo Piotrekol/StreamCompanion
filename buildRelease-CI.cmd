@@ -20,8 +20,8 @@ rm -rf ./Output/x86
 rm -rf ./Output/x64
 
 REM remove debug symbols
-REM rm ./Output/*.pdb
-REM rm ./Output/Plugins/*.pdb
+rm ./Output/*.pdb
+rm ./Output/Plugins/*.pdb
 
 REM remove misc files
 rm ./Output/*.xml
