@@ -91,9 +91,9 @@ namespace ModsHandler
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
 
                 _tokenSetter("mods", map.Mods?.ShownMods);
-                _tokenSetter("mAR", Math.Round(c["AR"], 1));
-                _tokenSetter("mCS", Math.Round(c["CS"], 1));
-                _tokenSetter("mOD", Math.Round(c["OD"], 1));
+                _tokenSetter("mAR", Math.Round(c["AR"], 2));
+                _tokenSetter("mCS", Math.Round(c["CS"], 2));
+                _tokenSetter("mOD", Math.Round(c["OD"], 2));
                 _tokenSetter("mHP", c["HP"], format: "{0:0.##}");
                 _tokenSetter("mStars", Math.Round(foundMap.Stars(PlayMode.Osu, mods), 2));
                 _tokenSetter("mBpm", bpm);

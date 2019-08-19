@@ -97,7 +97,7 @@ namespace ModsHandler
             cs = Math.Max(0.0f, Math.Min(10.0f, cs));
 
             if ((mods & Mods.Ez) != 0)
-                od /= Math.Max(0, od / 2);
+                od = Math.Max(0, od / 2);
             else
                 od = Math.Min(10, od * 1.4f);
 
