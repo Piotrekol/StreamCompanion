@@ -83,6 +83,7 @@ namespace StreamCompanionTypes.DataTypes
                     case OsuStatus.Editing: return "Editing";
                     case OsuStatus.Listening: return "Listening";
                     case OsuStatus.Watching: return "Watching";
+                    case OsuStatus.ResultsScreen: return "ResultsScreen";
                     case OsuStatus.Null: return "Never";
                     default: return "Unknown";
                 }
