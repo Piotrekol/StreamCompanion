@@ -36,6 +36,7 @@
             this.button_Next = new System.Windows.Forms.Button();
             this.button_anotherMap = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.label_memoryStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,13 +62,13 @@
             // 
             this.label_beatmapDL.Location = new System.Drawing.Point(136, 48);
             this.label_beatmapDL.Name = "label_beatmapDL";
-            this.label_beatmapDL.Size = new System.Drawing.Size(251, 72);
+            this.label_beatmapDL.Size = new System.Drawing.Size(251, 53);
             this.label_beatmapDL.TabIndex = 11;
-            this.label_beatmapDL.Text = "Enable following mods:";
+            this.label_beatmapDL.Text = "Enable following mods:\r\n$\r\n$";
             // 
             // label_CalibrationResult
             // 
-            this.label_CalibrationResult.Location = new System.Drawing.Point(3, 149);
+            this.label_CalibrationResult.Location = new System.Drawing.Point(3, 142);
             this.label_CalibrationResult.Name = "label_CalibrationResult";
             this.label_CalibrationResult.Size = new System.Drawing.Size(385, 30);
             this.label_CalibrationResult.TabIndex = 12;
@@ -75,7 +76,7 @@
             // 
             // linkLabel_mapDL
             // 
-            this.linkLabel_mapDL.Location = new System.Drawing.Point(137, 114);
+            this.linkLabel_mapDL.Location = new System.Drawing.Point(137, 105);
             this.linkLabel_mapDL.Name = "linkLabel_mapDL";
             this.linkLabel_mapDL.Size = new System.Drawing.Size(250, 31);
             this.linkLabel_mapDL.TabIndex = 13;
@@ -85,7 +86,7 @@
             // 
             // button_Next
             // 
-            this.button_Next.Location = new System.Drawing.Point(72, 211);
+            this.button_Next.Location = new System.Drawing.Point(72, 222);
             this.button_Next.Name = "button_Next";
             this.button_Next.Size = new System.Drawing.Size(254, 28);
             this.button_Next.TabIndex = 14;
@@ -95,9 +96,9 @@
             // 
             // button_anotherMap
             // 
-            this.button_anotherMap.Location = new System.Drawing.Point(275, 104);
+            this.button_anotherMap.Location = new System.Drawing.Point(309, 104);
             this.button_anotherMap.Name = "button_anotherMap";
-            this.button_anotherMap.Size = new System.Drawing.Size(112, 23);
+            this.button_anotherMap.Size = new System.Drawing.Size(78, 23);
             this.button_anotherMap.TabIndex = 15;
             this.button_anotherMap.Text = "No";
             this.button_anotherMap.UseVisualStyleBackColor = true;
@@ -105,17 +106,26 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(3, 179);
+            this.label1.Location = new System.Drawing.Point(3, 191);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(385, 29);
             this.label1.TabIndex = 16;
             this.label1.Text = "You can skip this step, but you won\'t be able to get data like live pp or hit cou" +
     "nts";
             // 
+            // label_memoryStatus
+            // 
+            this.label_memoryStatus.Location = new System.Drawing.Point(3, 174);
+            this.label_memoryStatus.Name = "label_memoryStatus";
+            this.label_memoryStatus.Size = new System.Drawing.Size(385, 17);
+            this.label_memoryStatus.TabIndex = 17;
+            this.label_memoryStatus.Text = "----";
+            // 
             // FirstRunMemoryCalibration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label_memoryStatus);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button_anotherMap);
             this.Controls.Add(this.button_Next);
@@ -125,7 +135,7 @@
             this.Controls.Add(this.label_msnString);
             this.Controls.Add(this.pictureBox1);
             this.Name = "FirstRunMemoryCalibration";
-            this.Size = new System.Drawing.Size(399, 242);
+            this.Size = new System.Drawing.Size(399, 253);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -141,5 +151,6 @@
         public System.Windows.Forms.Button button_Next;
         private System.Windows.Forms.Button button_anotherMap;
         public System.Windows.Forms.Label label1;
+        public System.Windows.Forms.Label label_memoryStatus;
     }
 }

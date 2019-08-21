@@ -113,9 +113,13 @@ namespace OsuMemoryEventSource
             if (!this.IsHandleCreated) return;
             lock (_lockingObject)
             {
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    label_memoryStatus.Text = $"{status}, id:{mapId}, valid mapset:{CurrentMap.BelongsToSet(mapId)}";
+                });
+                
                 if (CurrentMap.BelongsToSet(mapId) && status == OsuStatus.Playing)
                 {
-
                     this.BeginInvoke((MethodInvoker)delegate
                    {
                        SetCalibrationText("Searching. It can take up to 20 seconds.");
