@@ -8,6 +8,8 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
+using osu_StreamCompanion.Code.Core.Loggers;
+using SharpRaven.Data;
 
 namespace osu_StreamCompanion
 {
