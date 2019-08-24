@@ -69,31 +69,9 @@ namespace osu_StreamCompanion.Code.Core
             DiContainer.Container.Locate<ISqliteControler>();
             DiContainer.Container.Locate<OsuPathResolver>();
             DiContainer.Container.Locate<OsuFallbackDetector>();
+
             DiContainer.Container.LocateAll(typeof(IPlugin)).Cast<IPlugin>().ToList();
-            //_logger.Log(">loaded {0} modules, where {1} are providing settings", LogLevel.Basic, _modules.Count.ToString(), SettingsList.Count.ToString());
-
-
-            //#region plugins
-
-            ////var plugins = GetPlugins();
-            ////_logger.Log("Initalizing plugins", LogLevel.Advanced, plugins.Count.ToString());
-
-            //_logger.Log("==========", LogLevel.Advanced);
-
-            //DiContainer.Container.Locate<OsuPathResolver>();
-            //DiContainer.Container.Locate<OsuFallbackDetector>();
-            //var p = DiContainer.Container.LocateAll(typeof(IPlugin)).Cast<IPlugin>().ToList();
-
-            //var sortedPlugins = SortPlugins(plugins);
-
-            //LoadPlugins(sortedPlugins[0]);
-            //LoadPlugins(sortedPlugins[1]);
-
-            //_logger.Log("==========", LogLevel.Advanced);
-
-            //ProritizePluginsUsage();
-            //#endregion plugins
-
+            
             Settings.Add(_names.FirstRun.Name, false);
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
 

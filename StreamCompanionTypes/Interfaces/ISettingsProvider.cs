@@ -2,7 +2,6 @@
 
 namespace StreamCompanionTypes.Interfaces
 {
-    //TODO: remove all ISettings usages (DI refactor)
     public interface ISettingsProvider
     {
         string SettingGroup { get; }
