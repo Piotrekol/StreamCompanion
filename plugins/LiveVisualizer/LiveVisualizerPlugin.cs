@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ConfigEntry = StreamCompanionTypes.DataTypes.ConfigEntry;
 
 namespace LiveVisualizer
 {

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using StreamCompanionTypes.DataTypes;
+﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace osuOverlay

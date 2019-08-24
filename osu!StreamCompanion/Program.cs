@@ -1,12 +1,7 @@
 using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
-using SharpRaven;
-using SharpRaven.Data;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -18,7 +13,7 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v190824.19";
+        public static string ScVersion ="v190824.21";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 

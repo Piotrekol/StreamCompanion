@@ -1,4 +1,3 @@
-using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using Newtonsoft.Json;
 using OsuMemoryDataProvider;

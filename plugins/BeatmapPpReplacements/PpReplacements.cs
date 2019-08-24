@@ -1,12 +1,9 @@
-using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace BeatmapPpReplacements

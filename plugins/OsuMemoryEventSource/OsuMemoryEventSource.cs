@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
-using OsuMemoryDataProvider;
-using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
-using Timer = System.Threading.Timer;
 
 namespace OsuMemoryEventSource
 {

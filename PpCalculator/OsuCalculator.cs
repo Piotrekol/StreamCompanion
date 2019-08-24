@@ -1,5 +1,4 @@
-﻿using osu.Game.Beatmaps;
-using osu.Game.Rulesets;
+﻿using osu.Game.Rulesets;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Osu.Objects;
 using osu.Game.Rulesets.Scoring;

@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
-using StreamCompanionTypes;
+﻿using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;

@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using CollectionManager.Modules.FileIO.OsuDb;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 

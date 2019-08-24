@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using osu_StreamCompanion.Code.Core;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.Donation

@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Security.Principal;
 using System.Windows.Forms;
 
 namespace osu_StreamCompanion.Code.Modules.Updater

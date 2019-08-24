@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
-using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;

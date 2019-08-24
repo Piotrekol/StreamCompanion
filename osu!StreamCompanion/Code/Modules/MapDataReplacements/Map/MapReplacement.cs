@@ -1,6 +1,4 @@
-﻿using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Helpers;
-using osu_StreamCompanion.Code.Misc;
+﻿using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;

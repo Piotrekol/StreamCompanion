@@ -1,6 +1,4 @@
 ﻿using CollectionManager.Enums;
-using osu_StreamCompanion.Code.Core.Maps;
-using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
