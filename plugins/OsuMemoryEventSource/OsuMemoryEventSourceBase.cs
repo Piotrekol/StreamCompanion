@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -78,7 +79,15 @@ namespace OsuMemoryEventSource
 
 
             _memoryListener = new MemoryListener();
-            _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent?.Invoke(this, args);
+            _memoryListener.NewOsuEvent += async (s, args) =>
+            {
+                while (NewOsuEvent == null)
+                {
+                    await Task.Delay(5);
+                }
+
+                NewOsuEvent?.Invoke(this, args);
+            };
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
             _memoryListener.SetSettingsHandle(_settings);
 
