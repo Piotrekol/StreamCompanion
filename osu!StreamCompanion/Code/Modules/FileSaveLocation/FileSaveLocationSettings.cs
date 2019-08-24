@@ -6,7 +6,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
 {
-    public partial class FileSaveLocationSettings : UserControl,ISaveRequester
+    public partial class FileSaveLocationSettings : UserControl
     {
         private ISaver _saver;
 

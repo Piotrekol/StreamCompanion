@@ -4,9 +4,14 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.Donation
 {
-    class Donation:IModule,ISettingsProvider
+    class Donation : IModule, ISettingsProvider
     {
         public bool Started { get; set; }
+
+        public Donation(ILogger logger)
+        {
+            Start(logger);
+        }
         public void Start(ILogger logger)
         {
             Started = true;

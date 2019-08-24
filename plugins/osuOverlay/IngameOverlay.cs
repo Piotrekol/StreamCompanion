@@ -8,11 +8,9 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osuOverlay
 {
-    public class IngameOverlay : IPlugin, ISettingsProvider, ISaveRequester, IMapDataGetter, IDisposable
+    public class IngameOverlay : IPlugin, ISettingsProvider, IMapDataGetter, IDisposable
     {
         private ISettingsHandler _settings;
-        private ISaver _saver;
-        public bool Started { get; set; }
         public string SettingGroup { get; } = "General";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
@@ -29,11 +27,10 @@ namespace osuOverlay
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-
-        public void Start(ILogger logger)
+        public IngameOverlay(ILogger logger,ISettingsHandler settings)
         {
-            Started = true;
             _logger = logger;
+            _settings = settings;
 
             if (_settings.Get<bool>(PluginSettings.EnableIngameOverlay))
             {
@@ -141,16 +138,6 @@ namespace osuOverlay
         private string GetFullDllLocation() => Path.Combine(GetFilesFolder(), "osuOverlay.dll");
 
         private string GetFullFreeTypeLocation() => Path.Combine(GetFilesFolder(), "FreeType.dll");
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
-        public void SetSaveHandle(ISaver saver)
-        {
-            _saver = saver;
-        }
 
         public void Free()
         {

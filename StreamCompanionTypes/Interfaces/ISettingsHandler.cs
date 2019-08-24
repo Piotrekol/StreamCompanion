@@ -18,6 +18,5 @@ namespace StreamCompanionTypes.Interfaces
         bool Delete(string key);
         void Save();
         void Load();
-        void SetSavePath(string path);
     }
 }

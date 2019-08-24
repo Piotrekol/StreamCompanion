@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using StreamCompanionTypes.DataTypes;
@@ -9,9 +6,9 @@ using StreamCompanionTypes.Interfaces;
 
 namespace WindowDataGetter
 {
-    public class WindowDataGetter : IPlugin, IMapDataGetter, IMainWindowUpdater
+    public class WindowDataGetter : IPlugin, IMapDataGetter
     {
-        private IMainWindowModel _mainwindowHandle;
+        private readonly IMainWindowModel _mainWindowHandle;
         public bool Started { get; set; }
         
         public string Description { get; } = "Provides map data for StreamCompanion GUI";
@@ -20,9 +17,9 @@ namespace WindowDataGetter
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public void Start(ILogger logger)
+        public WindowDataGetter(IMainWindowModel mainWindowHandle)
         {
-            Started = true;
+            _mainWindowHandle = mainWindowHandle;
         }
 
         public void SetNewMap(MapSearchResult map)
@@ -38,18 +35,12 @@ namespace WindowDataGetter
                     var mods = map.Mods?.Mods ?? Mods.Omod;
                     nowPlaying += string.Format(" Modded: {0:##.###}", foundMap.Stars(PlayMode.Osu, mods));
                 }
-                _mainwindowHandle.NowPlaying = nowPlaying;
+                _mainWindowHandle.NowPlaying = nowPlaying;
             }
             else
             {
-                _mainwindowHandle.NowPlaying = "map data not found: " + map.MapSearchString;
+                _mainWindowHandle.NowPlaying = "map data not found: " + map.MapSearchString;
             }
         }
-
-        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
-        {
-            _mainwindowHandle = mainWindowHandle;
-        }
-
     }
 }

@@ -2,33 +2,34 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
-    public class MapStringFormatter : IModule, ISettings, IDisposable
+    public class MapStringFormatter : IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ILogger _logger;
         private readonly MainMapDataGetter _mainMapDataGetter;
-        private readonly List<IOsuEventSource> _osuEventSources;
         private ISettingsHandler _settings;
+
         private Thread ConsumerThread;
         private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
         private ConcurrentStack<MapSearchArgs> TasksMemory = new ConcurrentStack<MapSearchArgs>();
 
-        public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources)
+        public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettingsHandler settings)
         {
+            _settings = settings;
             _mainMapDataGetter = mainMapDataGetter;
-            _osuEventSources = osuEventSources;
             foreach (var source in osuEventSources)
             {
                 source.NewOsuEvent += NewOsuEvent;
             }
             ConsumerThread = new Thread(ConsumerTask);
+
+            Start(_logger);
         }
 
         private void NewOsuEvent(object sender, MapSearchArgs mapSearchArgs)
@@ -52,12 +53,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
+            if (Started)
+                return;
+
+            Started = true;
             _logger = logger;
             ConsumerThread.Start();
-        }
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
         }
 
 

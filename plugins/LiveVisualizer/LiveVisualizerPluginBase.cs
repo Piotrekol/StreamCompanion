@@ -18,6 +18,12 @@ namespace LiveVisualizer
         protected IWpfVisualizerData VisualizerData;
         private bool _disposed = false;
 
+        public LiveVisualizerPluginBase(ISettingsHandler settings)
+        {
+            Settings = settings;
+            _token = _cts.Token;
+            Started = true;
+        }
         public virtual void Dispose()
         {
             _disposed = true;
@@ -53,11 +59,6 @@ namespace LiveVisualizer
         {
             _token = _cts.Token;
             Started = true;
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            Settings = settings;
         }
 
         public string SettingGroup { get; } = "Visualizer";

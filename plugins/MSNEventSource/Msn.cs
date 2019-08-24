@@ -90,12 +90,17 @@ namespace MSNEventSource
             }
             return null;
         }
-        public Msn()
+
+        private static WndProc WndProcc;
+        public Msn(ILogger a)
         {
+            if (WndProcc != null)
+                return;
+            WndProcc = CustomWndProc;
             lpWndClass = new WNDCLASS
             {
                 lpszClassName = lpClassName,
-                lpfnWndProc = new WndProc(this.CustomWndProc)
+                lpfnWndProc = WndProcc
             };
 
             ushort num = RegisterClassW(ref lpWndClass);

@@ -12,7 +12,6 @@ namespace TcpSocketDataSender
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public bool Started { get; set; }
         private BlockedTcpSocketManager _liveTcpSocketManager;
         private BlockedTcpSocketManager _tcpSocketManager;
 
@@ -26,16 +25,18 @@ namespace TcpSocketDataSender
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public void Start(ILogger logger)
+        public TcpSocketDataGetter(ISettingsHandler settings)
         {
+            _settings = settings;
+
             _liveTcpSocketManager = new BlockedTcpSocketManager();
             _liveTcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _liveTcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketLiveMapDataPort);
-            
+
             _tcpSocketManager = new BlockedTcpSocketManager();
             _tcpSocketManager.ServerIp = _settings.Get<string>(_names.tcpSocketIp);
             _tcpSocketManager.ServerPort = _settings.Get<int>(_names.tcpSocketPort);
-            
+
 
             tcpSocketIsEnabled = _settings.Get<bool>(_names.tcpSocketEnabled);
             if (tcpSocketIsEnabled)
@@ -47,7 +48,6 @@ namespace TcpSocketDataSender
                 _tcpSocketManager.Connect();
             }
             _settings.SettingUpdated += SettingUpdated;
-            Started = true;
         }
 
         private void SettingUpdated(object sender, SettingUpdated settingUpdated)
@@ -79,14 +79,7 @@ namespace TcpSocketDataSender
                 _tcpSocketManager.Write(json);
             }
         }
-
-
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
+        
         public string SettingGroup { get; } = "Output patterns";
         private TcpSocketSettings settingsUserControl = null;
         public void Free()

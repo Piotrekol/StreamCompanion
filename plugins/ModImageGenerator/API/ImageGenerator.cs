@@ -9,7 +9,7 @@ using Point = System.Drawing.Point;
 
 namespace ModImageGenerator.API
 {
-    public class ImageGenerator:ISaveRequester
+    public class ImageGenerator
     {
         private readonly SettingNames _names = SettingNames.Instance;
 

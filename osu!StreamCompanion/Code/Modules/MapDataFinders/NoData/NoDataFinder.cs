@@ -4,10 +4,15 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
 {
-    public class NoDataFinder : IModule,IMapDataFinder
+    public class NoDataFinder : IModule, IMapDataFinder
     {
         private ILogger _logger;
         public bool Started { get; set; }
+
+        public NoDataFinder(ILogger logger)
+        {
+            Start(logger);
+        }
 
         public void Start(ILogger logger)
         {

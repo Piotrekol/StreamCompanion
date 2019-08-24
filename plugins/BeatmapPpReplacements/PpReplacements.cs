@@ -11,10 +11,8 @@ using System.Linq;
 
 namespace BeatmapPpReplacements
 {
-    public class PpReplacements : IPlugin, ITokensProvider, ISettings, IModParserGetter
+    public class PpReplacements : IPlugin, ITokensProvider
     {
-        private readonly SettingNames _names = SettingNames.Instance;
-
         private const string PpFormat = "{0:0.00}";
         private Tokens.TokenSetter _tokenSetter;
 
@@ -23,9 +21,8 @@ namespace BeatmapPpReplacements
         private ISettingsHandler _settings;
         private string _lastShortMods = "";
         private string _lastModsStr = "None";
-        private List<IModParser> _modParsers;
-        private IModParser ModParser => _modParsers[0];
-        public bool Started { get; set; }
+
+        
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(PpReplacements);
@@ -33,10 +30,10 @@ namespace BeatmapPpReplacements
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public void Start(ILogger logger)
+        public PpReplacements(ISettingsHandler settings)
         {
+            _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter(Name);
-            Started = true;
         }
 
         public void CreateTokens(MapSearchResult map)
@@ -47,8 +44,7 @@ namespace BeatmapPpReplacements
             }
 
             if (!map.FoundBeatmaps ||
-                !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)
-                )
+                !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 return;
 
 
@@ -145,22 +141,6 @@ namespace BeatmapPpReplacements
             }
 
             return -1;
-        }
-
-
-        private string GetOsuDir()
-        {
-            return _settings.Get<string>(_names.MainOsuDirectory);
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            this._settings = settings;
-        }
-
-        public void SetModParserHandle(List<IModParser> modParser)
-        {
-            _modParsers = modParser;
         }
     }
 }

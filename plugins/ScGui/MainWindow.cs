@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace ScGui
 {
-    class MainWindow : IPlugin, ISettingsProvider, IMainWindowUpdater, ISettingsGetter,IExiter
+    class MainWindow : IPlugin
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private ISettingsHandler _settings;
         private MainForm _mainForm;
         private IMainWindowModel _mainWindowHandle;
+        private readonly Delegates.Exit _exitAction;
         private List<ISettingsProvider> _settingsList;
-        private Action<object> exitAction;
-        public bool Started { get; set; }
 
         public string Description { get; } = "";
         public string Name { get; } = "StreamCompanion GUI";
@@ -23,12 +24,17 @@ namespace ScGui
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public void Start(ILogger logger)
+        public MainWindow(ISettingsHandler settings, IMainWindowModel mainWindowHandle, IEnumerable<ISettingsProvider> settingsProviders,Delegates.Exit exitAction)
         {
-            Started = true;
+            _settings = settings;
+            _mainWindowHandle = mainWindowHandle;
+            _exitAction = exitAction;
+            _settingsList = settingsProviders.ToList();
+
             if (!_settings.Get<bool>(_names.StartHidden))
                 ShowWindow();
         }
+
 
         private void ShowWindow()
         {
@@ -42,7 +48,7 @@ namespace ScGui
                 _mainForm.Closed += (sender, args) =>
                 {
                     _settings.Save();
-                    exitAction?.Invoke("User pressed exit");
+                    _exitAction?.Invoke("User pressed exit");
                 };
                 _mainForm.button_OpenSettings.Click += (sender, args) =>
                 {
@@ -63,40 +69,6 @@ namespace ScGui
                 _mainForm.Dispose();
                 _mainForm = null;
             }
-        }
-
-
-
-
-        public string SettingGroup { get; } = "General";
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
-        public void Free()
-        {
-
-        }
-
-        public UserControl GetUiSettings()
-        {
-            return (UserControl)null;
-        }
-
-        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
-        {
-            _mainWindowHandle = mainWindowHandle;
-        }
-
-        public void SetSettingsListHandle(List<ISettingsProvider> settingsList)
-        {
-            _settingsList = settingsList;
-        }
-
-        public void SetExitHandle(Action<object> exiter)
-        {
-            this.exitAction = exiter;
         }
     }
 }

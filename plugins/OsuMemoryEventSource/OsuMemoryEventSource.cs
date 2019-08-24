@@ -17,6 +17,10 @@ namespace OsuMemoryEventSource
     {
         public string SettingGroup { get; } = "Map matching";
 
+        public OsuMemoryEventSource(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler, IModParser modParser, List<IHighFrequencyDataHandler> highFrequencyDataHandlers) : base(logger, settings, sqliteControler, modParser, highFrequencyDataHandlers)
+        {
+        }
+
         protected override void OnSettingsSettingUpdated(object sender, SettingUpdated e)
         {
             if (e.Name == _names.EnableMemoryPooling.Name)
@@ -107,10 +111,7 @@ namespace OsuMemoryEventSource
 
         private ModsEx GetMods(int modsValue)
         {
-            if (_modParser == null || _modParser.Count == 0)
-                return null;
-
-            return _modParser[0].GetModsFromEnum(modsValue);
+            return _modParser?.GetModsFromEnum(modsValue);
         }
         private FirstRunMemoryCalibration _firstRunMemoryCalibration = null;
         public List<FirstRunUserControl> GetFirstRunUserControls()

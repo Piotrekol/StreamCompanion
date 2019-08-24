@@ -10,7 +10,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.Updater
 {
-    class Updater : IModule, IMainWindowUpdater
+    class Updater : IModule
     {
         private IMainWindowModel _mainWindowHandle;
         private const string baseGithubUrl = "https://api.github.com/repos/Piotrekol/StreamCompanion";
@@ -19,6 +19,13 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private DateTime _currentVersion = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
         private Exception exception = null;
         public bool Started { get; set; }
+
+        public Updater(ILogger logger, IMainWindowModel mainWindowHandle)
+        {
+            _mainWindowHandle = mainWindowHandle;
+            _mainWindowHandle.OnUpdateTextClicked += _mainWindowHandle_OnUpdateTextClicked;
+            Start(logger);
+        }
         public void Start(ILogger logger)
         {
             //TODO: handle not supported exception
@@ -160,11 +167,6 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private void setStatus(string status)
         {
             _mainWindowHandle.UpdateText = status;
-        }
-        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
-        {
-            _mainWindowHandle = mainWindowHandle;
-            _mainWindowHandle.OnUpdateTextClicked += _mainWindowHandle_OnUpdateTextClicked;
         }
 
         private void _mainWindowHandle_OnUpdateTextClicked(object sender, EventArgs e)

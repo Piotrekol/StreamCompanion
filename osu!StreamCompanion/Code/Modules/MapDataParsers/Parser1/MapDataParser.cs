@@ -19,6 +19,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private ParserSettings _parserSettings = null;
         private ILogger _logger;
 
+        public MapDataParser(ILogger logger, ISettingsHandler settings)
+        {
+            _logger = logger;
+            _settings = settings;
+            Start(logger);
+        }
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -106,9 +112,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             return toFormat;
         }
-        public void SetSettingsHandle(ISettingsHandler settings)
+        public void SetSettingsHandle()
         {
-            _settings = settings;
+
         }
 
         public string SettingGroup { get; } = "Output patterns";
@@ -171,6 +177,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _parserSettings?.Dispose();
             Save();
         }
-        
+
+        public void SetSettingsHandle(ISettingsHandler settings)
+        {
+            
+        }
     }
 }

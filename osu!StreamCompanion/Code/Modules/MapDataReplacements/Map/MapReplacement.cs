@@ -10,16 +10,21 @@ using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
-    class MapReplacement : IModule, ITokensProvider, ISettings
+    class MapReplacement : IModule, ITokensProvider
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
         private Tokens.TokenSetter _tokenSetter;
         public bool Started { get; set; }
 
+        public MapReplacement(ILogger logger, ISettingsHandler settings)
+        {
+            _settings = settings;
+            _tokenSetter = Tokens.CreateTokenSetter("MapReplacements");
+
+        }
         public void Start(ILogger logger)
         {
-            _tokenSetter = Tokens.CreateTokenSetter("MapReplacements");
             Started = true;
         }
 
@@ -55,10 +60,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
                 _tokenSetter(token.Key, token.Value);
             }
 
-        }
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
         }
     }
 }

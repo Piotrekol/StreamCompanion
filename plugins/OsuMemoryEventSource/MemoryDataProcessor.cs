@@ -15,9 +15,8 @@ using System.Threading;
 
 namespace OsuMemoryEventSource
 {
-    public class MemoryDataProcessor : IHighFrequencyDataSender, ISettings, IDisposable
+    public class MemoryDataProcessor : IDisposable
     {
-        private readonly string _songsFolderLocation;
         private readonly object _lockingObject = new object();
         private OsuStatus _lastStatus = OsuStatus.Null;
         LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
@@ -44,10 +43,8 @@ namespace OsuMemoryEventSource
         private Thread _interpolatedValueWorkerThread;
         private Thread _tokenWorkerThread;
 
-        public MemoryDataProcessor(string songsFolderLocation, bool enablePpSmoothing = true)
+        public MemoryDataProcessor(bool enablePpSmoothing = true)
         {
-            _songsFolderLocation = songsFolderLocation;
-
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
             {
                 InterpolatedValues.Add(v, new InterpolatedValue(0.15));

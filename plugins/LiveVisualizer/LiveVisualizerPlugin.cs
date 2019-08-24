@@ -49,7 +49,8 @@ namespace LiveVisualizer
         private string _lastMapLocation = string.Empty;
         private ModsEx _lastMods = null;
 
-        public override void Start(ILogger logger)
+
+        public LiveVisualizerPlugin(ILogger logger, ISettingsHandler settings) : base(settings)
         {
             base.Start(logger);
             VisualizerData = new VisualizerDataModel();
@@ -305,5 +306,6 @@ namespace LiveVisualizer
         {
             base.Dispose();
         }
+
     }
 }

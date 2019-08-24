@@ -38,6 +38,13 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 
         public bool Started { get; set; }
 
+        public OsuPathResolver(ILogger logger, ISettingsHandler settings)
+        {
+            _logger = logger;
+            _settings = settings;
+            Start(logger);
+        }
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -56,7 +63,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
         }
         public void SetSettingsHandle(ISettingsHandler settings)
         {
-            _settings = settings;
+
         }
 
         private void Log(string text, params string[] vals)

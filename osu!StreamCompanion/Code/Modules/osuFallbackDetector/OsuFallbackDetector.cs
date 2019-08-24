@@ -7,14 +7,22 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
 {
-    class OsuFallbackDetector : IModule, ISettings
+    class OsuFallbackDetector : IModule
     {
         private readonly SettingNames _names = SettingNames.Instance;
         //LastVersion = b20160403.6
         private const string LAST_FALLBACK_VERSION = "b20160403.6";
         private bool _isFallback;
         private string _customBeatmapDirectoryLocation;
+        private readonly ILogger _logger;
         private ISettingsHandler _settings;
+
+        public OsuFallbackDetector(ILogger logger, ISettingsHandler settings)
+        {
+            _logger = logger;
+            _settings = settings;
+            Start(logger);
+        }
         public bool Started { get; set; }
         public void Start(ILogger logger)
         {
@@ -40,12 +48,7 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
             if (_customBeatmapDirectoryLocation != _names.SongsFolderLocation.Default<string>())
                 logger.Log("Detected custom songs folder location \"{0}\"", LogLevel.Basic, _customBeatmapDirectoryLocation);
         }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
+        
         private void ReadSettings(string configPath)
         {
             foreach (var cfgLine in File.ReadLines(configPath))

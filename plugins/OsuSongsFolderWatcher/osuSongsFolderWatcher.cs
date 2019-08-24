@@ -9,16 +9,15 @@ using StreamCompanionTypes.Interfaces;
 
 namespace OsuSongsFolderWatcher
 {
-    class OsuSongsFolderWatcher : IPlugin, ISettings, ISqliteUser, IDisposable
+    class OsuSongsFolderWatcher : IPlugin, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private FileSystemWatcher _watcher;
         private ISettingsHandler _settings;
         private ILogger _logger;
-        private ISqliteControler _sqlite;
+        private ISqliteControler _sqliteControler;
         private int _numberOfBeatmapsCurrentlyBeingLoaded = 0;
-        public bool Started { get; set; }
         private Thread _consumerThread;
 
         public string Description { get; } = "";
@@ -27,9 +26,10 @@ namespace OsuSongsFolderWatcher
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public void Start(ILogger logger)
+        public OsuSongsFolderWatcher(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler)
         {
-            Started = true;
+            _settings = settings;
+            _sqliteControler = sqliteControler;
             _logger = logger;
 
             if (_settings.Get<bool>(_names.LoadingRawBeatmaps))
@@ -66,8 +66,7 @@ namespace OsuSongsFolderWatcher
             {
                 while (true)
                 {
-                    string fileFullPath;
-                    if (_filesChanged.TryDequeue(out fileFullPath))
+                    if (_filesChanged.TryDequeue(out var fileFullPath))
                     {
                         Beatmap beatmap = null;
                         _settings.Add(_names.LoadingRawBeatmaps.Name, true);
@@ -75,7 +74,7 @@ namespace OsuSongsFolderWatcher
                         _logger.Log("Processing new beatmap", LogLevel.Debug);
                         beatmap = BeatmapHelpers.ReadBeatmap(fileFullPath);
 
-                        _sqlite.StoreTempBeatmap(beatmap);
+                        _sqliteControler.StoreTempBeatmap(beatmap);
                         _logger.Log("Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Debug, beatmap.ArtistRoman,
                             beatmap.TitleRoman, beatmap.DiffName);
                         if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
@@ -96,28 +95,6 @@ namespace OsuSongsFolderWatcher
         {
             _filesChanged.Enqueue(e.FullPath);
             _logger.Log("New osu file: "+e.FullPath, LogLevel.Debug);
-        }
-
-
-        public string SettingGroup { get; } = "Passwords";
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
-        public void Free()
-        {
-        }
-
-        public UserControl GetUiSettings()
-        {
-            return null;
-        }
-
-        public void SetSqliteControlerHandle(ISqliteControler sqLiteControler)
-        {
-            _sqlite = sqLiteControler;
         }
 
         public void Dispose()
