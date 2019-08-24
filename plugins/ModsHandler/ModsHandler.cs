@@ -4,11 +4,12 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Linq;
+using System.Windows.Forms;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace ModsHandler
 {
-    public class ModsHandler : IPlugin, IModParser, IDifficultyCalculator, ITokensProvider
+    public class ModsHandler : IPlugin, IModParser, IDifficultyCalculator, ITokensProvider, ISettingsProvider
     {
         private readonly ModParser _modParser;
         private readonly DifficultyCalculator _difficultyCalculator = new DifficultyCalculator();
@@ -19,6 +20,7 @@ namespace ModsHandler
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
+        public string SettingGroup => _modParser.SettingGroup;
 
         public ModsHandler(ISettingsHandler settings)
         {
@@ -80,5 +82,13 @@ namespace ModsHandler
                 }
             }
         }
+
+        public void Free()
+        {
+            _modParser.Free();
+        }
+
+        public UserControl GetUiSettings()
+            => _modParser.GetUiSettings();
     }
 }
