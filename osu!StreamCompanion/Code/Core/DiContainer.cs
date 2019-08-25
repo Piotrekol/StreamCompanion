@@ -91,8 +91,7 @@ namespace osu_StreamCompanion.Code.Core
             {
                 try
                 {
-                    return fileList.Select(Assembly.LoadFile).ToList();
-
+                    assemblies.Add(Assembly.LoadFile(file));
                 }
                 catch (BadImageFormatException e)
                 {
