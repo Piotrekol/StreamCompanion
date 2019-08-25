@@ -16,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using osu_StreamCompanion.Code.Modules.Updater;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -76,7 +77,8 @@ namespace osu_StreamCompanion.Code.Core
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
 
             DiContainer.Container.Locate<MapStringFormatter>();
-            
+            DiContainer.Container.Locate<Updater>();
+
             _started = true;
             _logger.Log("Started!", LogLevel.Basic);
         }
