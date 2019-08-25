@@ -85,7 +85,7 @@ namespace OsuMemoryEventSource
                     await Task.Delay(5);
                 }
 
-                NewOsuEvent?.Invoke(this, args);
+                NewOsuEvent.Invoke(this, args);
             };
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
             _memoryListener.SetSettingsHandle(_settings);
