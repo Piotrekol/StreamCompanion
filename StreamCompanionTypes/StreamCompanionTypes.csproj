@@ -73,7 +73,6 @@
     <Compile Include="Enums\TokenType.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Interfaces\IDifficultyCalculator.cs" />
-    <Compile Include="Interfaces\IExiter.cs" />
     <Compile Include="Interfaces\IFirstRunControlProvider.cs" />
     <Compile Include="Interfaces\IHighFrequencyDataHandler.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
