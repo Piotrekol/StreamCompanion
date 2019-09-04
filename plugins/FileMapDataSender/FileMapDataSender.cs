@@ -9,20 +9,13 @@ namespace FileMapDataSender
     {
         public bool Started { get; set; }
         private readonly FileMapManager _fileMapManager = new FileMapManager();
-        private ILogger _logger;
 
         public string Description { get; } = "";
         public string Name { get; } = "FileMapDataSender";
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
-
-        public void Start(ILogger logger)
-        {
-            _logger = logger;
-            Started = true;
-        }
-
+        
         public void Save(string fileName, string content)
         {
             _fileMapManager.Write(fileName, content);

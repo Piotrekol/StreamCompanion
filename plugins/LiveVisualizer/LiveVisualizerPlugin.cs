@@ -50,7 +50,6 @@ namespace LiveVisualizer
 
         public LiveVisualizerPlugin(ILogger logger, ISettingsHandler settings) : base(settings)
         {
-            base.Start(logger);
             VisualizerData = new VisualizerDataModel();
 
             LoadConfiguration();

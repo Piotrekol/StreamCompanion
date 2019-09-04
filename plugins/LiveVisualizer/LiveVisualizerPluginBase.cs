@@ -18,11 +18,17 @@ namespace LiveVisualizer
         protected IWpfVisualizerData VisualizerData;
         private bool _disposed = false;
 
+        public string Description { get; } = "";
+        public string Name { get; } = "LiveVisualizer";
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+        public string SettingGroup { get; } = "Visualizer";
+
         public LiveVisualizerPluginBase(ISettingsHandler settings)
         {
             Settings = settings;
             _token = _cts.Token;
-            Started = true;
         }
         public virtual void Dispose()
         {
@@ -45,23 +51,6 @@ namespace LiveVisualizer
         }
 
         public abstract List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
-
-        public bool Started { get; set; }
-
-        public string Description { get; } = "";
-        public string Name { get; } = "LiveVisualizer";
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
-
-
-        public virtual void Start(ILogger logger)
-        {
-            _token = _cts.Token;
-            Started = true;
-        }
-
-        public string SettingGroup { get; } = "Visualizer";
 
         public void Free()
         {

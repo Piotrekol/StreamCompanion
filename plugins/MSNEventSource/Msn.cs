@@ -16,12 +16,6 @@ namespace MSNEventSource
         private const string lpClassName = "MsnMsgrUIManager";
         public bool Suspend { get; set; }
         private string _lastMsnString = "";
-        public bool Started { get; set; }
-        public void Start(ILogger logger)
-        {
-            _logger = logger;
-            Started = true;
-        }
 
         public string Description { get; } = "Provides basic osu! events using old MSN communication that still exists in osu!";
         public string Name { get; } = nameof(Msn);
@@ -29,6 +23,29 @@ namespace MSNEventSource
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
+
+        private static WndProc WndProcc;
+
+        public Msn(ILogger logger)
+        {
+            _logger = logger;
+            if (WndProcc != null)
+                return;
+            WndProcc = CustomWndProc;
+            lpWndClass = new WNDCLASS
+            {
+                lpszClassName = lpClassName,
+                lpfnWndProc = WndProcc
+            };
+
+            ushort num = RegisterClassW(ref lpWndClass);
+            int num2 = Marshal.GetLastWin32Error();
+            if ((num == 0) && (num2 != 0x582))
+            {
+                throw new Exception("Could not register window class");
+            }
+            this.m_hwnd = CreateWindowExW(0, lpClassName, string.Empty, 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+        }
 
         protected virtual void OnMsnStringChanged()
         {
@@ -88,27 +105,6 @@ namespace MSNEventSource
                 return searchArgs;
             }
             return null;
-        }
-
-        private static WndProc WndProcc;
-        public Msn(ILogger a)
-        {
-            if (WndProcc != null)
-                return;
-            WndProcc = CustomWndProc;
-            lpWndClass = new WNDCLASS
-            {
-                lpszClassName = lpClassName,
-                lpfnWndProc = WndProcc
-            };
-
-            ushort num = RegisterClassW(ref lpWndClass);
-            int num2 = Marshal.GetLastWin32Error();
-            if ((num == 0) && (num2 != 0x582))
-            {
-                throw new Exception("Could not register window class");
-            }
-            this.m_hwnd = CreateWindowExW(0, lpClassName, string.Empty, 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
         }
 
         [DllImport("user32.dll", SetLastError = true)]

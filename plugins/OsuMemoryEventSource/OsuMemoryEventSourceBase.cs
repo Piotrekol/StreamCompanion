@@ -49,13 +49,8 @@ namespace OsuMemoryEventSource
             _sqLiteController = sqliteControler;
             _modParser = modParser;
             _highFrequencyDataHandlers = highFrequencyDataHandlers;
-            Start(logger);
-        }
-        public virtual void Start(ILogger logger)
-        {
             Logger = logger;
             TokenSetter = Tokens.CreateTokenSetter(Name);
-
             _memoryReader = OsuMemoryReader.Instance;
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
@@ -92,7 +87,7 @@ namespace OsuMemoryEventSource
 
             Started = true;
         }
-
+        
         public void CreateTokens(MapSearchResult map)
         {
             //No need to do anything, tokens are created in MemoryDataProcessor.InitLiveTokens() and are constantly updated(live)
