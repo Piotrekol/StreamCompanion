@@ -13,7 +13,7 @@ namespace OsuMemoryEventSource
         IMapDataFinder, ISettingsProvider, IFirstRunControlProvider
     {
         public string SettingGroup { get; } = "Map matching";
-
+        public int Priority { get; set; } = 100;
         public OsuMemoryEventSource(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler, IModParser modParser, List<IHighFrequencyDataHandler> highFrequencyDataHandlers) : base(logger, settings, sqliteControler, modParser, highFrequencyDataHandlers)
         {
         }

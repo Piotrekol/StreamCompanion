@@ -10,5 +10,6 @@ namespace StreamCompanionTypes.Interfaces
         MapSearchResult FindBeatmap(MapSearchArgs searchArgs);
         OsuStatus SearchModes { get; }
         string SearcherName { get; }
+        int Priority { get; set; }
     }
 }

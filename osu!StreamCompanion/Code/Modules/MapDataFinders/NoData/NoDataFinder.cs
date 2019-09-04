@@ -7,7 +7,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
     {
         private ILogger _logger;
         public bool Started { get; set; }
-
+        public int Priority { get; set; } = -10;
         public NoDataFinder(ILogger logger)
         {
             Start(logger);

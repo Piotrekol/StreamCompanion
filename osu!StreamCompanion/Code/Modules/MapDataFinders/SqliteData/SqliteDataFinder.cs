@@ -17,7 +17,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                                                 OsuStatus.Watching | OsuStatus.ResultsScreen;
 
         public string SearcherName { get; } = "rawString";
-
+        public int Priority { get; set; } = 10;
         public SqliteDataFinder(ILogger logger, ISettingsHandler settings, IMainWindowModel mainWindowHandle, ISqliteControler sqLiteControler)
         {
             _mainWindowHandle = mainWindowHandle;
