@@ -1,6 +1,4 @@
-﻿using CollectionManager.DataTypes;
-using CollectionManager.Enums;
-using System;
+﻿using CollectionManager.Enums;
 using System.Collections.Generic;
 
 namespace StreamCompanionTypes.DataTypes

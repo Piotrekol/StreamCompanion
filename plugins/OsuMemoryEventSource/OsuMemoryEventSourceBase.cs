@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -10,7 +10,7 @@ using StreamCompanionTypes.Interfaces;
 namespace OsuMemoryEventSource
 {
     public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataGetter,
-         IOsuEventSource, IHighFrequencyDataSender, IModParserGetter, ISqliteUser, ISettings, ITokensProvider
+         IOsuEventSource, ITokensProvider
     {
         protected SettingNames _names = SettingNames.Instance;
 
@@ -29,7 +29,7 @@ namespace OsuMemoryEventSource
 
         protected List<IHighFrequencyDataHandler> _highFrequencyDataHandlers;
         protected ISqliteControler _sqLiteController;
-        protected List<IModParser> _modParser;
+        protected IModParser _modParser;
         protected ISettingsHandler _settings;
         internal static ILogger Logger;
         protected IOsuMemoryReader _memoryReader;
@@ -41,13 +41,16 @@ namespace OsuMemoryEventSource
         private Timer _timer;
         private int _poolingMsDelay = 33;
 
-        protected bool MemoryPoolingIsEnabled=false;
+        protected bool MemoryPoolingIsEnabled = false;
 
-        public virtual void Start(ILogger logger)
+        public OsuMemoryEventSourceBase(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler, IModParser modParser, List<IHighFrequencyDataHandler> highFrequencyDataHandlers)
         {
+            _settings = settings;
+            _sqLiteController = sqliteControler;
+            _modParser = modParser;
+            _highFrequencyDataHandlers = highFrequencyDataHandlers;
             Logger = logger;
             TokenSetter = Tokens.CreateTokenSetter(Name);
-
             _memoryReader = OsuMemoryReader.Instance;
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
@@ -64,19 +67,27 @@ namespace OsuMemoryEventSource
                 _settings.Add(_names.EnableMemoryScanner.Name, false);
                 return;
             }
-            
+
             lock (_lockingObject)
                 _timer = new Timer(TimerCallback, null, 250, Int32.MaxValue);
-            
 
-            _memoryListener = new MemoryListener(Helpers.GetFullSongsLocation(_settings));
-            _memoryListener.NewOsuEvent += (s, args) => NewOsuEvent?.Invoke(this, args);
+
+            _memoryListener = new MemoryListener();
+            _memoryListener.NewOsuEvent += async (s, args) =>
+            {
+                while (NewOsuEvent == null)
+                {
+                    await Task.Delay(5);
+                }
+
+                NewOsuEvent.Invoke(this, args);
+            };
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
             _memoryListener.SetSettingsHandle(_settings);
-            
+
             Started = true;
         }
-
+        
         public void CreateTokens(MapSearchResult map)
         {
             //No need to do anything, tokens are created in MemoryDataProcessor.InitLiveTokens() and are constantly updated(live)
@@ -139,26 +150,6 @@ namespace OsuMemoryEventSource
                 Interlocked.Increment(ref _shouldTimerRun);
                 RestartTimer(500);
             }
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
-        public void SetSqliteControlerHandle(ISqliteControler sqLiteControler)
-        {
-            _sqLiteController = sqLiteControler;
-        }
-
-        public void SetModParserHandle(List<IModParser> modParser)
-        {
-            _modParser = modParser;
-        }
-
-        public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
-        {
-            _highFrequencyDataHandlers = handlers;
         }
 
         public void Dispose()

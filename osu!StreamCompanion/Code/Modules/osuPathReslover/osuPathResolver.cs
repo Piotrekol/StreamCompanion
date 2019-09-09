@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -38,6 +37,13 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 
         public bool Started { get; set; }
 
+        public OsuPathResolver(ILogger logger, ISettingsHandler settings)
+        {
+            _logger = logger;
+            _settings = settings;
+            Start(logger);
+        }
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -56,7 +62,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
         }
         public void SetSettingsHandle(ISettingsHandler settings)
         {
-            _settings = settings;
+
         }
 
         private void Log(string text, params string[] vals)

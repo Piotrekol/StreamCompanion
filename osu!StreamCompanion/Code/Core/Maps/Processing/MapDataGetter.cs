@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CollectionManager.DataTypes;
 using osu_StreamCompanion.Code.Core.Savers;
-using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -27,7 +24,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             List<IMapDataParser> mapDataParsers, List<ITokensProvider> mapDataReplacementsGetters,
             MainSaver saver, ILogger logger, Settings settings)
         {
-            _mapDataFinders = mapDataFinders;
+            _mapDataFinders = mapDataFinders.OrderByDescending(x => x.Priority).ToList();
             _mapDataParsers = mapDataParsers;
             _mapDataGetters = mapDataGetters;
             _mapDataReplacementsGetters = mapDataReplacementsGetters;
@@ -78,7 +75,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             var tokens = new Tokens();
             foreach (var token in Tokens.AllTokens)
             {
-                tokens.Add(token.Key,token.Value);
+                tokens.Add(token.Key, token.Value);
             }
 
             mapSearchResult.FormatedStrings = GetMapPatterns(tokens, mapSearchResult.Action);

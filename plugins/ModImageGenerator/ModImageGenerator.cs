@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -11,12 +10,11 @@ using StreamCompanionTypes.Interfaces;
 
 namespace ModImageGenerator
 {
-    class ModImageGenerator : IPlugin, ITokensProvider, ISettingsProvider, ISaveRequester
+    class ModImageGenerator : IPlugin, ITokensProvider, ISettingsProvider
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
         private ISaver _saver;
-        public bool Started { get; set; }
         ImageDeployer _imageDeployer;
         ImageGenerator _imageGenerator;
         private ModImageGeneratorSettings _modImageGeneratorSettings;
@@ -29,17 +27,18 @@ namespace ModImageGenerator
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public void Start(ILogger logger)
+        public ModImageGenerator(ILogger logger, ISaver saver, ISettingsHandler settings)
         {
             _logger = logger;
+            _saver = saver;
+            _settings = settings;
+
             var imagesFolderName = "Images";
             _imageDeployer = new ImageDeployer(Path.Combine(_saver.SaveDirectory, imagesFolderName));
             _imageDeployer.DeployImages();
             _imageDeployer.CreateReadMe();
             _imageGenerator = new ImageGenerator(_settings, @"Images");
             _imageGenerator.SetSaveHandle(_saver);
-
-            Started = true;
         }
 
         public void CreateTokens(MapSearchResult map)
@@ -67,11 +66,6 @@ namespace ModImageGenerator
 
         public string SettingGroup { get; } = "Mod Image";
 
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
         public void Free()
         {
             _modImageGeneratorSettings.Dispose();
@@ -85,11 +79,5 @@ namespace ModImageGenerator
             }
             return _modImageGeneratorSettings;
         }
-
-        public void SetSaveHandle(ISaver saver)
-        {
-            _saver = saver;
-        }
-
     }
 }

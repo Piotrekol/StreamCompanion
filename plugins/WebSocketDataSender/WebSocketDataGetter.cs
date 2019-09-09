@@ -27,7 +27,24 @@ namespace WebSocketDataSender
 
         private DataContainer _liveDataContainer = new DataContainer();
         private DataContainer _mapDataContainer = new DataContainer();
+        private WebSocketServer webSocketServer;
 
+        public WebSocketDataGetter(ISettingsHandler settings)
+        {
+            _settings = settings;
+            if (!_settings.Get<bool>(Enabled))
+            {
+                return;
+            }
+
+            webSocketServer = new WebSocketServer(IPAddress.Loopback);
+            webSocketServer.ReuseAddress = true;
+
+            webSocketServer.AddWebSocketService("/StreamCompanion/LiveData/Stream", () => new StreamDataProvider(_liveDataContainer));
+            webSocketServer.AddWebSocketService("/StreamCompanion/MapData/Stream", () => new StreamDataProvider(_mapDataContainer));
+
+            webSocketServer.Start();
+        }
         public void Dispose()
         {
         }
@@ -54,23 +71,6 @@ namespace WebSocketDataSender
             _mapDataContainer.Data = json;
         }
 
-        private WebSocketServer webSocketServer;
-        public void Start(ILogger logger)
-        {
-            Started = true;
-            if (!_settings.Get<bool>(Enabled))
-            {
-                return;
-            }
-
-            webSocketServer = new WebSocketServer(IPAddress.Loopback);
-            webSocketServer.ReuseAddress = true;
-
-            webSocketServer.AddWebSocketService("/StreamCompanion/LiveData/Stream", () => new StreamDataProvider(_liveDataContainer));
-            webSocketServer.AddWebSocketService("/StreamCompanion/MapData/Stream", () => new StreamDataProvider(_mapDataContainer));
-
-            webSocketServer.Start();
-        }
 
         internal class DataContainer
         {
@@ -126,12 +126,6 @@ namespace WebSocketDataSender
                 }
             }
         }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
 
         public void Free()
         {

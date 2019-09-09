@@ -1,13 +1,9 @@
-﻿using CollectionManager.DataTypes;
-using CollectionManager.Enums;
+﻿using CollectionManager.Enums;
 using OsuMemoryDataProvider;
 using PpCalculator;
-using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
-using Mods = CollectionManager.DataTypes.Mods;
 
 namespace OsuMemoryEventSource
 {

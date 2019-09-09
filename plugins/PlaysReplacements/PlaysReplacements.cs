@@ -1,21 +1,12 @@
 ﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
-using System.Collections.Generic;
 
 namespace PlaysReplacements
 {
     public class PlaysReplacements : IPlugin, ITokensProvider
     {
         private int Plays, Retrys;
-        public bool Started { get; set; }
         private Tokens.TokenSetter _tokenSetter;
-
-        public void Start(ILogger logger)
-        {
-            _tokenSetter = Tokens.CreateTokenSetter(Name);
-
-            Started = true;
-        }
         private string lastMapSearchString = "";
 
         public string Description { get; } = "";
@@ -23,6 +14,11 @@ namespace PlaysReplacements
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
+
+        public PlaysReplacements()
+        {
+            _tokenSetter = Tokens.CreateTokenSetter(Name);
+        }
 
         public void CreateTokens(MapSearchResult map)
         {

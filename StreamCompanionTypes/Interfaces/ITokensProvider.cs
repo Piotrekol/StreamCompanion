@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using StreamCompanionTypes.DataTypes;
+﻿using StreamCompanionTypes.DataTypes;
 
 namespace StreamCompanionTypes.Interfaces
 {

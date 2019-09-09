@@ -4,19 +4,19 @@ using StreamCompanionTypes.Interfaces;
 
 namespace ModsHandler
 {
-    public class ModParser : CollectionManager.Modules.ModParser.ModParser, IModule, IModParser, ISettingsProvider
+    public class ModParser : CollectionManager.Modules.ModParser.ModParser, IModParser, ISettingsProvider
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private ISettingsHandler _settings;
         private ModParserSettings _modParserSettings;
-        public bool Started { get; set; }
         public string SettingGroup { get; } = "Map matching";
 
-        public void Start(ILogger logger)
+        public ModParser(ISettingsHandler settings)
         {
-            Started = true;
+            _settings = settings;
         }
+
 
         private void UpdateNoModText()
         {
@@ -40,11 +40,6 @@ namespace ModsHandler
             );
 
             return mods;
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
         }
 
         public void Free()

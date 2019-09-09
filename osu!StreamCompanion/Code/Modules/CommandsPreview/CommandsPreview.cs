@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1;
-using StreamCompanionTypes;
+﻿using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
@@ -18,6 +15,12 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         private CommandsPreviewSettings _commandsPreviewSettings;
         private ISettingsHandler _settings;
         private Dictionary<string, string> tokenFormats;
+
+        public CommandsPreview(ILogger logger, ISettingsHandler settings)
+        {
+            _settings = settings;
+            Start(logger);
+        }
         public void Start(ILogger logger)
         {
             tokenFormats = JsonConvert.DeserializeObject<Dictionary<string, string>>(_settings.Get<string>(SettingNames.Instance.TokenFormats));
@@ -54,7 +57,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         public string SettingGroup { get; } = "Commands Preview";
         public void SetSettingsHandle(ISettingsHandler settings)
         {
-            _settings = settings;
+
         }
 
         public void Free()

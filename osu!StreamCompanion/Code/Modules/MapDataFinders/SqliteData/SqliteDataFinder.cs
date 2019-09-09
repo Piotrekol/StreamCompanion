@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using CollectionManager.Modules.FileIO.OsuDb;
-using osu_StreamCompanion.Code.Core;
-using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 {
-    public class SqliteDataFinder : IModule, IMapDataFinder, IMainWindowUpdater, ISqliteUser, ISettings
+    public class SqliteDataFinder : IModule, IMapDataFinder
     {
         public bool Started { get; set; }
         private ILogger _logger;
@@ -24,15 +17,21 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                                                 OsuStatus.Watching | OsuStatus.ResultsScreen;
 
         public string SearcherName { get; } = "rawString";
-
-        
+        public int Priority { get; set; } = 10;
+        public SqliteDataFinder(ILogger logger, ISettingsHandler settings, IMainWindowModel mainWindowHandle, ISqliteControler sqLiteControler)
+        {
+            _mainWindowHandle = mainWindowHandle;
+            _settingsHandle = settings;
+            _sqliteControler = sqLiteControler;
+            Start(logger);
+        }
         public void Start(ILogger logger)
         {
             Started = true;
             _logger = logger;
-            var cacheInitalizer = new CacheInitalizer(_mainWindowHandle, _sqliteControler, _settingsHandle,_logger);
+            var cacheInitalizer = new CacheInitalizer(_mainWindowHandle, _sqliteControler, _settingsHandle, _logger);
             cacheInitalizer.Initalize();
-            
+
         }
 
 
@@ -64,24 +63,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
         private bool IsValidBeatmap(Beatmap beatmap)
         {
-            return beatmap != null 
-                   && !string.IsNullOrEmpty(beatmap.Md5) 
+            return beatmap != null
+                   && !string.IsNullOrEmpty(beatmap.Md5)
                    && !(string.IsNullOrWhiteSpace(beatmap.ArtistRoman) || string.IsNullOrWhiteSpace(beatmap.TitleRoman));
         }
 
-        public void GetMainWindowHandle(IMainWindowModel mainWindowHandle)
-        {
-            _mainWindowHandle = mainWindowHandle;
-        }
-
-        public void SetSqliteControlerHandle(ISqliteControler sqLiteControler)
-        {
-            _sqliteControler = sqLiteControler;
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settingsHandle = settings;
-        }
     }
 }

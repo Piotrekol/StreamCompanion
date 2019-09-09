@@ -17,9 +17,9 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<string> _rawLines = new List<string>();
         private readonly List<string> _backupRawLines = new List<string>();
         public EventHandler<SettingUpdated> SettingUpdated { get; set; }
-        private string saveLocation;
+        private string _saveLocation = AppDomain.CurrentDomain.BaseDirectory;
         private readonly string configFileName = "settings.ini";
-        public string FullConfigFilePath { get { return Path.Combine(saveLocation, configFileName); } }
+        public string FullConfigFilePath { get { return Path.Combine(_saveLocation, configFileName); } }
         private static readonly object _lockingObject = new object();
         public Settings(ILogger logger)
         {
@@ -161,9 +161,9 @@ namespace osu_StreamCompanion.Code.Core
                 {
                     stringBuilder.AppendFormat("{0} = {1}{2}", entry.Key, entry.Value, Environment.NewLine);
                 }
-                if (!Directory.Exists(saveLocation))
+                if (!Directory.Exists(_saveLocation))
                 {
-                    Directory.CreateDirectory(saveLocation);
+                    Directory.CreateDirectory(_saveLocation);
                 }
                 using (var fileHandle = new StreamWriter(FullConfigFilePath))
                 {
@@ -187,11 +187,6 @@ namespace osu_StreamCompanion.Code.Core
                         }
                     }
             }
-        }
-
-        public void SetSavePath(string path)
-        {
-            saveLocation = path;
         }
     }
 }

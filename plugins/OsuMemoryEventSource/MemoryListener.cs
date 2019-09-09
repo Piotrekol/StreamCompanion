@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace OsuMemoryEventSource
 {
-    public class MemoryListener : IOsuEventSource, IHighFrequencyDataSender, IDisposable, ISettings
+    public class MemoryListener : IOsuEventSource, IDisposable
     {
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
 
@@ -24,15 +24,14 @@ namespace OsuMemoryEventSource
         public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettingsHandler _settings;
 
-        public MemoryListener(string songsFolderLocation)
+        public MemoryListener()
         {
-            _memoryDataProcessor = new MemoryDataProcessor(songsFolderLocation);
+            _memoryDataProcessor = new MemoryDataProcessor();
         }
 
         public void Tick(IOsuMemoryReader reader, bool sendEvents)
         {
-            int num;
-            _currentStatus = reader.GetCurrentStatus(out num);
+            _currentStatus = reader.GetCurrentStatus(out _);
             if (_lastStatusLog != _currentStatus)
             {
                 _lastStatusLog = _currentStatus;

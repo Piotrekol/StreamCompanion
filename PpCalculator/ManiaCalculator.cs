@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Objects;

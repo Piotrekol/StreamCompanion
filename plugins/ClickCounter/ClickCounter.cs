@@ -3,12 +3,13 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace ClickCounter
 {
-    public class ClickCounter : ApplicationContext,IPlugin, ISettingsProvider, ISaveRequester, IDisposable, ITokensProvider, IHighFrequencyDataSender
+    public class ClickCounter : ApplicationContext, IPlugin, ISettingsProvider, IDisposable, ITokensProvider
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettingsHandler _settings;
@@ -27,6 +28,9 @@ namespace ClickCounter
         private Tokens.TokenSetter _tokenSetter;
         private Thread _hooksThread = null;
 
+        KeysPerX _keysPerX = new KeysPerX();
+        private ILogger _logger;
+
         public string SettingGroup { get; } = "Click counter";
 
         public string Description { get; } = "";
@@ -34,6 +38,28 @@ namespace ClickCounter
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
+
+        public ClickCounter(ILogger logger, ISaver saver,ISettingsHandler settings, IEnumerable<IHighFrequencyDataHandler> handlers)
+        {
+            _logger = logger;
+            _saver = saver;
+            _settings = settings;
+            _highFrequencyDataHandler = handlers.ToList();
+
+            disableSavingToDisk = _settings.Get<bool>(_names.DisableClickCounterWrite);
+            Load();
+
+            if (_settings.Get<bool>(_names.ResetKeysOnRestart))
+                ResetKeys();
+            HookAll();
+            if (_settings.Get<bool>(_names.CfgEnableKpx))
+            {
+                _keysPerX.Start();
+            }
+
+            _tokenSetter = Tokens.CreateTokenSetter(Name);
+        }
+        
         public void HookAll()
         {
             _hooksThread = new Thread(() =>
@@ -138,14 +164,7 @@ namespace ClickCounter
                 _keyPressed[args.VKCode] = true;
             }
         }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-            disableSavingToDisk = _settings.Get<bool>(_names.DisableClickCounterWrite);
-            Load();
-        }
-
+        
         public void Free()
         {
             _frmSettings.checkBox_ResetOnRestart.CheckedChanged -= CheckBox_ResetOnRestart_CheckedChanged;
@@ -251,26 +270,6 @@ namespace ClickCounter
             Load();
         }
 
-        public bool Started { get; set; }
-        KeysPerX _keysPerX = new KeysPerX();
-        private ILogger _logger;
-
-        public void Start(ILogger logger)
-        {
-            _logger = logger;
-            if (_settings.Get<bool>(_names.ResetKeysOnRestart))
-                ResetKeys();
-            HookAll();
-            if (_settings.Get<bool>(_names.CfgEnableKpx))
-            {
-                _keysPerX.Start();
-            }
-
-            _tokenSetter = Tokens.CreateTokenSetter(Name);
-            Started = true;
-
-        }
-
         private void SaveKeysToSettings()
         {
             var keyCounts = new List<int>();
@@ -303,11 +302,6 @@ namespace ClickCounter
 
             _tokenSetter("M1", _rightMouseCount);
             _tokenSetter("M2", _leftMouseCount);
-        }
-
-        public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
-        {
-            _highFrequencyDataHandler = handlers;
         }
     }
 }

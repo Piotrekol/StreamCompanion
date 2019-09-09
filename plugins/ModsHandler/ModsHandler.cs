@@ -1,42 +1,33 @@
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace ModsHandler
 {
-    public class ModsHandler : IPlugin, IModParser, ISettingsProvider, IDifficultyCalculator, ITokensProvider
+    public class ModsHandler : IPlugin, IModParser, IDifficultyCalculator, ITokensProvider, ISettingsProvider
     {
-        private readonly ModParser _modParser = new ModParser();
+        private readonly ModParser _modParser;
         private readonly DifficultyCalculator _difficultyCalculator = new DifficultyCalculator();
         private Tokens.TokenSetter _tokenSetter;
-
-        public bool Started { get; set; }
-
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(ModsHandler);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
+        public string SettingGroup => _modParser.SettingGroup;
 
-        public void Start(ILogger logger)
+        public ModsHandler(ISettingsHandler settings)
         {
+            _modParser = new ModParser(settings);
             _tokenSetter = Tokens.CreateTokenSetter(Name);
-            Started = true;
         }
 
-        public Mods GetMods(int modsEnum)
-        {
-            _modParser.Start(null);
-            return (Mods)modsEnum;
-        }
         public ModsEx GetModsFromEnum(int modsEnum)
         {
             return _modParser.GetModsFromEnum(modsEnum);
@@ -45,23 +36,6 @@ namespace ModsHandler
         public string GetModsFromEnum(int modsEnum, bool shortMod = false)
         {
             return _modParser.GetModsFromEnum(modsEnum, shortMod);
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _modParser.SetSettingsHandle(settings);
-        }
-
-        public string SettingGroup => _modParser.SettingGroup;
-
-        public void Free()
-        {
-            _modParser.Free();
-        }
-
-        public UserControl GetUiSettings()
-        {
-            return _modParser.GetUiSettings();
         }
 
         public Beatmap ApplyMods(Beatmap map, Mods mods)
@@ -73,7 +47,7 @@ namespace ModsHandler
             retMap.OverallDifficulty = c["OD"];
             return retMap;
         }
-        
+
         public void CreateTokens(MapSearchResult map)
         {
 
@@ -108,5 +82,13 @@ namespace ModsHandler
                 }
             }
         }
+
+        public void Free()
+        {
+            _modParser.Free();
+        }
+
+        public UserControl GetUiSettings()
+            => _modParser.GetUiSettings();
     }
 }

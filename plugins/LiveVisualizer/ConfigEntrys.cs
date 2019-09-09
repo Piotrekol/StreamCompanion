@@ -1,5 +1,4 @@
 ﻿using StreamCompanionTypes.DataTypes;
-using System.Net.NetworkInformation;
 
 namespace LiveVisualizer
 {

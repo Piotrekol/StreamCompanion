@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
-using OsuMemoryDataProvider;
-using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
-using Timer = System.Threading.Timer;
 
 namespace OsuMemoryEventSource
 {
@@ -16,6 +13,10 @@ namespace OsuMemoryEventSource
         IMapDataFinder, ISettingsProvider, IFirstRunControlProvider
     {
         public string SettingGroup { get; } = "Map matching";
+        public int Priority { get; set; } = 100;
+        public OsuMemoryEventSource(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler, IModParser modParser, List<IHighFrequencyDataHandler> highFrequencyDataHandlers) : base(logger, settings, sqliteControler, modParser, highFrequencyDataHandlers)
+        {
+        }
 
         protected override void OnSettingsSettingUpdated(object sender, SettingUpdated e)
         {
@@ -107,10 +108,7 @@ namespace OsuMemoryEventSource
 
         private ModsEx GetMods(int modsValue)
         {
-            if (_modParser == null || _modParser.Count == 0)
-                return null;
-
-            return _modParser[0].GetModsFromEnum(modsValue);
+            return _modParser?.GetModsFromEnum(modsValue);
         }
         private FirstRunMemoryCalibration _firstRunMemoryCalibration = null;
         public List<FirstRunUserControl> GetFirstRunUserControls()

@@ -3,10 +3,9 @@
     /// <summary>
     /// Defines a class that should get initalized in StreamCompanion <para/>
     /// All plugins are required to implement <see cref="IPlugin"/> in order to get loaded <para/>
-    /// There is NO guaranted order of with handlers for other interfaces(like <see cref="ISettingsGetter"/> or <see cref="ISqliteUser"/>) will get called <para/>
-    /// Only guarantee is that <see cref="IModule.Start"/> (with <see cref="IPlugin"/> implements) will get called as last
+    /// All dependencies defined in plugin class constructor will get injected.
     /// </summary>
-    public interface IPlugin : IModule
+    public interface IPlugin 
     {
         string Description { get; }
         string Name { get; }

@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ConfigEntry = StreamCompanionTypes.DataTypes.ConfigEntry;
 
 namespace LiveVisualizer
 {
@@ -49,9 +47,9 @@ namespace LiveVisualizer
         private string _lastMapLocation = string.Empty;
         private ModsEx _lastMods = null;
 
-        public override void Start(ILogger logger)
+
+        public LiveVisualizerPlugin(ILogger logger, ISettingsHandler settings) : base(settings)
         {
-            base.Start(logger);
             VisualizerData = new VisualizerDataModel();
 
             LoadConfiguration();
@@ -305,5 +303,6 @@ namespace LiveVisualizer
         {
             base.Dispose();
         }
+
     }
 }

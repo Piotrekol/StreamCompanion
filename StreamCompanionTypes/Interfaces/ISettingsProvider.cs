@@ -2,7 +2,7 @@
 
 namespace StreamCompanionTypes.Interfaces
 {
-    public interface ISettingsProvider : ISettings
+    public interface ISettingsProvider
     {
         string SettingGroup { get; }
         void Free();

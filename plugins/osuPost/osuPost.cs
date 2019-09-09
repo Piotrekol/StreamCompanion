@@ -11,9 +11,7 @@ namespace osuPost
         private readonly SettingNames _names = SettingNames.Instance;
 
         private ISettingsHandler _settings;
-        public bool Started { get; set; }
         private OsuPostApi api;
-
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(OsuPost);
@@ -21,13 +19,14 @@ namespace osuPost
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public void Start(ILogger logger)
+        public OsuPost(ILogger logger,ISettingsHandler settings)
         {
-            Started = true;
+            _settings = settings;
+
             api = new OsuPostApi(logger);
             api.EndpointUrl = _settings.Get<string>(_names.osuPostEndpoint);
             SwitchApiStatus(_settings.Get<bool>(_names.osuPostEnabled));
-            _settings.SettingUpdated+=SettingUpdated;
+            _settings.SettingUpdated += SettingUpdated;
         }
 
         private void SettingUpdated(object sender, SettingUpdated settingUpdated)
@@ -39,11 +38,6 @@ namespace osuPost
         }
 
         public string SettingGroup { get; } = "osu!Post";
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-        }
-
         public void Free()
         {
             _frmSettings.Dispose();
