@@ -15,6 +15,7 @@ namespace LiveVisualizer
     {
         private readonly ISettingsHandler _settings;
         private readonly IVisualizerConfiguration _configuration;
+        public EventHandler ResetSettings;
 
         public LiveVisualizerSettings(ISettingsHandler settings, IVisualizerConfiguration configuration)
         {
@@ -56,6 +57,12 @@ namespace LiveVisualizer
 
             BindColorPicker(color_textArtist, () => _configuration.ArtistTextColor, color => _configuration.ArtistTextColor = color);
             BindColorPicker(color_textTitle, () => _configuration.TitleTextColor, color => _configuration.TitleTextColor = color);
+
+            BindColorPicker(color_ppBackground, () => _configuration.PpBackgroundColor, color => _configuration.PpBackgroundColor = color);
+            BindColorPicker(color_hit100Background, () => _configuration.Hit100BackgroundColor, color => _configuration.Hit100BackgroundColor = color);
+            BindColorPicker(color_hit50Background, () => _configuration.Hit50BackgroundColor, color => _configuration.Hit50BackgroundColor = color);
+            BindColorPicker(color_hitMissBackground, () => _configuration.HitMissBackgroundColor, color => _configuration.HitMissBackgroundColor = color);
+
 
             textBox_chartCutoffs.Text = string.Join(";", _configuration.ChartCutoffsSet);
 
@@ -162,5 +169,34 @@ namespace LiveVisualizer
             Process.Start("https://osu.ppy.sh/users/4944211");
         }
 
+        private void Button_miniCounter_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("This will modify your existing Live Visualizer settings, are you sure?",
+                    "Live Visualizer mini counter mode", MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
+                DialogResult.Yes)
+            {
+                return;
+            }
+
+            numericUpDown_windowWidth.Value = numericUpDown_windowWidth.Minimum;
+            numericUpDown_windowHeight.Value = numericUpDown_windowHeight.Minimum;
+            numericUpDown_chartHeight.Value = numericUpDown_chartHeight.Minimum;
+            checkBox_enableRoundedCorners.Checked = false;
+            numericUpDown_bottomHeight.Value = 100;
+        }
+
+        private void Button_reset_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("This will reset all Live Visualizer settings, are you sure?",
+                    "Live Visualizer settings reset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                DialogResult.Yes)
+            {
+                ResetSettings?.Invoke(this, EventArgs.Empty);
+                if (Parent?.Parent?.Parent is Form frm)
+                {
+                    frm.Close();
+                }
+            }
+        }
     }
 }

@@ -62,6 +62,7 @@ namespace LiveVisualizer
             if (_liveVisualizerSettings == null || _liveVisualizerSettings.IsDisposed)
             {
                 _liveVisualizerSettings = new LiveVisualizerSettings(Settings, VisualizerData.Configuration);
+                _liveVisualizerSettings.ResetSettings += (_, __) => ResetSettings();
             }
 
             return _liveVisualizerSettings;
@@ -79,6 +80,8 @@ namespace LiveVisualizer
             _cts = new CancellationTokenSource();
             _token = _cts.Token;
         }
+
+        protected abstract void ResetSettings();
 
         protected abstract void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token);
     }

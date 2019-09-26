@@ -39,5 +39,9 @@ namespace LiveVisualizer
         Color ImageDimColor { get; set; }
         Color TitleTextColor { get; set; }
         Color ArtistTextColor { get; set; }
+        Color PpBackgroundColor { get; set; }
+        Color Hit100BackgroundColor { get; set; }
+        Color Hit50BackgroundColor { get; set; }
+        Color HitMissBackgroundColor { get; set; }
     }
 }

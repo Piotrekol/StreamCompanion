@@ -83,11 +83,19 @@ namespace LiveVisualizer
             Settings.Add(ConfigEntrys.LiveVisualizerConfig.Name, serializedConfig, false);
         }
 
-        private void LoadConfiguration()
+        private void LoadConfiguration(bool reset = false)
         {
             var config = Settings.Get<string>(ConfigEntrys.LiveVisualizerConfig);
 
-            if (config == ConfigEntrys.LiveVisualizerConfig.Default<string>())
+            if (reset)
+            {
+                //WPF window doesn't update its width when replacing configuration object - workaround
+                var newConfiguration = new VisualizerConfiguration();
+                VisualizerData.Configuration.WindowWidth = newConfiguration.WindowWidth;
+                VisualizerData.Configuration = newConfiguration;
+            }
+
+            if (reset || config == ConfigEntrys.LiveVisualizerConfig.Default<string>())
             {
                 VisualizerData.Configuration.ChartCutoffsSet = new SortedSet<int>(new[] { 30, 60, 100, 200, 350 });
                 return;
@@ -95,7 +103,12 @@ namespace LiveVisualizer
 
             VisualizerData.Configuration = JsonConvert.DeserializeObject<VisualizerConfiguration>(config);
         }
-
+        
+        protected override void ResetSettings()
+        {
+            LoadConfiguration(true);
+        }
+        
         private void EnableVisualizer(bool enable)
         {
             if (enable)
@@ -113,7 +126,6 @@ namespace LiveVisualizer
                 _visualizerWindow?.Hide();
             }
         }
-
 
         protected override void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token)
         {
