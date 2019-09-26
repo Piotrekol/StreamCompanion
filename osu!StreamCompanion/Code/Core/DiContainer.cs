@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -33,7 +34,7 @@ namespace osu_StreamCompanion.Code.Core
                 .As<ISqliteControler>().Lifestyle.Singleton());
             di.Configure(x => x.ExportDefault(typeof(MapStringFormatter)));
             di.Configure(x => x.ExportDefault(typeof(MainMapDataGetter)));
-
+            di.Configure(c => c.ImportMembers<object>(MembersThat.HaveAttribute<ImportAttribute>()));
             di.Configure(x => x.ExportFuncWithContext<Delegates.Exit>((scope, context, arg3) =>
               {
                   var isModule = context.TargetInfo.InjectionType.GetInterfaces().Contains(typeof(IModule));
