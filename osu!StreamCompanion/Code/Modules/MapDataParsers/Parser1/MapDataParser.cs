@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
+using System.Linq;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using StreamCompanionTypes;
@@ -18,14 +20,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private readonly object _lockingObject = new object();
         private ParserSettings _parserSettings = null;
         private ILogger _logger;
+        public bool Started { get; set; }
+        public string SettingGroup { get; } = "Output patterns";
 
+        [Import]
+        public Lazy<IEnumerable<IPlugin>> LoadedPlugins { get; set; }
+        
         public MapDataParser(ILogger logger, ISettingsHandler settings)
         {
             _logger = logger;
             _settings = settings;
             Start(logger);
         }
-        public bool Started { get; set; }
+
         public void Start(ILogger logger)
         {
             Started = true;
@@ -84,7 +91,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             Save();
         }
-        
+
         public List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
             List<OutputPattern> ret = null;
@@ -112,12 +119,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             return toFormat;
         }
-        public void SetSettingsHandle()
-        {
 
-        }
-
-        public string SettingGroup { get; } = "Output patterns";
         public void Free()
         {
             _parserSettings.Dispose();
@@ -127,9 +129,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (_parserSettings == null || _parserSettings.IsDisposed)
             {
-                _parserSettings = new ParserSettings(_settings, ResetPatterns);
+                var inGameOverlayIsAvailable = LoadedPlugins.Value.Any(p => p.Name == "IngameOverlay");
+                _parserSettings = new ParserSettings(_settings, inGameOverlayIsAvailable, ResetPatterns);
                 _parserSettings.SetPatterns(_patterns);
             }
+
             return _parserSettings;
         }
         private void Save()
@@ -176,11 +180,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             _parserSettings?.Dispose();
             Save();
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            
         }
     }
 }

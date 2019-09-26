@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using StreamCompanionTypes.DataTypes;
@@ -7,6 +7,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
     public partial class PatternList : UserControl
     {
+        public EventHandler<OutputPattern> SelectedItemChanged;
+
+        public bool InGameOverlayIsAvailable;
+
         public PatternList()
         {
             InitializeComponent();
@@ -25,8 +29,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             dataGridView.DataSource = patterns;
             dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        }
 
-        public EventHandler<OutputPattern> SelectedItemChanged;
+            if (!InGameOverlayIsAvailable && dataGridView?.Columns["ShowInOsu"] != null)
+                dataGridView.Columns["ShowInOsu"].Visible = false;
+        }
     }
 }

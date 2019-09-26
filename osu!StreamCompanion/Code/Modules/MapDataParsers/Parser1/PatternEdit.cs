@@ -13,6 +13,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
     public partial class PatternEdit : UserControl
     {
         private OutputPattern _current;
+        private bool _inGameOverlayIsAvailable;
+
+        public bool InGameOverlayIsAvailable
+        {
+            get => _inGameOverlayIsAvailable;
+            set
+            {
+                _inGameOverlayIsAvailable = value;
+                checkBox_ShowIngame.Visible = value;
+                panel_showInOsu.Visible = value && checkBox_ShowIngame.Checked;
+            }
+        }
+
         public Dictionary<string, OsuStatus> SaveEvents = new Dictionary<string, OsuStatus>
         {
             {"All",OsuStatus.All },
