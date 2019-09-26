@@ -116,6 +116,7 @@
             // 
             this.textBox_preview.Location = new System.Drawing.Point(116, 58);
             this.textBox_preview.Name = "textBox_preview";
+            this.textBox_preview.ReadOnly = true;
             this.textBox_preview.Size = new System.Drawing.Size(466, 20);
             this.textBox_preview.TabIndex = 9;
             // 
