@@ -44,14 +44,14 @@
             this.panel_colorPreview.Cursor = System.Windows.Forms.Cursors.Hand;
             this.panel_colorPreview.Location = new System.Drawing.Point(69, 0);
             this.panel_colorPreview.Name = "panel_colorPreview";
-            this.panel_colorPreview.Size = new System.Drawing.Size(25, 25);
+            this.panel_colorPreview.Size = new System.Drawing.Size(23, 23);
             this.panel_colorPreview.TabIndex = 0;
             this.panel_colorPreview.Click += new System.EventHandler(this.panel_ColorPreview_Click);
             // 
             // Label
             // 
             this.Label.AutoSize = true;
-            this.Label.Location = new System.Drawing.Point(3, 6);
+            this.Label.Location = new System.Drawing.Point(3, 5);
             this.Label.Name = "Label";
             this.Label.Size = new System.Drawing.Size(64, 13);
             this.Label.TabIndex = 1;
@@ -59,7 +59,7 @@
             // 
             // button_change
             // 
-            this.button_change.Location = new System.Drawing.Point(5, 1);
+            this.button_change.Location = new System.Drawing.Point(5, -1);
             this.button_change.Name = "button_change";
             this.button_change.Size = new System.Drawing.Size(58, 23);
             this.button_change.TabIndex = 2;
@@ -69,7 +69,7 @@
             // 
             // numericUpDown_alpha
             // 
-            this.numericUpDown_alpha.Location = new System.Drawing.Point(139, 3);
+            this.numericUpDown_alpha.Location = new System.Drawing.Point(139, 1);
             this.numericUpDown_alpha.Maximum = new decimal(new int[] {
             255,
             0,
@@ -83,7 +83,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(98, 7);
+            this.label1.Location = new System.Drawing.Point(98, 5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(37, 13);
             this.label1.TabIndex = 4;
@@ -98,7 +98,7 @@
             this.panel1.Controls.Add(this.button_change);
             this.panel1.Location = new System.Drawing.Point(230, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(196, 26);
+            this.panel1.Size = new System.Drawing.Size(196, 22);
             this.panel1.TabIndex = 5;
             // 
             // ColorPickerWithPreview
@@ -108,7 +108,7 @@
             this.Controls.Add(this.Label);
             this.Controls.Add(this.panel1);
             this.Name = "ColorPickerWithPreview";
-            this.Size = new System.Drawing.Size(426, 26);
+            this.Size = new System.Drawing.Size(426, 22);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_alpha)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

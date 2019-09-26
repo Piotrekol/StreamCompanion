@@ -41,7 +41,7 @@
             <RowDefinition
                 Height="{Binding Configuration.BottomHeight, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid.RowDefinitions>
-        <Border Name="Border">
+        <Border Name="Border" Grid.RowSpan="2">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
@@ -57,7 +57,7 @@
                     Stretch="UniformToFill" />
             </Border.Background>
         </Border>
-        <Border Name="Border2">
+        <Border Grid.Row="0" Name="Border2" Grid.RowSpan="2">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
@@ -72,7 +72,7 @@
             </Border.Background>
         </Border>
 
-        <Grid>
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="{Binding Configuration.ArtistContainerHeight}" />
@@ -103,23 +103,46 @@
         <Frame Name="frameholderTimer" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom"
                HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}" />
 
-        <Rectangle Grid.Row="1" Fill="#141414" />
-        <Grid Grid.Row="1">
+        <Border Grid.Row="1"  Margin="10" Background="Transparent"
+        BorderBrush="Transparent" BorderThickness="2" Opacity="1.0">
+
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                        <GradientStop Color="{Binding Configuration.PpBackgroundColor}" Offset="0.25"/>
+                        <GradientStop Color="{Binding Configuration.Hit100BackgroundColor}" Offset="0.5"/>
+                        <GradientStop Color="{Binding Configuration.Hit50BackgroundColor}" Offset="0.75"/>
+                        <GradientStop Color="{Binding Configuration.HitMissBackgroundColor}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            
+            <Border.Effect>
+                <BlurEffect/>
+            </Border.Effect>
+            
+        </Border>
+        <Grid Grid.Row="1" Margin="15,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <Grid Margin="{Binding Configuration.MarginPP}">
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.5*" />
                     <ColumnDefinition Width="*" />
+
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+
                 </Grid.ColumnDefinitions>
                 <TextBlock Name="PPData" Text="{Binding Display.Pp, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                           Grid.Column="0" FontSize="{Binding Configuration.FontSizePP}" Foreground="#d6d0d1"
-                           HorizontalAlignment="Right" FontFamily="{Binding Configuration.Font}" />
-                <Label Name="PP" Grid.Column="1" Content="pp" FontSize="{Binding Configuration.FontSizePP}"
-                       Foreground="#d6d0d1" HorizontalAlignment="Left" FontFamily="{Binding Configuration.Font}" />
+                           Grid.Column="1" FontSize="{Binding Configuration.FontSizePP}" Foreground="#d6d0d1"
+                            VerticalAlignment="Center" FontFamily="{Binding Configuration.Font}" />
+                <Label Name="PP" Grid.Column="2" Content="pp" FontSize="{Binding Configuration.FontSizePP}"
+                       Foreground="#d6d0d1" VerticalAlignment="Center" FontFamily="{Binding Configuration.Font}" />
             </Grid>
+            
 
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -127,48 +150,22 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Name="hundreds" Content="100" HorizontalAlignment="Center"
-                           FontSize="{Binding Configuration.FontSizePPText}" Foreground="#FF817E7F"
-                           FontFamily="{Binding Configuration.Font}" />
-                    <Label Grid.Row="1" Name="hundredsData"
-                           Content="{Binding Display.Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                           HorizontalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
-                           Foreground="#d6d0d1" Margin="0 0 0 0" FontFamily="{Binding Configuration.Font}" />
+                <Label Grid.Column="0" Name="hundredsData"
+                       Content="{Binding Display.Hit100, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                       HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
+                       Foreground="#d6d0d1" Margin="0 0 0 0" FontFamily="{Binding Configuration.Font}" FontWeight="Bold"
+                       />
+                <Label Name="fiftieData" Grid.Column="1"
+                       Content="{Binding Display.Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
+                       Foreground="#d6d0d1" FontFamily="{Binding Configuration.Font}" FontWeight="Bold"
+                       />
+                <Label Name="missData" Grid.Column="2"
+                       Content="{Binding Display.HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
+                       Foreground="#d6d0d1" FontFamily="{Binding Configuration.Font}" FontWeight="Bold"
+                       />
 
-                </Grid>
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Name="fifties" Grid.Column="1" Content="50" HorizontalAlignment="Center"
-                           FontSize="{Binding Configuration.FontSizePPText}" Foreground="#FF817E7F"
-                           FontFamily="{Binding Configuration.Font}" />
-                    <Label Grid.Row="1" Name="fiftieData" Grid.Column="1"
-                           Content="{Binding Display.Hit50, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                           HorizontalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
-                           Foreground="#d6d0d1" FontFamily="{Binding Configuration.Font}" />
-
-                </Grid>
-                <Grid Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Name="miss" Grid.Column="2" Content="MISS" HorizontalAlignment="Center"
-                           FontSize="{Binding Configuration.FontSizePPText}" Foreground="#FF817E7F"
-                           FontFamily="{Binding Configuration.Font}" />
-                    <Label Grid.Row="1" Name="missData" Grid.Column="2"
-                           Content="{Binding Display.HitMiss, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                           HorizontalAlignment="Center" FontSize="{Binding Configuration.FontSizePPHits}"
-                           Foreground="#d6d0d1" FontFamily="{Binding Configuration.Font}" />
-
-                </Grid>
 
 
             </Grid>

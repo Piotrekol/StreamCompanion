@@ -12,13 +12,13 @@ namespace LiveVisualizer
 
         public double FontsizeTitle { get; set; } = 15;
         public double FontsizeArtist { get; set; } = 15;
-        public Color ChartColor { get; set; } = Color.FromArgb(102, 255, 178, 227);
-        public Color ChartProgressColor { get; set; } = Color.FromArgb(178, 255, 178, 227);
+        public Color ChartColor { get; set; } = Color.FromArgb(80, 255, 178, 227);
+        public Color ChartProgressColor { get; set; } = Color.FromArgb(140, 255, 178, 227);
         public double MaxYValue { get; set; } = 350;
         public Color FillColor { get; set; } = Color.FromArgb(178, 255, 178, 227);
         public bool Enable { get; set; } = true;
         public bool SimulatePPWhenListening { get; set; } = true;
-        public bool EnableRoundedCorners { get; set; } = true;
+        public bool EnableRoundedCorners { get; set; } = false;
         public string BottomHeight { get; set; } = "0.65*";
         public string Font { get; set; } = "Arial";
         public string TitleContainerHeight { get; set; } = "30";
@@ -40,6 +40,10 @@ namespace LiveVisualizer
         public Color ImageDimColor { get; set; } = Color.FromArgb(102, 0, 0, 0);
         public Color TitleTextColor { get; set; } = Color.FromArgb(255, 232, 232, 232);
         public Color ArtistTextColor { get; set; } = Color.FromArgb(255, 203, 203, 203);
+        public Color PpBackgroundColor { get; set; } = Color.FromArgb(102, 0, 0, 0);
+        public Color Hit100BackgroundColor { get; set; } = Color.FromArgb(170, 50, 205, 50); //LimeGreen
+        public Color Hit50BackgroundColor { get; set; } = Color.FromArgb(170, 138, 43, 226); //BlueViolet
+        public Color HitMissBackgroundColor { get; set; } = Color.FromArgb(170, 255, 69, 0); //OrangeRed
         public SortedSet<int> ChartCutoffsSet { get; set; } = new SortedSet<int>();
     }
 }
