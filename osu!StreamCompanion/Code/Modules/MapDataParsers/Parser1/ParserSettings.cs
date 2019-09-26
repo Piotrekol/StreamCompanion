@@ -16,13 +16,15 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         private BindingList<OutputPattern> _patterns;
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public ParserSettings(ISettingsHandler settings, Action resetPatterns)
+        public ParserSettings(ISettingsHandler settings, bool inGameOverlayIsAvailable, Action resetPatterns)
         {
             _settings = settings;
             _resetPatterns = resetPatterns;
             InitializeComponent();
             this.patternList.SelectedItemChanged += SelectedItemChanged;
+            this.patternList.InGameOverlayIsAvailable = inGameOverlayIsAvailable;
             this.checkBox_disableDiskSaving.Checked = _settings.Get<bool>(_names.DisableDiskPatternWrite);
+            this.patternEdit.InGameOverlayIsAvailable = inGameOverlayIsAvailable;
             this.patternEdit.DeletePattern += DeletePattern;
             this.patternEdit.AddPattern += AddPattern;
             checkBox_disableDiskSaving.CheckedChanged += CheckBox_disableDiskSaving_CheckedChanged;
