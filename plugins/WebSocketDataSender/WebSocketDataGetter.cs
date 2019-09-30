@@ -24,6 +24,7 @@ namespace WebSocketDataSender
         public string SettingGroup { get; } = "Output patterns";
 
         public static ConfigEntry Enabled = new ConfigEntry("webSocketEnabled", false);
+        public static ConfigEntry WebSocketPort = new ConfigEntry("webSocketPort", 80);
 
         private DataContainer _liveDataContainer = new DataContainer();
         private DataContainer _mapDataContainer = new DataContainer();
@@ -37,7 +38,7 @@ namespace WebSocketDataSender
                 return;
             }
 
-            webSocketServer = new WebSocketServer(IPAddress.Loopback);
+            webSocketServer = new WebSocketServer(IPAddress.Loopback, _settings.Get<int>(WebSocketPort));
             webSocketServer.ReuseAddress = true;
 
             webSocketServer.AddWebSocketService("/StreamCompanion/LiveData/Stream", () => new StreamDataProvider(_liveDataContainer));
