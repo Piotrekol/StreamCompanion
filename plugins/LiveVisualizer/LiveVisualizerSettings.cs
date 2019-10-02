@@ -71,7 +71,11 @@ namespace LiveVisualizer
             numericUpDown_windowHeight.Value = ((decimal)_configuration.WindowHeight).Clamp(numericUpDown_windowHeight.Minimum, numericUpDown_windowHeight.Maximum);
             numericUpDown_windowWidth.Value = ((decimal)_configuration.WindowWidth).Clamp(numericUpDown_windowWidth.Minimum, numericUpDown_windowWidth.Maximum);
             numericUpDown_chartHeight.Value = ((decimal)_configuration.ChartHeight).Clamp(numericUpDown_chartHeight.Minimum, numericUpDown_chartHeight.Maximum);
-            numericUpDown_bottomHeight.Value = decimal.Parse(_configuration.BottomHeight.Replace("*", "").Replace(".", ",")).Clamp(numericUpDown_bottomHeight.Minimum, numericUpDown_bottomHeight.Maximum);
+
+            numericUpDown_bottomHeight.Value = decimal.TryParse(_configuration.BottomHeight.Replace("*", "").Replace(".", ","),
+                NumberStyles.Any, CultureInfo.InvariantCulture, out var bottomHeight) 
+                ? bottomHeight.Clamp(numericUpDown_bottomHeight.Minimum, numericUpDown_bottomHeight.Maximum) 
+                : 0.65M;
 
 
             checkBox_enable.CheckedChanged += CheckBoxEnableOnCheckedChanged;
