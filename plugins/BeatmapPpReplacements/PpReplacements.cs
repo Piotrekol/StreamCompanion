@@ -19,7 +19,7 @@ namespace BeatmapPpReplacements
         private string _lastShortMods = "";
         private string _lastModsStr = "None";
 
-        
+
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(PpReplacements);
@@ -129,15 +129,8 @@ namespace BeatmapPpReplacements
             ppCalculator.Score = score;
 
             _ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            try
-            {
-                return ppCalculator.Calculate();
-            }
-            catch (ArgumentException e) when (e.Message.Contains("Invalid mod provided"))
-            {
-            }
 
-            return -1;
+            return ppCalculator.Calculate();
         }
     }
 }
