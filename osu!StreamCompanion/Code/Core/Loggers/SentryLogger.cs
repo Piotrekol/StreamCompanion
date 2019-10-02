@@ -14,7 +14,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             "https://2a3c77450ec84295b6a6d426b2fdd9b5@sentry.io/107853";
         public static RavenClient RavenClient { get; } = new RavenClient(RavenDsn);
 
-        public Dictionary<string,string> ContextData { get; } = new Dictionary<string, string>();
+        public static Dictionary<string,string> ContextData { get; } = new Dictionary<string, string>();
         public SentryLogger()
         {
             RavenClient.Release = Program.ScVersion;

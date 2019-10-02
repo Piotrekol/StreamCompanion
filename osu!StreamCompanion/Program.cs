@@ -178,6 +178,7 @@ namespace osu_StreamCompanion
                     var ravenClient = SentryLogger.RavenClient;
                     ravenClient.Release = ScVersion;
                     var sentryEvent = new SentryEvent(ex);
+                    sentryEvent.Extra = SentryLogger.ContextData;
                     ravenClient.Capture(sentryEvent);
                 }
 #endif
