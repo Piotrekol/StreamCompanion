@@ -34,11 +34,11 @@ namespace osu_StreamCompanion.Code.Core
 
             if (Settings.Get<bool>(_names.Console))
             {
-                _logger.ChangeLogger(new ConsoleLogger(Settings));
+                _logger.AddLogger(new ConsoleLogger(Settings));
             }
             else
             {
-                _logger.ChangeLogger(new EmptyLogger());
+                _logger.AddLogger(new EmptyLogger());
             }
 
             _logger.AddLogger(new FileLogger(saver, Settings));

@@ -5,18 +5,9 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {
-    class MainLogger : ILogger
+    class MainLogger : IContextAwareLogger
     {
-        private ILogger _logger = new EmptyLogger();
         private List<ILogger> _loggers = new List<ILogger>();
-        public void ChangeLogger(ILogger logger)
-        {
-            if (_logger is IDisposable)
-                ((IDisposable)_logger).Dispose();
-            _logger = null;
-
-            _logger = logger;
-        }
 
         public void AddLogger(ILogger logger)
         {
@@ -24,10 +15,18 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         }
         public void Log(object logMessage, LogLevel logLevel, params string[] vals)
         {
-            _logger?.Log(logMessage, logLevel, vals);
             for (int i = 0; i < _loggers.Count; i++)
             {
                 _loggers[i].Log(logMessage, logLevel, vals);
+            }
+        }
+
+        public void SetContextData(string key, string value)
+        {
+            for (int i = 0; i < _loggers.Count; i++)
+            {
+                if (_loggers[i] is IContextAwareLogger logger)
+                    logger.SetContextData(key, value);
             }
         }
     }

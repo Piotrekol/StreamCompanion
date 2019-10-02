@@ -11,7 +11,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
     public class MapStringFormatter : IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private ILogger _logger;
+        private IContextAwareLogger _logger;
         private readonly MainMapDataGetter _mainMapDataGetter;
         private ISettingsHandler _settings;
 
@@ -19,7 +19,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
         private ConcurrentStack<MapSearchArgs> TasksMemory = new ConcurrentStack<MapSearchArgs>();
 
-        public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettingsHandler settings)
+        public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettingsHandler settings, IContextAwareLogger logger)
         {
             _settings = settings;
             _mainMapDataGetter = mainMapDataGetter;
@@ -29,7 +29,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }
             ConsumerThread = new Thread(ConsumerTask);
 
-            Start(_logger);
+            _logger = logger;
+            ConsumerThread.Start();
         }
 
         private void NewOsuEvent(object sender, MapSearchArgs mapSearchArgs)
@@ -40,6 +41,14 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchArgs.SourceName == "OsuMemory")
             {
                 TasksMemory.Clear();
+                _logger.SetContextData("OsuMemory_event", new
+                {
+                    mapId = mapSearchArgs.MapId.ToString(),
+                    raw = mapSearchArgs.Raw,
+                    hash = mapSearchArgs.MapHash,
+                    playMode = mapSearchArgs.PlayMode?.ToString() ?? "null"
+                }.ToString());
+
                 TasksMemory.Push(mapSearchArgs);
             }
             else
@@ -50,16 +59,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         }
 
-        public bool Started { get; set; }
-        public void Start(ILogger logger)
-        {
-            if (Started)
-                return;
-
-            Started = true;
-            _logger = logger;
-            ConsumerThread.Start();
-        }
 
 
         public void ConsumerTask()
@@ -92,11 +91,22 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                             }
                             else
                             {
+                                _logger.SetContextData("OsuMemory_searchingForBeatmaps", "1");
                                 searchResult = _mainMapDataGetter.FindMapData(memorySearchArgs);
+                                _logger.SetContextData("OsuMemory_searchingForBeatmaps", "0");
+
                                 if (searchResult.FoundBeatmaps)
                                 {
                                     memorySearchFailed = false;
                                     searchResult.EventSource = memorySearchArgs.SourceName;
+                                    _logger.SetContextData("OsuMemory_searchResult", new
+                                    {
+                                        mods = searchResult.Mods?.Mods.ToString() ?? "null",
+                                        rawName = $"{searchResult.BeatmapsFound[0].Artist} - {searchResult.BeatmapsFound[0].Title} [{searchResult.BeatmapsFound[0].DiffName}]",
+                                        mapId = searchResult.BeatmapsFound[0].MapId.ToString(),
+                                        action = searchResult.Action.ToString()
+                                    }.ToString());
+
                                     _mainMapDataGetter.ProcessMapResult(searchResult);
                                 }
                                 else
@@ -109,8 +119,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                             {
                                 var status = memorySearchArgs?.Status ?? OsuStatus.Null;
 
-                                msnSearchArgs.Status = status != OsuStatus.Null 
-                                    ? status 
+                                msnSearchArgs.Status = status != OsuStatus.Null
+                                    ? status
                                     : msnSearchArgs.Status;
 
                                 searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
