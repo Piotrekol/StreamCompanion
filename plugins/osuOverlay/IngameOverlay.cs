@@ -27,10 +27,23 @@ namespace osuOverlay
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public IngameOverlay(ILogger logger,ISettingsHandler settings)
+        public IngameOverlay(ILogger logger, ISettingsHandler settings, Delegates.Exit exiter)
         {
             _logger = logger;
             _settings = settings;
+
+            try
+            {
+                SetNewMap(new MapSearchResult(new MapSearchArgs("dummy")));
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(
+                    $"IngameOverlay plugin version is not valid for this version of StreamCompanion. {Environment.NewLine} Either update or remove it from plugins folder",
+                    "osu!StreamCompanion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                exiter("plugin version is invalid for current StreamCompanion version.");
+            }
 
             if (_settings.Get<bool>(PluginSettings.EnableIngameOverlay))
             {
