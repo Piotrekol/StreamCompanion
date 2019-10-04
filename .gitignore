@@ -20,7 +20,6 @@
 [Rr]eleases/
 x64/
 x86/
-build/
 bld/
 [Bb]in/
 [Oo]bj/
@@ -200,3 +199,5 @@ FakesAssemblies/
 #innoSetup compilation results
 innoSetup/Output/
 osu!StreamCompanion/Properties/Annotations\.cs
+
+build/*/*
