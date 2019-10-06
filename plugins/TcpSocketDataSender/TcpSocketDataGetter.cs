@@ -87,7 +87,7 @@ namespace TcpSocketDataSender
             settingsUserControl?.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (settingsUserControl == null || settingsUserControl.IsDisposed)
             {

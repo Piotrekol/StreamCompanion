@@ -47,7 +47,7 @@ namespace ModsHandler
             _modParserSettings.Dispose();
         }
 
-        public System.Windows.Forms.UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_modParserSettings == null || _modParserSettings.IsDisposed)
             {

@@ -71,7 +71,7 @@ namespace ModImageGenerator
             _modImageGeneratorSettings.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_modImageGeneratorSettings == null || _modImageGeneratorSettings.IsDisposed)
             {

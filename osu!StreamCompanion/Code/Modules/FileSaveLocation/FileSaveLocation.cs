@@ -31,7 +31,7 @@ namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
             _fileSaveLocationSettings.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_fileSaveLocationSettings == null || _fileSaveLocationSettings.IsDisposed)
             {

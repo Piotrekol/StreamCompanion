@@ -1,18 +1,24 @@
-﻿using StreamCompanionTypes.DataTypes;
+﻿using System;
+using System.Windows.Forms;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces;
 
 namespace MSNEventSource
 {
-    public partial class FirstRunMsn : FirstRunUserControl
+    public partial class FirstRunMsn : UserControl, IFirstRunUserControl
     {
         public FirstRunMsn()
         {
             InitializeComponent();
-            this.pictureBox1.Image = GetStreamCompanionLogo();
+            this.pictureBox1.Image = StreamCompanionHelper.StreamCompanionLogo();
         }
 
         public void GotMsn(string msnString)
         {
-            this.OnCompleted(FirstRunUserControl.status.Ok);
+            Completed?.Invoke(this, new FirstRunCompletedEventArgs { ControlCompletionStatus = FirstRunStatus.Ok });
         }
+
+        public event EventHandler<FirstRunCompletedEventArgs> Completed;
     }
 }

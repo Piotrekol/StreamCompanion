@@ -27,7 +27,7 @@ namespace osu_StreamCompanion.Code.Modules.Donation
         }
 
         private DonationSettings donationSettings;
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (donationSettings == null || donationSettings.IsDisposed)
             {

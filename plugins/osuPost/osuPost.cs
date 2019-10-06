@@ -44,7 +44,7 @@ namespace osuPost
         }
 
         private osuPostSettings _frmSettings;
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_frmSettings == null || _frmSettings.IsDisposed)
             {

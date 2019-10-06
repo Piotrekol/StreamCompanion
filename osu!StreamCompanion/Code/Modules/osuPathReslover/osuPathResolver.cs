@@ -74,7 +74,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
             _frmSettings.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_frmSettings == null || _frmSettings.IsDisposed)
             {

@@ -134,7 +134,7 @@ namespace WebSocketDataSender
         }
 
         private WebSocketSettings _webSocketSettings;
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_webSocketSettings == null || _webSocketSettings.IsDisposed)
             {

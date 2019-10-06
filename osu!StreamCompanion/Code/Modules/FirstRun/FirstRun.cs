@@ -54,7 +54,7 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
 
             return _firstRunControlProviders.Count != 0 && (shouldForceFirstRun || _settings.Get<bool>(SettingNames.Instance.FirstRun));
         }
-        private IEnumerable<FirstRunUserControl> GetControls()
+        private IEnumerable<IFirstRunUserControl> GetControls()
         {
             foreach (var controlProvider in _firstRunControlProviders)
             {
