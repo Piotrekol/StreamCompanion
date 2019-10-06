@@ -88,7 +88,7 @@ namespace ModsHandler
             _modParser.Free();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
             => _modParser.GetUiSettings();
     }
 }

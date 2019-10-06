@@ -57,7 +57,7 @@ namespace LiveVisualizer
             _liveVisualizerSettings?.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_liveVisualizerSettings == null || _liveVisualizerSettings.IsDisposed)
             {

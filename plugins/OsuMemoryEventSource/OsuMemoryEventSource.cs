@@ -33,7 +33,7 @@ namespace OsuMemoryEventSource
         }
 
         private MemoryDataFinderSettings userSettings = null;
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (userSettings == null || userSettings.IsDisposed)
             {
@@ -111,7 +111,7 @@ namespace OsuMemoryEventSource
             return _modParser?.GetModsFromEnum(modsValue);
         }
         private FirstRunMemoryCalibration _firstRunMemoryCalibration = null;
-        public List<FirstRunUserControl> GetFirstRunUserControls()
+        public List<IFirstRunUserControl> GetFirstRunUserControls()
         {
             if (_firstRunMemoryCalibration == null || _firstRunMemoryCalibration.IsDisposed)
             {
@@ -122,7 +122,7 @@ namespace OsuMemoryEventSource
             {
                 _firstRunMemoryCalibration?.GotMemory(args.MapId, args.Status, args.Raw);
             };
-            return new List<FirstRunUserControl> { _firstRunMemoryCalibration };
+            return new List<IFirstRunUserControl> { _firstRunMemoryCalibration };
         }
     }
 }

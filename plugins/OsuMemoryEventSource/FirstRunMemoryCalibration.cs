@@ -7,11 +7,12 @@ using System.Windows.Forms;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace OsuMemoryEventSource
 {
-    public partial class FirstRunMemoryCalibration : FirstRunUserControl
+    public partial class FirstRunMemoryCalibration : UserControl, IFirstRunUserControl
     {
         private class Map
         {
@@ -72,7 +73,7 @@ namespace OsuMemoryEventSource
             _settings = settings;
 
             InitializeComponent();
-            this.pictureBox1.Image = GetStreamCompanionLogo();
+            this.pictureBox1.Image = StreamCompanionHelper.StreamCompanionLogo();
 
             CurrentMap = _maps[rnd.Next(0, _maps.Count)];
 
@@ -117,7 +118,7 @@ namespace OsuMemoryEventSource
                 {
                     label_memoryStatus.Text = $"{status}, id:{mapId}, valid mapset:{CurrentMap.BelongsToSet(mapId)}";
                 });
-                
+
                 if (CurrentMap.BelongsToSet(mapId) && status == OsuStatus.Playing)
                 {
                     this.BeginInvoke((MethodInvoker)delegate
@@ -175,7 +176,7 @@ namespace OsuMemoryEventSource
             _settings.Add(_names.EnableMemoryScanner.Name, Passed);
             _settings.Add(_names.EnableMemoryPooling.Name, Passed);
 
-            this.OnCompleted(status.Ok);
+            Completed?.Invoke(this, new FirstRunCompletedEventArgs { ControlCompletionStatus = FirstRunStatus.Ok });
         }
 
         private void button_anotherMap_Click(object sender, EventArgs e)
@@ -184,5 +185,7 @@ namespace OsuMemoryEventSource
             var l = new List<string> { "No", "NO", "Nah", "Nope", "Why", "uh-uh", "nay", "negative", "" };//Last one is intentional
             button_anotherMap.Text = l[rnd.Next(0, l.Count)];
         }
+
+        public event EventHandler<FirstRunCompletedEventArgs> Completed;
     }
 }

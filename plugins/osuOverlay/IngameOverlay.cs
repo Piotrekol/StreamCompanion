@@ -157,7 +157,7 @@ namespace osuOverlay
             _overlaySettings?.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_overlaySettings == null || _overlaySettings.IsDisposed)
             {

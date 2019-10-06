@@ -229,10 +229,10 @@ namespace MSNEventSource
         #endregion //MSN FIX
 
         private FirstRunMsn _firstRunUserControl = null;
-        public List<FirstRunUserControl> GetFirstRunUserControls()
+        public List<IFirstRunUserControl> GetFirstRunUserControls()
         {
             _firstRunUserControl = new FirstRunMsn();
-            return new List<FirstRunUserControl> { _firstRunUserControl };
+            return new List<IFirstRunUserControl> { _firstRunUserControl };
         }
         
     }

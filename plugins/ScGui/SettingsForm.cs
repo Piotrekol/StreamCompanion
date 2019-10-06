@@ -30,7 +30,7 @@ namespace ScGui
             foreach (var setting in _settingsList)
             {
                 int tabNumber;
-                var control = setting.GetUiSettings();
+                var control = (UserControl)setting.GetUiSettings();
                 if(control==null)
                     continue;
                 //If group tab doesn't exist - create it

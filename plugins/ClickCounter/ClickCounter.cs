@@ -209,7 +209,7 @@ namespace ClickCounter
 
 
         }
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             SaveKeysToSettings();
             if (_frmSettings == null || _frmSettings.IsDisposed)
