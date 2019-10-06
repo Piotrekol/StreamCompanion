@@ -65,7 +65,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             _commandsPreviewSettings.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_commandsPreviewSettings == null || _commandsPreviewSettings.IsDisposed)
             {

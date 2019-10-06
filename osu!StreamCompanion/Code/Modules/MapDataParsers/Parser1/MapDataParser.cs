@@ -125,7 +125,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _parserSettings.Dispose();
         }
 
-        public UserControl GetUiSettings()
+        public object GetUiSettings()
         {
             if (_parserSettings == null || _parserSettings.IsDisposed)
             {

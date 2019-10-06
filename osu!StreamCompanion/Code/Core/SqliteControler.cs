@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading;
@@ -45,7 +46,7 @@ namespace osu_StreamCompanion.Code.Core
         /// </summary>
         /// <param name="query">SQLite query to be executed</param>
         /// <returns>SQLiteDataReader with query results</returns>
-        public SQLiteDataReader Query(string query)
+        public DbDataReader Query(string query)
         {
             return _sqlConnector.Query(query);
         }
