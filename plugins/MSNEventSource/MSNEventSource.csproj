@@ -55,13 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
-      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
-      <Name>StreamCompanionTypes</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="FirstRunMsn.resx">
       <DependentUpon>FirstRunMsn.cs</DependentUpon>
     </EmbeddedResource>

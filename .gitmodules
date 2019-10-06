@@ -1,9 +1,6 @@
 [submodule "submodules/osu"]
 	path = submodules/osu
 	url = https://github.com/Piotrekol/osu
-[submodule "submodules/CollectionManager"]
-	path = submodules/CollectionManager
-	url = https://github.com/Piotrekol/CollectionManager
 [submodule "submodules/ProcessMemoryDataFinder"]
 	path = submodules/ProcessMemoryDataFinder
 	url = https://github.com/Piotrekol/ProcessMemoryDataFinder

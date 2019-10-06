@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -317,10 +317,6 @@
     <EmbeddedResource Include="Resources\logo_256x256.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StreamCompanionTypes\StreamCompanionTypes.csproj">
-      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
-      <Name>StreamCompanionTypes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\submodules\CollectionManager\CollectionManagerDll\CollectionManagerDll.csproj">
       <Project>{533ab47a-d1b5-45db-a37e-f053fa3699c4}</Project>
       <Name>CollectionManagerDll</Name>

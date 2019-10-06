@@ -62,13 +62,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
-      <Project>{2B90289D-8C11-4D91-8A41-C5C99620E537}</Project>
-      <Name>StreamCompanionTypes</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

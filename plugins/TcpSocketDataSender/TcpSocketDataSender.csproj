@@ -69,13 +69,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\StreamCompanionTypes\StreamCompanionTypes.csproj">
-      <Project>{2b90289d-8c11-4d91-8a41-c5c99620e537}</Project>
-      <Name>StreamCompanionTypes</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
