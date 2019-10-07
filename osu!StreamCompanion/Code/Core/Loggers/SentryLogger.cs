@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using osu_StreamCompanion.Code.Helpers;
 using SharpRaven;
 using SharpRaven.Data;
-using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Loggers

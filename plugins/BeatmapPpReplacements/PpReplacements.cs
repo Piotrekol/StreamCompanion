@@ -5,6 +5,7 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Linq;
+using StreamCompanionTypes.Enums;
 
 namespace BeatmapPpReplacements
 {

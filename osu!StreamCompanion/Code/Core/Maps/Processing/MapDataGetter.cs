@@ -4,6 +4,7 @@ using System.Linq;
 using osu_StreamCompanion.Code.Core.Savers;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing

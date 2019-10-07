@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Enums;
 
 namespace OsuSongsFolderWatcher
 {

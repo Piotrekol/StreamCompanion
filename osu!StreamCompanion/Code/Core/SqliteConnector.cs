@@ -8,6 +8,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text;
+using StreamCompanionTypes.Enums;
 
 namespace osu_StreamCompanion.Code.Core
 {

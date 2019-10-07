@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Windows.Forms;
+using StreamCompanionTypes.Enums;
 using CollectionManager.DataTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
