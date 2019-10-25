@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using StreamCompanionTypes;
-using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.osuPathReslover

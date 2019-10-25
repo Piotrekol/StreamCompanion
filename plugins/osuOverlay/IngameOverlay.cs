@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Enums;
 
 namespace osuOverlay
 {

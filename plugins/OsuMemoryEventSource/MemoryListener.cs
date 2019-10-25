@@ -4,6 +4,7 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using StreamCompanionTypes.Enums;
 
 namespace OsuMemoryEventSource
 {

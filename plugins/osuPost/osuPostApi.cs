@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace osuPost

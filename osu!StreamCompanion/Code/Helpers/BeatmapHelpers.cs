@@ -69,7 +69,9 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.DisableSb = reader.GetBoolean(i); i++;
             beatmap.BgDim = reader.GetInt16(i); i++;
             beatmap.Somestuff = reader.GetInt16(i); i++;
-            beatmap.DeSerializeStars((byte[])reader.GetValue(i));
+            beatmap.DeSerializeStars((byte[])reader.GetValue(i)); i++;
+            i++; // beatmapChecksum
+            beatmap.MainBpm = reader.GetDouble(i);
         }
 
         private static void WriteAll(this MemoryStream ms, int value)
@@ -148,6 +150,7 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"MaxBpm", null},
                     {"MinBpm", null},
                     {"Bpm", null},
+                    {"MainBpm", null },
                     {"tags", null},
                     {"state", null},
                     {"circles", null},
@@ -194,6 +197,7 @@ namespace osu_StreamCompanion.Code.Helpers
                         ? Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture)
                         : string.Format("{0} - {1}",Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture),Math.Round(bm.MaxBpm, 2).ToString(CultureInfo.InvariantCulture))
                     },
+                    {"MainBpm", Math.Round(bm.MainBpm, 2) },
                     {"tags", bm.Tags},
                     {"state", bm.StateStr},
                     {"circles", bm.Circles},

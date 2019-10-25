@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Enums;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {

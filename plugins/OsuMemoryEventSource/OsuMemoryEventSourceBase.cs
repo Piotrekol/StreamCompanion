@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace OsuMemoryEventSource

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using ModImageGenerator.API;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace ModImageGenerator

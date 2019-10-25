@@ -14,6 +14,7 @@ using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Enums;
 
 namespace osu_StreamCompanion.Code.Core
 {

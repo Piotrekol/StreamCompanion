@@ -2,6 +2,7 @@
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace WindowDataGetter

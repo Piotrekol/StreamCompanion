@@ -7,6 +7,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using StreamCompanionTypes.Enums;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
