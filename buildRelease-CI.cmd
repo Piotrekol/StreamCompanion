@@ -30,6 +30,7 @@ rm "./Output/StreamCompanion Updater.exe.config"
 cd ..
 REM clean installer folder
 rm ./innoSetup/Output/*
-REM create installer (Inno Setup 5)
-"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" ".\innoSetup\setupScript.iss"
-7z a .\build\overlayPlugin.zip .\build\Release_unsafe\*
+REM create installer (Inno Setup 6)
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\setupScript.iss"
+7z a .\build\ingameOverlay.zip .\build\Release_unsafe\*
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\osuOverlayScript.iss"
