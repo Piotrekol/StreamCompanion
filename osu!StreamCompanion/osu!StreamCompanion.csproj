@@ -345,8 +345,9 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)build\msbuild.bat" "$(SolutionDir)VersionControler\VersionControler.csproj" /p:Configuration=Debug
-"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" -1 "" "public static string ScVersion ="</PreBuildEvent>
+    <PreBuildEvent>CALL "$(SolutionDir)build\msbuild.bat" "$(SolutionDir)VersionControler\VersionControler.csproj" /p:Configuration=Debug
+"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" -1 "" "public static string ScVersion ="
+</PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.111.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.111.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
