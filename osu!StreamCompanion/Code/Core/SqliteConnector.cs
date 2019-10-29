@@ -235,7 +235,6 @@ namespace osu_StreamCompanion.Code.Core
 
         public void EndMassStoring()
         {
-
             _transation.Commit();
             _transation.Dispose();
             _transation = null;
@@ -266,6 +265,13 @@ namespace osu_StreamCompanion.Code.Core
         }
         public void StoreBeatmap(Beatmap beatmap)
         {
+            if (float.IsNaN(beatmap.ApproachRate))
+                beatmap.ApproachRate = 0;
+            if (float.IsNaN(beatmap.CircleSize))
+                beatmap.CircleSize = 0;
+            if (float.IsNaN(beatmap.OverallDifficulty))
+                beatmap.OverallDifficulty = 0;
+
             string sql;
             if (beatmap.MapId != 0)
                 sql =
@@ -287,9 +293,6 @@ namespace osu_StreamCompanion.Code.Core
             FillBeatmapParameters(beatmap);
             _insertSql.ExecuteNonQuery();
         }
-
-
-
 
         private void FillBeatmapParameters(Beatmap beatmap)
         {
