@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Windows.Forms;
 using CollectionManager.Modules.FileIO.OsuDb;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -24,9 +25,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             _settings = settings;
             _logger = logger;
         }
+
         public void Initalize()
         {
-            _osuDatabaseLoader = new LOsuDatabaseLoader(new BeatmapLoaderLogger(_mainWindowHandle), _sqliteControler, new Beatmap());
+            _osuDatabaseLoader = new OsuDatabaseLoader(new BeatmapLoaderLogger(_mainWindowHandle), _sqliteControler, new Beatmap());
 
             new System.Threading.Thread(() =>
             {
@@ -52,8 +54,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                     }
                     catch (Exception e)
                     {
-                        _mainWindowHandle.BeatmapsLoaded = "loading osu!.db FAILED: "+ e.Message;
+                        _mainWindowHandle.BeatmapsLoaded = "loading osu!.db FAILED!";
                         _logger?.Log("loading osu!.db FAILED\nsrc:{0}\ndest:{1}\n{2}\n{3} ", LogLevel.Error, osudb, newOsuFile, e.Message, e.StackTrace);
+                        MessageBox.Show("Failed to load osu! beatmap database: "+Environment.NewLine + string.Format("Exception: {0},{1}", e.Message, e.StackTrace), "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
