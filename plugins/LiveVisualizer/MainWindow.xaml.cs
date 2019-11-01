@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace LiveVisualizer
 {
@@ -11,6 +13,7 @@ namespace LiveVisualizer
         //TODO: Resizing of transparent wpf window is not supported natively.(xaml)
         public MainWindow(IWpfVisualizerData data)
         {
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             InitializeComponent();
 
             this.DataContext = data;
