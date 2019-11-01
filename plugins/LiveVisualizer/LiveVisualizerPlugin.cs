@@ -90,10 +90,15 @@ namespace LiveVisualizer
 
             if (reset)
             {
+                VisualizerData.Configuration.PropertyChanged -= VisualizerConfigurationPropertyChanged;
+
                 //WPF window doesn't update its width when replacing configuration object - workaround
                 var newConfiguration = new VisualizerConfiguration();
                 VisualizerData.Configuration.WindowWidth = newConfiguration.WindowWidth;
                 VisualizerData.Configuration = newConfiguration;
+                VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
+                VisualizerConfigurationPropertyChanged(this, new PropertyChangedEventArgs("dummy"));
+
             }
 
             if (reset || config == ConfigEntrys.LiveVisualizerConfig.Default<string>())
