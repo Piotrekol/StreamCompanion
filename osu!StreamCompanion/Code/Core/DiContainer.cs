@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -133,8 +133,23 @@ namespace osu_StreamCompanion.Code.Core
         private static List<Type> GetTypes<T>(Assembly asm)
         {
             List<Type> plugins = new List<Type>();
+            List<Type> types = new List<Type>();
 
-            foreach (var type in asm.GetTypes())
+            try
+            {
+                types = asm.GetTypes().ToList();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                var dllName = asm.ManifestModule.Name;
+                MessageBox.Show($"Plugin \"{dllName}\" could not get loaded. StreamCompanion will continue to work, however, some features might be missing." +
+                                Environment.NewLine + Environment.NewLine + "Errors:" +
+                                Environment.NewLine +
+                                string.Join(Environment.NewLine, e.LoaderExceptions.Select(x => $"{x.GetType()}: {x.Message}")),
+                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            foreach (var type in types)
             {
                 if (type.GetInterfaces().Contains(typeof(T)))
                 {
