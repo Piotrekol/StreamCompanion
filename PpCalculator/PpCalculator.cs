@@ -97,9 +97,7 @@ namespace PpCalculator
                 mods = getMods(ruleset).ToArray();
                 LastMods = newMods;
 
-                WorkingBeatmap.Mods.Value = mods;
-
-                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo);
+                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods);
 
                 ScoreInfo.Mods = mods;
 
