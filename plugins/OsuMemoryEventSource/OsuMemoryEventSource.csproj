@@ -130,6 +130,8 @@ copy "$(TargetDir)\System.Runtime.dll" "$(TargetDir)\..\$(ConfigurationName)\Dll
 copy "$(TargetDir)\System.Runtime.InteropServices.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Runtime.InteropServices.dll"
 copy "$(TargetDir)\System.Threading.Tasks.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Threading.Tasks.dll"
 copy "$(TargetDir)\System.ValueTuple.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.ValueTuple.dll"
+copy "$(TargetDir)\System.Numerics.Vectors.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Numerics.Vectors.dll"
+
 
 copy "$(TargetDir)\OsuMemoryEventSource.dll" "$(TargetDir)\..\$(ConfigurationName)\OsuMemoryEventSource.dll"
 copy "$(TargetDir)\ProcessMemoryDataFinder.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ProcessMemoryDataFinder.dll"

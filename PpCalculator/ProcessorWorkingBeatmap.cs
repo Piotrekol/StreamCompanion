@@ -13,6 +13,8 @@ using osu.Game.Rulesets.Taiko;
 using System;
 using System.IO;
 using System.Linq;
+using osu.Framework.Graphics.Video;
+using osu.Game.IO;
 
 namespace PpCalculator
 {
@@ -35,9 +37,9 @@ namespace PpCalculator
             : this(readFromFile(file), beatmapId)
         {
         }
-
+        
         internal ProcessorWorkingBeatmap(Beatmap beatmap, int? beatmapId = null)
-            : base(beatmap.BeatmapInfo)
+            : base(beatmap.BeatmapInfo, null)
         {
             this.beatmap = beatmap;
 
@@ -50,12 +52,14 @@ namespace PpCalculator
         private static Beatmap readFromFile(string filename)
         {
             using (var stream = File.OpenRead(filename))
-            using (var streamReader = new StreamReader(stream))
+            using (var streamReader = new LineBufferedReader(stream))
                 return Decoder.GetDecoder<Beatmap>(streamReader).Decode(streamReader);
         }
 
         protected override IBeatmap GetBeatmap() => beatmap;
         protected override Texture GetBackground() => null;
+        protected override VideoSprite GetVideo() => null;
+
         protected override Track GetTrack() => null;
 
         public static Ruleset GetRulesetFromLegacyID(int id)
