@@ -28,7 +28,7 @@ namespace PpCalculator
                 case 1:
                     return new TaikoCalculator();
                 case 2:
-                    return null;
+                    return new CatchCalculator();
                 case 3:
                     return new ManiaCalculator();
             }
