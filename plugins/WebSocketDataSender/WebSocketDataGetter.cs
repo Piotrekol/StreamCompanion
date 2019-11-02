@@ -40,6 +40,7 @@ namespace WebSocketDataSender
 
             webSocketServer = new WebSocketServer(IPAddress.Loopback, _settings.Get<int>(WebSocketPort));
             webSocketServer.ReuseAddress = true;
+            webSocketServer.WaitTime = TimeSpan.FromSeconds(30);
 
             webSocketServer.AddWebSocketService("/StreamCompanion/LiveData/Stream", () => new StreamDataProvider(_liveDataContainer));
             webSocketServer.AddWebSocketService("/StreamCompanion/MapData/Stream", () => new StreamDataProvider(_mapDataContainer));
