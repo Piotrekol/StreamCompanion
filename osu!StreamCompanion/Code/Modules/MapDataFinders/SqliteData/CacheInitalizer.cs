@@ -50,15 +50,21 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
                         _osuDatabaseLoader.LoadDatabase(newOsuFile);
 
+                        if (_logger is IContextAwareLogger contextAwareLogger)
+                            contextAwareLogger.SetContextData("osu!username", string.IsNullOrEmpty(_osuDatabaseLoader.Username) ? "null" : _osuDatabaseLoader.Username);
+
                         File.Delete(newOsuFile);
                     }
                     catch (Exception e)
                     {
                         _mainWindowHandle.BeatmapsLoaded = "loading osu!.db FAILED!";
-                        var osuDbLoadFailedException= new OsuDbLoadFailedException($"loading osu!.db FAILED\n{e.Message}",e);
+                        var osuDbLoadFailedException = new OsuDbLoadFailedException($"loading osu!.db FAILED\n{e.Message}", e);
                         osuDbLoadFailedException.Data["src"] = osudb;
                         osuDbLoadFailedException.Data["dest"] = newOsuFile;
                         osuDbLoadFailedException.Data["stack"] = e.StackTrace;
+                        if (_logger is IContextAwareLogger contextAwareLogger)
+                            contextAwareLogger.SetContextData("osu!username", string.IsNullOrEmpty(_osuDatabaseLoader.Username) ? "null" : _osuDatabaseLoader.Username);
+
                         _logger?.Log(osuDbLoadFailedException, LogLevel.Error);
                         MessageBox.Show("Failed to load osu! beatmap database: " + Environment.NewLine + string.Format("Exception: {0},{1}", e.Message, e.StackTrace), "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
