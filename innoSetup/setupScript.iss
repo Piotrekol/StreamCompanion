@@ -58,6 +58,8 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 
 [InstallDelete]
 Type: files; Name: "{app}\OsuMemoryDataProvider.dll"
+Type: files; Name: "{app}\Plugins\CollectionManager.dll"
+Type: files; Name: "{app}\Plugins\StreamCompanionTypes.dll"
 
 [UninstallDelete]
 Type: files; Name: "{app}\StreamCompanionCache.db"
