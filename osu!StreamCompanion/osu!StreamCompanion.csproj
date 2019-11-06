@@ -84,8 +84,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CollectionManager, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CollectionManager.1.0.2\lib\net471\CollectionManager.dll</HintPath>
+    <Reference Include="CollectionManager, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CollectionManager.1.0.3\lib\net471\CollectionManager.dll</HintPath>
     </Reference>
     <Reference Include="Grace, Version=7.1.0.0, Culture=neutral, PublicKeyToken=b7d24c6367970497, processorArchitecture=MSIL">
       <HintPath>..\packages\Grace.7.1.0-Beta768\lib\net45\Grace.dll</HintPath>
