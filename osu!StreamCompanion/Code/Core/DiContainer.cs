@@ -38,12 +38,13 @@ namespace osu_StreamCompanion.Code.Core
             di.Configure(c => c.ImportMembers<object>(MembersThat.HaveAttribute<ImportAttribute>()));
             di.Configure(x => x.ExportFuncWithContext<Delegates.Exit>((scope, context, arg3) =>
               {
+                  var logger = scope.Locate<IContextAwareLogger>();
+                  logger.SetContextData("exiting","1");
                   var isModule = context.TargetInfo.InjectionType.GetInterfaces().Contains(typeof(IModule));
                   if (isModule)
                   {
                       return reason =>
                       {
-                          var logger = scope.Locate<ILogger>();
                           logger.Log("StreamCompanion is shutting down", LogLevel.Basic);
                           Program.SafeQuit();
                       };
@@ -59,8 +60,6 @@ namespace osu_StreamCompanion.Code.Core
                       catch
                       {
                       }
-
-                      var logger = scope.Locate<ILogger>();
 
                       logger.Log("Plugin {0} has requested StreamCompanion shutdown! due to: {1}", LogLevel.Basic,
                           context.TargetInfo.InjectionType.FullName, reason);
