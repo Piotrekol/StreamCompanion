@@ -55,8 +55,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                     catch (Exception e)
                     {
                         _mainWindowHandle.BeatmapsLoaded = "loading osu!.db FAILED!";
-                        _logger?.Log("loading osu!.db FAILED\nsrc:{0}\ndest:{1}\n{2}\n{3} ", LogLevel.Error, osudb, newOsuFile, e.Message, e.StackTrace);
-                        MessageBox.Show("Failed to load osu! beatmap database: "+Environment.NewLine + string.Format("Exception: {0},{1}", e.Message, e.StackTrace), "Error",
+                        var osuDbLoadFailedException= new OsuDbLoadFailedException($"loading osu!.db FAILED\n{e.Message}",e);
+                        osuDbLoadFailedException.Data["src"] = osudb;
+                        osuDbLoadFailedException.Data["dest"] = newOsuFile;
+                        osuDbLoadFailedException.Data["stack"] = e.StackTrace;
+                        _logger?.Log(osuDbLoadFailedException, LogLevel.Error);
+                        MessageBox.Show("Failed to load osu! beatmap database: " + Environment.NewLine + string.Format("Exception: {0},{1}", e.Message, e.StackTrace), "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -66,7 +70,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                 }
             }).Start();
         }
-        
+
+        class OsuDbLoadFailedException : Exception
+        {
+            public OsuDbLoadFailedException(string message, Exception exception) : base(message, exception)
+            {
+            }
+        }
         class BeatmapLoaderLogger : CollectionManager.Interfaces.ILogger
         {
             private readonly IMainWindowModel _handle;
