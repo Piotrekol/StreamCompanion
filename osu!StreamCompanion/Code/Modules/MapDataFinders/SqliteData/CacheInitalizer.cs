@@ -69,6 +69,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                         MessageBox.Show("Failed to load osu! beatmap database: " + Environment.NewLine + string.Format("Exception: {0},{1}", e.Message, e.StackTrace), "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    finally
+                    {
+                        _sqliteControler.EndMassStoring();
+                    }
                 }
                 else
                 {

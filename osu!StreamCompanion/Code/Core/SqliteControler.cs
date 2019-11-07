@@ -56,6 +56,8 @@ namespace osu_StreamCompanion.Code.Core
         /// </summary>
         public void StartMassStoring()
         {
+            if (_sqlConnector.MassInsertIsActive)
+                return;
             lock (_sqlConnector)
             {
                 string sql = "SELECT Md5, MapId, BeatmapChecksum FROM (SELECT Md5, MapId, BeatmapChecksum FROM `withID` UNION SELECT Md5, MapId, BeatmapChecksum FROM `withoutID`)";
@@ -123,6 +125,9 @@ namespace osu_StreamCompanion.Code.Core
         /// </summary>
         public void EndMassStoring()
         {
+            if (!_sqlConnector.MassInsertIsActive)
+                return;
+
             lock (_sqlConnector)
             {
                 var deletedBeatmaps = _beatmapChecksums.Where(x => !x.Value.Found).ToList();
