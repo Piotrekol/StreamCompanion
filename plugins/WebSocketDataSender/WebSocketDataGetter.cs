@@ -25,6 +25,7 @@ namespace WebSocketDataSender
 
         public static ConfigEntry Enabled = new ConfigEntry("webSocketEnabled", false);
         public static ConfigEntry WebSocketPort = new ConfigEntry("webSocketPort", 80);
+        public static ConfigEntry WebSocketAddress = new ConfigEntry("webSocketAddress", "127.0.0.1");
 
         private DataContainer _liveDataContainer = new DataContainer();
         private DataContainer _mapDataContainer = new DataContainer();
@@ -38,7 +39,7 @@ namespace WebSocketDataSender
                 return;
             }
 
-            webSocketServer = new WebSocketServer(IPAddress.Loopback, _settings.Get<int>(WebSocketPort));
+            webSocketServer = new WebSocketServer(IPAddress.Parse(_settings.Get<string>(WebSocketAddress)), _settings.Get<int>(WebSocketPort));
             webSocketServer.ReuseAddress = true;
             webSocketServer.WaitTime = TimeSpan.FromSeconds(30);
 
