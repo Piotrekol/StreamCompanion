@@ -61,6 +61,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                         var osuDbLoadFailedException = new OsuDbLoadFailedException($"loading osu!.db FAILED\n{e.Message}", e);
                         osuDbLoadFailedException.Data["src"] = osudb;
                         osuDbLoadFailedException.Data["dest"] = newOsuFile;
+                        osuDbLoadFailedException.Data["osuDbVersion"] = _osuDatabaseLoader.FileDate;
+                        osuDbLoadFailedException.Data["counts"] = $"{_osuDatabaseLoader.ExpectedNumberOfMapSets} - {_osuDatabaseLoader.ExpectedNumOfBeatmaps}";
                         osuDbLoadFailedException.Data["stack"] = e.StackTrace;
                         if (_logger is IContextAwareLogger contextAwareLogger)
                             contextAwareLogger.SetContextData("osu!username", string.IsNullOrEmpty(_osuDatabaseLoader.Username) ? "null" : _osuDatabaseLoader.Username);
