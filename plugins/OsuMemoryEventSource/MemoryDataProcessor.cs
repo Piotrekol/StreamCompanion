@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace OsuMemoryEventSource
 {
@@ -39,8 +40,7 @@ namespace OsuMemoryEventSource
         }
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
 
-        private Thread _interpolatedValueWorkerThread;
-        private Thread _tokenWorkerThread;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public MemoryDataProcessor(bool enablePpSmoothing = true)
         {
@@ -54,21 +54,19 @@ namespace OsuMemoryEventSource
 
             InitLiveTokens();
 
-            _interpolatedValueWorkerThread = new Thread(InterpolatedValueThreadWork);
-            _interpolatedValueWorkerThread.Start();
+            Task.Run(InterpolatedValueThreadWork, cancellationTokenSource.Token);
+            Task.Run(TokenThreadWork, cancellationTokenSource.Token);
 
-            _tokenWorkerThread = new Thread(TokenThreadWork);
-            _tokenWorkerThread.Start();
         }
 
-        public void TokenThreadWork()
+        public Task TokenThreadWork()
         {
             try
             {
                 while (true)
                 {
                     if (_tokenTick == null || _tokenCallbackTick == null)
-                        return;
+                        return Task.CompletedTask;
 
                     if (_tokenTick.WaitOne(1))
                     {
@@ -82,12 +80,14 @@ namespace OsuMemoryEventSource
                     _tokenCallbackTick.Set();
                 }
             }
-            catch (ThreadAbortException)
+            catch (TaskCanceledException)
             {
 
             }
+
+            return Task.CompletedTask;
         }
-        public void InterpolatedValueThreadWork()
+        public async Task InterpolatedValueThreadWork()
         {
             try
             {
@@ -99,10 +99,10 @@ namespace OsuMemoryEventSource
                     }
                     //_ppIfMapEndsNow.Tick();
                     //_ppIfRestFced.Tick();
-                    Thread.Sleep(11);
+                    await Task.Delay(11);
                 }
             }
-            catch (ThreadAbortException)
+            catch (TaskCanceledException)
             {
             }
         }
@@ -366,8 +366,7 @@ namespace OsuMemoryEventSource
 
         public void Dispose()
         {
-            _interpolatedValueWorkerThread?.Abort();
-            _tokenWorkerThread.Abort();
+            cancellationTokenSource.Cancel();
             _settings.SettingUpdated -= SettingUpdated;
         }
 
