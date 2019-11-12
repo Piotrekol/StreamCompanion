@@ -41,13 +41,13 @@ namespace osuOverlayLoader
 
             while (GetOsuProcess() != null)
             {
-                Log("osu! is running - close it! Press CTRL+C at any tme to cancel.");
+                Log("osu! is running - close it! Press CTRL+C at any time to cancel.");
                 await Task.Delay(2000);
             }
 
             do
             {
-                Log("Ready to inject - start osu! now. Press CTRL+C at any tme to cancel.");
+                Log("Ready to inject - start osu! now. Press CTRL+C at any time to cancel.");
                 await Task.Delay(2000);
             } while (GetOsuProcess() == null);
 
