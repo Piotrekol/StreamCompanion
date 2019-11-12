@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -15,18 +16,17 @@ namespace osuOverlay
         public string SettingGroup { get; } = "General";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
+        private Process _osuLoaderProcess;
 
-        private Thread _workerThread;
         private Process _currentOsuProcess;
         private bool _pauseProcessTracking;
-        private bool _injectedAtleastOnce = false;
-
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(IngameOverlay);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
+        CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
         public IngameOverlay(ILogger logger, ISettingsHandler settings, Delegates.Exit exiter)
         {
@@ -49,45 +49,95 @@ namespace osuOverlay
             if (_settings.Get<bool>(PluginSettings.EnableIngameOverlay))
             {
                 CopyFreeType();
-                _workerThread = new Thread(WatchForProcessStart);
-                _workerThread.Start();
+
+                Task.Run(() => WatchForProcessStart(cancellationToken.Token), cancellationToken.Token);
             }
         }
 
-        public void WatchForProcessStart()
+        private Process GetOsuProcess()
         {
+            foreach (var process in Process.GetProcesses())
+            {
+                if (process.ProcessName == "osu!")
+                {
+                    return process;
+                }
+            }
+
+            return null;
+        }
+        public async Task WatchForProcessStart(CancellationToken token)
+        {
+            int RunHelperProcess()
+            {
+                var proc = new ProcessStartInfo(Path.Combine("Plugins", "bin", "osuOverlayLoader.exe"),
+                    $"\"{GetFullDllLocation()}\" silent");
+                _osuLoaderProcess = Process.Start(proc);
+                while (_osuLoaderProcess?.WaitForExit(100) == false)
+                {
+                    if (token.IsCancellationRequested)
+                        return -2;
+                }
+                return _osuLoaderProcess?.ExitCode ?? -1;
+            }
             try
             {
                 while (true)
                 {
+                    if (token.IsCancellationRequested)
+                        return;
 
                     if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
-                        _currentOsuProcess = null;
-                        foreach (var process in Process.GetProcesses())
+                        var exitCode = RunHelperProcess();
+                        HandleExitCode(exitCode);
+
+                        if (exitCode == 0)
                         {
-                            if (process.ProcessName == "osu!")
+
+                            if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                             {
-                                _currentOsuProcess = process;
-                                break;
+                                _currentOsuProcess = GetOsuProcess();
                             }
-                        }
-                        if (_currentOsuProcess != null)
-                        {
-                            if (Inject(!_injectedAtleastOnce))
-                                _injectedAtleastOnce = true;
                         }
                     }
 
                     while (_pauseProcessTracking)
                     {
-                        Thread.Sleep(1000);
+                        await Task.Delay(1000);
                     }
-                    Thread.Sleep(2000);
+
+                    await Task.Delay(2000);
                 }
             }
-            catch (ThreadAbortException)
+            catch (TaskCanceledException)
             {
+            }
+        }
+        private void HandleExitCode(int exitCode, bool showErrors = false)
+        {
+            string message = string.Empty;
+            switch (exitCode)
+            {
+                case -1:
+                    message = "Could not spawn helper process";
+                    break;
+                case (int)InjectionResult.GameProcessNotFound:
+                    showErrors = false;
+                    break;
+                case (int)InjectionResult.DllNotFound:
+                    message =
+                        "Could not find osuOverlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
+                    break;
+                case (int)InjectionResult.InjectionFailed:
+                    message =
+                        "Could not add overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
+                    break;
+            }
+            if (showErrors && exitCode != (int)InjectionResult.GameProcessNotFound)
+            {
+                MessageBox.Show(message, "StreamCompanion - ingameOverlay Error!", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -116,43 +166,10 @@ namespace osuOverlay
             }
         }
 
-        private bool Inject(bool showErrors = false)
-        {
-            DllInjector dllInjector = DllInjector.GetInstance;
-            var result = dllInjector.Inject("osu!", GetFullDllLocation());
-            if (result != DllInjectionResult.Success)
-            {
-                string message = "";
-                switch (result)
-                {
-                    case DllInjectionResult.GameProcessNotFound:
-                        message = "osu! is not running yet - restart StreamCompanion after starting it!";
-                        break;
-                    case DllInjectionResult.DllNotFound:
-                        message =
-                            "Could not find osuOverlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
-                        break;
-                    case DllInjectionResult.InjectionFailed:
-                        message =
-                            "Could not add overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
-                        break;
-                }
-                if (showErrors && result != DllInjectionResult.GameProcessNotFound)
-                    MessageBox.Show(message, "StreamCompanion - ingameOverlay Error!", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                _logger?.Log(message, LogLevel.Basic);
-                return false;
-            }
-
-            return true;
-        }
-
         private string GetFilesFolder() => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "Dlls");
 
-        private string GetFullDllLocation() => Path.Combine(GetFilesFolder(), "osuOverlay.dll");
-
         private string GetFullFreeTypeLocation() => Path.Combine(GetFilesFolder(), "FreeType.dll");
-
+        private string GetFullDllLocation() => Path.Combine(GetFilesFolder(), "osuOverlay.dll");
         public void Free()
         {
             _overlaySettings?.Dispose();
@@ -181,10 +198,11 @@ namespace osuOverlay
 
         public void Dispose()
         {
-            _currentOsuProcess?.Dispose();
             _overlaySettings?.Dispose();
-            _workerThread?.Abort();
-        }
 
+            _osuLoaderProcess?.Kill();
+            cancellationToken.Cancel();
+            _currentOsuProcess?.Dispose();
+        }
     }
 }

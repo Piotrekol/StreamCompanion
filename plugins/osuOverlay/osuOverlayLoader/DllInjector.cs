@@ -4,23 +4,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace osuOverlay
+namespace osuOverlayLoader
 {
-
-
-
-    public enum DllInjectionResult
-    {
-        DllNotFound,
-        GameProcessNotFound,
-        InjectionFailed,
-        Success
-    }
-    
-
     public sealed class DllInjector
     {
-        private enum LoadedResult
+        
+        public enum LoadedResult
         {
             Loaded,
             NotLoaded,
@@ -90,7 +79,7 @@ namespace osuOverlay
                 return DllInjectionResult.GameProcessNotFound;
             }
 
-            var loadedResult = isAlreadyLoaded(sProcName, Path.GetFileName(sDllPath));
+            var loadedResult = IsAlreadyLoaded(sProcName, Path.GetFileName(sDllPath));
 
             if (loadedResult == LoadedResult.Loaded)
                 return DllInjectionResult.Success;
@@ -105,7 +94,7 @@ namespace osuOverlay
 
             return DllInjectionResult.Success;
         }
-        private LoadedResult isAlreadyLoaded(string procName, string dllName)
+        public LoadedResult IsAlreadyLoaded(string procName, string dllName)
         {
             try
             {
