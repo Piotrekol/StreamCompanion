@@ -62,6 +62,7 @@ namespace LiveVisualizer
             BindColorPicker(color_hit100Background, () => _configuration.Hit100BackgroundColor, color => _configuration.Hit100BackgroundColor = color);
             BindColorPicker(color_hit50Background, () => _configuration.Hit50BackgroundColor, color => _configuration.Hit50BackgroundColor = color);
             BindColorPicker(color_hitMissBackground, () => _configuration.HitMissBackgroundColor, color => _configuration.HitMissBackgroundColor = color);
+            BindColorPicker(color_artistTitleBackground, () => _configuration.TextBackground, color => _configuration.TextBackground = color);
 
 
             textBox_chartCutoffs.Text = string.Join(";", _configuration.ChartCutoffsSet);
@@ -71,10 +72,12 @@ namespace LiveVisualizer
             numericUpDown_windowHeight.Value = ((decimal)_configuration.WindowHeight).Clamp(numericUpDown_windowHeight.Minimum, numericUpDown_windowHeight.Maximum);
             numericUpDown_windowWidth.Value = ((decimal)_configuration.WindowWidth).Clamp(numericUpDown_windowWidth.Minimum, numericUpDown_windowWidth.Maximum);
             numericUpDown_chartHeight.Value = ((decimal)_configuration.ChartHeight).Clamp(numericUpDown_chartHeight.Minimum, numericUpDown_chartHeight.Maximum);
+            numericUpDown_artistHeight.Value = ((decimal)_configuration.ArtistContainerHeight).Clamp(numericUpDown_artistHeight.Minimum, numericUpDown_artistHeight.Maximum);
+            numericUpDown_titleHeight.Value = ((decimal)_configuration.TitleContainerHeight).Clamp(numericUpDown_titleHeight.Minimum, numericUpDown_titleHeight.Maximum);
 
-            numericUpDown_bottomHeight.Value = decimal.TryParse(_configuration.BottomHeight.Replace("*", "").Replace(".", ","),
-                NumberStyles.Any, CultureInfo.InvariantCulture, out var bottomHeight) 
-                ? bottomHeight.Clamp(numericUpDown_bottomHeight.Minimum, numericUpDown_bottomHeight.Maximum) 
+            numericUpDown_bottomHeight.Value = decimal.TryParse(_configuration.BottomHeight.Replace("*", ""),
+                NumberStyles.Any, CultureInfo.InvariantCulture, out var bottomHeight)
+                ? bottomHeight.Clamp(numericUpDown_bottomHeight.Minimum, numericUpDown_bottomHeight.Maximum)
                 : 0.65M;
 
 
@@ -88,9 +91,21 @@ namespace LiveVisualizer
             numericUpDown_windowWidth.ValueChanged += NumericUpDownWindowWidthOnValueChanged;
             numericUpDown_chartHeight.ValueChanged += NumericUpDownChartHeightOnValueChanged;
             numericUpDown_bottomHeight.ValueChanged += NumericUpDownBottomHeightOnValueChanged;
+            numericUpDown_artistHeight.ValueChanged += NumericUpDownArtistHeightOnValueChanged;
+            numericUpDown_titleHeight.ValueChanged += NumericUpDownTitleHeightOnValueChanged;
 
             checkBox_simulatePP.CheckedChanged += CheckBoxSimulatePpOnCheckedChanged;
             checkBox_enableRoundedCorners.CheckedChanged += CheckBoxEnableRoundedCornersOnCheckedChanged;
+        }
+
+        private void NumericUpDownTitleHeightOnValueChanged(object sender, EventArgs e)
+        {
+            _configuration.TitleContainerHeight = (double)numericUpDown_titleHeight.Value;
+        }
+
+        private void NumericUpDownArtistHeightOnValueChanged(object sender, EventArgs e)
+        {
+            _configuration.ArtistContainerHeight = (double)numericUpDown_artistHeight.Value;
         }
 
         private void NumericUpDownBottomHeightOnValueChanged(object sender, EventArgs e)

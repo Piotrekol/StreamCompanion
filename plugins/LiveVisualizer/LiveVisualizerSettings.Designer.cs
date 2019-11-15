@@ -30,6 +30,8 @@
         {
             this.checkBox_enable = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button_miniCounter = new System.Windows.Forms.Button();
+            this.button_reset = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.numericUpDown_bottomHeight = new System.Windows.Forms.NumericUpDown();
             this.checkBox_enableRoundedCorners = new System.Windows.Forms.CheckBox();
@@ -53,6 +55,11 @@
             this.textBox_chartCutoffs = new System.Windows.Forms.TextBox();
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
             this.label_oneScreenWarning = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.numericUpDown_artistHeight = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numericUpDown_titleHeight = new System.Windows.Forms.NumericUpDown();
+            this.color_artistTitleBackground = new LiveVisualizer.ColorPickerWithPreview();
             this.color_ppBackground = new LiveVisualizer.ColorPickerWithPreview();
             this.color_hit100Background = new LiveVisualizer.ColorPickerWithPreview();
             this.color_hit50Background = new LiveVisualizer.ColorPickerWithPreview();
@@ -64,8 +71,6 @@
             this.color_imageDimming = new LiveVisualizer.ColorPickerWithPreview();
             this.color_horizontalLegend = new LiveVisualizer.ColorPickerWithPreview();
             this.color_background = new LiveVisualizer.ColorPickerWithPreview();
-            this.button_reset = new System.Windows.Forms.Button();
-            this.button_miniCounter = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_bottomHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).BeginInit();
@@ -74,6 +79,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_windowWidth)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel_manualChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_artistHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_titleHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // checkBox_enable
@@ -88,6 +95,10 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.numericUpDown_titleHeight);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.numericUpDown_artistHeight);
             this.panel1.Controls.Add(this.button_miniCounter);
             this.panel1.Controls.Add(this.button_reset);
             this.panel1.Controls.Add(this.label7);
@@ -108,8 +119,28 @@
             this.panel1.Controls.Add(this.checkBox_autosizeChart);
             this.panel1.Location = new System.Drawing.Point(0, 45);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(650, 380);
+            this.panel1.Size = new System.Drawing.Size(650, 442);
             this.panel1.TabIndex = 1;
+            // 
+            // button_miniCounter
+            // 
+            this.button_miniCounter.Location = new System.Drawing.Point(456, 413);
+            this.button_miniCounter.Name = "button_miniCounter";
+            this.button_miniCounter.Size = new System.Drawing.Size(81, 23);
+            this.button_miniCounter.TabIndex = 50;
+            this.button_miniCounter.Text = "Mini counter";
+            this.button_miniCounter.UseVisualStyleBackColor = true;
+            this.button_miniCounter.Click += new System.EventHandler(this.Button_miniCounter_Click);
+            // 
+            // button_reset
+            // 
+            this.button_reset.Location = new System.Drawing.Point(543, 413);
+            this.button_reset.Name = "button_reset";
+            this.button_reset.Size = new System.Drawing.Size(97, 23);
+            this.button_reset.TabIndex = 49;
+            this.button_reset.Text = "Reset to defaults";
+            this.button_reset.UseVisualStyleBackColor = true;
+            this.button_reset.Click += new System.EventHandler(this.Button_reset_Click);
             // 
             // label7
             // 
@@ -196,6 +227,7 @@
             // 
             // groupBox_chartColors
             // 
+            this.groupBox_chartColors.Controls.Add(this.color_artistTitleBackground);
             this.groupBox_chartColors.Controls.Add(this.color_ppBackground);
             this.groupBox_chartColors.Controls.Add(this.color_hit100Background);
             this.groupBox_chartColors.Controls.Add(this.color_hit50Background);
@@ -274,7 +306,7 @@
             this.panel2.Controls.Add(this.linkLabel_UICredit2);
             this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.linkLabel_UICredit1);
-            this.panel2.Location = new System.Drawing.Point(4, 355);
+            this.panel2.Location = new System.Drawing.Point(4, 418);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(267, 18);
             this.panel2.TabIndex = 34;
@@ -392,6 +424,85 @@
             this.label_oneScreenWarning.TabIndex = 2;
             this.label_oneScreenWarning.Text = "WARNING: In order for window to work in OBS while osu! is in fullscreen \r\nwith on" +
     "e screen you have to use game capture, NOT window capture!";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(200, 326);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(85, 13);
+            this.label8.TabIndex = 52;
+            this.label8.Text = "Artist text height:";
+            // 
+            // numericUpDown_artistHeight
+            // 
+            this.numericUpDown_artistHeight.Location = new System.Drawing.Point(291, 324);
+            this.numericUpDown_artistHeight.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numericUpDown_artistHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_artistHeight.Name = "numericUpDown_artistHeight";
+            this.numericUpDown_artistHeight.Size = new System.Drawing.Size(66, 20);
+            this.numericUpDown_artistHeight.TabIndex = 51;
+            this.numericUpDown_artistHeight.Value = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(368, 326);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(82, 13);
+            this.label9.TabIndex = 54;
+            this.label9.Text = "Title text height:";
+            // 
+            // numericUpDown_titleHeight
+            // 
+            this.numericUpDown_titleHeight.Location = new System.Drawing.Point(456, 324);
+            this.numericUpDown_titleHeight.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numericUpDown_titleHeight.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown_titleHeight.Name = "numericUpDown_titleHeight";
+            this.numericUpDown_titleHeight.Size = new System.Drawing.Size(66, 20);
+            this.numericUpDown_titleHeight.TabIndex = 53;
+            this.numericUpDown_titleHeight.Value = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            // 
+            // color_artistTitleBackground
+            // 
+            this.color_artistTitleBackground.Color = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(180)))), ((int)(((byte)(209)))));
+            // 
+            // 
+            // 
+            this.color_artistTitleBackground.LabelDesigner.AutoSize = true;
+            this.color_artistTitleBackground.LabelDesigner.Location = new System.Drawing.Point(3, 6);
+            this.color_artistTitleBackground.LabelDesigner.Name = "Label";
+            this.color_artistTitleBackground.LabelDesigner.Size = new System.Drawing.Size(90, 13);
+            this.color_artistTitleBackground.LabelDesigner.TabIndex = 1;
+            this.color_artistTitleBackground.LabelDesigner.Text = "Artist background";
+            this.color_artistTitleBackground.Location = new System.Drawing.Point(6, 187);
+            this.color_artistTitleBackground.Name = "color_artistTitleBackground";
+            this.color_artistTitleBackground.Size = new System.Drawing.Size(290, 21);
+            this.color_artistTitleBackground.TabIndex = 47;
             // 
             // color_ppBackground
             // 
@@ -580,26 +691,6 @@
             this.color_background.Size = new System.Drawing.Size(290, 21);
             this.color_background.TabIndex = 39;
             // 
-            // button_reset
-            // 
-            this.button_reset.Location = new System.Drawing.Point(543, 350);
-            this.button_reset.Name = "button_reset";
-            this.button_reset.Size = new System.Drawing.Size(97, 23);
-            this.button_reset.TabIndex = 49;
-            this.button_reset.Text = "Reset to defaults";
-            this.button_reset.UseVisualStyleBackColor = true;
-            this.button_reset.Click += new System.EventHandler(this.Button_reset_Click);
-            // 
-            // button_miniCounter
-            // 
-            this.button_miniCounter.Location = new System.Drawing.Point(456, 350);
-            this.button_miniCounter.Name = "button_miniCounter";
-            this.button_miniCounter.Size = new System.Drawing.Size(81, 23);
-            this.button_miniCounter.TabIndex = 50;
-            this.button_miniCounter.Text = "Mini counter";
-            this.button_miniCounter.UseVisualStyleBackColor = true;
-            this.button_miniCounter.Click += new System.EventHandler(this.Button_miniCounter_Click);
-            // 
             // LiveVisualizerSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -608,7 +699,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkBox_enable);
             this.Name = "LiveVisualizerSettings";
-            this.Size = new System.Drawing.Size(650, 425);
+            this.Size = new System.Drawing.Size(650, 487);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_bottomHeight)).EndInit();
@@ -620,6 +711,8 @@
             this.panel2.PerformLayout();
             this.panel_manualChart.ResumeLayout(false);
             this.panel_manualChart.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_artistHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_titleHeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -650,7 +743,6 @@
         private ColorPickerWithPreview color_background;
         private ColorPickerWithPreview color_imageDimming;
         private System.Windows.Forms.GroupBox groupBox_chartColors;
-        private System.Windows.Forms.Label label_oneScreenWarning;
         private ColorPickerWithPreview color_textTitle;
         private ColorPickerWithPreview color_textArtist;
         private System.Windows.Forms.Label label6;
@@ -665,5 +757,11 @@
         private ColorPickerWithPreview color_hitMissBackground;
         private System.Windows.Forms.Button button_miniCounter;
         private System.Windows.Forms.Button button_reset;
+        private ColorPickerWithPreview color_artistTitleBackground;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numericUpDown_titleHeight;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown numericUpDown_artistHeight;
+        private System.Windows.Forms.Label label_oneScreenWarning;
     }
 }

@@ -11,8 +11,8 @@ namespace LiveVisualizer
         bool EnableRoundedCorners { get; set; }
         string BottomHeight { get; set; }
         string Font { get; set; }
-        string TitleContainerHeight { get; set; }
-        string ArtistContainerHeight { get; set; }
+        double TitleContainerHeight { get; set; }
+        double ArtistContainerHeight { get; set; }
         double FontSizePPText { get; set; }
         double FontSizePP { get; set; }
         string MarginPP { get; set; }
@@ -43,5 +43,6 @@ namespace LiveVisualizer
         Color Hit100BackgroundColor { get; set; }
         Color Hit50BackgroundColor { get; set; }
         Color HitMissBackgroundColor { get; set; }
+        Color TextBackground { get; set; }
     }
 }

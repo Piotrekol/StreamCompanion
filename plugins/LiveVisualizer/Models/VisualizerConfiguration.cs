@@ -21,8 +21,8 @@ namespace LiveVisualizer
         public bool EnableRoundedCorners { get; set; } = false;
         public string BottomHeight { get; set; } = "0.65*";
         public string Font { get; set; } = "Arial";
-        public string TitleContainerHeight { get; set; } = "30";
-        public string ArtistContainerHeight { get; set; } = "20";
+        public double TitleContainerHeight { get; set; } = 50;
+        public double ArtistContainerHeight { get; set; } = 30;
         public double FontSizePP { get; set; } = 50;
         public string MarginPP { get; set; } = "0 10 0 0";
         public double FontSizePPText { get; set; } = 30;
@@ -44,6 +44,8 @@ namespace LiveVisualizer
         public Color Hit100BackgroundColor { get; set; } = Color.FromArgb(170, 50, 205, 50); //LimeGreen
         public Color Hit50BackgroundColor { get; set; } = Color.FromArgb(170, 138, 43, 226); //BlueViolet
         public Color HitMissBackgroundColor { get; set; } = Color.FromArgb(170, 255, 69, 0); //OrangeRed
+        public Color TextBackground { get; set; } = Color.FromArgb(102, 0, 0, 0);
+
         public SortedSet<int> ChartCutoffsSet { get; set; } = new SortedSet<int>();
     }
 }
