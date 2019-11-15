@@ -68,10 +68,10 @@ namespace osuOverlay
         }
         public async Task WatchForProcessStart(CancellationToken token)
         {
-            int RunHelperProcess()
+            int RunHelperProcess(bool silent, bool checkInjectionStatus = false)
             {
                 var proc = new ProcessStartInfo(Path.Combine("Plugins", "bin", "osuOverlayLoader.exe"),
-                    $"\"{GetFullDllLocation()}\" silent");
+                    $"\"{GetFullDllLocation()}\" {silent.ToString().ToLower()} {checkInjectionStatus.ToString().ToLower()}");
                 _osuLoaderProcess = Process.Start(proc);
                 while (_osuLoaderProcess?.WaitForExit(100) == false)
                 {
@@ -80,6 +80,7 @@ namespace osuOverlay
                 }
                 return _osuLoaderProcess?.ExitCode ?? -1;
             }
+
             try
             {
                 while (true)
@@ -89,12 +90,26 @@ namespace osuOverlay
 
                     if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
-                        var exitCode = RunHelperProcess();
-                        HandleExitCode(exitCode);
+                        var isAlreadyInjected = RunHelperProcess(true, true) == 0;
+                        int exitCode = 0;
+                        if (!isAlreadyInjected)
+                        {
+                            if (_currentOsuProcess == null && GetOsuProcess() != null)
+                            {
+                                _ = Task.Run(() =>
+                                {
+                                    MessageBox.Show(
+                                        "In order to load StreamCompanion osu! overlay you need to restart your osu!",
+                                        "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                });
+                            }
+
+                            exitCode = RunHelperProcess(true);
+                            HandleExitCode(exitCode);
+                        }
 
                         if (exitCode == 0)
                         {
-
                             if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                             {
                                 _currentOsuProcess = GetOsuProcess();

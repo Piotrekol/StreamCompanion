@@ -19,10 +19,13 @@ namespace osuOverlayLoader
             Console.WriteLine(message);
         }
 
-        public async void Run(string dllLocation)
+        public async void Run(string dllLocation, bool checkInjectionStatus)
         {
             if (DllInjector.GetInstance.IsAlreadyLoaded("osu!", Path.GetFileName(dllLocation)) == DllInjector.LoadedResult.Loaded)
                 Environment.Exit(0);
+
+            if(checkInjectionStatus)
+                Environment.Exit(1);
 
             Environment.ExitCode = 1;
 
