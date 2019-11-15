@@ -24,8 +24,6 @@ namespace LiveVisualizer
 
             InitializeComponent();
 
-            label_oneScreenWarning.Visible = Screen.AllScreens.Length <= 1;
-
             using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
             {
                 var fontNames = fontsCollection.Families.Select(f => f.Name).ToList();

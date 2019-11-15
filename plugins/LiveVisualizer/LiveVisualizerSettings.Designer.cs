@@ -54,7 +54,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_chartCutoffs = new System.Windows.Forms.TextBox();
             this.checkBox_autosizeChart = new System.Windows.Forms.CheckBox();
-            this.label_oneScreenWarning = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.numericUpDown_artistHeight = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
@@ -414,17 +413,6 @@
             this.checkBox_autosizeChart.Text = "Autosize chart value height based on max value";
             this.checkBox_autosizeChart.UseVisualStyleBackColor = true;
             // 
-            // label_oneScreenWarning
-            // 
-            this.label_oneScreenWarning.AutoSize = true;
-            this.label_oneScreenWarning.ForeColor = System.Drawing.Color.Red;
-            this.label_oneScreenWarning.Location = new System.Drawing.Point(140, 9);
-            this.label_oneScreenWarning.Name = "label_oneScreenWarning";
-            this.label_oneScreenWarning.Size = new System.Drawing.Size(352, 26);
-            this.label_oneScreenWarning.TabIndex = 2;
-            this.label_oneScreenWarning.Text = "WARNING: In order for window to work in OBS while osu! is in fullscreen \r\nwith on" +
-    "e screen you have to use game capture, NOT window capture!";
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -695,7 +683,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label_oneScreenWarning);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkBox_enable);
             this.Name = "LiveVisualizerSettings";
@@ -762,6 +749,5 @@
         private System.Windows.Forms.NumericUpDown numericUpDown_titleHeight;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown numericUpDown_artistHeight;
-        private System.Windows.Forms.Label label_oneScreenWarning;
     }
 }
