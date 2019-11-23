@@ -33,7 +33,7 @@
             this.label_beatmapDL = new System.Windows.Forms.Label();
             this.label_CalibrationResult = new System.Windows.Forms.Label();
             this.linkLabel_mapDL = new System.Windows.Forms.LinkLabel();
-            this.button_Next = new System.Windows.Forms.Button();
+            this.button_Skip = new System.Windows.Forms.Button();
             this.button_anotherMap = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label_memoryStatus = new System.Windows.Forms.Label();
@@ -84,15 +84,15 @@
             this.linkLabel_mapDL.Text = "Click here for map download";
             this.linkLabel_mapDL.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel_mapDL_LinkClicked);
             // 
-            // button_Next
+            // button_Skip
             // 
-            this.button_Next.Location = new System.Drawing.Point(72, 222);
-            this.button_Next.Name = "button_Next";
-            this.button_Next.Size = new System.Drawing.Size(254, 28);
-            this.button_Next.TabIndex = 14;
-            this.button_Next.Text = "Next";
-            this.button_Next.UseVisualStyleBackColor = true;
-            this.button_Next.Click += new System.EventHandler(this.button_Next_Click);
+            this.button_Skip.Location = new System.Drawing.Point(72, 222);
+            this.button_Skip.Name = "button_Skip";
+            this.button_Skip.Size = new System.Drawing.Size(254, 28);
+            this.button_Skip.TabIndex = 14;
+            this.button_Skip.Text = "Skip";
+            this.button_Skip.UseVisualStyleBackColor = true;
+            this.button_Skip.Click += new System.EventHandler(this.button_Skip_Click);
             // 
             // button_anotherMap
             // 
@@ -100,7 +100,7 @@
             this.button_anotherMap.Name = "button_anotherMap";
             this.button_anotherMap.Size = new System.Drawing.Size(78, 23);
             this.button_anotherMap.TabIndex = 15;
-            this.button_anotherMap.Text = "No";
+            this.button_anotherMap.Text = "Change";
             this.button_anotherMap.UseVisualStyleBackColor = true;
             this.button_anotherMap.Click += new System.EventHandler(this.button_anotherMap_Click);
             // 
@@ -128,7 +128,7 @@
             this.Controls.Add(this.label_memoryStatus);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button_anotherMap);
-            this.Controls.Add(this.button_Next);
+            this.Controls.Add(this.button_Skip);
             this.Controls.Add(this.linkLabel_mapDL);
             this.Controls.Add(this.label_CalibrationResult);
             this.Controls.Add(this.label_beatmapDL);
@@ -148,7 +148,7 @@
         public System.Windows.Forms.Label label_beatmapDL;
         public System.Windows.Forms.Label label_CalibrationResult;
         private System.Windows.Forms.LinkLabel linkLabel_mapDL;
-        public System.Windows.Forms.Button button_Next;
+        public System.Windows.Forms.Button button_Skip;
         private System.Windows.Forms.Button button_anotherMap;
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.Label label_memoryStatus;
