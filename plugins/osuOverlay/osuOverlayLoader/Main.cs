@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -48,11 +48,16 @@ namespace osuOverlayLoader
                 await Task.Delay(2000);
             }
 
+            Process process;
             do
             {
                 Log("Ready to inject - start osu! now. Press CTRL+C at any time to cancel.");
                 await Task.Delay(2000);
-            } while (GetOsuProcess() == null);
+            } while (!(
+                (process = GetOsuProcess()) != null 
+                && !process.MainWindowTitle.Contains("osu! updater")
+                && !string.IsNullOrEmpty(process.MainWindowTitle))
+                );
 
             var result = Inject(dllLocation);
             Log(result.ToString());
