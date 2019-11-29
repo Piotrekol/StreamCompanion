@@ -28,9 +28,11 @@ namespace osu_StreamCompanion
             string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value.ToString();
             string mutexId = string.Format("Global\\{{{0}}}", appGuid);
 
+            string settingsProfileName = GetSettingsProfileNameFromArgs(args);
+
             if (AllowMultiInstance)
 #pragma warning disable 162
-                Run();
+                Run(settingsProfileName);
 #pragma warning restore 162
             else
                 using (var mutex = new Mutex(false, mutexId))
@@ -58,7 +60,7 @@ namespace osu_StreamCompanion
                             hasHandle = true;
                         }
 
-                        Run();
+                        Run(settingsProfileName);
 
                     }
                     finally
@@ -69,14 +71,21 @@ namespace osu_StreamCompanion
                 }
         }
 
-        private static void Run()
+        private static string GetSettingsProfileNameFromArgs(string[] args)
+        {
+            const string argPrefix = "--settings-profile=";
+            int argIndex = args.AnyStartsWith(argPrefix);
+            return argIndex == -1 ? null : args[argIndex].Substring(argPrefix.Length);
+        }
+
+        private static void Run(string settingsProfileName)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Application.ThreadException += Application_ThreadException;
-            _initializer = new Initializer();
+            _initializer = new Initializer(settingsProfileName);
             _initializer.Start();
             Application.Run(_initializer);
         }

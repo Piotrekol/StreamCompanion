@@ -14,7 +14,7 @@ namespace osu_StreamCompanion.Code.Helpers
             }
             return false;
         }
-        public static int AnyStartsWith(this List<string> list, string val)
+        public static int AnyStartsWith(this IReadOnlyList<string> list, string val)
         {
             for (int i = 0; i < list.Count; i++)
             {
