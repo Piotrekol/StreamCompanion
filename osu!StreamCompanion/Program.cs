@@ -10,12 +10,13 @@ using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core.Loggers;
 using SharpRaven.Data;
+using System.IO;
 
 namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v190824.21";
+        public static string ScVersion ="v191129.19";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 
@@ -28,7 +29,13 @@ namespace osu_StreamCompanion
             string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value.ToString();
             string mutexId = string.Format("Global\\{{{0}}}", appGuid);
 
-            string settingsProfileName = GetSettingsProfileNameFromArgs(args);
+            string settingsProfileName = GetSettingsProfileNameFromArgs(args)?.Trim();
+            if(settingsProfileName.IndexOfAny(Path.GetInvalidFileNameChars()) >=0)
+            {
+                // settingsProfileName contains chars not valid for a filename
+                MessageBox.Show(settingsProfileName + " is an invalid settings profile name", "Error");
+                return;
+            }
 
             if (AllowMultiInstance)
 #pragma warning disable 162
