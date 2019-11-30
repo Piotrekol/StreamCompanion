@@ -16,7 +16,7 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v191129.19";
+        public static string ScVersion ="v191130.18";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 
@@ -30,7 +30,7 @@ namespace osu_StreamCompanion
             string mutexId = string.Format("Global\\{{{0}}}", appGuid);
 
             string settingsProfileName = GetSettingsProfileNameFromArgs(args)?.Trim();
-            if(settingsProfileName.IndexOfAny(Path.GetInvalidFileNameChars()) >=0)
+            if(!string.IsNullOrEmpty(settingsProfileName) && settingsProfileName.IndexOfAny(Path.GetInvalidFileNameChars()) >=0)
             {
                 // settingsProfileName contains chars not valid for a filename
                 MessageBox.Show(settingsProfileName + " is an invalid settings profile name", "Error");
