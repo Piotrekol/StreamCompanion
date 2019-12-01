@@ -1,4 +1,4 @@
-﻿using StreamCompanionTypes;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
@@ -62,6 +62,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     if (value?.FontName != null)
                         comboBox_font.SelectedItem = value.FontName;
                     numericUpDown_fontSize.Value = value?.FontSize ?? 12;
+                    numericUpDown_colorAlpha.Value = value?.Color.A ?? 255;
+                    comboBox_align.SelectedIndex = value?.Aligment ?? 0;
                 }));
             }
         }
@@ -88,6 +90,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             InitializeComponent();
             comboBox_saveEvent.DataSource = SaveEvents.Select(v => v.Key).ToList();
+            comboBox_align.DataSource = new List<string>
+            {
+                "To Left",
+                "To Center",
+                "To Right"
+            };
 
             using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
             {
@@ -112,6 +120,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Current.Color = panel_ColorPreview.BackColor;
                 Current.FontName = (string)comboBox_font.SelectedItem;
                 Current.FontSize = Convert.ToInt32(numericUpDown_fontSize.Value);
+                Current.Aligment = comboBox_align.SelectedIndex;
             }
         }
 
@@ -165,7 +174,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                         replacement = "";
                     else
                     {
-                            replacement = r.Value.FormatedValue;
+                        replacement = r.Value.FormatedValue;
                     }
 
                     toFormat = toFormat.Replace($"!{r.Key}!", replacement, StringComparison.InvariantCultureIgnoreCase);
@@ -178,19 +187,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.AllowFullOpen = true;
-            colorDialog.ShowHelp = true;
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
-                panel_ColorPreview.BackColor = colorDialog.Color;
-                label_TestText.ForeColor = colorDialog.Color;
-            }
-
-        }
-
         private void checkBox_ShowIngame_CheckedChanged(object sender, EventArgs e)
         {
             panel_showInOsu.Visible = checkBox_ShowIngame.Checked;
@@ -198,7 +194,15 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         private void panel_ColorPreview_Click(object sender, EventArgs e)
         {
-            button1_Click(sender, null);
+            ColorDialog colorDialog = new ColorDialog();
+
+            colorDialog.AllowFullOpen = true;
+            colorDialog.ShowHelp = true;
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                panel_ColorPreview.BackColor = colorDialog.Color;
+                label_TestText.ForeColor = colorDialog.Color;
+            }
         }
 
         private void comboBox_font_SelectedIndexChanged(object sender, EventArgs e)
@@ -212,16 +216,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             { }
         }
 
-        private void button_changePatternPosition_Click(object sender, EventArgs e)
+        private void numericUpDown_colorAlpha_ValueChanged(object sender, EventArgs e)
         {
-            var dialog = new PatternPositionForm();
-
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                numericUpDown_XPosition.Value = dialog.X;
-                numericUpDown_XPosition.Value = dialog.Y;
-            }
+            panel_ColorPreview.BackColor = label_TestText.ForeColor =
+                Color.FromArgb((int)numericUpDown_colorAlpha.Value, panel_ColorPreview.BackColor);
         }
-
     }
 }
