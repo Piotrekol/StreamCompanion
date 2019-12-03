@@ -22,7 +22,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly SettingNames _names = SettingNames.Instance;
         public readonly Settings Settings;
 
-        public Initializer()
+        public Initializer(string settingsProfileName)
         {
             new FileChecker();
 
@@ -31,6 +31,10 @@ namespace osu_StreamCompanion.Code.Core
             _logger = di.Locate<MainLogger>();
             var saver = di.Locate<MainSaver>();
             Settings = di.Locate<Settings>();
+            if (!string.IsNullOrEmpty(settingsProfileName))
+            {
+                Settings.ConfigFileName = Settings.ConfigFileName.Replace(".ini", $".{settingsProfileName}.ini");
+            }
 
             Settings.Load();
 

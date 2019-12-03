@@ -19,8 +19,8 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<string> _backupRawLines = new List<string>();
         public EventHandler<SettingUpdated> SettingUpdated { get; set; }
         private string _saveLocation = AppDomain.CurrentDomain.BaseDirectory;
-        private readonly string configFileName = "settings.ini";
-        public string FullConfigFilePath { get { return Path.Combine(_saveLocation, configFileName); } }
+        public string ConfigFileName { get; set; }  = "settings.ini";
+        public string FullConfigFilePath { get { return Path.Combine(_saveLocation, ConfigFileName); } }
         private static readonly object _lockingObject = new object();
         public Settings(ILogger logger)
         {
