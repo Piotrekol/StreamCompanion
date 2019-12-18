@@ -130,8 +130,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CollectionManager, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CollectionManager.1.0.4\lib\net471\CollectionManager.dll</HintPath>
+    <Reference Include="CollectionManager, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CollectionManager.1.0.5\lib\net471\CollectionManager.dll</HintPath>
     </Reference>
     <Reference Include="Grace, Version=7.1.0.0, Culture=neutral, PublicKeyToken=b7d24c6367970497, processorArchitecture=MSIL">
       <HintPath>..\packages\Grace.7.1.0-Beta768\lib\net45\Grace.dll</HintPath>
@@ -147,8 +147,8 @@
     <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpRaven.2.4.0\lib\net471\SharpRaven.dll</HintPath>
     </Reference>
-    <Reference Include="StreamCompanionTypes, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\osuStreamCompanionTypes.1.0.6\lib\net471\StreamCompanionTypes.dll</HintPath>
+    <Reference Include="StreamCompanionTypes, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\osuStreamCompanionTypes.1.0.7\lib\net471\StreamCompanionTypes.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
@@ -246,18 +246,6 @@
     <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternList.Designer.cs">
       <DependentUpon>PatternList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPosition.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPosition.Designer.cs">
-      <DependentUpon>PatternPosition.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.Designer.cs">
-      <DependentUpon>PatternPositionForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
     <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
@@ -329,12 +317,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternList.resx">
       <DependentUpon>PatternList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternPosition.resx">
-      <DependentUpon>PatternPosition.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternPositionForm.resx">
-      <DependentUpon>PatternPositionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
       <DependentUpon>osuPathResolverSettings.cs</DependentUpon>

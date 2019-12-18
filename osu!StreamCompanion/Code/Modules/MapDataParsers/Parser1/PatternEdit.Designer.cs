@@ -42,19 +42,24 @@
             this.checkBox_ShowIngame = new System.Windows.Forms.CheckBox();
             this.numericUpDown_XPosition = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_YPosition = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
             this.panel_showInOsu = new System.Windows.Forms.Panel();
+            this.numericUpDown_colorAlpha = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.numericUpDown_fontSize = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.button_changePatternPosition = new System.Windows.Forms.Button();
             this.label_TestText = new System.Windows.Forms.Label();
             this.comboBox_font = new System.Windows.Forms.ComboBox();
             this.panel_ColorPreview = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.comboBox_align = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_XPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_YPosition)).BeginInit();
             this.panel_showInOsu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_colorAlpha)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_fontSize)).BeginInit();
             this.SuspendLayout();
             // 
@@ -177,7 +182,7 @@
             // 
             // numericUpDown_XPosition
             // 
-            this.numericUpDown_XPosition.Location = new System.Drawing.Point(108, 4);
+            this.numericUpDown_XPosition.Location = new System.Drawing.Point(26, 4);
             this.numericUpDown_XPosition.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -189,7 +194,7 @@
             // 
             // numericUpDown_YPosition
             // 
-            this.numericUpDown_YPosition.Location = new System.Drawing.Point(151, 4);
+            this.numericUpDown_YPosition.Location = new System.Drawing.Point(92, 4);
             this.numericUpDown_YPosition.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -199,39 +204,64 @@
             this.numericUpDown_YPosition.Size = new System.Drawing.Size(41, 20);
             this.numericUpDown_YPosition.TabIndex = 19;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(3, 28);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 23);
-            this.button1.TabIndex = 22;
-            this.button1.Text = "Change color";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // panel_showInOsu
             // 
             this.panel_showInOsu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel_showInOsu.Controls.Add(this.comboBox_align);
+            this.panel_showInOsu.Controls.Add(this.label9);
+            this.panel_showInOsu.Controls.Add(this.numericUpDown_colorAlpha);
+            this.panel_showInOsu.Controls.Add(this.label7);
+            this.panel_showInOsu.Controls.Add(this.label6);
             this.panel_showInOsu.Controls.Add(this.label4);
             this.panel_showInOsu.Controls.Add(this.numericUpDown_fontSize);
             this.panel_showInOsu.Controls.Add(this.label3);
-            this.panel_showInOsu.Controls.Add(this.button_changePatternPosition);
             this.panel_showInOsu.Controls.Add(this.label_TestText);
             this.panel_showInOsu.Controls.Add(this.comboBox_font);
             this.panel_showInOsu.Controls.Add(this.panel_ColorPreview);
-            this.panel_showInOsu.Controls.Add(this.button1);
             this.panel_showInOsu.Controls.Add(this.numericUpDown_XPosition);
             this.panel_showInOsu.Controls.Add(this.numericUpDown_YPosition);
+            this.panel_showInOsu.Controls.Add(this.label8);
             this.panel_showInOsu.Location = new System.Drawing.Point(93, 81);
             this.panel_showInOsu.Name = "panel_showInOsu";
             this.panel_showInOsu.Size = new System.Drawing.Size(490, 54);
             this.panel_showInOsu.TabIndex = 23;
             this.panel_showInOsu.Visible = false;
             // 
+            // numericUpDown_colorAlpha
+            // 
+            this.numericUpDown_colorAlpha.Location = new System.Drawing.Point(92, 28);
+            this.numericUpDown_colorAlpha.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDown_colorAlpha.Name = "numericUpDown_colorAlpha";
+            this.numericUpDown_colorAlpha.Size = new System.Drawing.Size(41, 20);
+            this.numericUpDown_colorAlpha.TabIndex = 33;
+            this.numericUpDown_colorAlpha.ValueChanged += new System.EventHandler(this.numericUpDown_colorAlpha_ValueChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(74, 8);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(15, 13);
+            this.label7.TabIndex = 32;
+            this.label7.Text = "y:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 8);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(15, 13);
+            this.label6.TabIndex = 31;
+            this.label6.Text = "x:";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(183, 30);
+            this.label4.Location = new System.Drawing.Point(265, 30);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 13);
             this.label4.TabIndex = 29;
@@ -239,7 +269,7 @@
             // 
             // numericUpDown_fontSize
             // 
-            this.numericUpDown_fontSize.Location = new System.Drawing.Point(241, 28);
+            this.numericUpDown_fontSize.Location = new System.Drawing.Point(323, 28);
             this.numericUpDown_fontSize.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -262,27 +292,17 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(204, 8);
+            this.label3.Location = new System.Drawing.Point(286, 8);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(31, 13);
             this.label3.TabIndex = 27;
             this.label3.Text = "Font:";
             // 
-            // button_changePatternPosition
-            // 
-            this.button_changePatternPosition.Location = new System.Drawing.Point(3, 3);
-            this.button_changePatternPosition.Name = "button_changePatternPosition";
-            this.button_changePatternPosition.Size = new System.Drawing.Size(102, 23);
-            this.button_changePatternPosition.TabIndex = 26;
-            this.button_changePatternPosition.Text = "Change Position";
-            this.button_changePatternPosition.UseVisualStyleBackColor = true;
-            this.button_changePatternPosition.Click += new System.EventHandler(this.button_changePatternPosition_Click);
-            // 
             // label_TestText
             // 
             this.label_TestText.AutoSize = true;
             this.label_TestText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label_TestText.Location = new System.Drawing.Point(349, 17);
+            this.label_TestText.Location = new System.Drawing.Point(418, 17);
             this.label_TestText.Name = "label_TestText";
             this.label_TestText.Size = new System.Drawing.Size(57, 17);
             this.label_TestText.TabIndex = 25;
@@ -292,7 +312,7 @@
             // 
             this.comboBox_font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_font.FormattingEnabled = true;
-            this.comboBox_font.Location = new System.Drawing.Point(241, 3);
+            this.comboBox_font.Location = new System.Drawing.Point(323, 3);
             this.comboBox_font.Name = "comboBox_font";
             this.comboBox_font.Size = new System.Drawing.Size(78, 21);
             this.comboBox_font.TabIndex = 24;
@@ -301,11 +321,20 @@
             // panel_ColorPreview
             // 
             this.panel_ColorPreview.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panel_ColorPreview.Location = new System.Drawing.Point(111, 28);
+            this.panel_ColorPreview.Location = new System.Drawing.Point(10, 28);
             this.panel_ColorPreview.Name = "panel_ColorPreview";
             this.panel_ColorPreview.Size = new System.Drawing.Size(38, 20);
             this.panel_ColorPreview.TabIndex = 24;
             this.panel_ColorPreview.Click += new System.EventHandler(this.panel_ColorPreview_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(53, 32);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(37, 13);
+            this.label8.TabIndex = 34;
+            this.label8.Text = "Alpha:";
             // 
             // label5
             // 
@@ -315,6 +344,24 @@
             this.label5.Size = new System.Drawing.Size(65, 13);
             this.label5.TabIndex = 30;
             this.label5.Text = "Save event:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(139, 6);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(33, 13);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "Align:";
+            // 
+            // comboBox_align
+            // 
+            this.comboBox_align.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_align.FormattingEnabled = true;
+            this.comboBox_align.Location = new System.Drawing.Point(178, 3);
+            this.comboBox_align.Name = "comboBox_align";
+            this.comboBox_align.Size = new System.Drawing.Size(88, 21);
+            this.comboBox_align.TabIndex = 31;
             // 
             // PatternEdit
             // 
@@ -340,6 +387,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_YPosition)).EndInit();
             this.panel_showInOsu.ResumeLayout(false);
             this.panel_showInOsu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_colorAlpha)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_fontSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -362,15 +410,19 @@
         private System.Windows.Forms.CheckBox checkBox_ShowIngame;
         private System.Windows.Forms.NumericUpDown numericUpDown_XPosition;
         private System.Windows.Forms.NumericUpDown numericUpDown_YPosition;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel panel_showInOsu;
         private System.Windows.Forms.Panel panel_ColorPreview;
         private System.Windows.Forms.ComboBox comboBox_font;
         private System.Windows.Forms.Label label_TestText;
-        private System.Windows.Forms.Button button_changePatternPosition;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown numericUpDown_fontSize;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericUpDown_colorAlpha;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox comboBox_align;
+        private System.Windows.Forms.Label label9;
     }
 }

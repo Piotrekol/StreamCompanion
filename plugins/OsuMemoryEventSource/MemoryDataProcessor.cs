@@ -252,7 +252,7 @@ namespace OsuMemoryEventSource
             {
                 var configName = "conf-" + p.Name;
                 var valueName = "value-" + p.Name;
-                var config = $"{p.XPosition} {p.YPosition} {p.Color.R} {p.Color.G} {p.Color.B} {p.FontName.Replace(' ', '/')} {p.FontSize}";
+                var config = $"{p.XPosition} {p.YPosition} {p.Color.R} {p.Color.G} {p.Color.B} {p.Color.A} {p.FontName.Replace(' ', '/')} {p.FontSize} {p.Aligment}";
                 WriteToHandlers(configName, config);
                 WriteToHandlers(valueName, value);
             }

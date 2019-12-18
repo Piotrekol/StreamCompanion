@@ -37,7 +37,7 @@ namespace FileMapDataSender
                 {
                     var configName = "conf-" + name;
                     var valueName = "value-" + name;
-                    var config = $"{s.XPosition} {s.YPosition} {s.Color.R} {s.Color.G} {s.Color.B} {s.FontName.Replace(' ', '/')} {s.FontSize}";
+                    var config = $"{s.XPosition} {s.YPosition} {s.Color.R} {s.Color.G} {s.Color.B} {s.Color.A} {s.FontName.Replace(' ', '/')} {s.FontSize} {s.Aligment}";
                     _fileMapManager.Write(configName, config);
                     if (!s.IsMemoryFormat)
                         _fileMapManager.Write(valueName, valueToWrite.Replace("\r", ""));
