@@ -65,17 +65,17 @@ namespace OsuMemoryEventSource
                 case OsuMemoryStatus.EditingMap:
                     return OsuStatus.Editing;
 
+                case OsuMemoryStatus.MultiplayerResultsscreen:
+                case OsuMemoryStatus.RankingTagCoop:
+                case OsuMemoryStatus.RankingTeam:
                 case OsuMemoryStatus.ResultsScreen:
                     return OsuStatus.ResultsScreen;
                 case OsuMemoryStatus.MainMenu:
                 case OsuMemoryStatus.SongSelect:
                 case OsuMemoryStatus.SongSelectEdit:
                 case OsuMemoryStatus.MultiplayerRoom:
-                case OsuMemoryStatus.MultiplayerResultsscreen:
                 case OsuMemoryStatus.MultiplayerRooms:
                 case OsuMemoryStatus.MultiplayerSongSelect:
-                case OsuMemoryStatus.RankingTagCoop:
-                case OsuMemoryStatus.RankingTeam:
                 case OsuMemoryStatus.Tourney:
                 case OsuMemoryStatus.OsuDirect:
                     return OsuStatus.Listening;
