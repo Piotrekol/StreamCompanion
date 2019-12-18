@@ -1,4 +1,4 @@
-﻿using CollectionManager.Enums;
+using CollectionManager.Enums;
 using OsuMemoryDataProvider;
 using PpCalculator;
 using System;
@@ -16,6 +16,7 @@ namespace OsuMemoryEventSource
         private Beatmap _currentBeatmap = null;
         private string _currentMods;
         private string _currentOsuFileLocation = null;
+        private PlayMode _currentPlayMode;
 
         private PpCalculator.PpCalculator _ppCalculator = null;
 
@@ -30,6 +31,7 @@ namespace OsuMemoryEventSource
             _currentBeatmap = beatmap;
             _currentMods = mods;
             _currentOsuFileLocation = osuFileLocation;
+            _currentPlayMode = playMode;
 
             _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, _ppCalculator);
 
@@ -46,7 +48,7 @@ namespace OsuMemoryEventSource
         {
             double pp = double.NaN;
 
-            if (_ppCalculator == null || _currentBeatmap.PlayMode == PlayMode.OsuMania)
+            if (_ppCalculator == null || _currentPlayMode == PlayMode.OsuMania)
                 return pp;
 
             try
@@ -100,7 +102,7 @@ namespace OsuMemoryEventSource
                     var pp = _ppCalculator.Calculate(PlayTime, attribs);
                     if (!double.IsInfinity(pp))
                     {
-                        switch (_currentBeatmap.PlayMode)
+                        switch (_currentPlayMode)
                         {
                             case PlayMode.Taiko:
                             case PlayMode.OsuMania:
@@ -135,7 +137,7 @@ namespace OsuMemoryEventSource
         {
             double pp = double.NaN;
 
-            if (_ppCalculator == null || _currentBeatmap.PlayMode == PlayMode.OsuMania)
+            if (_ppCalculator == null || _currentPlayMode == PlayMode.OsuMania)
                 return pp;
 
             try
