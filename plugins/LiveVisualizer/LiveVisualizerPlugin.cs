@@ -1,5 +1,4 @@
 using CollectionManager.Enums;
-using LiveCharts.Helpers;
 using Newtonsoft.Json;
 using PpCalculator;
 using StreamCompanionTypes;
@@ -12,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LiveCharts;
 using StreamCompanionTypes.Enums;
 
 namespace LiveVisualizer
@@ -195,8 +195,12 @@ namespace LiveVisualizer
 
             VisualizerData.Display.Title = Tokens.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
             VisualizerData.Display.Artist = Tokens.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
+            
+            if(VisualizerData.Display.Strains==null)
+                VisualizerData.Display.Strains = new ChartValues<double>();
 
-            VisualizerData.Display.Strains = strains.Select(s => s.Value).AsChartValues();
+            VisualizerData.Display.Strains.Clear();
+            VisualizerData.Display.Strains.AddRange(strains.Select(s => s.Value));
 
             SetAxisValues();
 
