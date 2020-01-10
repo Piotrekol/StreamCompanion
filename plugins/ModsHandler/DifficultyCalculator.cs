@@ -99,7 +99,7 @@ namespace ModsHandler
             if ((mods & Mods.Ez) != 0)
                 od = Math.Max(0, od / 2);
             else
-                od = Math.Min(10, od * 1.4f);
+                od = Math.Min(11.08f, od * 1.4f);
 
 
             retValue.Add("AR", ar);
