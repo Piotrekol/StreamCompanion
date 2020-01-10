@@ -105,7 +105,7 @@ namespace osuOverlay
                             }
 
                             exitCode = RunHelperProcess(true);
-                            HandleExitCode(exitCode);
+                            HandleExitCode(exitCode, true);
                         }
 
                         if (exitCode == 0)
@@ -131,7 +131,7 @@ namespace osuOverlay
         }
         private void HandleExitCode(int exitCode, bool showErrors = false)
         {
-            string message = string.Empty;
+            string message = null;
             switch (exitCode)
             {
                 case -1:
@@ -149,9 +149,9 @@ namespace osuOverlay
                         "Could not add overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
                     break;
             }
-            if (showErrors && exitCode != (int)InjectionResult.GameProcessNotFound)
+            if (showErrors && exitCode != (int)InjectionResult.GameProcessNotFound && !cancellationToken.IsCancellationRequested)
             {
-                MessageBox.Show(message, "StreamCompanion - ingameOverlay Error!", MessageBoxButtons.OK,
+                MessageBox.Show(message ?? $"exit code:{exitCode}", "StreamCompanion - ingameOverlay Error!", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
