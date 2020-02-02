@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using CollectionManager.DataTypes;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -72,7 +74,7 @@ namespace OsuMemoryEventSource
         {
             if (label_CalibrationResult.InvokeRequired)
             {
-                BeginInvoke((MethodInvoker) delegate { SetCalibrationText(text); });
+                Invoke((MethodInvoker) delegate { SetCalibrationText(text); });
                 return;
             }
 
@@ -84,7 +86,7 @@ namespace OsuMemoryEventSource
             if (!IsHandleCreated) return;
             lock (_lockingObject)
             {
-                BeginInvoke((MethodInvoker) delegate
+                Invoke((MethodInvoker) delegate
                 {
                     label_memoryStatus.Text =
                         $"{status}, id:{mapId}, valid mapset:{CurrentMap.BelongsToSet(mapId)}";
@@ -92,31 +94,36 @@ namespace OsuMemoryEventSource
 
                 if (CurrentMap.BelongsToSet(mapId) && status == OsuStatus.Playing)
                 {
-                    BeginInvoke((MethodInvoker) delegate
+                    Invoke((MethodInvoker) delegate
                     {
                         SetCalibrationText("Searching. It can take up to 20 seconds.");
                         button_Skip.Enabled = false;
                     });
-                    var everythingIsOk = Helpers.ExecWithTimeout(token =>
+
+                    var mods = Helpers.ExecWithTimeout(async token =>
                     {
                         if (token.IsCancellationRequested)
-                            return false;
+                            return -1;
 
-                        return memoryReader.GetMods() == ExpectedMods;
-                    }, 20000);
+                        //ugly workaround
+                        SetCalibrationText("Initial search delay... waiting 3 seconds");
+                        await Task.Delay(3000);
 
-                    Passed = everythingIsOk;
+                        return memoryReader.GetMods();
+                    }, 20000).Result;
 
-                    BeginInvoke((MethodInvoker) delegate
+                    Passed = mods == ExpectedMods;
+
+                    Invoke((MethodInvoker) delegate
                     {
-                        if (everythingIsOk)
+                        if (Passed)
                         {
                             button_Skip_Click(this, EventArgs.Empty);
                         }
                         else
                         {
                             var resultText =
-                                "Something went wrong. Try again(start map again) or continue with DISABLED memory";
+                                $"Something went wrong(mods: {(Mods)mods}). Try again(start map again) or continue with DISABLED memory";
                             SetCalibrationText(resultText);
                             button_Skip.Enabled = true;
                         }
