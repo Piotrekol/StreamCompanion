@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using CollectionManager.DataTypes;
+using StreamCompanionTypes.DataTypes;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Helpers
@@ -18,7 +19,7 @@ namespace osu_StreamCompanion.Code.Helpers
                 return reader.GetDouble(colIndex);
             return double.NaN;
         }
-        public static void Read(this Beatmap beatmap, SQLiteDataReader reader)
+        public static void Read(this IBeatmap beatmap, SQLiteDataReader reader)
         {
             int i = 1;
             beatmap.TitleRoman = reader.GetString(i); i++;
@@ -86,7 +87,7 @@ namespace osu_StreamCompanion.Code.Helpers
         }
         private static BinaryReader _binaryReader;
 
-        public static byte[] SerializeStars(this Beatmap bm)
+        public static byte[] SerializeStars(this IBeatmap bm)
         {
             using (MemoryStream mStream = new MemoryStream())
             {
@@ -106,7 +107,7 @@ namespace osu_StreamCompanion.Code.Helpers
                 return mStream.ToArray();
             }
         }
-        public static void DeSerializeStars(this Beatmap bm, byte[] starsData)
+        public static void DeSerializeStars(this IBeatmap bm, byte[] starsData)
         {
             using (MemoryStream mStream = new MemoryStream())
             {
@@ -129,7 +130,7 @@ namespace osu_StreamCompanion.Code.Helpers
             }
         }
 
-        public static Dictionary<string,object> GetTokens(this Beatmap bm, bool empty = false)
+        public static Dictionary<string,object> GetTokens(this IBeatmap bm, bool empty = false)
         {
             Dictionary<string, object> dict;
             if (bm == null || empty)
@@ -231,7 +232,7 @@ namespace osu_StreamCompanion.Code.Helpers
 
 
 
-        public static Dictionary<string, string> GetDict(this Beatmap bm, bool empty = false)
+        public static Dictionary<string, string> GetDict(this IBeatmap bm, bool empty = false)
         {
             Dictionary<string, string> dict;
             if (bm == null || empty)

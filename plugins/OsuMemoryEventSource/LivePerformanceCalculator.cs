@@ -3,6 +3,7 @@ using OsuMemoryDataProvider;
 using PpCalculator;
 using System;
 using System.Collections.Generic;
+using StreamCompanionTypes.DataTypes;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace OsuMemoryEventSource
@@ -13,14 +14,14 @@ namespace OsuMemoryEventSource
         public int PlayTime { get; set; }
         public List<int> HitErrors { get; set; }
 
-        private Beatmap _currentBeatmap = null;
+        private IBeatmap _currentBeatmap = null;
         private string _currentMods;
         private string _currentOsuFileLocation = null;
         private PlayMode _currentPlayMode;
 
         private PpCalculator.PpCalculator _ppCalculator = null;
 
-        public void SetCurrentMap(Beatmap beatmap, string mods, string osuFileLocation, PlayMode playMode)
+        public void SetCurrentMap(IBeatmap beatmap, string mods, string osuFileLocation, PlayMode playMode)
         {
             if (beatmap == null)
             {

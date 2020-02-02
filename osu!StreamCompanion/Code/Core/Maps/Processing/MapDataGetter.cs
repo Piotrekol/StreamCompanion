@@ -37,7 +37,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         public MapSearchResult FindMapData(MapSearchArgs searchArgs)
         {
             MapSearchResult mapSearchResult = null;
-            ModsEx foundMods = null;
+            IModsEx foundMods = null;
             for (int i = 0; i < _mapDataFinders.Count; i++)
             {
                 if ((_mapDataFinders[i].SearchModes & searchArgs.Status) == 0)
@@ -95,7 +95,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }
         }
 
-        private void SaveMapStrings(List<OutputPattern> patterns, OsuStatus status)
+        private void SaveMapStrings(List<IOutputPattern> patterns, OsuStatus status)
         {
 
             foreach (var p in patterns)
@@ -112,9 +112,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         }
 
 
-        private List<OutputPattern> GetMapPatterns(Tokens replacements, OsuStatus status)
+        private List<IOutputPattern> GetMapPatterns(Tokens replacements, OsuStatus status)
         {
-            var ret = new List<OutputPattern>();
+            var ret = new List<IOutputPattern>();
             foreach (var dataGetter in _mapDataParsers)
             {
                 var temp = dataGetter.GetFormatedPatterns(replacements, status);

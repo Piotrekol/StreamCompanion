@@ -35,12 +35,12 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
                 {
                     if (liveTokens != null && this.IsHandleCreated)
 
-                        BeginInvoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
+                        Invoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
 
 
                     _cts.Token.ThrowIfCancellationRequested();
 #if DEBUG
-                    Thread.Sleep(250);
+                    Thread.Sleep(50);
 #else
                     Thread.Sleep(11);
 #endif
@@ -55,8 +55,8 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
 
         }
 
-        private List<KeyValuePair<string, Token>> liveTokens = null;
-        public void Add(Dictionary<string, Token> replacements)
+        private List<KeyValuePair<string, IToken>> liveTokens = null;
+        public void Add(Dictionary<string, IToken> replacements)
         {
             if (InvokeRequired)
             {
@@ -80,7 +80,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             label_ListedNum.Text = notHidden.Count.ToString();
         }
 
-        private Size ProcessReplacements(IEnumerable<KeyValuePair<string, Token>> replacements, int xPosition = 30, int yPosition = 30)
+        private Size ProcessReplacements(IEnumerable<KeyValuePair<string, IToken>> replacements, int xPosition = 30, int yPosition = 30)
         {
             var replacementsCopy = replacements.ToDictionary(k => k.Key, v => v.Value);
             var startYPosition = yPosition;
@@ -146,7 +146,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             return (control.Size, control, alreadyExisted);
         }
 
-        private Size AddEditTextBox(Token token, string name, int xPosition, int yPosition)
+        private Size AddEditTextBox(IToken token, string name, int xPosition, int yPosition)
         {
             var ret = AddControl<TextBox>($"T{name}", token.Format, xPosition, yPosition);
             if (!ret.AlreadyExisted)

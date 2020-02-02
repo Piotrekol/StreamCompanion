@@ -28,10 +28,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         public void SetPatterns(BindingList<OutputPattern> patterns)
         {
             dataGridView.DataSource = patterns;
-            dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             if (!InGameOverlayIsAvailable && dataGridView?.Columns["ShowInOsu"] != null)
                 dataGridView.Columns["ShowInOsu"].Visible = false;
+
+            if (dataGridView.Columns.Contains("Replacements") && dataGridView.Columns["Replacements"] != null)
+                dataGridView.Columns["Replacements"].Visible = false;
+
         }
     }
 }

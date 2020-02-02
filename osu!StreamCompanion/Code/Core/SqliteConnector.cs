@@ -263,7 +263,7 @@ namespace osu_StreamCompanion.Code.Core
             NonQuery(sql);
 
         }
-        public void StoreBeatmap(Beatmap beatmap)
+        public void StoreBeatmap(IBeatmap beatmap)
         {
             if (float.IsNaN(beatmap.ApproachRate))
                 beatmap.ApproachRate = 0;
@@ -285,7 +285,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.ExecuteNonQuery();
         }
 
-        public void StoreTempBeatmap(Beatmap beatmap)
+        public void StoreTempBeatmap(IBeatmap beatmap)
         {
             string sql =
                     string.Format("INSERT OR REPLACE INTO Temp ({0}) VALUES ({1})", _tableStruct.GetFieldnames(), _tableStruct.GetFieldnames("@"));
@@ -294,7 +294,7 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.ExecuteNonQuery();
         }
 
-        private void FillBeatmapParameters(Beatmap beatmap)
+        private void FillBeatmapParameters(IBeatmap beatmap)
         {
             _insertSql.Parameters.Add("@Raw", DbType.String).Value = $"{beatmap.TitleRoman} - {beatmap.ArtistRoman}";
             _insertSql.Parameters.Add("@TitleRoman", DbType.String).Value = beatmap.TitleRoman;

@@ -28,7 +28,7 @@ namespace ModsHandler
             _tokenSetter = Tokens.CreateTokenSetter(Name);
         }
 
-        public ModsEx GetModsFromEnum(int modsEnum)
+        public IModsEx GetModsFromEnum(int modsEnum)
         {
             return _modParser.GetModsFromEnum(modsEnum);
         }
@@ -38,7 +38,7 @@ namespace ModsHandler
             return _modParser.GetModsFromEnum(modsEnum, shortMod);
         }
 
-        public Beatmap ApplyMods(Beatmap map, Mods mods)
+        public IBeatmap ApplyMods(IBeatmap map, Mods mods)
         {
             var c = _difficultyCalculator.ApplyMods(map, mods);
             var retMap = (Beatmap)map.Clone();

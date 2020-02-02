@@ -39,7 +39,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
             var result = new MapSearchResult(searchArgs);
-            Beatmap beatmap = null;
+            IBeatmap beatmap = null;
 
             if (!string.IsNullOrEmpty(searchArgs.MapHash))
                 beatmap = _sqliteControler.GetBeatmap(searchArgs.MapHash);
@@ -62,7 +62,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             return result;
         }
 
-        private bool IsValidBeatmap(Beatmap beatmap)
+        private bool IsValidBeatmap(IBeatmap beatmap)
         {
             return beatmap != null
                    && !string.IsNullOrEmpty(beatmap.Md5)

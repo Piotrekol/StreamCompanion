@@ -22,12 +22,15 @@ namespace OsuMemoryEventSource
         private string _currentMapString = "";
         private string _lastMapHash = "";
         private MemoryDataProcessor _memoryDataProcessor;
+        private PatternsDispatcher _patternsDispatcher;
         public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettingsHandler _settings;
 
         public MemoryListener()
         {
             _memoryDataProcessor = new MemoryDataProcessor();
+            _patternsDispatcher = new PatternsDispatcher();
+            _memoryDataProcessor.TokensUpdated += _patternsDispatcher.TokensUpdated;
         }
 
         public void Tick(IOsuMemoryReader reader, bool sendEvents)
@@ -80,10 +83,11 @@ namespace OsuMemoryEventSource
         public void SetNewMap(MapSearchResult map)
         {
             _memoryDataProcessor.SetNewMap(map);
+            _patternsDispatcher.SetOutputPatterns(map.FormatedStrings);
         }
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
         {
-            _memoryDataProcessor.SetHighFrequencyDataHandlers(handlers);
+            _patternsDispatcher.HighFrequencyDataHandlers = handlers;
         }
 
         public void Dispose()

@@ -34,7 +34,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             Started = true;
         }
 
-        public List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
+        public List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
             if (_commandsPreviewSettings != null && !_commandsPreviewSettings.IsDisposed)
                 _commandsPreviewSettings.Add(replacements);
@@ -42,7 +42,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             return null;
         }
 
-        private void AdjustTokenFormats(Dictionary<string, Token> tokensDictionary)
+        private void AdjustTokenFormats(IReadOnlyDictionary<string, IToken> tokensDictionary)
         {
             if (tokenFormats.Count == 0)
                 return;
@@ -71,7 +71,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             {
                 _commandsPreviewSettings = new CommandsPreviewSettings();
 
-                _commandsPreviewSettings.Add(Tokens.AllTokens);
+                _commandsPreviewSettings.Add(new Dictionary<string, IToken>(Tokens.AllTokens));
             }
             return _commandsPreviewSettings;
         }

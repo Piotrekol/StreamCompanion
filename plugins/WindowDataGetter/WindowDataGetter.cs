@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using StreamCompanionTypes.DataTypes;
@@ -29,12 +29,15 @@ namespace WindowDataGetter
             {
                 var foundMap = map.BeatmapsFound[0];
                 var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
-                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.EventSource!="Msn")
+                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.EventSource != "Msn")
                 {
                     nowPlaying += string.Format(" [{0}] {1}", foundMap.DiffName, map.Mods?.ShownMods ?? "");
-                    nowPlaying += string.Format(Environment.NewLine + "NoMod:{0:##.###}", foundMap.StarsNomod);
+                    nowPlaying += string.Format(Environment.NewLine + "NoMod:{0:##.###} ", foundMap.StarsNomod);
                     var mods = map.Mods?.Mods ?? Mods.Omod;
-                    nowPlaying += string.Format(" Modded: {0:##.###}", foundMap.Stars(PlayMode.Osu, mods));
+                    if(mods!=Mods.Omod)
+                        nowPlaying += $"Modded: {foundMap.Stars(PlayMode.Osu, mods):##.###}, {map.Action}";
+                    else
+                        nowPlaying += $"{map.Action}";
                 }
                 _mainWindowHandle.NowPlaying = nowPlaying;
             }

@@ -93,13 +93,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             Save();
         }
 
-        public List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
+        public List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
-            List<OutputPattern> ret = null;
+            List<IOutputPattern> ret = null;
 
             if (replacements != null)
             {
-                ret = new List<OutputPattern>();
+                ret = new List<IOutputPattern>();
                 foreach (var p in _patterns)
                 {
                     var newPattern = (OutputPattern)p.Clone();
@@ -107,7 +107,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     ret.Add(newPattern);
                 }
                 if (_parserSettings != null && !_parserSettings.IsDisposed)
-                    _parserSettings.SetPreview(replacements);
+                    _parserSettings.SetPreview(replacements, status);
             }
             return ret;
         }
@@ -173,7 +173,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                             _patterns.Add(p);
                         }
                 }
-
             }
         }
 
