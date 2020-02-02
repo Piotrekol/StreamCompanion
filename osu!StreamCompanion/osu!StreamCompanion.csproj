@@ -147,8 +147,8 @@
     <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpRaven.2.4.0\lib\net471\SharpRaven.dll</HintPath>
     </Reference>
-    <Reference Include="StreamCompanionTypes, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\osuStreamCompanionTypes.1.0.7\lib\net471\StreamCompanionTypes.dll</HintPath>
+    <Reference Include="StreamCompanionTypes, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\osuStreamCompanionTypes.2.0.0\lib\net471\StreamCompanionTypes.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
