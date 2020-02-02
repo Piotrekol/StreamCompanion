@@ -10,7 +10,7 @@ using StreamCompanionTypes.Enums;
 
 namespace OsuSongsFolderWatcher
 {
-    class OsuSongsFolderWatcher : IPlugin, IDisposable
+    class OsuSongsFolderWatcher : IPlugin, IDisposable, IOsuEventSource, IMapDataFinder
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -47,6 +47,7 @@ namespace OsuSongsFolderWatcher
             {
                 _watcher = new FileSystemWatcher(dir, "*.osu");
                 _watcher.Created += Watcher_FileCreated;
+                _watcher.Changed += Watcher_FileChanged;
                 _watcher.IncludeSubdirectories = true;
                 _watcher.EnableRaisingEvents = true;
                 _consumerThread = new Thread(ConsumerTask);
@@ -61,26 +62,48 @@ namespace OsuSongsFolderWatcher
             }
         }
 
+        private void Watcher_FileChanged(object sender, FileSystemEventArgs e)
+        {
+            Watcher_FileCreated(sender, e);
+        }
+
         private void ConsumerTask()
         {
             try
             {
                 while (true)
                 {
-                    if (_filesChanged.TryDequeue(out var fileFullPath))
+                    if (_filesChanged.TryDequeue(out var fsArgs))
                     {
                         Beatmap beatmap = null;
                         _settings.Add(_names.LoadingRawBeatmaps.Name, true);
                         Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
                         _logger.Log("Processing new beatmap", LogLevel.Debug);
-                        beatmap = BeatmapHelpers.ReadBeatmap(fileFullPath);
+                        beatmap = BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
 
                         _sqliteControler.StoreTempBeatmap(beatmap);
+                        
                         _logger.Log("Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Debug, beatmap.ArtistRoman,
                             beatmap.TitleRoman, beatmap.DiffName);
                         if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
                         {
                             _settings.Add(_names.LoadingRawBeatmaps.Name, false);
+                        }
+
+                        if (fsArgs.ChangeType == WatcherChangeTypes.Changed && lastMapSearchArgs != null)
+                        {
+                            var l = lastMapSearchArgs;
+                            NewOsuEvent?.Invoke(this, new MapSearchArgs($"OsuMemory-FolderWatcherReplay")
+                            {
+                                Artist = beatmap.Artist,
+                                MapHash = beatmap.Md5,
+                                Title = beatmap.Title,
+                                Diff = beatmap.DiffName,
+                                EventType = OsuEventType.MapChange,
+                                PlayMode = beatmap.PlayMode,
+                                Status = l.Status,
+                                MapId = -123//bogus id to force string search
+                            });
                         }
                     }
                     Thread.Sleep(5);
@@ -91,11 +114,11 @@ namespace OsuSongsFolderWatcher
                 return;
             }
         }
-        private readonly ConcurrentQueue<string> _filesChanged = new ConcurrentQueue<string>();
+        private readonly ConcurrentQueue<FileSystemEventArgs> _filesChanged = new ConcurrentQueue<FileSystemEventArgs>();
         private void Watcher_FileCreated(object sender, FileSystemEventArgs e)
         {
-            _filesChanged.Enqueue(e.FullPath);
-            _logger.Log("New osu file: "+e.FullPath, LogLevel.Debug);
+            _filesChanged.Enqueue(e);
+            _logger.Log("New osu file: " + e.FullPath, LogLevel.Debug);
         }
 
         public void Dispose()
@@ -103,6 +126,17 @@ namespace OsuSongsFolderWatcher
             _watcher?.Dispose();
             _consumerThread?.Abort();
         }
+        private MapSearchArgs lastMapSearchArgs;
 
+        public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
+        public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
+        {
+            lastMapSearchArgs = searchArgs;
+            return null;
+        }
+
+        public OsuStatus SearchModes { get; } = OsuStatus.All;
+        public string SearcherName { get; } = nameof(OsuSongsFolderWatcher);
+        public int Priority { get; set; } = 1000;
     }
 }

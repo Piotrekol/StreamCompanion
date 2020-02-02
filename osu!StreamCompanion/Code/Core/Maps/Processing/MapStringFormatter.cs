@@ -38,8 +38,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             if (mapSearchArgs == null)
                 return;
+
             //TODO: priority system for IOsuEventSource 
-            if (mapSearchArgs.SourceName == "OsuMemory")
+            if (mapSearchArgs.SourceName.Contains("OsuMemory"))
             {
                 TasksMemory.Clear();
                 _logger.SetContextData("OsuMemory_event", new
@@ -82,7 +83,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     counter++;
                     if (isPoolingEnabled)
                     {
-
                         //Here we prioritize Memory events over MSN/other.
                         if (TasksMemory.TryPop(out memorySearchArgs))
                         {

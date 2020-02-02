@@ -46,6 +46,7 @@ namespace LiveVisualizer
         }
 
         private string _lastMapLocation = string.Empty;
+        private string _lastMapHash = string.Empty;
         private IModsEx _lastMods = null;
 
 
@@ -138,7 +139,7 @@ namespace LiveVisualizer
             if (VisualizerData == null ||
                 !mapSearchResult.FoundBeatmaps ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
-                ( mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods )
+                ( mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods && _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5)
             )
                 return;
 
@@ -190,6 +191,7 @@ namespace LiveVisualizer
 
             _lastMapLocation = mapLocation;
             _lastMods = mapSearchResult.Mods;
+            _lastMapHash = mapSearchResult.BeatmapsFound[0].Md5;
 
             VisualizerData.Display.TotalTime = mapLength;
 
