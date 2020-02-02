@@ -1,4 +1,4 @@
-using StreamCompanionTypes.DataTypes;
+﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using System;
 using System.Collections.Generic;
@@ -35,12 +35,12 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
                 {
                     if (liveTokens != null && this.IsHandleCreated)
 
-                        BeginInvoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
+                        Invoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
 
 
                     _cts.Token.ThrowIfCancellationRequested();
 #if DEBUG
-                    Thread.Sleep(250);
+                    Thread.Sleep(50);
 #else
                     Thread.Sleep(11);
 #endif
