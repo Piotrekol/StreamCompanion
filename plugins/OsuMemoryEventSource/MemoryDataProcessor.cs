@@ -218,7 +218,7 @@ namespace OsuMemoryEventSource
             {
                 if (_rawData.PlayTime != 0)
                     return _rawData.PlayTime / 1000d;
-                return 0;
+                return 0d;
             });
             _liveTokens["combo"] = new LiveToken(_tokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.Combo);
             _liveTokens["score"] = new LiveToken(_tokenSetter("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, OsuStatus.Playing), () => _rawData.Play.Score);
