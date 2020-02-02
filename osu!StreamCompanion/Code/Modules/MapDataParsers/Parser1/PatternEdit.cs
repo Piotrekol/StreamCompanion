@@ -1,4 +1,3 @@
-using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
@@ -6,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using StreamCompanionTypes.Enums;
 
@@ -75,20 +75,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         public EventHandler<OutputPattern> DeletePattern;
         public EventHandler AddPattern;
         private Tokens _replacements;
-        private Dictionary<string, string> _liveReplacements = new Dictionary<string, string>
-        {
-            { "!acc!", "98.05" },
-            { "!300!", "301" },
-            { "!100!", "101" },
-            { "!50!", "51" },
-            { "!miss!", "15" },
-            { "!time!", "116,5" },
-            { "!combo!", "124" },
-            { "!CurrentMaxCombo!", "1000" },
-            { "!PpIfMapEndsNow!", "99,52" },
-            { "!PpIfRestFced!", "257,27" },
-            { "!AccIfRestFced!", "99,54" }
-        };
+
+        private OsuStatus _currentStatus;
 
         public PatternEdit()
         {
@@ -107,8 +95,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 comboBox_font.DataSource = fontNames;
                 comboBox_font.SelectedItem = fontNames.First(f => f == "Arial");
             }
-
-
         }
 
         private void Save()
@@ -152,18 +138,36 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
         }
 
-        public void SetPreview(Tokens replacements)
+        public async void textBoxUpdateLoop(Tokens replacements)
+        {
+            var _replacements = replacements;
+            try
+            {
+                while (!IsDisposed && Created && ReferenceEquals(_replacements, replacements))
+                {
+                    Invoke((MethodInvoker)(() => { textBox_formating_TextChanged(null, EventArgs.Empty); }));
+                    await Task.Delay(33);
+                }
+            }
+            catch (ObjectDisposedException) { }
+        }
+        public void SetPreview(Tokens replacements, OsuStatus status)
         {
             _replacements = replacements;
+            _currentStatus = status;
+            if (Created)
+            {
+                Invoke((MethodInvoker)(() => { textBox_formating_TextChanged(null, EventArgs.Empty); }));
+                Task.Run(() => textBoxUpdateLoop(replacements));
+            }
         }
         private void textBox_formating_TextChanged(object sender, EventArgs e)
         {
             if (!this.IsHandleCreated || this.IsDisposed || Current == null)
                 return;
+
             var isMemoryPattern = Current.MemoryFormatTokens.Select(s => s.ToLower()).Any(textBox_formating.Text.ToLower().Contains);
             label_warning.Visible = isMemoryPattern;
-            comboBox_saveEvent.SelectedItem = isMemoryPattern ? "Playing" : comboBox_saveEvent.SelectedItem;
-            comboBox_saveEvent.Enabled = !isMemoryPattern;
 
 
             if (_replacements == null)
@@ -171,23 +175,19 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             else
             {
                 var toFormat = textBox_formating.Text ?? "";
-                foreach (var r in _replacements)
+                var saveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
+                var result = OutputPattern.FormatPattern(toFormat, _replacements, saveEvent, _currentStatus);
+                if (string.IsNullOrEmpty(result) && !string.IsNullOrEmpty(toFormat))
                 {
-                    string replacement;
-                    if (r.Value.Value is null)
-                        replacement = "";
-                    else
-                    {
-                        replacement = r.Value.FormatedValue;
-                    }
+                    label_statusInfo.Visible = true;
+                    label_statusInfo.Text = $"This pattern will not save anything with current save event under current osu status ({_currentStatus})";
+                }
+                else
+                {
+                    label_statusInfo.Visible = false;
+                }
 
-                    toFormat = toFormat.Replace($"!{r.Key}!", replacement, StringComparison.InvariantCultureIgnoreCase);
-                }
-                foreach (var r in _liveReplacements)
-                {
-                    toFormat = toFormat.Replace($"!{r.Key}!", r.Value, StringComparison.InvariantCultureIgnoreCase);
-                }
-                textBox_preview.Text = toFormat;
+                textBox_preview.Text = result;
             }
         }
 

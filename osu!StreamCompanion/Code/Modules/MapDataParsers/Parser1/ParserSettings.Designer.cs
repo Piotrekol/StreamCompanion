@@ -36,8 +36,9 @@
             // 
             // checkBox_disableDiskSaving
             // 
+            this.checkBox_disableDiskSaving.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_disableDiskSaving.AutoSize = true;
-            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(246, 380);
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(246, 413);
             this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
             this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(153, 17);
             this.checkBox_disableDiskSaving.TabIndex = 2;
@@ -47,9 +48,10 @@
             // patternEdit
             // 
             this.patternEdit.Current = null;
+            this.patternEdit.InGameOverlayIsAvailable = false;
             this.patternEdit.Location = new System.Drawing.Point(0, 223);
             this.patternEdit.Name = "patternEdit";
-            this.patternEdit.Size = new System.Drawing.Size(601, 180);
+            this.patternEdit.Size = new System.Drawing.Size(601, 213);
             this.patternEdit.TabIndex = 1;
             // 
             // patternList
@@ -61,7 +63,8 @@
             // 
             // button_reset
             // 
-            this.button_reset.Location = new System.Drawing.Point(534, 374);
+            this.button_reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_reset.Location = new System.Drawing.Point(534, 407);
             this.button_reset.Name = "button_reset";
             this.button_reset.Size = new System.Drawing.Size(93, 23);
             this.button_reset.TabIndex = 3;
@@ -78,7 +81,7 @@
             this.Controls.Add(this.checkBox_disableDiskSaving);
             this.Controls.Add(this.patternEdit);
             this.Name = "ParserSettings";
-            this.Size = new System.Drawing.Size(640, 403);
+            this.Size = new System.Drawing.Size(640, 436);
             this.ResumeLayout(false);
             this.PerformLayout();
 

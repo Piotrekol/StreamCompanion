@@ -107,7 +107,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     ret.Add(newPattern);
                 }
                 if (_parserSettings != null && !_parserSettings.IsDisposed)
-                    _parserSettings.SetPreview(replacements);
+                    _parserSettings.SetPreview(replacements, status);
             }
             return ret;
         }
@@ -173,7 +173,6 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                             _patterns.Add(p);
                         }
                 }
-
             }
         }
 

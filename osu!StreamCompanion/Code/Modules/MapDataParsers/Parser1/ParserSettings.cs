@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
@@ -70,9 +71,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _patterns = patterns;
             this.patternList.SetPatterns(patterns);
         }
-        public void SetPreview(Tokens replacements)
+        public void SetPreview(Tokens replacements, OsuStatus status)
         {
-            this.patternEdit.SetPreview(replacements);
+            this.patternEdit.SetPreview(replacements, status);
         }
 
         private void button_reset_Click(object sender, EventArgs e)

@@ -43,6 +43,8 @@
             this.numericUpDown_XPosition = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_YPosition = new System.Windows.Forms.NumericUpDown();
             this.panel_showInOsu = new System.Windows.Forms.Panel();
+            this.comboBox_align = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.numericUpDown_colorAlpha = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -54,8 +56,7 @@
             this.panel_ColorPreview = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.comboBox_align = new System.Windows.Forms.ComboBox();
+            this.label_statusInfo = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_XPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_YPosition)).BeginInit();
             this.panel_showInOsu.SuspendLayout();
@@ -83,7 +84,7 @@
             // button_save
             // 
             this.button_save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_save.Location = new System.Drawing.Point(6, 154);
+            this.button_save.Location = new System.Drawing.Point(6, 172);
             this.button_save.Name = "button_save";
             this.button_save.Size = new System.Drawing.Size(75, 23);
             this.button_save.TabIndex = 6;
@@ -128,7 +129,7 @@
             // button_addNew
             // 
             this.button_addNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_addNew.Location = new System.Drawing.Point(87, 154);
+            this.button_addNew.Location = new System.Drawing.Point(87, 172);
             this.button_addNew.Name = "button_addNew";
             this.button_addNew.Size = new System.Drawing.Size(75, 23);
             this.button_addNew.TabIndex = 11;
@@ -139,7 +140,7 @@
             // button_delete
             // 
             this.button_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_delete.Location = new System.Drawing.Point(168, 154);
+            this.button_delete.Location = new System.Drawing.Point(168, 172);
             this.button_delete.Name = "button_delete";
             this.button_delete.Size = new System.Drawing.Size(75, 23);
             this.button_delete.TabIndex = 12;
@@ -161,7 +162,7 @@
             this.label_warning.AutoSize = true;
             this.label_warning.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label_warning.ForeColor = System.Drawing.Color.Crimson;
-            this.label_warning.Location = new System.Drawing.Point(3, 138);
+            this.label_warning.Location = new System.Drawing.Point(3, 155);
             this.label_warning.Name = "label_warning";
             this.label_warning.Size = new System.Drawing.Size(316, 13);
             this.label_warning.TabIndex = 15;
@@ -170,7 +171,6 @@
             // 
             // checkBox_ShowIngame
             // 
-            this.checkBox_ShowIngame.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_ShowIngame.AutoSize = true;
             this.checkBox_ShowIngame.Location = new System.Drawing.Point(4, 83);
             this.checkBox_ShowIngame.Name = "checkBox_ShowIngame";
@@ -206,7 +206,6 @@
             // 
             // panel_showInOsu
             // 
-            this.panel_showInOsu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel_showInOsu.Controls.Add(this.comboBox_align);
             this.panel_showInOsu.Controls.Add(this.label9);
             this.panel_showInOsu.Controls.Add(this.numericUpDown_colorAlpha);
@@ -226,6 +225,24 @@
             this.panel_showInOsu.Size = new System.Drawing.Size(490, 54);
             this.panel_showInOsu.TabIndex = 23;
             this.panel_showInOsu.Visible = false;
+            // 
+            // comboBox_align
+            // 
+            this.comboBox_align.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_align.FormattingEnabled = true;
+            this.comboBox_align.Location = new System.Drawing.Point(178, 3);
+            this.comboBox_align.Name = "comboBox_align";
+            this.comboBox_align.Size = new System.Drawing.Size(88, 21);
+            this.comboBox_align.TabIndex = 31;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(139, 6);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(33, 13);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "Align:";
             // 
             // numericUpDown_colorAlpha
             // 
@@ -345,28 +362,23 @@
             this.label5.TabIndex = 30;
             this.label5.Text = "Save event:";
             // 
-            // label9
+            // label_statusInfo
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(139, 6);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(33, 13);
-            this.label9.TabIndex = 32;
-            this.label9.Text = "Align:";
-            // 
-            // comboBox_align
-            // 
-            this.comboBox_align.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_align.FormattingEnabled = true;
-            this.comboBox_align.Location = new System.Drawing.Point(178, 3);
-            this.comboBox_align.Name = "comboBox_align";
-            this.comboBox_align.Size = new System.Drawing.Size(88, 21);
-            this.comboBox_align.TabIndex = 31;
+            this.label_statusInfo.AutoSize = true;
+            this.label_statusInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_statusInfo.ForeColor = System.Drawing.Color.SaddleBrown;
+            this.label_statusInfo.Location = new System.Drawing.Point(3, 138);
+            this.label_statusInfo.Name = "label_statusInfo";
+            this.label_statusInfo.Size = new System.Drawing.Size(55, 13);
+            this.label_statusInfo.TabIndex = 31;
+            this.label_statusInfo.Text = "status info";
+            this.label_statusInfo.Visible = false;
             // 
             // PatternEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label_statusInfo);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.checkBox_ShowIngame);
             this.Controls.Add(this.label_warning);
@@ -382,7 +394,7 @@
             this.Controls.Add(this.textBox_FileName);
             this.Controls.Add(this.panel_showInOsu);
             this.Name = "PatternEdit";
-            this.Size = new System.Drawing.Size(585, 180);
+            this.Size = new System.Drawing.Size(585, 198);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_XPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_YPosition)).EndInit();
             this.panel_showInOsu.ResumeLayout(false);
@@ -424,5 +436,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox comboBox_align;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label_statusInfo;
     }
 }
