@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CollectionManager.DataTypes;
-using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
+using StreamCompanionTypes.DataTypes;
 
 namespace ModsHandler
 {
@@ -14,7 +14,7 @@ namespace ModsHandler
         readonly float ar_ms_step1 = 120, // ar0-5 
             ar_ms_step2 = 150; // ar5-10 
 
-        public Dictionary<string, float> ApplyMods(Beatmap map, Mods mods)
+        public Dictionary<string, float> ApplyMods(IBeatmap map, Mods mods)
         {
             float od = map.OverallDifficulty;
             float ar = map.ApproachRate;

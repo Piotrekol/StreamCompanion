@@ -106,7 +106,7 @@ namespace OsuMemoryEventSource
             return result;
         }
 
-        private ModsEx GetMods(int modsValue)
+        private IModsEx GetMods(int modsValue)
         {
             return _modParser?.GetModsFromEnum(modsValue);
         }

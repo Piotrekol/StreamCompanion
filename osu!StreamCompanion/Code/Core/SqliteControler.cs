@@ -146,7 +146,7 @@ namespace osu_StreamCompanion.Code.Core
         /// When MassStoring is active, only new maps are queried to Sqlite 
         /// </summary>
         /// <param name="beatmap">Beatmap to insert</param>
-        public void StoreBeatmap(Beatmap beatmap)
+        public void StoreBeatmap(IBeatmap beatmap)
         {
             lock (_sqlConnector)
             {
@@ -176,7 +176,7 @@ namespace osu_StreamCompanion.Code.Core
         /// Data stored this way won't be preserved on the following application runs
         /// </summary>
         /// <param name="beatmap">beatmap to insert</param>
-        public void StoreTempBeatmap(Beatmap beatmap)
+        public void StoreTempBeatmap(IBeatmap beatmap)
         {
             lock (_sqlConnector)
             {
@@ -189,7 +189,7 @@ namespace osu_StreamCompanion.Code.Core
         /// </summary>
         /// <param name="mapId"></param>
         /// <returns>Beatmap object with data, or null on not found</returns>
-        public Beatmap GetBeatmap(int mapId)
+        public IBeatmap GetBeatmap(int mapId)
         {
             lock (_sqlConnector)
             {
@@ -197,7 +197,7 @@ namespace osu_StreamCompanion.Code.Core
             }
         }
 
-        public Beatmap GetBeatmap(string mapHash)
+        public IBeatmap GetBeatmap(string mapHash)
         {
             lock (_sqlConnector)
             {
@@ -212,7 +212,7 @@ namespace osu_StreamCompanion.Code.Core
         /// <param name="title"></param>
         /// <param name="diff"></param>
         /// <returns>Beatmap object with filled or not map data</returns>
-        public Beatmap GetBeatmap(string artist, string title, string diff, string raw)
+        public IBeatmap GetBeatmap(string artist, string title, string diff, string raw)
         {
             lock (_sqlConnector)
             {
@@ -230,7 +230,7 @@ namespace osu_StreamCompanion.Code.Core
 
         public void StoreBeatmap(CollectionManager.DataTypes.Beatmap beatmap)
         {
-            StoreBeatmap((Beatmap)beatmap);
+            StoreBeatmap((IBeatmap) beatmap);
         }
 
         public CollectionManager.DataTypes.Beatmap GetByHash(string hash)

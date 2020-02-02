@@ -93,13 +93,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             Save();
         }
 
-        public List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
+        public List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
-            List<OutputPattern> ret = null;
+            List<IOutputPattern> ret = null;
 
             if (replacements != null)
             {
-                ret = new List<OutputPattern>();
+                ret = new List<IOutputPattern>();
                 foreach (var p in _patterns)
                 {
                     var newPattern = (OutputPattern)p.Clone();

@@ -27,7 +27,7 @@ namespace ModsHandler
                 ShortNoModText = noneText;
         }
 
-        public ModsEx GetModsFromEnum(int modsEnum)
+        public IModsEx GetModsFromEnum(int modsEnum)
         {
             UpdateNoModText();
 

@@ -22,14 +22,14 @@ namespace LiveVisualizer
         private PpCalculator.PpCalculator _ppCalculator;
         private readonly object _ppCalculatorLock = new object();
 
-        private List<KeyValuePair<string, Token>> _liveTokens;
-        private Token _ppToken;
-        private Token _hit100Token;
-        private Token _hit50Token;
-        private Token _hitMissToken;
-        private Token _timeToken;
-        private Token _statusToken;
-        private List<KeyValuePair<string, Token>> Tokens
+        private List<KeyValuePair<string, IToken>> _liveTokens;
+        private IToken _ppToken;
+        private IToken _hit100Token;
+        private IToken _hit50Token;
+        private IToken _hitMissToken;
+        private IToken _timeToken;
+        private IToken _statusToken;
+        private List<KeyValuePair<string, IToken>> Tokens
         {
             get => _liveTokens;
             set
@@ -46,7 +46,7 @@ namespace LiveVisualizer
         }
 
         private string _lastMapLocation = string.Empty;
-        private ModsEx _lastMods = null;
+        private IModsEx _lastMods = null;
 
 
         public LiveVisualizerPlugin(ILogger logger, ISettingsHandler settings) : base(settings)
@@ -227,7 +227,7 @@ namespace LiveVisualizer
             }
         }
 
-        public override List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
+        public override List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
         {
             //TODO: UHH... would be nice to have better way of sharing this data (instead of relying on Tokens with magic strings and blind value casts)
             Tokens = replacements.ToList();

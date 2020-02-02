@@ -50,7 +50,7 @@ namespace LiveVisualizer
             }
         }
 
-        public abstract List<OutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
+        public abstract List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
 
         public void Free()
         {
