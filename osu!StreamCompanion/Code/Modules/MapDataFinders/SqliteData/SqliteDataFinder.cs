@@ -15,7 +15,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
 
         public OsuStatus SearchModes { get; } = OsuStatus.Listening | OsuStatus.Null | OsuStatus.Playing |
-                                                OsuStatus.Watching | OsuStatus.ResultsScreen;
+                                                OsuStatus.Watching | OsuStatus.ResultsScreen | OsuStatus.Editing;
 
         public string SearcherName { get; } = "rawString";
         public int Priority { get; set; } = 10;
