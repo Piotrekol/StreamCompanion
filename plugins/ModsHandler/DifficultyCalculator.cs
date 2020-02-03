@@ -96,11 +96,11 @@ namespace ModsHandler
             cs *= cs_multiplier;
             cs = Math.Max(0.0f, Math.Min(10.0f, cs));
 
+            var isDtPlay = (mods & Mods.Dt) != 0 || (mods & Mods.Nc) != 0;
             if ((mods & Mods.Ez) != 0)
                 od = Math.Max(0, od / 2);
             else
-                od = Math.Min(11.08f, od * 1.4f);
-
+                od = Math.Min(isDtPlay ? 11.08f : 10f, od * 1.4f);
 
             retValue.Add("AR", ar);
             retValue.Add("CS", cs);
@@ -108,8 +108,6 @@ namespace ModsHandler
             retValue.Add("HP", hp);
             retValue.Add("MinBpm", (float)minBpm);
             retValue.Add("MaxBpm", (float)maxBpm);
-            if ((mods & Mods.SpeedChanging) == 0)
-                return retValue;
 
             return retValue;
         }
