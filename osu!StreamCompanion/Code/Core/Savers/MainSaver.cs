@@ -6,7 +6,7 @@ namespace osu_StreamCompanion.Code.Core.Savers
 {
     public class MainSaver : ISaver
     {
-        private ISaver _saver = new FileSaver();
+        private ISaver _saver;
         private ILogger _logger;
 
         public string SaveDirectory
@@ -16,9 +16,10 @@ namespace osu_StreamCompanion.Code.Core.Savers
         }
 
 
-        public MainSaver(ILogger logger)
+        public MainSaver(ILogger logger, TextSaver saver)
         {
             _logger = logger;
+            _saver = saver;
         }
         public void ChangeSaver(ISaver saver)
         {

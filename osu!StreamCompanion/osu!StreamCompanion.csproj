@@ -182,7 +182,7 @@
     <Compile Include="Code\Core\Loggers\FileLogger.cs" />
     <Compile Include="Code\Core\Loggers\SentryLogger.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapDataGetter.cs" />
-    <Compile Include="Code\Core\Savers\FileSaver.cs" />
+    <Compile Include="Code\Core\Savers\TextSaver.cs" />
     <Compile Include="Code\Core\Savers\MainSaver.cs" />
     <Compile Include="Code\Helpers\Exceptions.cs" />
     <Compile Include="Code\Helpers\GetDotNetVersion.cs" />

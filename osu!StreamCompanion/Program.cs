@@ -42,6 +42,8 @@ namespace osu_StreamCompanion
                 Run(settingsProfileName);
 #pragma warning restore 162
             else
+#pragma warning disable 162
+
                 using (var mutex = new Mutex(false, mutexId))
                 {
 
@@ -76,6 +78,8 @@ namespace osu_StreamCompanion
                             mutex.ReleaseMutex();
                     }
                 }
+#pragma warning restore 162
+
         }
 
         private static string GetSettingsProfileNameFromArgs(string[] args)

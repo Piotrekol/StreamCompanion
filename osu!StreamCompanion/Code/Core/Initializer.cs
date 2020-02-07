@@ -29,7 +29,6 @@ namespace osu_StreamCompanion.Code.Core
             var di = DiContainer.Container;
 
             _logger = di.Locate<MainLogger>();
-            var saver = di.Locate<MainSaver>();
             Settings = di.Locate<Settings>();
             if (!string.IsNullOrEmpty(settingsProfileName))
             {
@@ -37,6 +36,8 @@ namespace osu_StreamCompanion.Code.Core
             }
 
             Settings.Load();
+
+            var saver = di.Locate<MainSaver>();
 
             if (Settings.Get<bool>(_names.Console))
             {
