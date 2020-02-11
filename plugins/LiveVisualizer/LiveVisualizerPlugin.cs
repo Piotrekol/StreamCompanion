@@ -139,9 +139,24 @@ namespace LiveVisualizer
             if (VisualizerData == null ||
                 !mapSearchResult.FoundBeatmaps ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
-                ( mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods && _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5)
+                (mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods && _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5)
             )
+            {
+                if (!mapSearchResult.FoundBeatmaps && VisualizerData != null)
+                {
+                    VisualizerData.Display.ImageLocation = null;
+                    VisualizerData.Display.Artist = null;
+                    VisualizerData.Display.Title = null;
+                    VisualizerData.Display.Strains?.Clear();
+                    _lastMapLocation = null;
+                    _lastMapHash = null;
+                    lock (_ppCalculatorLock)
+                    {
+                        _ppCalculator = null;
+                    }
+                }
                 return;
+            }
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
 
@@ -197,8 +212,8 @@ namespace LiveVisualizer
 
             VisualizerData.Display.Title = Tokens.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
             VisualizerData.Display.Artist = Tokens.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
-            
-            if(VisualizerData.Display.Strains==null)
+
+            if (VisualizerData.Display.Strains == null)
                 VisualizerData.Display.Strains = new ChartValues<double>();
 
             VisualizerData.Display.Strains.Clear();
