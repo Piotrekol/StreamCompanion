@@ -66,7 +66,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         {
             return beatmap != null
                    && !string.IsNullOrEmpty(beatmap.Md5)
-                   && !(string.IsNullOrWhiteSpace(beatmap.ArtistRoman) || string.IsNullOrWhiteSpace(beatmap.TitleRoman));
+                   && !(string.IsNullOrWhiteSpace(beatmap.ArtistRoman) && string.IsNullOrWhiteSpace(beatmap.TitleRoman));
         }
 
     }
