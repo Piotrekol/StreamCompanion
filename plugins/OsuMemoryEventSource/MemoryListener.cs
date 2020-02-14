@@ -30,7 +30,7 @@ namespace OsuMemoryEventSource
         {
             _memoryDataProcessor = new MemoryDataProcessor();
             _patternsDispatcher = new PatternsDispatcher();
-            _memoryDataProcessor.TokensUpdated += _patternsDispatcher.TokensUpdated;
+            _memoryDataProcessor.TokensUpdated += (_, status) => _patternsDispatcher.TokensUpdated(status);
         }
 
         public void Tick(IOsuMemoryReader reader, bool sendEvents)

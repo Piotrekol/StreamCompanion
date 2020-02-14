@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -26,7 +25,7 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void TokensUpdated(object sender, OsuStatus status)
+        public void TokensUpdated(OsuStatus status)
         {
             Dictionary<string, string> output = new Dictionary<string, string>();
 
@@ -36,11 +35,15 @@ namespace OsuMemoryEventSource
                 {
                     foreach (var pattern in OutputPatterns)
                     {
-                        if(!pattern.IsMemoryFormat)
+                        if (!pattern.IsMemoryFormat)
                             continue;
 
-                        output[pattern.Name] = pattern.GetFormatedPattern(status);
-                        SetOutput(pattern, output[pattern.Name]);
+                        var formattedPattern = pattern.GetFormatedPattern(((status & pattern.SaveEvent) != 0) ? OsuStatus.All : status);
+                        if (string.IsNullOrEmpty(formattedPattern))
+                            formattedPattern = " "; //workaround: OBS plugin doesn't seem to react to empty strings
+
+                        output[pattern.Name] = formattedPattern;
+                        SetOutput(pattern, formattedPattern);
                     }
 
                     var json = JsonConvert.SerializeObject(output);

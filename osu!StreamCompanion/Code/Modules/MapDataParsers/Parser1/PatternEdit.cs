@@ -1,6 +1,7 @@
 using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
@@ -150,7 +151,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 }
             }
             catch (ObjectDisposedException) { }
+            catch (InvalidAsynchronousStateException) { }
         }
+
         public void SetPreview(Tokens replacements, OsuStatus status)
         {
             _replacements = replacements;
@@ -176,7 +179,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 var toFormat = textBox_formating.Text ?? "";
                 var saveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
-                var result = OutputPattern.FormatPattern(toFormat, _replacements, saveEvent, _currentStatus);
+                OsuStatus currentStatus = _currentStatus;
+                if ((_currentStatus & saveEvent) != 0)
+                {
+                    currentStatus = OsuStatus.All;
+                }
+
+                var result = OutputPattern.FormatPattern(toFormat, _replacements, saveEvent, currentStatus);
                 if (string.IsNullOrEmpty(result) && !string.IsNullOrEmpty(toFormat))
                 {
                     label_statusInfo.Visible = true;

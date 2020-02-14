@@ -1,5 +1,4 @@
 using CollectionManager.Enums;
-using Newtonsoft.Json;
 using OsuMemoryDataProvider;
 using PpCalculator;
 using StreamCompanionTypes;
@@ -7,7 +6,6 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,10 +13,6 @@ using System.Threading.Tasks;
 
 namespace OsuMemoryEventSource
 {
-    public class TokensUpdateEventArgs
-    {
-        public OsuStatus status { get; set; }
-    }
     public class MemoryDataProcessor : IDisposable
     {
         private readonly object _lockingObject = new object();
@@ -126,9 +120,6 @@ namespace OsuMemoryEventSource
             }
         }
 
-        
-
-        private bool _clearedLiveTokens = false;
         private IOsuMemoryReader _reader;
         private AutoResetEvent _tokenTick = new AutoResetEvent(false);
         private AutoResetEvent _tokenCallbackTick = new AutoResetEvent(true);
@@ -144,13 +135,6 @@ namespace OsuMemoryEventSource
 
                 if (status != OsuStatus.Playing)
                 {
-                    if (_clearLiveTokensAfterResultScreenExit && !_clearedLiveTokens && (status & OsuStatus.ResultsScreen) == 0)
-                    {//we're not playing or we haven't just finished playing - clear
-                        ResetTokens();
-                        _lastStatus = status;
-                        _clearedLiveTokens = true;
-                    }
-
                     _rawData.PlayTime = reader.ReadPlayTime();
                     _liveTokens["time"].Update();
                     _lastStatus = status;
@@ -162,8 +146,6 @@ namespace OsuMemoryEventSource
                 {
                     Thread.Sleep(500);//Initial play delay
                 }
-
-                _clearedLiveTokens = false;
 
                 reader.GetPlayData(_rawData.Play);
                 _rawData.HitErrors = reader.HitErrors() ?? new List<int>();
@@ -300,7 +282,6 @@ namespace OsuMemoryEventSource
         public void Dispose()
         {
             cancellationTokenSource.Cancel();
-            _settings.SettingUpdated -= SettingUpdated;
         }
 
         public void ToggleSmoothing(bool enable)
@@ -316,17 +297,6 @@ namespace OsuMemoryEventSource
         public void SetSettingsHandle(ISettingsHandler settings)
         {
             _settings = settings;
-            _settings.SettingUpdated += SettingUpdated;
-            _clearLiveTokensAfterResultScreenExit = _settings.Get<bool>(Helpers.ClearLiveTokensAfterResultScreenExit);
-        }
-
-        private bool _clearLiveTokensAfterResultScreenExit;
-        private void SettingUpdated(object sender, SettingUpdated e)
-        {
-            if (e.Name == Helpers.ClearLiveTokensAfterResultScreenExit.Name)
-            {
-                _clearLiveTokensAfterResultScreenExit = _settings.Get<bool>(Helpers.ClearLiveTokensAfterResultScreenExit);
-            }
         }
     }
 }

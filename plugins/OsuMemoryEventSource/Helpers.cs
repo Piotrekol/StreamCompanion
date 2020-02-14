@@ -17,7 +17,6 @@ namespace OsuMemoryEventSource
     internal static class Helpers
     {
         public static readonly ConfigEntry EnablePpSmoothing = new ConfigEntry("EnablePPSmoothing", true);
-        public static readonly ConfigEntry ClearLiveTokensAfterResultScreenExit = new ConfigEntry("ClearLiveTokensAfterResultScreenExit", true);
 
         public static bool IsInvalidCombination(Mods mods)
         {

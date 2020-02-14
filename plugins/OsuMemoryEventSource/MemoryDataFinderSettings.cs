@@ -29,8 +29,6 @@ namespace OsuMemoryEventSource
                 checkBox_EnableMemoryFinder.Checked = _settings.Get<bool>(_names.EnableMemoryScanner);
 
                 checkBox_EnableMemoryPooling.Checked = _settings.Get<bool>(_names.EnableMemoryPooling);
-
-                checkBox_clearTokensAfterPlay.Checked = _settings.Get<bool>(Helpers.ClearLiveTokensAfterResultScreenExit);
             }
 
             init = false;
@@ -52,12 +50,6 @@ namespace OsuMemoryEventSource
         {
             if (init) return;
             _settings.Add(Helpers.EnablePpSmoothing.Name, checkBox_enableSmoothPp.Checked, true);
-        }
-
-        private void checkBox_clearTokensAfterPlay_CheckedChanged(object sender, EventArgs e)
-        {
-            if (init) return;
-            _settings.Add(Helpers.ClearLiveTokensAfterResultScreenExit.Name, checkBox_clearTokensAfterPlay.Checked, true);
         }
     }
 }
