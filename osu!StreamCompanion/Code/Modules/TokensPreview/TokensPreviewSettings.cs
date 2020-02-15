@@ -40,11 +40,8 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
 
 
                     _cts.Token.ThrowIfCancellationRequested();
-#if DEBUG
+
                     Thread.Sleep(50);
-#else
-                    Thread.Sleep(11);
-#endif
                 }
             }
             catch (Exception)
@@ -201,6 +198,7 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             if (!ret.AlreadyExisted)
             {
                 ret.Control.BorderStyle = BorderStyle.Fixed3D;
+                ret.Control.Anchor = AnchorStyles.Left | AnchorStyles.Right | ret.Control.Anchor;
             }
 
             return ret.Control.Size;
