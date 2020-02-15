@@ -1,22 +1,22 @@
-﻿using StreamCompanionTypes;
-using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
-namespace osu_StreamCompanion.Code.Modules.CommandsPreview
+namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
-    public class CommandsPreview : IModule, IMapDataParser, ISettingsProvider, IDisposable
+    public class TokensPreview : IModule, IMapDataParser, ISettingsProvider, IDisposable
     {
         public bool Started { get; set; }
-        private CommandsPreviewSettings _commandsPreviewSettings;
+        private TokensPreviewSettings _commandsPreviewSettings;
         private ISettingsHandler _settings;
         private Dictionary<string, string> tokenFormats;
 
-        public CommandsPreview(ILogger logger, ISettingsHandler settings)
+        public TokensPreview(ILogger logger, ISettingsHandler settings)
         {
             _settings = settings;
             Start(logger);
@@ -54,11 +54,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             }
         }
 
-        public string SettingGroup { get; } = "Commands Preview";
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-
-        }
+        public string SettingGroup { get; } = "Tokens Preview";
 
         public void Free()
         {
@@ -69,7 +65,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
         {
             if (_commandsPreviewSettings == null || _commandsPreviewSettings.IsDisposed)
             {
-                _commandsPreviewSettings = new CommandsPreviewSettings();
+                _commandsPreviewSettings = new TokensPreviewSettings();
 
                 _commandsPreviewSettings.Add(new Dictionary<string, IToken>(Tokens.AllTokens));
             }

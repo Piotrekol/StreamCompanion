@@ -1,6 +1,6 @@
-﻿namespace osu_StreamCompanion.Code.Modules.CommandsPreview
+﻿namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
-    partial class CommandsPreviewSettings
+    partial class TokensPreviewSettings
     {
         /// <summary> 
         /// Required designer variable.
@@ -81,7 +81,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.p);
-            this.Name = "CommandsPreviewSettings";
+            this.Name = "TokensPreviewSettings";
             this.Size = new System.Drawing.Size(612, 399);
             this.p.ResumeLayout(false);
             this.p.PerformLayout();

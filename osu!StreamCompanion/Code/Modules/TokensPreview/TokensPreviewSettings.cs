@@ -8,13 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace osu_StreamCompanion.Code.Modules.CommandsPreview
+namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
-    public partial class CommandsPreviewSettings : UserControl
+    public partial class TokensPreviewSettings : UserControl
     {
         private Task UpdateTask;
         private CancellationTokenSource _cts = new CancellationTokenSource();
-        public CommandsPreviewSettings()
+        public TokensPreviewSettings()
         {
             InitializeComponent();
 
@@ -27,6 +27,7 @@ namespace osu_StreamCompanion.Code.Modules.CommandsPreview
             _cts.Cancel();
             base.Dispose();
         }
+
         private void UpdateLiveTokens()
         {
             try

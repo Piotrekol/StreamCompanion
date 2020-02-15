@@ -48,6 +48,8 @@ namespace ScGui
                 tabControl.TabPages[tabNumber].Controls.Add(control);
                 //change start postion for next control in that group
                 _groupControlPostions[setting.SettingGroup].StartHeight += control.Height;
+                if (setting.SettingGroup == "Tokens Preview")
+                    tabControl.TabPages[tabNumber].Controls[0].Dock = DockStyle.Fill;
             }
         }
 

@@ -198,12 +198,12 @@
     <Compile Include="Code\Helpers\ListExtensions.cs" />
     <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
     <Compile Include="Code\Core\Loggers\MainLogger.cs" />
-    <Compile Include="Code\Modules\CommandsPreview\CommandsPreview.cs" />
-    <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.cs">
+    <Compile Include="Code\Modules\TokensPreview\TokensPreview.cs" />
+    <Compile Include="Code\Modules\TokensPreview\TokensPreviewSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.Designer.cs">
-      <DependentUpon>CommandsPreviewSettings.cs</DependentUpon>
+    <Compile Include="Code\Modules\TokensPreview\TokensPreviewSettings.Designer.cs">
+      <DependentUpon>TokensPreviewSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Modules\Donation\Donation.cs" />
     <Compile Include="Code\Modules\Donation\DonationSettings.cs">
@@ -291,8 +291,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Code\Modules\CommandsPreview\CommandsPreviewSettings.resx">
-      <DependentUpon>CommandsPreviewSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Code\Modules\TokensPreview\TokensPreviewSettings.resx">
+      <DependentUpon>TokensPreviewSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\Donation\DonationSettings.resx">
       <DependentUpon>DonationSettings.cs</DependentUpon>
