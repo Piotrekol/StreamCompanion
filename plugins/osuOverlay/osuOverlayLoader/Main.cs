@@ -96,7 +96,7 @@ namespace osuOverlayLoader
             return null;
         }
 
-        private (DllInjectionResult InjectionResult, int ErrorCode) Inject(string dllLocation)
+        private (DllInjectionResult InjectionResult, int ErrorCode, int Win32Error) Inject(string dllLocation)
         {
             DllInjector dllInjector = DllInjector.GetInstance;
             return dllInjector.Inject("osu!", dllLocation);

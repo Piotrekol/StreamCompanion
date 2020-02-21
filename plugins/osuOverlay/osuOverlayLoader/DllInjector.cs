@@ -55,11 +55,11 @@ namespace osuOverlayLoader
 
         DllInjector() { }
 
-        public (DllInjectionResult InjectionResult, int errorCode) Inject(string sProcName, string sDllPath)
+        public (DllInjectionResult InjectionResult, int errorCode, int Win32Error) Inject(string sProcName, string sDllPath)
         {
             if (!File.Exists(sDllPath))
             {
-                return (DllInjectionResult.DllNotFound, 1);
+                return (DllInjectionResult.DllNotFound, 1, 0);
             }
 
             uint _procId = 0;
@@ -76,24 +76,24 @@ namespace osuOverlayLoader
 
             if (_procId == 0)
             {
-                return (DllInjectionResult.GameProcessNotFound, 2);
+                return (DllInjectionResult.GameProcessNotFound, 2, 0);
             }
 
             var loadedResult = IsAlreadyLoaded(sProcName, Path.GetFileName(sDllPath));
 
             if (loadedResult.LoadedResult == LoadedResult.Loaded)
-                return (DllInjectionResult.Success, 0);
+                return (DllInjectionResult.Success, 0, 0);
 
             if (loadedResult.LoadedResult == LoadedResult.Error)
-                return (DllInjectionResult.InjectionFailed, -1);
+                return (DllInjectionResult.InjectionFailed, -1, 0);
 
             var injectionResult = bInject(_procId, sDllPath);
             if (!injectionResult.Success)
             {
-                return (DllInjectionResult.InjectionFailed, injectionResult.ErrorCode);
+                return (DllInjectionResult.InjectionFailed, injectionResult.ErrorCode, Marshal.GetLastWin32Error());
             }
 
-            return (DllInjectionResult.Success, 0);
+            return (DllInjectionResult.Success, 0, 0);
         }
         public (LoadedResult LoadedResult, int ErrorCode) IsAlreadyLoaded(string procName, string dllName)
         {
