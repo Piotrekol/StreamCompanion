@@ -8,7 +8,7 @@ namespace osuOverlayLoader
 {
     public sealed class DllInjector
     {
-        
+
         public enum LoadedResult
         {
             Loaded,
@@ -55,11 +55,11 @@ namespace osuOverlayLoader
 
         DllInjector() { }
 
-        public DllInjectionResult Inject(string sProcName, string sDllPath)
+        public (DllInjectionResult InjectionResult, int errorCode) Inject(string sProcName, string sDllPath)
         {
             if (!File.Exists(sDllPath))
             {
-                return DllInjectionResult.DllNotFound;
+                return (DllInjectionResult.DllNotFound, 1);
             }
 
             uint _procId = 0;
@@ -76,25 +76,26 @@ namespace osuOverlayLoader
 
             if (_procId == 0)
             {
-                return DllInjectionResult.GameProcessNotFound;
+                return (DllInjectionResult.GameProcessNotFound, 2);
             }
 
             var loadedResult = IsAlreadyLoaded(sProcName, Path.GetFileName(sDllPath));
 
-            if (loadedResult == LoadedResult.Loaded)
-                return DllInjectionResult.Success;
+            if (loadedResult.LoadedResult == LoadedResult.Loaded)
+                return (DllInjectionResult.Success, 0);
 
-            if (loadedResult == LoadedResult.Error)
-                return DllInjectionResult.InjectionFailed;
+            if (loadedResult.LoadedResult == LoadedResult.Error)
+                return (DllInjectionResult.InjectionFailed, -1);
 
-            if (!bInject(_procId, sDllPath))
+            var injectionResult = bInject(_procId, sDllPath);
+            if (!injectionResult.Success)
             {
-                return DllInjectionResult.InjectionFailed;
+                return (DllInjectionResult.InjectionFailed, injectionResult.ErrorCode);
             }
 
-            return DllInjectionResult.Success;
+            return (DllInjectionResult.Success, 0);
         }
-        public LoadedResult IsAlreadyLoaded(string procName, string dllName)
+        public (LoadedResult LoadedResult, int ErrorCode) IsAlreadyLoaded(string procName, string dllName)
         {
             try
             {
@@ -114,55 +115,57 @@ namespace osuOverlayLoader
                     foreach (ProcessModule pm in osuProcess.Modules)
                     {
                         if (pm.ModuleName == dllName)
-                            return LoadedResult.Loaded;
+                            return (LoadedResult.Loaded, 0);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return LoadedResult.Error;
+                Console.WriteLine(ex);
+                return (LoadedResult.Error, 0);
             }
-            return LoadedResult.NotLoaded;
+
+            return (LoadedResult.NotLoaded, 0);
 
         }
-        bool bInject(uint pToBeInjected, string sDllPath)
+        (bool Success, int ErrorCode) bInject(uint pToBeInjected, string sDllPath)
         {
             IntPtr hndProc = OpenProcess((0x2 | 0x8 | 0x10 | 0x20 | 0x400), 1, pToBeInjected);
 
             if (hndProc == INTPTR_ZERO)
             {
-                return false;
+                return (false, 3);
             }
 
             IntPtr lpLLAddress = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
             if (lpLLAddress == INTPTR_ZERO)
             {
-                return false;
+                return (false, 4);
             }
 
             IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, (0x1000 | 0x2000), 0X40);
 
             if (lpAddress == INTPTR_ZERO)
             {
-                return false;
+                return (false, 5);
             }
 
             byte[] bytes = Encoding.ASCII.GetBytes(sDllPath);
 
             if (WriteProcessMemory(hndProc, lpAddress, bytes, (uint)bytes.Length, 0) == 0)
             {
-                return false;
+                return (false, 6);
             }
 
             if (CreateRemoteThread(hndProc, (IntPtr)null, INTPTR_ZERO, lpLLAddress, lpAddress, 0, (IntPtr)null) == INTPTR_ZERO)
             {
-                return false;
+                return (false, 7);
             }
 
             CloseHandle(hndProc);
 
-            return true;
+            return (true, 0);
         }
     }
 
