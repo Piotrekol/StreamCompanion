@@ -67,6 +67,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "osuOverlay", "osuOverlay", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osuOverlayLoader", "plugins\osuOverlay\osuOverlayLoader\osuOverlayLoader.csproj", "{7F30AE10-182D-48C2-B6DB-2A96E8180335}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundImageProvider", "plugins\BackgroundImageProvider\BackgroundImageProvider.csproj", "{DF0879B6-D76D-4FCD-B825-8956FFF19143}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -578,6 +580,24 @@ Global
 		{7F30AE10-182D-48C2-B6DB-2A96E8180335}.Remote debug|x64.Build.0 = Release|Any CPU
 		{7F30AE10-182D-48C2-B6DB-2A96E8180335}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{7F30AE10-182D-48C2-B6DB-2A96E8180335}.Remote debug|x86.Build.0 = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Debug|x64.Build.0 = Debug|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Debug|x86.Build.0 = Debug|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Release|x64.ActiveCfg = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Release|x64.Build.0 = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Release|x86.ActiveCfg = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Release|x86.Build.0 = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|x64.ActiveCfg = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|x64.Build.0 = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -610,6 +630,7 @@ Global
 		{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{5DDAA708-B9C7-4E2B-80EB-840FB612B124} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{7F30AE10-182D-48C2-B6DB-2A96E8180335} = {5DDAA708-B9C7-4E2B-80EB-840FB612B124}
+		{DF0879B6-D76D-4FCD-B825-8956FFF19143} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}

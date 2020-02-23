@@ -139,6 +139,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
         }
 
+        private bool longFormat = false;
         public async void textBoxUpdateLoop(Tokens replacements)
         {
             var _replacements = replacements;
@@ -147,13 +148,20 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 while (!IsDisposed && Created && ReferenceEquals(_replacements, replacements))
                 {
                     Invoke((MethodInvoker)(() => { textBox_formating_TextChanged(null, EventArgs.Empty); }));
-                    await Task.Delay(33);
+                    await Task.Delay(longFormat ? 1000 : 33);
                 }
             }
             catch (ObjectDisposedException) { }
             catch (InvalidAsynchronousStateException) { }
         }
 
+        private string Sanitize(string inputFormat)
+        {
+            if (string.IsNullOrEmpty(inputFormat) || inputFormat.Length < 250)
+                return inputFormat;
+
+            return $"{inputFormat.Substring(0, 250)}... (preview truncated)";
+        }
         public void SetPreview(Tokens replacements, OsuStatus status)
         {
             _replacements = replacements;
@@ -177,7 +185,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 textBox_preview.Text = "Change map in osu! to see preview";
             else
             {
-                var toFormat = textBox_formating.Text ?? "";
+                var toFormat = Sanitize(textBox_formating.Text ?? "");
                 var saveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
                 OsuStatus currentStatus = _currentStatus;
                 if ((_currentStatus & saveEvent) != 0)
@@ -186,6 +194,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 }
 
                 var result = OutputPattern.FormatPattern(toFormat, _replacements, saveEvent, currentStatus);
+                longFormat = result.Length > 250;
+                result = Sanitize(result);
+
                 if (string.IsNullOrEmpty(result) && !string.IsNullOrEmpty(toFormat))
                 {
                     label_statusInfo.Visible = true;
