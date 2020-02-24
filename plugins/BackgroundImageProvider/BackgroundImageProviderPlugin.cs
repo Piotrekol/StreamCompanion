@@ -30,28 +30,40 @@ namespace BackgroundImageProvider
 
         }
 
+        protected void InternalCreateTokens(MapSearchResult map, int retryCount)
+        {
+            try
+            {
+                if (map.FoundBeatmaps)
+                {
+                    var imageLocation = map.BeatmapsFound[0].GetImageLocation(_settings);
+                    if (_lastCopiedFileLocation != imageLocation && !string.IsNullOrEmpty(imageLocation))
+                    {
+                        if (File.Exists(_saveLocation))
+                            File.Delete(_saveLocation);
+
+                        File.Copy(imageLocation, _saveLocation);
+                        _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
+                        _lastCopiedFileLocation = imageLocation;
+                        return;
+                    }
+                }
+
+                if (File.Exists(_saveLocation))
+                    File.Delete(_saveLocation);
+
+                _imageToken.Value = null;
+                _lastCopiedFileLocation = null;
+            }
+            catch (IOException)
+            {
+                if (retryCount < 5)
+                    InternalCreateTokens(map, ++retryCount);
+            }
+        }
         public void CreateTokens(MapSearchResult map)
         {
-            if (map.FoundBeatmaps)
-            {
-                var imageLocation = map.BeatmapsFound[0].GetImageLocation(_settings);
-                if (_lastCopiedFileLocation != imageLocation && !string.IsNullOrEmpty(imageLocation))
-                {
-                    if (File.Exists(_saveLocation))
-                        File.Delete(_saveLocation);
-
-                    File.Copy(imageLocation, _saveLocation);
-                    _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
-                    _lastCopiedFileLocation = imageLocation;
-                    return;
-                }
-            }
-
-            if (File.Exists(_saveLocation))
-                File.Delete(_saveLocation);
-
-            _imageToken.Value = null;
-            _lastCopiedFileLocation = null;
+            InternalCreateTokens(map, 0);
         }
 
         private string ImageToBase64(string imageLocation)
