@@ -77,7 +77,7 @@ namespace OsuMemoryEventSource
             if (searchArgs.Status == OsuStatus.Playing)
             {
                 Thread.Sleep(250);
-                mods = _memoryReader.GetMods();
+                mods = _memoryReader.GetPlayingMods();
                 result.Mods = GetMods(mods);
             }
 
