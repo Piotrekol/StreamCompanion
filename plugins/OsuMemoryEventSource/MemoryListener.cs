@@ -21,6 +21,7 @@ namespace OsuMemoryEventSource
         private string _lastMapString = "-";
         private string _currentMapString = "";
         private string _lastMapHash = "";
+        private int _lastMapSelectionMods = -2;
         private MemoryDataProcessor _memoryDataProcessor;
         private PatternsDispatcher _patternsDispatcher;
         public Tokens Tokens => _memoryDataProcessor.Tokens;
@@ -49,6 +50,7 @@ namespace OsuMemoryEventSource
                 OsuStatus status = _currentStatus.Convert();
                 var gameMode = reader.ReadSongSelectGameMode();
                 var mapHash = reader.GetMapMd5Safe();
+                var mapSelectionMods = reader.GetMods();
                 var mapHashDiffers = mapHash != null && _lastMapHash != null && _lastMapHash != mapHash;
 
                 if (sendEvents &&
@@ -56,6 +58,7 @@ namespace OsuMemoryEventSource
                     _lastStatus != _currentStatus ||
                     _currentMapString != _lastMapString ||
                      gameMode != _lastGameMode ||
+                    mapSelectionMods != _lastMapSelectionMods ||
                      mapHashDiffers)
                     )
                 {
@@ -63,6 +66,7 @@ namespace OsuMemoryEventSource
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
                     _lastGameMode = gameMode;
+                    _lastMapSelectionMods = mapSelectionMods;
                     _lastMapHash = mapHash;
 
 
@@ -72,7 +76,7 @@ namespace OsuMemoryEventSource
                         Status = status,
                         Raw = _currentMapString,
                         MapHash = mapHash,
-                        PlayMode = (PlayMode)gameMode
+                        PlayMode = (PlayMode)gameMode,
                     });
 
                 }
