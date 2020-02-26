@@ -17,10 +17,6 @@ namespace BeatmapPpReplacements
         private PpCalculator.PpCalculator _ppCalculator = null;
 
         private ISettingsHandler _settings;
-        private string _lastShortMods = "";
-        private string _lastModsStr = "None";
-
-
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(PpReplacements);
@@ -88,19 +84,8 @@ namespace BeatmapPpReplacements
             _tokenSetter("MaxCombo", _ppCalculator.GetMaxCombo());
 
 
-            string modsStr;
-            if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching)
-            {
-                mods = map.Mods?.WorkingMods ?? "";
-                modsStr = map.Mods?.ShownMods ?? "";
-                _lastShortMods = mods;
-                _lastModsStr = modsStr;
-            }
-            else
-            {
-                mods = _lastShortMods;
-                modsStr = _lastModsStr;
-            }
+            mods = map.Mods?.WorkingMods ?? "";
+            var modsStr = map.Mods?.ShownMods ?? "";
 
             _tokenSetter("mMod", modsStr);
 
