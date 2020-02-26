@@ -18,7 +18,7 @@ namespace OsuMemoryEventSource
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
         internal static Tokens.TokenSetter TokenSetter;
 
-        public OsuStatus SearchModes { get; } = OsuStatus.Playing;
+        public OsuStatus SearchModes { get; } = OsuStatus.All;
         public string SearcherName { get; } = "Memory";
         public bool Started { get; set; }
 
