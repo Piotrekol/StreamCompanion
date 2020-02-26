@@ -85,9 +85,6 @@ namespace BeatmapPpReplacements
 
 
             mods = map.Mods?.WorkingMods ?? "";
-            var modsStr = map.Mods?.ShownMods ?? "";
-
-            _tokenSetter("mMod", modsStr);
 
             if (playMode == PlayMode.OsuMania)
             {
