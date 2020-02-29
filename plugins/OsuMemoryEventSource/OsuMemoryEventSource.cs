@@ -77,8 +77,12 @@ namespace OsuMemoryEventSource
             if (searchArgs.Status == OsuStatus.Playing)
             {
                 Thread.Sleep(250);
-                mods = _memoryReader.GetMods();
+                mods = _memoryReader.GetPlayingMods();
                 result.Mods = GetMods(mods);
+            }
+            else
+            {
+                result.Mods = GetMods(_memoryReader.GetMods());
             }
 
             Logger?.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
