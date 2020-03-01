@@ -24,7 +24,7 @@ namespace WebSocketDataSender
         public string SettingGroup { get; } = "Output patterns";
 
         public static ConfigEntry Enabled = new ConfigEntry("webSocketEnabled", false);
-        public static ConfigEntry WebSocketPort = new ConfigEntry("webSocketPort", 80);
+        public static ConfigEntry WebSocketPort = new ConfigEntry("webSocketPort", 8080);
         public static ConfigEntry WebSocketAddress = new ConfigEntry("webSocketAddress", "127.0.0.1");
 
         private DataContainer _liveDataContainer = new DataContainer();
