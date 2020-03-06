@@ -18,7 +18,7 @@ namespace BackgroundImageProvider
                 string line;
                 while ((line = file.ReadLine()) != null)
                 {
-                    if (line.ToLower().Contains(".jpg") || line.ToLower().Contains(".png"))
+                    if (line.ToLower().Contains(".jpg") || line.ToLower().Contains(".png") || line.ToLower().Contains(".jpeg"))
                     {
                         var splited = line.Split(',');
                         ImageLocation = Path.Combine(beatmap.BeatmapDirectory(songsDirectory), splited[2].Trim('"'));
