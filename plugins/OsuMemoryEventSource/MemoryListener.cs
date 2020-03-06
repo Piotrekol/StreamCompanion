@@ -27,11 +27,15 @@ namespace OsuMemoryEventSource
         public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettingsHandler _settings;
 
-        public MemoryListener()
+        public MemoryListener(ISettingsHandler settings)
         {
-            _memoryDataProcessor = new MemoryDataProcessor();
+            _settings = settings;
+            _settings.SettingUpdated += SettingUpdated;
+
+            _memoryDataProcessor = new MemoryDataProcessor(settings);
             _patternsDispatcher = new PatternsDispatcher();
             _memoryDataProcessor.TokensUpdated += (_, status) => _patternsDispatcher.TokensUpdated(status);
+            _memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
         }
 
         public void Tick(IOsuMemoryReader reader, bool sendEvents)
@@ -98,14 +102,6 @@ namespace OsuMemoryEventSource
         {
             _memoryDataProcessor?.Dispose();
             _settings.SettingUpdated -= SettingUpdated;
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
-            _settings.SettingUpdated += SettingUpdated;
-            _memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
-            _memoryDataProcessor.SetSettingsHandle(_settings);
         }
 
         private void SettingUpdated(object sender, SettingUpdated settingUpdated)
