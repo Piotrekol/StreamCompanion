@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
 using StreamCompanionTypes.DataTypes;
@@ -11,7 +12,7 @@ namespace WindowDataGetter
     {
         private readonly IMainWindowModel _mainWindowHandle;
         public bool Started { get; set; }
-        
+
         public string Description { get; } = "Provides map data for StreamCompanion GUI";
         public string Name { get; } = nameof(WindowDataGetter);
         public string Author { get; } = "Piotrekol";
@@ -27,6 +28,7 @@ namespace WindowDataGetter
         {
             if (map.FoundBeatmaps)
             {
+
                 var foundMap = map.BeatmapsFound[0];
                 var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.EventSource != "Msn")
@@ -34,8 +36,11 @@ namespace WindowDataGetter
                     nowPlaying += string.Format(" [{0}] {1}", foundMap.DiffName, map.Mods?.ShownMods ?? "");
                     nowPlaying += string.Format(Environment.NewLine + "NoMod:{0:##.###} ", foundMap.StarsNomod);
                     var mods = map.Mods?.Mods ?? Mods.Omod;
-                    if(mods!=Mods.Omod)
-                        nowPlaying += $"Modded: {foundMap.Stars(PlayMode.Osu, mods):##.###}, {map.Action}";
+                    var token = Tokens.AllTokens.FirstOrDefault(t => t.Key.ToLower() == "mstars").Value;
+                    if (mods != Mods.Omod && token != null)
+                    {
+                        nowPlaying += $"Modded: {token.Value:##.###}, {map.Action}";
+                    }
                     else
                         nowPlaying += $"{map.Action}";
                 }
