@@ -1,5 +1,6 @@
 using System;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 
 namespace OsuMemoryEventSource
 {
@@ -14,9 +15,9 @@ namespace OsuMemoryEventSource
             Updater = updater;
         }
 
-        public void Update()
+        public void Update(OsuStatus status = OsuStatus.All)
         {
-            if (Updater != null)
+            if (Token.CanSave(status) && Updater != null)
                 Token.Value = Updater();
         }
     }

@@ -66,7 +66,7 @@ namespace OsuMemoryEventSource
                     if (_tokenTick.WaitOne(1))
                     {
                         _tokenCallbackTick.Reset();
-                        UpdateLiveTokens(OsuStatus.All);
+                        UpdateLiveTokens(_lastStatus);
 
                         _tokenTick.Reset();
                     }
@@ -254,16 +254,16 @@ namespace OsuMemoryEventSource
 
             HitErrors = _tokenSetter("HitErrors", new List<int>(), TokenType.Live | TokenType.Hidden, defaultValue: new List<int>(), whitelist: OsuStatus.Playing);
 
-            _liveTokens["LocalTime"] = new LiveToken(_tokenSetter("LocalTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All),()=> DateTime.Now.TimeOfDay);
+            _liveTokens["LocalTime"] = new LiveToken(_tokenSetter("LocalTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
         }
 
         private void UpdateLiveTokens(OsuStatus status)
         {
             foreach (var liveToken in _liveTokens)
             {
-                if(liveToken.Value.Token.CanSave(status))
+                if (liveToken.Value.Token.CanSave(status))
                 {
-                    liveToken.Value.Update();
+                    liveToken.Value.Update(status);
                 }
             }
             _tokensUpdated();
