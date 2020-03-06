@@ -7,6 +7,7 @@ using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace OsuMemoryEventSource
     public class MemoryDataProcessor : IDisposable
     {
         private readonly object _lockingObject = new object();
+        private readonly SettingNames _names = SettingNames.Instance;
         private OsuStatus _lastStatus = OsuStatus.Null;
         private LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
         private ISettingsHandler _settings;
@@ -36,8 +38,9 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
-        public MemoryDataProcessor(bool enablePpSmoothing = true)
+        public MemoryDataProcessor(ISettingsHandler settings,bool enablePpSmoothing = true)
         {
+            _settings = settings;
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
             {
                 InterpolatedValues.Add(v, new InterpolatedValue(0.15));
@@ -189,8 +192,10 @@ namespace OsuMemoryEventSource
         private IToken HitErrors;
         private void InitLiveTokens()
         {
+            var osuDirectory = Path.Combine(_settings.Get<string>(_names.MainOsuDirectory),"Skins");
             _liveTokens["status"] = new LiveToken(_tokenSetter("status", OsuStatus.Null, TokenType.Live, "", OsuStatus.Null), null);
-            _liveTokens["skinName"] = new LiveToken(_tokenSetter("skinName", string.Empty, TokenType.Live, null, string.Empty), () => _reader?.GetSkinFolderName() ?? string.Empty);
+            _liveTokens["skin"] = new LiveToken(_tokenSetter("skin", string.Empty, TokenType.Live, null, string.Empty), () => _reader?.GetSkinFolderName() ?? string.Empty);
+            _liveTokens["skinPath"] = new LiveToken(_tokenSetter("skinPath", string.Empty, TokenType.Live, null, string.Empty), () => Path.Combine(osuDirectory, (string)_liveTokens["skin"].Token.Value));
             _liveTokens["acc"] = new LiveToken(_tokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Acc);
             _liveTokens["300"] = new LiveToken(_tokenSetter("300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C300);
             _liveTokens["100"] = new LiveToken(_tokenSetter("100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C100);
@@ -297,11 +302,6 @@ namespace OsuMemoryEventSource
             {
                 v.Value.ChangeSpeed(speed);
             }
-        }
-
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-            _settings = settings;
         }
     }
 }

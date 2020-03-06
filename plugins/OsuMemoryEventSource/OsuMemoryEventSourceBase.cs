@@ -73,7 +73,7 @@ namespace OsuMemoryEventSource
                 _timer = new Timer(TimerCallback, null, 250, Int32.MaxValue);
 
 
-            _memoryListener = new MemoryListener();
+            _memoryListener = new MemoryListener(settings);
             _memoryListener.NewOsuEvent += async (s, args) =>
             {
                 while (NewOsuEvent == null)
@@ -84,7 +84,6 @@ namespace OsuMemoryEventSource
                 NewOsuEvent.Invoke(this, args);
             };
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
-            _memoryListener.SetSettingsHandle(_settings);
 
             Started = true;
         }
