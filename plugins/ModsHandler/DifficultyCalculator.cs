@@ -20,6 +20,8 @@ namespace ModsHandler
         public Dictionary<string, float> ApplyMods(IBeatmap map, Mods mods)
         {
             float od = map.OverallDifficulty;
+            float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);
+            float od_real = (od0_ms - odms) / od_ms_step;
             float ar = map.ApproachRate;
             float cs = map.CircleSize;
             float hp = map.HpDrainRate;
@@ -32,6 +34,7 @@ namespace ModsHandler
                 retValue.Add("AR", ar);
                 retValue.Add("CS", cs);
                 retValue.Add("OD", od);
+                retValue.Add("OD-Real", od_real);
                 retValue.Add("HP", hp);
                 retValue.Add("MinBpm", (float)minBpm);
                 retValue.Add("MaxBpm", (float)maxBpm);
@@ -82,7 +85,7 @@ namespace ModsHandler
                 od *= 0.5f;
             if ((mods & Mods.Hr) != 0)
                 od = Math.Min(10f, od * 1.4f);
-            float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);          
+            odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);          
 
             //cs 
             float cs_multiplier = 1;
@@ -101,7 +104,7 @@ namespace ModsHandler
 
             // convert AR back into their stat form
             // separate OD into od and od_real
-            float od_real = (od0_ms - odms) / od_ms_step;
+            od_real = (od0_ms - odms) / od_ms_step;
             ar = ar <= 5.0f
                 ? ((ar0_ms - arms) / ar_ms_step1)
                 : (5.0f + (ar5_ms - arms) / ar_ms_step2);
