@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osuOverlayLoader", "plugins
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundImageProvider", "plugins\BackgroundImageProvider\BackgroundImageProvider.csproj", "{DF0879B6-D76D-4FCD-B825-8956FFF19143}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModsHandlerTests", "plugins\ModsHandlerTests\ModsHandlerTests.csproj", "{44B0DAB1-55A5-45DD-8209-093E8F517466}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -598,6 +600,24 @@ Global
 		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|x64.Build.0 = Release|Any CPU
 		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|x86.ActiveCfg = Release|Any CPU
 		{DF0879B6-D76D-4FCD-B825-8956FFF19143}.Remote debug|x86.Build.0 = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Debug|x64.Build.0 = Debug|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Debug|x86.Build.0 = Debug|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Release|x64.ActiveCfg = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Release|x64.Build.0 = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Release|x86.ActiveCfg = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Release|x86.Build.0 = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Remote debug|Any CPU.ActiveCfg = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Remote debug|Any CPU.Build.0 = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Remote debug|x64.ActiveCfg = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Remote debug|x64.Build.0 = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Remote debug|x86.ActiveCfg = Release|Any CPU
+		{44B0DAB1-55A5-45DD-8209-093E8F517466}.Remote debug|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -631,6 +651,7 @@ Global
 		{5DDAA708-B9C7-4E2B-80EB-840FB612B124} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{7F30AE10-182D-48C2-B6DB-2A96E8180335} = {5DDAA708-B9C7-4E2B-80EB-840FB612B124}
 		{DF0879B6-D76D-4FCD-B825-8956FFF19143} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
+		{44B0DAB1-55A5-45DD-8209-093E8F517466} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}
