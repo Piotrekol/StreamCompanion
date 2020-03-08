@@ -115,7 +115,7 @@ namespace ModsHandler
             cs = Math.Max(0.0f, Math.Min(10.0f, cs));           
             
             //combined od
-            float od_combined = od;
+            od_combined = od;
             if ((mods & Mods.Dt) != 0 || (mods & Mods.Nc) != 0)
                 od_combined = od_real;
             
