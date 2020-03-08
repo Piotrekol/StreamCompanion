@@ -25,6 +25,7 @@ namespace ModsHandlerTests
 
         [Test]
         [TestCase(Mods.Omod)]
+        [TestCase(Mods.Dt)]
         [TestCase(Mods.Ht, Ignore = "value mismatch in a range of 0.1f")]
         [TestCase(Mods.Hr)]
         [TestCase(Mods.Hr | Mods.Dt)]
