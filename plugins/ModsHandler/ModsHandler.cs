@@ -67,8 +67,7 @@ namespace ModsHandler
                 _tokenSetter("mods", map.Mods?.ShownMods);
                 _tokenSetter("mAR", Math.Round(c["AR"], 2));
                 _tokenSetter("mCS", Math.Round(c["CS"], 2));
-                _tokenSetter("mOD", Math.Round(Math.Min(10, c["OD"]), 2));
-                _tokenSetter("mOD-Real", Math.Round(c["OD"], 2));
+                _tokenSetter("mOD", Math.Round(c["OD"], 2));
                 _tokenSetter("mHP", c["HP"], format: "{0:0.##}");
                 _tokenSetter("mStars", Math.Round(foundMap.Stars(PlayMode.Osu, mods), 2));
                 _tokenSetter("mBpm", bpm);
