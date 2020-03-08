@@ -7,7 +7,9 @@ namespace ModsHandler
 {
     public class DifficultyCalculator
     {
-        readonly float ar0_ms = 1800f,
+        readonly float od0_ms = 79.5f,
+           od10_ms = 19.5f,
+           ar0_ms = 1800f,
            ar5_ms = 1200f,
            ar10_ms = 450f;
 
@@ -73,6 +75,13 @@ namespace ModsHandler
             float arms = ar <= 5
             ? (ar0_ms - ar_ms_step1 * ar)
             : (ar5_ms - ar_ms_step2 * (ar - 5));
+            
+            //od
+            if ((mods & Mods.Ez) != 0)
+                od *= 0.5f;
+            if ((mods & Mods.Hr) != 0)
+                od = Math.Min(10f, od * 1.4f);
+            float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);          
 
             //cs 
             float cs_multiplier = 1;
@@ -87,24 +96,25 @@ namespace ModsHandler
 
             // apply speed-changing mods 
             arms /= speed;
+            odms /= speed;
 
-            // convert AR back into their stat form 
+            // convert AR back into their stat form
+            // separate OD into od and od_real
+            od_real = (od0_ms - odms) / od_ms_step;
             ar = ar <= 5.0f
                 ? ((ar0_ms - arms) / ar_ms_step1)
                 : (5.0f + (ar5_ms - arms) / ar_ms_step2);
 
             cs *= cs_multiplier;
-            cs = Math.Max(0.0f, Math.Min(10.0f, cs));
+            cs = Math.Max(0.0f, Math.Min(10.0f, cs));           
 
-            var isDtPlay = (mods & Mods.Dt) != 0 || (mods & Mods.Nc) != 0;
-            if ((mods & Mods.Ez) != 0)
-                od = Math.Max(0, od / 2);
-            else
-                od = Math.Min(isDtPlay ? 11.08f : 10f, od * 1.4f);
-
+            
+            
+            
             retValue.Add("AR", ar);
             retValue.Add("CS", cs);
             retValue.Add("OD", od);
+            retValue.Add("OD-Real", od_real);
             retValue.Add("HP", hp);
             retValue.Add("MinBpm", (float)minBpm);
             retValue.Add("MaxBpm", (float)maxBpm);
