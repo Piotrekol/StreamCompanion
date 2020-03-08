@@ -19,8 +19,8 @@ namespace ModsHandler
 
         public Dictionary<string, float> ApplyMods(IBeatmap map, Mods mods)
         {
-            float od_display = map.OverallDifficulty;
-            float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od_display);
+            float od = map.OverallDifficulty;
+            float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);
             float od_real = (od0_ms - odms) / od_ms_step;
             float ar = map.ApproachRate;
             float cs = map.CircleSize;
@@ -33,9 +33,8 @@ namespace ModsHandler
             {
                 retValue.Add("AR", ar);
                 retValue.Add("CS", cs);
-                retValue.Add("OD", od_display);
+                retValue.Add("OD", od);
                 retValue.Add("OD-Real", od_real);
-                retValue.Add("OD-Display", od_display);
                 retValue.Add("HP", hp);
                 retValue.Add("MinBpm", (float)minBpm);
                 retValue.Add("MaxBpm", (float)maxBpm);
@@ -83,10 +82,10 @@ namespace ModsHandler
             
             //od
             if ((mods & Mods.Ez) != 0)
-                od_display *= 0.5f;
+                od *= 0.5f;
             if ((mods & Mods.Hr) != 0)
-                od_display = Math.Min(10f, od_display * 1.4f);
-            odms = od0_ms - (float)Math.Ceiling(od_ms_step * od_display);          
+                od = Math.Min(10f, od_display * 1.4f);
+            odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);          
 
             //cs 
             float cs_multiplier = 1;
@@ -113,9 +112,8 @@ namespace ModsHandler
             cs *= cs_multiplier;
             cs = Math.Max(0.0f, Math.Min(10.0f, cs));           
             
-            //combined od
-            float od = od_display;
-            if ((mods & Mods.Dt) != 0 || (mods & Mods.Nc) != 0)
+            //switch od if dt/ht
+            if ((mods & Mods.Dt) != 0 || (mods & Mods.Nc) != 0 || (mods & Mods.Ht) != 0)
                 od = od_real;
             
             
@@ -124,7 +122,6 @@ namespace ModsHandler
             retValue.Add("CS", cs);
             retValue.Add("OD", od);
             retValue.Add("OD-Real", od_real);
-            retValue.Add("OD-Display", od_display);
             retValue.Add("HP", hp);
             retValue.Add("MinBpm", (float)minBpm);
             retValue.Add("MaxBpm", (float)maxBpm);
