@@ -84,7 +84,7 @@ namespace ModsHandler
             if ((mods & Mods.Ez) != 0)
                 od *= 0.5f;
             if ((mods & Mods.Hr) != 0)
-                od = Math.Min(10f, od_display * 1.4f);
+                od = Math.Min(10f, od * 1.4f);
             odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);          
 
             //cs 
