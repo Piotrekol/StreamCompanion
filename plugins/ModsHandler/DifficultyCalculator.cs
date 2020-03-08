@@ -13,7 +13,8 @@ namespace ModsHandler
            ar5_ms = 1200f,
            ar10_ms = 450f;
 
-        readonly float ar_ms_step1 = 120, // ar0-5 
+        readonly float od_ms_step = 6,
+            ar_ms_step1 = 120, // ar0-5 
             ar_ms_step2 = 150; // ar5-10 
 
         public Dictionary<string, float> ApplyMods(IBeatmap map, Mods mods)
@@ -100,7 +101,7 @@ namespace ModsHandler
 
             // convert AR back into their stat form
             // separate OD into od and od_real
-            od_real = (od0_ms - odms) / od_ms_step;
+            float od_real = (od0_ms - odms) / od_ms_step;
             ar = ar <= 5.0f
                 ? ((ar0_ms - arms) / ar_ms_step1)
                 : (5.0f + (ar5_ms - arms) / ar_ms_step2);
