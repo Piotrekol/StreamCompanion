@@ -1,16 +1,11 @@
-﻿using NUnit.Framework;
-using ModsHandler;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks;
 using CollectionManager.DataTypes;
+using ModsHandler;
+using NUnit.Framework;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
-namespace ModsHandler.Tests
+namespace ModsHandlerTests
 {
     [TestFixture()]
     public class DifficultyCalculatorTests
