@@ -22,6 +22,7 @@ namespace ModsHandler
             float od = map.OverallDifficulty;
             float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);
             float od_real = (od0_ms - odms) / od_ms_step;
+            float od_combined = od;
             float ar = map.ApproachRate;
             float cs = map.CircleSize;
             float hp = map.HpDrainRate;
@@ -35,6 +36,7 @@ namespace ModsHandler
                 retValue.Add("CS", cs);
                 retValue.Add("OD", od);
                 retValue.Add("OD-Real", od_real);
+                retValue.Add("OD-Combined", od_combined);
                 retValue.Add("HP", hp);
                 retValue.Add("MinBpm", (float)minBpm);
                 retValue.Add("MaxBpm", (float)maxBpm);
@@ -111,7 +113,11 @@ namespace ModsHandler
 
             cs *= cs_multiplier;
             cs = Math.Max(0.0f, Math.Min(10.0f, cs));           
-
+            
+            //combined od
+            float od_combined = od;
+            if ((mods & Mods.Dt) != 0 || (mods & Mods.Nc) != 0)
+                od_combined = od_real;
             
             
             
@@ -119,6 +125,7 @@ namespace ModsHandler
             retValue.Add("CS", cs);
             retValue.Add("OD", od);
             retValue.Add("OD-Real", od_real);
+            retValue.Add("OD-Combined", od_combined);
             retValue.Add("HP", hp);
             retValue.Add("MinBpm", (float)minBpm);
             retValue.Add("MaxBpm", (float)maxBpm);
