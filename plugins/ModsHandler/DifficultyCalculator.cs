@@ -51,7 +51,10 @@ namespace ModsHandler
                 od_multiplier *= 0.5f;
 
             od *= od_multiplier;
-            float odms = od0_ms - (float)Math.Ceiling(od_ms_step * od);
+            float odms = (mods & Mods.Hr) != 0 && (mods & Mods.Dt) == 0 && (mods & Mods.Ht) == 0
+                ? od0_ms - (od_ms_step * od)
+                : od0_ms - (float)Math.Ceiling(od_ms_step * od);
+
             //hp
             if ((mods & Mods.Ez) != 0)
                 hp *= 0.5f;
@@ -71,7 +74,7 @@ namespace ModsHandler
 
             minBpm *= modifier;
             maxBpm *= modifier;
-            
+
             //ar 
             float ar_multiplier = 1;
 
@@ -120,6 +123,6 @@ namespace ModsHandler
 
             return retValue;
         }
-        
+
     }
 }
