@@ -4,12 +4,13 @@ using Newtonsoft.Json;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
 
 namespace OsuMemoryEventSource
 {
     public class PatternsDispatcher
     {
-        public List<IHighFrequencyDataHandler> HighFrequencyDataHandlers { get; set; }
+        public List<IHighFrequencyDataConsumer> HighFrequencyDataConsumers { get; set; }
         public BlockingCollection<IOutputPattern> OutputPatterns = new BlockingCollection<IOutputPattern>();
 
         public void SetOutputPatterns(IList<IOutputPattern> patterns)
@@ -47,7 +48,7 @@ namespace OsuMemoryEventSource
                     }
 
                     var json = JsonConvert.SerializeObject(output);
-                    HighFrequencyDataHandlers.ForEach(h => h.Handle(json));
+                    HighFrequencyDataConsumers.ForEach(h => h.Handle(json));
                 }
             }
         }
@@ -56,7 +57,7 @@ namespace OsuMemoryEventSource
         {
             void WriteToHandlers(string name, string content)
             {
-                HighFrequencyDataHandlers.ForEach(h => h.Handle(name, content));
+                HighFrequencyDataConsumers.ForEach(h => h.Handle(name, content));
             }
 
             //Standard output

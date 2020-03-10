@@ -6,7 +6,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace MSNEventSource
 {
-    public partial class FirstRunMsn : UserControl, IFirstRunUserControl
+    public partial class FirstRunMsn : UserControl, IFirstRunControl
     {
         public FirstRunMsn()
         {

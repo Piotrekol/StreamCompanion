@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using StreamCompanionTypes;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace OsuMemoryEventSource
 {
@@ -9,9 +9,9 @@ namespace OsuMemoryEventSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
         private bool init = true;
-        public MemoryDataFinderSettings(ISettingsHandler settings)
+        public MemoryDataFinderSettings(ISettings settings)
         {
             InitializeComponent();
 

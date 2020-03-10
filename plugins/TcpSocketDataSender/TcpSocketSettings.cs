@@ -2,15 +2,16 @@
 using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace TcpSocketDataSender
 {
     public partial class TcpSocketSettings : UserControl
     {
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public TcpSocketSettings(ISettingsHandler settings)
+        public TcpSocketSettings(ISettings settings)
         {
             _settings = settings;
             InitializeComponent();

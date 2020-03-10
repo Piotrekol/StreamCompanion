@@ -7,13 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ClickCounter
 {
-    public class ClickCounter : ApplicationContext, IPlugin, ISettingsProvider, IDisposable, ITokensProvider
+    public class ClickCounter : ApplicationContext, IPlugin, ISettingsSource, IDisposable, ITokensSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private ClickCounterSettings _frmSettings;
         private KeyboardListener _keyboardListener;
         private MouseListener _mouseListener;
@@ -25,7 +28,7 @@ namespace ClickCounter
         private readonly List<int> _keyList = new List<int>();
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
-        private List<IHighFrequencyDataHandler> _highFrequencyDataHandler;
+        private List<IHighFrequencyDataConsumer> _highFrequencyDataConsumers;
         private Tokens.TokenSetter _tokenSetter;
         private Thread _hooksThread = null;
 
@@ -40,12 +43,12 @@ namespace ClickCounter
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public ClickCounter(ILogger logger, ISaver saver,ISettingsHandler settings, IEnumerable<IHighFrequencyDataHandler> handlers)
+        public ClickCounter(ILogger logger, ISaver saver,ISettings settings, IEnumerable<IHighFrequencyDataConsumer> consumers)
         {
             _logger = logger;
             _saver = saver;
             _settings = settings;
-            _highFrequencyDataHandler = handlers.ToList();
+            _highFrequencyDataConsumers = consumers.ToList();
 
             disableSavingToDisk = _settings.Get<bool>(_names.DisableClickCounterWrite);
             Load();
@@ -91,7 +94,7 @@ namespace ClickCounter
             if (!disableSavingToDisk)
                 _saver.Save(name + ".txt", value);
 
-            _highFrequencyDataHandler.ForEach(h =>
+            _highFrequencyDataConsumers.ForEach(h =>
                 h.Handle(name, value)
             );
         }
@@ -177,9 +180,11 @@ namespace ClickCounter
 
         private void Load()
         {
+#pragma warning disable 618 // deprecated
             var keys = _settings.Geti(_names.KeyList.Name);
             var keyfilenames = _settings.Get(_names.KeyNames.Name);
             var keyCounts = _settings.Geti(_names.KeyCounts.Name);
+#pragma warning restore 618
 
             _rightMouseCount = _settings.Get<long>(_names.RightMouseCount);
             _leftMouseCount = _settings.Get<long>(_names.LeftMouseCount);
@@ -278,7 +283,9 @@ namespace ClickCounter
             {
                 keyCounts.Add(k.Value);
             }
+#pragma warning disable 618 // deprecated
             _settings.Add(_names.KeyCounts.Name, keyCounts);
+#pragma warning restore 618
             _settings.Add(_names.RightMouseCount.Name, _rightMouseCount);
             _settings.Add(_names.LeftMouseCount.Name, _leftMouseCount);
         }

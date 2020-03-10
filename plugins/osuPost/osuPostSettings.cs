@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osuPost
 {
@@ -9,9 +10,9 @@ namespace osuPost
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
         private bool init = true;
-        public osuPostSettings(ISettingsHandler settings)
+        public osuPostSettings(ISettings settings)
         {
             _settings = settings;
             InitializeComponent();

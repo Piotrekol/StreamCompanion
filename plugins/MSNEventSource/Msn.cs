@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace MSNEventSource
 {
@@ -230,10 +232,10 @@ namespace MSNEventSource
         #endregion //MSN FIX
 
         private FirstRunMsn _firstRunUserControl = null;
-        public List<IFirstRunUserControl> GetFirstRunUserControls()
+        public List<IFirstRunControl> GetFirstRunUserControls()
         {
             _firstRunUserControl = new FirstRunMsn();
-            return new List<IFirstRunUserControl> { _firstRunUserControl };
+            return new List<IFirstRunControl> { _firstRunUserControl };
         }
         
     }

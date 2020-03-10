@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace WebSocketDataSender
 {
     public partial class WebSocketSettings : UserControl
     {
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
 
-        public WebSocketSettings(ISettingsHandler settings)
+        public WebSocketSettings(ISettings settings)
         {
             _settings = settings;
             InitializeComponent();

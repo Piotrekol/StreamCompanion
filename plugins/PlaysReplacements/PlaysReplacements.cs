@@ -1,10 +1,11 @@
 ﻿using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace PlaysReplacements
 {
-    public class PlaysReplacements : IPlugin, ITokensProvider
+    public class PlaysReplacements : IPlugin, ITokensSource
     {
         private int Plays, Retrys;
         private Tokens.TokenSetter _tokenSetter;

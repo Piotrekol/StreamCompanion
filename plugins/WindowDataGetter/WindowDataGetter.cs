@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
 using CollectionManager.DataTypes;
-using CollectionManager.Enums;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
 
 namespace WindowDataGetter
 {
-    public class WindowDataGetter : IPlugin, IMapDataGetter
+    public class WindowDataGetter : IPlugin, IMapDataConsumer
     {
         private readonly IMainWindowModel _mainWindowHandle;
         public bool Started { get; set; }

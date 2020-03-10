@@ -13,7 +13,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         private readonly Settings _settings;
         DateTime startTime = DateTime.Today;
         private string CurrentLogSaveLocation = "";
-
+        private object _lockingObject = new object();
 
         private readonly string _logsSaveFolderName = @"Logs\";
 
@@ -47,14 +47,17 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             {
                 string message = logMessage.ToString();
                 if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
-                    File.AppendAllText(CurrentLogSaveLocation, string.Format(message, vals) + Environment.NewLine);
+                    lock(_lockingObject)
+                        File.AppendAllText(CurrentLogSaveLocation, string.Format(message, vals) + Environment.NewLine);
             }
             catch
             {
                 if (SaveDirectoryExists())
                     throw;
 
-                CreateLogsDirectory();
+                lock(_lockingObject)
+                    CreateLogsDirectory();
+
                 Log(logMessage, loglvevel, vals);
             }
         }

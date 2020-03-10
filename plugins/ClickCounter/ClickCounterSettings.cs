@@ -5,16 +5,18 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+#pragma warning disable 618 // deprecated
 
 namespace ClickCounter
 {
     public partial class ClickCounterSettings : UserControl
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private KeyboardCounterKeyClick keyboardCounterKeyClick;
         public event EventHandler KeysChanged;
-        public ClickCounterSettings(ISettingsHandler settings)
+        public ClickCounterSettings(ISettings settings)
         {
             _settings = settings;
             InitializeComponent();
@@ -31,6 +33,7 @@ namespace ClickCounter
         public void RefreshDataGrid()
         {
             this.dataGridView1.Rows.Clear();
+
             var keys = _settings.Get("keyList");
             var keysSaves = _settings.Get("keyNames");
             var keysCounts = _settings.Geti("keyCounts");

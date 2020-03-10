@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LiveCharts;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace LiveVisualizer
 {
@@ -50,7 +51,7 @@ namespace LiveVisualizer
         private IModsEx _lastMods = null;
 
 
-        public LiveVisualizerPlugin(ILogger logger, ISettingsHandler settings) : base(settings)
+        public LiveVisualizerPlugin(ILogger logger, ISettings settings) : base(settings)
         {
             VisualizerData = new VisualizerDataModel();
 
@@ -244,7 +245,7 @@ namespace LiveVisualizer
             }
         }
 
-        public override List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
+        public override List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status)
         {
             //TODO: UHH... would be nice to have better way of sharing this data (instead of relying on Tokens with magic strings and blind value casts)
             Tokens = replacements.ToList();

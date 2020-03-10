@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using StreamCompanionTypes.Interfaces.Services;
 using DColor = System.Drawing.Color;
 using MColor = System.Windows.Media.Color;
 
@@ -13,11 +14,11 @@ namespace LiveVisualizer
 {
     public partial class LiveVisualizerSettings : UserControl
     {
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
         private readonly IVisualizerConfiguration _configuration;
         public EventHandler ResetSettings;
 
-        public LiveVisualizerSettings(ISettingsHandler settings, IVisualizerConfiguration configuration)
+        public LiveVisualizerSettings(ISettings settings, IVisualizerConfiguration configuration)
         {
             _settings = settings;
             _configuration = configuration;
