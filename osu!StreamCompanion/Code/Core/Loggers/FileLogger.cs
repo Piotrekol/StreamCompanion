@@ -2,7 +2,7 @@
 using System.IO;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {
@@ -21,7 +21,6 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             _saver = saver;
             _settings = settings;
-            CurrentLogSaveLocation = GetRelativeSaveLocation();
 
             CreateLogsDirectory();
         }
@@ -33,7 +32,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            CurrentLogSaveLocation = GetRelativeSaveLocation();
+            CurrentLogSaveLocation = Path.Combine(dir, $"{startTime:yyyy-MM-dd}.txt");
         }
 
 
@@ -42,17 +41,13 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             return Directory.Exists(Path.Combine(_saver.SaveDirectory, _logsSaveFolderName));
         }
 
-        private string GetRelativeSaveLocation()
-        {
-            return Path.Combine(_logsSaveFolderName, startTime.ToString("yyyy-MM-dd") + ".txt");
-        }
         public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
         {
             try
             {
                 string message = logMessage.ToString();
                 if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
-                    _saver.append(CurrentLogSaveLocation, string.Format(message, vals) + Environment.NewLine);
+                    File.AppendAllText(CurrentLogSaveLocation, string.Format(message, vals) + Environment.NewLine);
             }
             catch
             {

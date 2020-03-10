@@ -11,10 +11,12 @@ using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Helpers;
+using osu_StreamCompanion.Code.Misc;
 using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -32,7 +34,7 @@ namespace osu_StreamCompanion.Code.Core
             di.Configure(x => x.ExportDefault(typeof(MainWindowUpdater)));
             di.Configure(x => x.ExportDefault(typeof(MainSaver)));
             di.Configure(x => x.ExportFactory((ILogger logger) => new SqliteControler(new SqliteConnector(logger)))
-                .As<ISqliteControler>().Lifestyle.Singleton());
+                .As<IDatabaseController>().Lifestyle.Singleton());
             di.Configure(x => x.ExportDefault(typeof(MapStringFormatter)));
             di.Configure(x => x.ExportDefault(typeof(MainMapDataGetter)));
             di.Configure(c => c.ImportMembers<object>(MembersThat.HaveAttribute<ImportAttribute>()));

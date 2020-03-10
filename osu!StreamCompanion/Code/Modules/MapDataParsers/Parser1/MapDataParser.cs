@@ -5,19 +5,22 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
-    public class MapDataParser : IModule, IMapDataParser, ISettingsProvider, IDisposable
+    public class MapDataParser : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private readonly BindingList<OutputPattern> _patterns = new BindingList<OutputPattern>();
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private readonly object _lockingObject = new object();
         private ParserSettings _parserSettings = null;
         private ILogger _logger;
@@ -27,7 +30,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         [Import]
         public Lazy<IEnumerable<IPlugin>> LoadedPlugins { get; set; }
         
-        public MapDataParser(ILogger logger, ISettingsHandler settings)
+        public MapDataParser(ILogger logger, ISettings settings)
         {
             _logger = logger;
             _settings = settings;
@@ -93,7 +96,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             Save();
         }
 
-        public List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
+        public List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status)
         {
             List<IOutputPattern> ret = null;
 

@@ -3,18 +3,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 {
-    public class OsuPathResolver : ISettingsProvider, IModule
+    public class OsuPathResolver : ISettingsSource, IModule
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private Process[] _processes;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private OsuPathResolverSettings _frmSettings;
         private ILogger _logger;
 
@@ -37,7 +39,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 
         public bool Started { get; set; }
 
-        public OsuPathResolver(ILogger logger, ISettingsHandler settings)
+        public OsuPathResolver(ILogger logger, ISettings settings)
         {
             _logger = logger;
             _settings = settings;
@@ -59,10 +61,6 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
                     SaveOsuDir(GetManualOsuDir());
                 }
             }
-        }
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-
         }
 
         private void Log(string text, params string[] vals)

@@ -1,6 +1,8 @@
-﻿using StreamCompanionTypes.DataTypes;
+﻿using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
 {
@@ -20,13 +22,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
             _logger = logger;
         }
 
-        
-
         public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
         {
-
             MapSearchResult mapSearchResult = new MapSearchResult(searchArgs);
-
 
             return mapSearchResult;
         }

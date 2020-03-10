@@ -1,9 +1,11 @@
 ﻿using System.Windows.Forms;
-using StreamCompanionTypes.Interfaces;
+using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
 {
-    class FileSaveLocation : IModule, ISettingsProvider
+    class FileSaveLocation : IModule, ISettingsSource
     {
         private FileSaveLocationSettings _fileSaveLocationSettings;
         private readonly ILogger _logger;
@@ -22,9 +24,6 @@ namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
         }
 
         public string SettingGroup { get; } = "General";
-        public void SetSettingsHandle(ISettingsHandler settings)
-        {
-        }
 
         public void Free()
         {

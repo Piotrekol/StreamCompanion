@@ -1,21 +1,23 @@
 ﻿using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 using System.Collections.Generic;
 using System.IO;
+using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
-    class MapReplacement : IModule, ITokensProvider
+    class MapReplacement : IModule, ITokensSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private Tokens.TokenSetter _tokenSetter;
         public bool Started { get; set; }
 
-        public MapReplacement(ILogger logger, ISettingsHandler settings)
+        public MapReplacement(ILogger logger, ISettings settings)
         {
             _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter("MapReplacements");

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
 {
@@ -14,9 +16,9 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
         private bool _isFallback;
         private string _customBeatmapDirectoryLocation;
         private readonly ILogger _logger;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
 
-        public OsuFallbackDetector(ILogger logger, ISettingsHandler settings)
+        public OsuFallbackDetector(ILogger logger, ISettings settings)
         {
             _logger = logger;
             _settings = settings;

@@ -13,6 +13,8 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -61,7 +63,7 @@ namespace osu_StreamCompanion.Code.Core
 
             DiContainer.Container.Locate<FirstRun>();
 
-            DiContainer.Container.Locate<ISqliteControler>();
+            DiContainer.Container.Locate<IDatabaseController>();
             DiContainer.Container.Locate<OsuPathResolver>();
             DiContainer.Container.Locate<OsuFallbackDetector>();
 
@@ -69,11 +71,11 @@ namespace osu_StreamCompanion.Code.Core
 
             //TODO: remove this check after few releases (2020?)
             var ingameOverlay = plugins.FirstOrDefault(p => p.Name == "IngameOverlay");
-            if (ingameOverlay != null && ingameOverlay is IMapDataGetter mapDataGetter)
+            if (ingameOverlay != null && ingameOverlay is IMapDataConsumer mapDataConsumer)
             {
                 try
                 {
-                    mapDataGetter.SetNewMap(new MapSearchResult(new MapSearchArgs("dummy")));
+                    mapDataConsumer.SetNewMap(new MapSearchResult(new MapSearchArgs("dummy")));
                 }
                 catch (Exception) 
                 {

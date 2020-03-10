@@ -6,29 +6,32 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
     public class MainMapDataGetter
     {
         private readonly List<IMapDataFinder> _mapDataFinders;
-        private readonly List<IMapDataParser> _mapDataParsers;
-        private readonly List<IMapDataGetter> _mapDataGetters;
-        private List<ITokensProvider> _mapDataReplacementsGetters;
+        private readonly List<IOutputPatternGenerator> _outputPatternGenerators;
+        private readonly List<IMapDataConsumer> _mapDataConsumers;
+        private List<ITokensSource> _tokenSources;
 
         private readonly MainSaver _saver;
         private ILogger _logger;
         private readonly Settings _settings;
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataGetter> mapDataGetters,
-            List<IMapDataParser> mapDataParsers, List<ITokensProvider> mapDataReplacementsGetters,
+        public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataConsumer> mapDataConsumers,
+            List<IOutputPatternGenerator> outputPatternGenerators, List<ITokensSource> tokenSources,
             MainSaver saver, ILogger logger, Settings settings)
         {
             _mapDataFinders = mapDataFinders.OrderByDescending(x => x.Priority).ToList();
-            _mapDataParsers = mapDataParsers;
-            _mapDataGetters = mapDataGetters;
-            _mapDataReplacementsGetters = mapDataReplacementsGetters;
+            _outputPatternGenerators = outputPatternGenerators;
+            _mapDataConsumers = mapDataConsumers;
+            _tokenSources = tokenSources;
             _saver = saver;
             _logger = logger;
             _settings = settings;
@@ -81,7 +84,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
             mapSearchResult.FormatedStrings = GetMapPatterns(tokens, mapSearchResult.Action);
 
-
             if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
                 SaveMapStrings(mapSearchResult.FormatedStrings, mapSearchResult.Action);
             SetNewMap(mapSearchResult);
@@ -89,7 +91,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private void CreateMapReplacements(MapSearchResult mapSearchResult)
         {
-            foreach (var mapDataReplacementsGetter in _mapDataReplacementsGetters)
+            foreach (var mapDataReplacementsGetter in _tokenSources)
             {
                 mapDataReplacementsGetter.CreateTokens(mapSearchResult);
             }
@@ -112,12 +114,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         }
 
 
-        private List<IOutputPattern> GetMapPatterns(Tokens replacements, OsuStatus status)
+        private List<IOutputPattern> GetMapPatterns(Tokens tokens, OsuStatus status)
         {
             var ret = new List<IOutputPattern>();
-            foreach (var dataGetter in _mapDataParsers)
+            foreach (var dataGetter in _outputPatternGenerators)
             {
-                var temp = dataGetter.GetFormatedPatterns(replacements, status);
+                var temp = dataGetter.GetOutputPatterns(tokens, status);
                 if (temp?.Count > 0)
                 {
                     ret.AddRange(temp);
@@ -128,7 +130,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private void SetNewMap(MapSearchResult map)
         {
-            foreach (var dataGetter in _mapDataGetters)
+            foreach (var dataGetter in _mapDataConsumers)
             {
                 dataGetter.SetNewMap(map);
             }
