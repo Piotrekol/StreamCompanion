@@ -2,12 +2,13 @@
 using System.Drawing;
 using System.Windows.Forms;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ScGui
 {
     public partial class SettingsForm : Form
     {
-        private readonly List<ISettingsProvider> _settingsList;
+        private readonly List<ISettingsSource> _settingsList;
 
         private class UserControlPostion
         {
@@ -17,7 +18,7 @@ namespace ScGui
         }
 
         private readonly Dictionary<string, UserControlPostion> _groupControlPostions = new Dictionary<string, UserControlPostion>();
-        public SettingsForm(List<ISettingsProvider> settingsList)
+        public SettingsForm(List<ISettingsSource> settingsList)
         {
             _settingsList = settingsList;
             InitializeComponent();

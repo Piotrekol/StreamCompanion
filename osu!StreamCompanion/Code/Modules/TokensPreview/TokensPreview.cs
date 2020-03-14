@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
-    public class TokensPreview : IModule, IMapDataParser, ISettingsProvider, IDisposable
+    public class TokensPreview : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
     {
         public bool Started { get; set; }
         private TokensPreviewSettings _commandsPreviewSettings;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private Dictionary<string, string> tokenFormats;
 
-        public TokensPreview(ILogger logger, ISettingsHandler settings)
+        public TokensPreview(ILogger logger, ISettings settings)
         {
             _settings = settings;
             Start(logger);
@@ -34,7 +37,7 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             Started = true;
         }
 
-        public List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status)
+        public List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status)
         {
             if (_commandsPreviewSettings != null && !_commandsPreviewSettings.IsDisposed)
                 _commandsPreviewSettings.Add(replacements);

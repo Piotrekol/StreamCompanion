@@ -1,6 +1,6 @@
 ﻿using System;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Savers
 {
@@ -34,18 +34,6 @@ namespace osu_StreamCompanion.Code.Core.Savers
             try
             {
                 _saver.Save(directory, content);
-            }
-            catch (System.IO.IOException e)
-            {
-                _logger.Log("EXCEPTION: {0}" + Environment.NewLine + "{1}", LogLevel.Basic, e.Message, e.StackTrace);
-            }
-        }
-
-        public void append(string directory, string content)
-        {
-            try
-            {
-                _saver.append(directory, content);
             }
             catch (System.IO.IOException e)
             {

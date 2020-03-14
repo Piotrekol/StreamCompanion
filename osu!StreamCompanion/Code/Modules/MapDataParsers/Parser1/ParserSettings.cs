@@ -7,17 +7,18 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
     public partial class ParserSettings : UserControl
     {
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
         private readonly Action _resetPatterns;
         private BindingList<OutputPattern> _patterns;
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public ParserSettings(ISettingsHandler settings, bool inGameOverlayIsAvailable, Action resetPatterns)
+        public ParserSettings(ISettings settings, bool inGameOverlayIsAvailable, Action resetPatterns)
         {
             _settings = settings;
             _resetPatterns = resetPatterns;

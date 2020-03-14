@@ -9,10 +9,10 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
     public partial class FirstRunFrm : Form
     {
-        private List<IFirstRunUserControl> phases = new List<IFirstRunUserControl>();
+        private List<IFirstRunControl> phases = new List<IFirstRunControl>();
         public bool CompletedSuccesfully { get; set; }
 
-        public FirstRunFrm(List<IFirstRunUserControl> firstRunControls)
+        public FirstRunFrm(List<IFirstRunControl> firstRunControls)
         {
             foreach (var control in firstRunControls)
             {

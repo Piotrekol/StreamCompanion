@@ -4,7 +4,7 @@ using osu_StreamCompanion.Code.Helpers;
 using SharpRaven;
 using SharpRaven.Data;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {

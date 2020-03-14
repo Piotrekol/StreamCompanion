@@ -2,19 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Newtonsoft.Json;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
 namespace WebSocketDataSender
 {
-    public class WebSocketDataGetter : IPlugin, IMapDataGetter, ISettingsProvider, IDisposable,
-        IHighFrequencyDataHandler
+    public class WebSocketDataGetter : IPlugin, IMapDataConsumer, ISettingsSource, IDisposable,
+        IHighFrequencyDataConsumer
     {
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         public string Description { get; } = "Provides beatmap and live map data using websockets";
         public string Name { get; } = nameof(WebSocketDataGetter);
         public string Author { get; } = "Piotrekol";
@@ -31,7 +33,7 @@ namespace WebSocketDataSender
         private DataContainer _mapDataContainer = new DataContainer();
         private WebSocketServer webSocketServer;
 
-        public WebSocketDataGetter(ISettingsHandler settings)
+        public WebSocketDataGetter(ISettings settings)
         {
             _settings = settings;
             if (!_settings.Get<bool>(Enabled))

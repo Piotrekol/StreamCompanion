@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Windows.Forms;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osuOverlay
 {
     public partial class IngameOverlaySettings : UserControl
     {
 
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
 
-        public IngameOverlaySettings(ISettingsHandler settings)
+        public IngameOverlaySettings(ISettings settings)
         {
             _settings = settings;
             InitializeComponent();

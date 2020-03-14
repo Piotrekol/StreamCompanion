@@ -6,7 +6,7 @@ using StreamCompanionTypes.Interfaces;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun.Phases
 {
-    public partial class FirstRunFinish : UserControl, IFirstRunUserControl
+    public partial class FirstRunFinish : UserControl, IFirstRunControl
     {
         public FirstRunFinish()
         {

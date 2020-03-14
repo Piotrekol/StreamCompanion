@@ -5,16 +5,19 @@ using StreamCompanionTypes.Enums;
 using CollectionManager.DataTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace OsuMemoryEventSource
 {
     //TODO: OsuMemoryEventSource should get refactored into several interface-scoped classes
     public class OsuMemoryEventSource : OsuMemoryEventSourceBase,
-        IMapDataFinder, ISettingsProvider, IFirstRunControlProvider
+        IMapDataFinder, ISettingsSource, IFirstRunControlProvider
     {
         public string SettingGroup { get; } = "Map matching";
         public int Priority { get; set; } = 100;
-        public OsuMemoryEventSource(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler, IModParser modParser, List<IHighFrequencyDataHandler> highFrequencyDataHandlers) : base(logger, settings, sqliteControler, modParser, highFrequencyDataHandlers)
+        public OsuMemoryEventSource(ILogger logger, ISettings settings, IDatabaseController databaseController, IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers) : base(logger, settings, databaseController, modParser, highFrequencyDataConsumers)
         {
         }
 
@@ -101,7 +104,7 @@ namespace OsuMemoryEventSource
                 return result;
             }
 
-            var b = _sqLiteController?.GetBeatmap(mapId);
+            var b = _databaseController?.GetBeatmap(mapId);
             if (b != null)
             {
                 result.BeatmapsFound.Add(b);
@@ -115,7 +118,7 @@ namespace OsuMemoryEventSource
             return _modParser?.GetModsFromEnum(modsValue);
         }
         private FirstRunMemoryCalibration _firstRunMemoryCalibration = null;
-        public List<IFirstRunUserControl> GetFirstRunUserControls()
+        public List<IFirstRunControl> GetFirstRunUserControls()
         {
             if (_firstRunMemoryCalibration == null || _firstRunMemoryCalibration.IsDisposed)
             {
@@ -126,7 +129,7 @@ namespace OsuMemoryEventSource
             {
                 _firstRunMemoryCalibration?.GotMemory(args.MapId, args.Status, args.Raw);
             };
-            return new List<IFirstRunUserControl> { _firstRunMemoryCalibration };
+            return new List<IFirstRunControl> { _firstRunMemoryCalibration };
         }
     }
 }

@@ -2,10 +2,12 @@
 using System.IO;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace BackgroundImageProvider
 {
-    public class BackgroundImageProviderPlugin : IPlugin, ITokensProvider
+    public class BackgroundImageProviderPlugin : IPlugin, ITokensSource
     {
         public string Description { get; } = "Provides current beatmap background image both as token and local file on disk";
         public string Name { get; } = nameof(BackgroundImageProviderPlugin);
@@ -14,13 +16,13 @@ namespace BackgroundImageProvider
         public string UpdateUrl { get; }
 
         private readonly ISaver _saver;
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
         private Tokens.TokenSetter _tokenSetter;
         private IToken _imageToken;
         private string _saveLocation;
         private string _lastCopiedFileLocation;
 
-        public BackgroundImageProviderPlugin(ISaver saver, ISettingsHandler settings)
+        public BackgroundImageProviderPlugin(ISaver saver, ISettings settings)
         {
             _saver = saver;
             _settings = settings;

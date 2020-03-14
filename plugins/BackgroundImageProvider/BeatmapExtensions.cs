@@ -2,13 +2,14 @@
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace BackgroundImageProvider
 {
     public static class BeatmapExtensions
     {
         
-        public static string GetImageLocation(this IBeatmap beatmap,ISettingsHandler settings)
+        public static string GetImageLocation(this IBeatmap beatmap, ISettings settings)
         {
             var songsDirectory = BeatmapHelpers.GetFullSongsLocation(settings);
             var osuFileLocation = beatmap.FullOsuFileLocation(songsDirectory);

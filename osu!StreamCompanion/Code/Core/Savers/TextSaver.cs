@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Savers
 {
@@ -19,7 +19,7 @@ namespace osu_StreamCompanion.Code.Core.Savers
             set { }
         }
 
-        public TextSaver(ISettingsHandler settings)
+        public TextSaver(ISettings settings)
         {
             var saveDirectory = settings.Get<string>(SaveDirectoryConfigEntry);
             if (saveDirectory != SaveDirectoryConfigEntry.Default<string>()

@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {

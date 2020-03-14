@@ -1,6 +1,8 @@
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 {
@@ -10,8 +12,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         private ILogger _logger;
         private IMainWindowModel _mainWindowHandle;
 
-        private ISqliteControler _sqliteControler;
-        private ISettingsHandler _settingsHandle;
+        private IDatabaseController _databaseController;
+        private ISettings _settings;
 
 
         public OsuStatus SearchModes { get; } = OsuStatus.Listening | OsuStatus.Null | OsuStatus.Playing |
@@ -19,18 +21,18 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 
         public string SearcherName { get; } = "rawString";
         public int Priority { get; set; } = 10;
-        public SqliteDataFinder(ILogger logger, ISettingsHandler settings, IMainWindowModel mainWindowHandle, ISqliteControler sqLiteControler)
+        public SqliteDataFinder(ILogger logger, ISettings settings, IMainWindowModel mainWindowHandle, IDatabaseController databaseController)
         {
             _mainWindowHandle = mainWindowHandle;
-            _settingsHandle = settings;
-            _sqliteControler = sqLiteControler;
+            _settings = settings;
+            _databaseController = databaseController;
             Start(logger);
         }
         public void Start(ILogger logger)
         {
             Started = true;
             _logger = logger;
-            var cacheInitalizer = new CacheInitalizer(_mainWindowHandle, _sqliteControler, _settingsHandle, _logger);
+            var cacheInitalizer = new CacheInitalizer(_mainWindowHandle, _databaseController, _settings, _logger);
             cacheInitalizer.Initalize();
 
         }
@@ -42,16 +44,16 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
             IBeatmap beatmap = null;
 
             if (!string.IsNullOrEmpty(searchArgs.MapHash))
-                beatmap = _sqliteControler.GetBeatmap(searchArgs.MapHash);
+                beatmap = _databaseController.GetBeatmap(searchArgs.MapHash);
 
             if (!IsValidBeatmap(beatmap) && searchArgs.MapId > 0)
-                beatmap = _sqliteControler.GetBeatmap(searchArgs.MapId);
+                beatmap = _databaseController.GetBeatmap(searchArgs.MapId);
 
             if (!IsValidBeatmap(beatmap))
             {
                 if (!(string.IsNullOrEmpty(searchArgs.Artist) && string.IsNullOrEmpty(searchArgs.Title)) || !string.IsNullOrEmpty(searchArgs.Raw))
                 {
-                    beatmap = _sqliteControler.GetBeatmap(searchArgs.Artist, searchArgs.Title, searchArgs.Diff, searchArgs.Raw);
+                    beatmap = _databaseController.GetBeatmap(searchArgs.Artist, searchArgs.Title, searchArgs.Diff, searchArgs.Raw);
                 }
             }
 

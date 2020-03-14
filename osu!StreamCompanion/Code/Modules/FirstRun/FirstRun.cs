@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
     public class FirstRun : IModule
     {
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private FirstRunFrm _setupFrm;
         public ILogger _logger { get; set; }
         private List<IFirstRunControlProvider> _firstRunControlProviders;
-        public FirstRun(ILogger logger, ISettingsHandler settings, IEnumerable<IFirstRunControlProvider> firstRunControlProviders)
+        public FirstRun(ILogger logger, ISettings settings, IEnumerable<IFirstRunControlProvider> firstRunControlProviders)
         {
             _logger = logger;
             _settings = settings;
@@ -54,7 +56,7 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
 
             return _firstRunControlProviders.Count != 0 && (shouldForceFirstRun || _settings.Get<bool>(SettingNames.Instance.FirstRun));
         }
-        private IEnumerable<IFirstRunUserControl> GetControls()
+        private IEnumerable<IFirstRunControl> GetControls()
         {
             foreach (var controlProvider in _firstRunControlProviders)
             {

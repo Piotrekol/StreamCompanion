@@ -7,6 +7,8 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace OsuSongsFolderWatcher
 {
@@ -15,9 +17,9 @@ namespace OsuSongsFolderWatcher
         private readonly SettingNames _names = SettingNames.Instance;
 
         private FileSystemWatcher _watcher;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private ILogger _logger;
-        private ISqliteControler _sqliteControler;
+        private IDatabaseController _databaseController;
         private int _numberOfBeatmapsCurrentlyBeingLoaded = 0;
         private Thread _consumerThread;
 
@@ -27,10 +29,10 @@ namespace OsuSongsFolderWatcher
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public OsuSongsFolderWatcher(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler)
+        public OsuSongsFolderWatcher(ILogger logger, ISettings settings, IDatabaseController databaseController)
         {
             _settings = settings;
-            _sqliteControler = sqliteControler;
+            _databaseController = databaseController;
             _logger = logger;
 
             if (_settings.Get<bool>(_names.LoadingRawBeatmaps))
@@ -81,7 +83,7 @@ namespace OsuSongsFolderWatcher
                         _logger.Log("Processing new beatmap", LogLevel.Debug);
                         beatmap = BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
 
-                        _sqliteControler.StoreTempBeatmap(beatmap);
+                        _databaseController.StoreTempBeatmap(beatmap);
                         
                         _logger.Log("Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Debug, beatmap.ArtistRoman,
                             beatmap.TitleRoman, beatmap.DiffName);

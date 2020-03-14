@@ -6,17 +6,19 @@ using StreamCompanionTypes.Interfaces;
 using System;
 using System.Linq;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace BeatmapPpReplacements
 {
-    public class PpReplacements : IPlugin, ITokensProvider
+    public class PpReplacements : IPlugin, ITokensSource
     {
         private const string PpFormat = "{0:0.00}";
         private Tokens.TokenSetter _tokenSetter;
 
         private PpCalculator.PpCalculator _ppCalculator = null;
 
-        private ISettingsHandler _settings;
+        private ISettings _settings;
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(PpReplacements);
@@ -24,7 +26,7 @@ namespace BeatmapPpReplacements
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public PpReplacements(ISettingsHandler settings)
+        public PpReplacements(ISettings settings)
         {
             _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter(Name);

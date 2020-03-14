@@ -7,11 +7,14 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace OsuMemoryEventSource
 {
-    public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataGetter,
-         IOsuEventSource, ITokensProvider
+    public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataConsumer,
+         IOsuEventSource, ITokensSource
     {
         protected SettingNames _names = SettingNames.Instance;
 
@@ -28,10 +31,10 @@ namespace OsuMemoryEventSource
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        protected List<IHighFrequencyDataHandler> _highFrequencyDataHandlers;
-        protected ISqliteControler _sqLiteController;
+        protected List<IHighFrequencyDataConsumer> _highFrequencyDataConsumers;
+        protected IDatabaseController _databaseController;
         protected IModParser _modParser;
-        protected ISettingsHandler _settings;
+        protected ISettings _settings;
         internal static ILogger Logger;
         protected IOsuMemoryReader _memoryReader;
         protected MemoryListener _memoryListener;
@@ -44,12 +47,12 @@ namespace OsuMemoryEventSource
 
         protected bool MemoryPoolingIsEnabled = false;
 
-        public OsuMemoryEventSourceBase(ILogger logger, ISettingsHandler settings, ISqliteControler sqliteControler, IModParser modParser, List<IHighFrequencyDataHandler> highFrequencyDataHandlers)
+        public OsuMemoryEventSourceBase(ILogger logger, ISettings settings, IDatabaseController databaseControler, IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers)
         {
             _settings = settings;
-            _sqLiteController = sqliteControler;
+            _databaseController = databaseControler;
             _modParser = modParser;
-            _highFrequencyDataHandlers = highFrequencyDataHandlers;
+            _highFrequencyDataConsumers = highFrequencyDataConsumers;
             Logger = logger;
             TokenSetter = Tokens.CreateTokenSetter(Name);
             _memoryReader = OsuMemoryReader.Instance;
@@ -83,7 +86,7 @@ namespace OsuMemoryEventSource
 
                 NewOsuEvent.Invoke(this, args);
             };
-            _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataHandlers);
+            _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataConsumers);
 
             Started = true;
         }

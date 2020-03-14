@@ -1,6 +1,5 @@
 using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,10 +8,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core
 {
-    public class SqliteConnector : IDisposable, IMapDataStorer
+    public class SqliteConnector : IDisposable, IMapDataSaver
     {
         private readonly ILogger _logger;
         private SQLiteConnection _mDbConnection;

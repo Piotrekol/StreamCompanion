@@ -3,16 +3,17 @@ using System.Drawing;
 using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace ModImageGenerator
 {
     public partial class ModImageGeneratorSettings : UserControl
     {
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private bool init = true;
         private Func<string[], Bitmap> _generateImage;
         private readonly SettingNames _names = SettingNames.Instance;
-        public ModImageGeneratorSettings(ISettingsHandler settings, Func<string[], Bitmap> generateImage)
+        public ModImageGeneratorSettings(ISettings settings, Func<string[], Bitmap> generateImage)
         {
             _generateImage = generateImage;
             _settings = settings;

@@ -6,6 +6,7 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -30,7 +31,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         private readonly SettingNames _names = SettingNames.Instance;
 
-        public List<OutputPattern> Convert(ISettingsHandler settings, bool removeLegacyEntries = true)
+        public List<OutputPattern> Convert(ISettings settings, bool removeLegacyEntries = true)
         {
             var patterns = Load(settings, settings.Get<string>(_names.LastRunVersion));
             if (removeLegacyEntries)
@@ -50,15 +51,16 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             return patterns;
         }
-        private List<OutputPattern> Load(ISettingsHandler settings, string lastRanVersion)
+        private List<OutputPattern> Load(ISettings settings, string lastRanVersion)
         {
             var names = LegacyConfigEntries.Instance;
-
+#pragma warning disable CS0618 // Type or member is obsolete
             List<string> filenames = settings.Get(names.PatternFileNames.Name);
             if (filenames.Count == 1 && string.IsNullOrEmpty(filenames[0]))
                 return new List<OutputPattern>();
             List<string> patterns = settings.Get(names.Patterns.Name);
             List<int> saveEvents = settings.Geti(names.SaveEvents.Name);
+#pragma warning restore CS0618 // Type or member is obsolete
 
 
             var requiredCount = Math.Max(filenames.Count, Math.Max(patterns.Count, saveEvents.Count));

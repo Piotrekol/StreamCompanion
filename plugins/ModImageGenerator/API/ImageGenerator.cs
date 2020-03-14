@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 using Point = System.Drawing.Point;
 
 namespace ModImageGenerator.API
@@ -13,10 +14,10 @@ namespace ModImageGenerator.API
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private ISaver _saver;
         public string ImagesFolderName { get; set; }
-        public ImageGenerator(ISettingsHandler settings, string imagesFolderName)
+        public ImageGenerator(ISettings settings, string imagesFolderName)
         {
             ImagesFolderName = imagesFolderName;
             _settings = settings;

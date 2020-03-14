@@ -6,6 +6,8 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
@@ -14,13 +16,13 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly SettingNames _names = SettingNames.Instance;
         private IContextAwareLogger _logger;
         private readonly MainMapDataGetter _mainMapDataGetter;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
 
         private Thread ConsumerThread;
         private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
         private ConcurrentStack<MapSearchArgs> TasksMemory = new ConcurrentStack<MapSearchArgs>();
 
-        public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettingsHandler settings, IContextAwareLogger logger)
+        public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettings settings, IContextAwareLogger logger)
         {
             _settings = settings;
             _mainMapDataGetter = mainMapDataGetter;

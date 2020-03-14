@@ -3,14 +3,17 @@ using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osuPost
 {
-    public class OsuPost :IPlugin,ISettingsProvider,IMapDataGetter,IDisposable
+    public class OsuPost :IPlugin,ISettingsSource, IMapDataConsumer, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private OsuPostApi api;
 
         public string Description { get; } = "";
@@ -19,7 +22,7 @@ namespace osuPost
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public OsuPost(ILogger logger,ISettingsHandler settings)
+        public OsuPost(ILogger logger, ISettings settings)
         {
             _settings = settings;
 

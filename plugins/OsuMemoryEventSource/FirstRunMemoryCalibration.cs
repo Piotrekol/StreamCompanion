@@ -10,10 +10,11 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace OsuMemoryEventSource
 {
-    public partial class FirstRunMemoryCalibration : UserControl, IFirstRunUserControl
+    public partial class FirstRunMemoryCalibration : UserControl, IFirstRunControl
     {
         private readonly object _lockingObject = new object();
 
@@ -31,7 +32,7 @@ namespace OsuMemoryEventSource
         };
 
         private readonly SettingNames _names = SettingNames.Instance;
-        private readonly ISettingsHandler _settings;
+        private readonly ISettings _settings;
 
         private readonly int ExpectedMods = 89; //HRNFDTHD 
 
@@ -56,7 +57,7 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public FirstRunMemoryCalibration(IOsuMemoryReader reader, ISettingsHandler settings)
+        public FirstRunMemoryCalibration(IOsuMemoryReader reader, ISettings settings)
         {
             memoryReader = reader;
             _settings = settings;

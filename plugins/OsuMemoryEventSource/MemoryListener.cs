@@ -5,6 +5,9 @@ using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace OsuMemoryEventSource
 {
@@ -25,9 +28,9 @@ namespace OsuMemoryEventSource
         private MemoryDataProcessor _memoryDataProcessor;
         private PatternsDispatcher _patternsDispatcher;
         public Tokens Tokens => _memoryDataProcessor.Tokens;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
 
-        public MemoryListener(ISettingsHandler settings)
+        public MemoryListener(ISettings settings)
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
@@ -93,9 +96,10 @@ namespace OsuMemoryEventSource
             _memoryDataProcessor.SetNewMap(map);
             _patternsDispatcher.SetOutputPatterns(map.FormatedStrings);
         }
-        public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataHandler> handlers)
+
+        public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataConsumer> consumers)
         {
-            _patternsDispatcher.HighFrequencyDataHandlers = handlers;
+            _patternsDispatcher.HighFrequencyDataConsumers = consumers;
         }
 
         public void Dispose()

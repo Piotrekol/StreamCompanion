@@ -1,6 +1,5 @@
-﻿using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
+﻿using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {

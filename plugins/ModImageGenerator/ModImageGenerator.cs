@@ -8,13 +8,15 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ModImageGenerator
 {
-    class ModImageGenerator : IPlugin, ITokensProvider, ISettingsProvider
+    class ModImageGenerator : IPlugin, ITokensSource, ISettingsSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private ISaver _saver;
         ImageDeployer _imageDeployer;
         ImageGenerator _imageGenerator;
@@ -28,7 +30,7 @@ namespace ModImageGenerator
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public ModImageGenerator(ILogger logger, ISaver saver, ISettingsHandler settings)
+        public ModImageGenerator(ILogger logger, ISaver saver, ISettings settings)
         {
             _logger = logger;
             _saver = saver;

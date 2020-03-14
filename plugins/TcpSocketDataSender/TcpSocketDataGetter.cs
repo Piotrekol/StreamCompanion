@@ -5,17 +5,20 @@ using Newtonsoft.Json;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace TcpSocketDataSender
 {
-    public class TcpSocketDataGetter : IPlugin, IMapDataGetter, ISettingsProvider, IDisposable, IHighFrequencyDataHandler
+    public class TcpSocketDataGetter : IPlugin, IMapDataConsumer, ISettingsSource, IDisposable, IHighFrequencyDataConsumer
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private BlockedTcpSocketManager _liveTcpSocketManager;
         private BlockedTcpSocketManager _tcpSocketManager;
 
-        private ISettingsHandler _settings;
+        private ISettings _settings;
 
         private bool tcpSocketIsEnabled = false;
         
@@ -25,7 +28,7 @@ namespace TcpSocketDataSender
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public TcpSocketDataGetter(ISettingsHandler settings)
+        public TcpSocketDataGetter(ISettings settings)
         {
             _settings = settings;
 

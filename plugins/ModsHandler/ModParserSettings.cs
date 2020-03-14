@@ -3,15 +3,16 @@ using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace ModsHandler
 {
     public partial class ModParserSettings : UserControl
     {
         private readonly SettingNames _names = SettingNames.Instance;
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private bool init = true;
-        public ModParserSettings(ISettingsHandler settings)
+        public ModParserSettings(ISettings settings)
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;

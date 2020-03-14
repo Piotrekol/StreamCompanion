@@ -62,8 +62,8 @@
       <HintPath>..\..\packages\CollectionManager.1.0.6\lib\net471\CollectionManager.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="StreamCompanionTypes, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\osuStreamCompanionTypes.2.0.0\lib\net471\StreamCompanionTypes.dll</HintPath>
+    <Reference Include="StreamCompanionTypes, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\StreamCompanionTypes.3.0.0\lib\net471\StreamCompanionTypes.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />

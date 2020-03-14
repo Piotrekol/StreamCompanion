@@ -10,6 +10,7 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace OsuMemoryEventSource
@@ -105,7 +106,7 @@ namespace OsuMemoryEventSource
         
         private static readonly SettingNames _names = SettingNames.Instance;
 
-        public static string GetFullSongsLocation(ISettingsHandler settings)
+        public static string GetFullSongsLocation(ISettings settings)
         {
             var dir = settings.Get<string>(_names.SongsFolderLocation);
             if (dir == _names.SongsFolderLocation.Default<string>())

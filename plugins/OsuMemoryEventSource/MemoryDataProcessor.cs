@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace OsuMemoryEventSource
 {
@@ -19,7 +20,7 @@ namespace OsuMemoryEventSource
         private readonly object _lockingObject = new object();
         private OsuStatus _lastStatus = OsuStatus.Null;
         private LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         private enum InterpolatedValueName
@@ -37,7 +38,7 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
-        public MemoryDataProcessor(ISettingsHandler settings,bool enablePpSmoothing = true)
+        public MemoryDataProcessor(ISettings settings,bool enablePpSmoothing = true)
         {
             _settings = settings;
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))

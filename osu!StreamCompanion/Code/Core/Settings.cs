@@ -7,11 +7,12 @@ using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core
 {
     
-    public class Settings : ISettingsHandler
+    public class Settings : ISettings
     {
         private readonly Dictionary<string, object> _settingsEntries = new Dictionary<string, object>();
         private ILogger _logger;

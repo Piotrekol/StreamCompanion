@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ScGui
 {
@@ -11,11 +13,11 @@ namespace ScGui
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private MainForm _mainForm;
         private IMainWindowModel _mainWindowHandle;
         private readonly Delegates.Exit _exitAction;
-        private List<ISettingsProvider> _settingsList;
+        private List<ISettingsSource> _settingsList;
 
         public string Description { get; } = "";
         public string Name { get; } = "StreamCompanion GUI";
@@ -23,12 +25,12 @@ namespace ScGui
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public MainWindow(ISettingsHandler settings, IMainWindowModel mainWindowHandle, IEnumerable<ISettingsProvider> settingsProviders,Delegates.Exit exitAction)
+        public MainWindow(ISettings settings, IMainWindowModel mainWindowHandle, IEnumerable<ISettingsSource> settingsSources,Delegates.Exit exitAction)
         {
             _settings = settings;
             _mainWindowHandle = mainWindowHandle;
             _exitAction = exitAction;
-            _settingsList = settingsProviders.ToList();
+            _settingsList = settingsSources.ToList();
 
             if (!_settings.Get<bool>(_names.StartHidden))
                 ShowWindow();

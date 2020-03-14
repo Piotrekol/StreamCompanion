@@ -5,16 +5,19 @@ using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace LiveVisualizer
 {
-    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataGetter, IMapDataParser,
-        ISettingsProvider, IDisposable
+    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternGenerator,
+        ISettingsSource, IDisposable
     {
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private LiveVisualizerSettings _liveVisualizerSettings;
         private CancellationToken _token = CancellationToken.None;
-        protected ISettingsHandler Settings;
+        protected ISettings Settings;
         protected IWpfVisualizerData VisualizerData;
         private bool _disposed = false;
 
@@ -25,7 +28,7 @@ namespace LiveVisualizer
         public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "Visualizer";
 
-        public LiveVisualizerPluginBase(ISettingsHandler settings)
+        public LiveVisualizerPluginBase(ISettings settings)
         {
             Settings = settings;
             _token = _cts.Token;
@@ -50,7 +53,7 @@ namespace LiveVisualizer
             }
         }
 
-        public abstract List<IOutputPattern> GetFormatedPatterns(Tokens replacements, OsuStatus status);
+        public abstract List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status);
 
         public void Free()
         {

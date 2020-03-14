@@ -6,29 +6,30 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
 {
     public class CacheInitalizer
     {
         private readonly IMainWindowModel _mainWindowHandle;
-        private readonly ISqliteControler _sqliteControler;
-        private readonly ISettingsHandler _settings;
+        private readonly IDatabaseController _databaseControler;
+        private readonly ISettings _settings;
         private readonly ILogger _logger;
         private readonly SettingNames _names = SettingNames.Instance;
         private OsuDatabaseLoader _osuDatabaseLoader;
 
-        public CacheInitalizer(IMainWindowModel mainWindowHandle, ISqliteControler sqliteControler, ISettingsHandler settings, ILogger logger)
+        public CacheInitalizer(IMainWindowModel mainWindowHandle, IDatabaseController databaseControler, ISettings settings, ILogger logger)
         {
             _mainWindowHandle = mainWindowHandle;
-            _sqliteControler = sqliteControler;
+            _databaseControler = databaseControler;
             _settings = settings;
             _logger = logger;
         }
 
         public void Initalize()
         {
-            _osuDatabaseLoader = new OsuDatabaseLoader(new BeatmapLoaderLogger(_mainWindowHandle), _sqliteControler, new Beatmap());
+            _osuDatabaseLoader = new OsuDatabaseLoader(new BeatmapLoaderLogger(_mainWindowHandle), _databaseControler, new Beatmap());
 
             new System.Threading.Thread(() =>
             {
@@ -73,7 +74,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                     }
                     finally
                     {
-                        _sqliteControler.EndMassStoring();
+                        _databaseControler.EndMassStoring();
                     }
                 }
                 else

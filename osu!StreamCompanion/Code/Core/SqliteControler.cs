@@ -6,12 +6,13 @@ using System.Linq;
 using System.Threading;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 
 namespace osu_StreamCompanion.Code.Core
 {
 
-    public class SqliteControler : ISqliteControler
+    public class SqliteControler : IDatabaseController
     {
         private readonly SqliteConnector _sqlConnector;
         private Dictionary<string, MapIdMd5Pair> _beatmapChecksums;

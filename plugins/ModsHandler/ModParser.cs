@@ -1,18 +1,20 @@
 ﻿using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ModsHandler
 {
-    public class ModParser : CollectionManager.Modules.ModParser.ModParser, IModParser, ISettingsProvider
+    public class ModParser : CollectionManager.Modules.ModParser.ModParser, IModParser, ISettingsSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         private ModParserSettings _modParserSettings;
         public string SettingGroup { get; } = "Map matching";
 
-        public ModParser(ISettingsHandler settings)
+        public ModParser(ISettings settings)
         {
             _settings = settings;
         }

@@ -7,12 +7,15 @@ using System.Windows.Forms;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osuOverlay
 {
-    public class IngameOverlay : IPlugin, ISettingsProvider, IMapDataGetter, IDisposable
+    public class IngameOverlay : IPlugin, ISettingsSource, IMapDataConsumer, IDisposable
     {
-        private ISettingsHandler _settings;
+        private ISettings _settings;
         public string SettingGroup { get; } = "General";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
@@ -28,7 +31,7 @@ namespace osuOverlay
         public string UpdateUrl { get; } = "";
         CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
-        public IngameOverlay(ILogger logger, ISettingsHandler settings, Delegates.Exit exiter)
+        public IngameOverlay(ILogger logger, ISettings settings, Delegates.Exit exiter)
         {
             _logger = logger;
             _settings = settings;

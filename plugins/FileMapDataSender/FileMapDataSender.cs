@@ -2,10 +2,11 @@
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using StreamCompanionTypes.Interfaces.Consumers;
 
 namespace FileMapDataSender
 {
-    public class FileMapDataSender : IPlugin, IMapDataGetter, IDisposable, IHighFrequencyDataHandler
+    public class FileMapDataSender : IPlugin, IMapDataConsumer, IDisposable, IHighFrequencyDataConsumer
     {
         public bool Started { get; set; }
         private readonly FileMapManager _fileMapManager = new FileMapManager();
