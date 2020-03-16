@@ -17,7 +17,7 @@ namespace OsuMemoryEventSource
     {
         public string SettingGroup { get; } = "Map matching";
         public int Priority { get; set; } = 100;
-        public OsuMemoryEventSource(ILogger logger, ISettings settings, IDatabaseController databaseController, IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers) : base(logger, settings, databaseController, modParser, highFrequencyDataConsumers)
+        public OsuMemoryEventSource(IContextAwareLogger logger, ISettings settings, IDatabaseController databaseController, IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers) : base(logger, settings, databaseController, modParser, highFrequencyDataConsumers)
         {
         }
 

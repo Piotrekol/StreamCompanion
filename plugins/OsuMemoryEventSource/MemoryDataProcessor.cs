@@ -21,6 +21,7 @@ namespace OsuMemoryEventSource
         private OsuStatus _lastStatus = OsuStatus.Null;
         private LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
         private ISettings _settings;
+        private readonly IContextAwareLogger _logger;
         private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         private enum InterpolatedValueName
@@ -38,9 +39,10 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
-        public MemoryDataProcessor(ISettings settings,bool enablePpSmoothing = true)
+        public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, bool enablePpSmoothing = true)
         {
             _settings = settings;
+            _logger = logger;
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
             {
                 InterpolatedValues.Add(v, new InterpolatedValue(0.15));
@@ -195,8 +197,22 @@ namespace OsuMemoryEventSource
             var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
             var notPlaying = (OsuStatus)(OsuStatus.All - OsuStatus.Playing);
             _liveTokens["status"] = new LiveToken(_tokenSetter("status", OsuStatus.Null, TokenType.Live, "", OsuStatus.Null), null);
-            _liveTokens["skin"] = new LiveToken(_tokenSetter("skin", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () => _reader?.GetSkinFolderName() ?? string.Empty);
-            _liveTokens["skinPath"] = new LiveToken(_tokenSetter("skinPath", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () => Path.Combine(osuSkinsDirectory, (string)_liveTokens["skin"].Token.Value));
+            _liveTokens["skin"] = new LiveToken(_tokenSetter("skin", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () =>_reader?.GetSkinFolderName() ?? string.Empty);
+            _liveTokens["skinPath"] = new LiveToken(_tokenSetter("skinPath", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () =>
+            {
+                try
+                {
+                    return Path.Combine(osuSkinsDirectory, (string) _liveTokens["skin"].Token.Value);
+                }
+                catch (ArgumentException ex)
+                {
+                    _logger.SetContextData("!skin!",$"{_liveTokens["skin"].Token.Value}");
+                    _logger.SetContextData("osuSkinsDirectory", $"{osuSkinsDirectory}");
+                    _logger.Log(ex, LogLevel.Error);
+                    return string.Empty;
+                }
+            });
+
             _liveTokens["acc"] = new LiveToken(_tokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Acc);
             _liveTokens["300"] = new LiveToken(_tokenSetter("300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C300);
             _liveTokens["100"] = new LiveToken(_tokenSetter("100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C100);

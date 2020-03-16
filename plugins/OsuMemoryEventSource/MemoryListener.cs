@@ -1,4 +1,4 @@
-﻿using CollectionManager.Enums;
+using CollectionManager.Enums;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -30,12 +30,12 @@ namespace OsuMemoryEventSource
         public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettings _settings;
 
-        public MemoryListener(ISettings settings)
+        public MemoryListener(ISettings settings, IContextAwareLogger logger)
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
 
-            _memoryDataProcessor = new MemoryDataProcessor(settings);
+            _memoryDataProcessor = new MemoryDataProcessor(settings, logger);
             _patternsDispatcher = new PatternsDispatcher();
             _memoryDataProcessor.TokensUpdated += (_, status) => _patternsDispatcher.TokensUpdated(status);
             _memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));

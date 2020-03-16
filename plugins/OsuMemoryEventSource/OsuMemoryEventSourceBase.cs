@@ -47,7 +47,7 @@ namespace OsuMemoryEventSource
 
         protected bool MemoryPoolingIsEnabled = false;
 
-        public OsuMemoryEventSourceBase(ILogger logger, ISettings settings, IDatabaseController databaseControler, IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers)
+        public OsuMemoryEventSourceBase(IContextAwareLogger logger, ISettings settings, IDatabaseController databaseControler, IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers)
         {
             _settings = settings;
             _databaseController = databaseControler;
@@ -76,7 +76,7 @@ namespace OsuMemoryEventSource
                 _timer = new Timer(TimerCallback, null, 250, Int32.MaxValue);
 
 
-            _memoryListener = new MemoryListener(settings);
+            _memoryListener = new MemoryListener(settings, logger);
             _memoryListener.NewOsuEvent += async (s, args) =>
             {
                 while (NewOsuEvent == null)
@@ -90,7 +90,7 @@ namespace OsuMemoryEventSource
 
             Started = true;
         }
-        
+
         public void CreateTokens(MapSearchResult map)
         {
             //No need to do anything, tokens are created in MemoryDataProcessor.InitLiveTokens() and are constantly updated(live)
