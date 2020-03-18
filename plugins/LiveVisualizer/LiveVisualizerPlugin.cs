@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -135,7 +134,7 @@ namespace LiveVisualizer
             }
         }
 
-        protected override void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token)
+        protected override void ProcessNewMap(MapSearchResult mapSearchResult)
         {
             if (VisualizerData == null ||
                 !mapSearchResult.FoundBeatmaps ||
@@ -160,12 +159,12 @@ namespace LiveVisualizer
             }
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-
+            
             var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
                 mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
 
             var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-
+            
             var strains = new Dictionary<int, double>(300);
 
             //Length refers to beatmap time, not song total time
@@ -180,8 +179,9 @@ namespace LiveVisualizer
                
                 while (time + strainLength / 2 < mapLength)
                 {
-                    if (token.IsCancellationRequested)
+                    if (Cts.Token.IsCancellationRequested)
                         return;
+
                     var a = new Dictionary<string, double>();
                     var strain = ppCalculator.Calculate(time, time + strainLength, a);
 
@@ -232,7 +232,6 @@ namespace LiveVisualizer
                 _ppCalculator = ppCalculator;
             }
         }
-
         private void SetAxisValues()
         {
             if (VisualizerData.Display.Strains != null && VisualizerData.Display.Strains.Any())

@@ -14,12 +14,12 @@ namespace LiveVisualizer
     public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternGenerator,
         ISettingsSource, IDisposable
     {
-        private CancellationTokenSource _cts = new CancellationTokenSource();
+        protected CancellationTokenSource Cts = new CancellationTokenSource();
         private LiveVisualizerSettings _liveVisualizerSettings;
-        private CancellationToken _token = CancellationToken.None;
         protected ISettings Settings;
         protected IWpfVisualizerData VisualizerData;
-        private bool _disposed = false;
+        private Task processNewMapTask;
+        private bool disposed = false;
 
         public string Description { get; } = "";
         public string Name { get; } = "LiveVisualizer";
@@ -31,25 +31,27 @@ namespace LiveVisualizer
         public LiveVisualizerPluginBase(ISettings settings)
         {
             Settings = settings;
-            _token = _cts.Token;
         }
         public virtual void Dispose()
         {
-            _disposed = true;
-            _cts?.Dispose();
+            disposed = true;
             _liveVisualizerSettings?.Dispose();
         }
 
         public async void SetNewMap(MapSearchResult mapSearchResult)
         {
-            CancelNewMapProcessing();
+            if (disposed)
+                return;
 
-            try
+            Cts.Cancel();
+            if (processNewMapTask != null)
+                await processNewMapTask.ConfigureAwait(false);
+
+            if (processNewMapTask == null || processNewMapTask.IsCanceled || processNewMapTask.IsFaulted ||
+                processNewMapTask.IsCompleted)
             {
-                await Task.Run(() => ProcessNewMap(mapSearchResult, _token), _token);
-            }
-            catch (TaskCanceledException)
-            {
+                Cts = new CancellationTokenSource();
+                processNewMapTask = Task.Run(() => ProcessNewMap(mapSearchResult), Cts.Token);
             }
         }
 
@@ -71,21 +73,8 @@ namespace LiveVisualizer
             return _liveVisualizerSettings;
         }
 
-        private void CancelNewMapProcessing()
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            _cts.Cancel();
-            _cts.Dispose();
-            _cts = new CancellationTokenSource();
-            _token = _cts.Token;
-        }
-
         protected abstract void ResetSettings();
 
-        protected abstract void ProcessNewMap(MapSearchResult mapSearchResult, CancellationToken token);
+        protected abstract void ProcessNewMap(MapSearchResult mapSearchResult);
     }
 }
