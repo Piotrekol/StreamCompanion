@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Services;
@@ -17,19 +18,20 @@ namespace BackgroundImageProvider
 
         private readonly ISaver _saver;
         private readonly ISettings _settings;
+        private readonly IContextAwareLogger _logger;
         private Tokens.TokenSetter _tokenSetter;
         private IToken _imageToken;
         private string _saveLocation;
         private string _lastCopiedFileLocation;
 
-        public BackgroundImageProviderPlugin(ISaver saver, ISettings settings)
+        public BackgroundImageProviderPlugin(ISaver saver, ISettings settings, IContextAwareLogger logger)
         {
             _saver = saver;
             _settings = settings;
+            _logger = logger;
             _saveLocation = Path.Combine(_saver.SaveDirectory, "BG.png");
             _tokenSetter = Tokens.CreateTokenSetter(Name);
             _imageToken = _tokenSetter("backgroundImage", null);
-
         }
 
         protected void InternalCreateTokens(MapSearchResult map, int retryCount)
@@ -70,14 +72,26 @@ namespace BackgroundImageProvider
 
         private string ImageToBase64(string imageLocation)
         {
-            using (System.Drawing.Image image = System.Drawing.Image.FromFile(imageLocation))
+            try
             {
-                using (MemoryStream m = new MemoryStream())
+                using (System.Drawing.Image image = System.Drawing.Image.FromFile(imageLocation))
                 {
-                    image.Save(m, image.RawFormat);
-                    byte[] imageBytes = m.ToArray();
-                    return Convert.ToBase64String(imageBytes);
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, image.RawFormat);
+                        byte[] imageBytes = m.ToArray();
+                        return Convert.ToBase64String(imageBytes);
+                    }
                 }
+            }
+            catch (ExternalException ex)
+            {
+                var fileInfo = new FileInfo(imageLocation);
+                _logger.SetContextData("backgroundImageFilename", fileInfo.Name);
+                _logger.SetContextData("backgroundImageSize", fileInfo.Length.ToString());
+                _logger.SetContextData("backgroundImageExternalExceptionCode", ex.ErrorCode.ToString());
+                _logger.Log(ex, LogLevel.Error);
+                return string.Empty;
             }
         }
     }
