@@ -38,6 +38,7 @@ namespace osuOverlayLoader
             {
                 Log("Already loaded");
                 BeforeExit();
+                Console.Write($@"0,0,Loaded");
                 Environment.Exit(0);
             }
 
@@ -45,6 +46,7 @@ namespace osuOverlayLoader
             {
                 Log("Not loaded");
                 BeforeExit();
+                Console.Write($@"1,0,NotLoaded");
                 Environment.Exit(1);
             }
 

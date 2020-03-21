@@ -174,6 +174,9 @@ namespace osuOverlay
                 case -1:
                     message = "Could not spawn helper process";
                     break;
+                case -3:
+                    message = "helper process exited without returning any data. Consider reinstalling ingameOverlay plugin.";
+                    break;
                 case (int)InjectionResult.DllNotFound:
                     message =
                         "Could not find osuOverlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
