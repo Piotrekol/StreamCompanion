@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace PpCalculator
 {
@@ -35,24 +36,6 @@ namespace PpCalculator
         }
 
         /// <summary>
-        /// Returns initalized performance calculator suitable for given beatmap<para/>
-        /// Reuses provided calculator if possible
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="ppCalculator"></param>
-        /// <returns></returns>
-        public static PpCalculator GetPpCalculator(string file, PpCalculator ppCalculator)
-        {
-            var workingBeatmap = new ProcessorWorkingBeatmap(file);
-
-            ppCalculator = GetPpCalculator(workingBeatmap.BeatmapInfo.RulesetID, ppCalculator);
-            
-            ppCalculator?.PreProcess(workingBeatmap);
-
-            return ppCalculator;
-        }
-
-        /// <summary>
         /// Returns performance calculator suitable for given beatmap<para/>
         /// Reuses provided calculator if possible
         /// </summary>
@@ -66,27 +49,38 @@ namespace PpCalculator
 
             return GetPpCalculator(rulesetId);
         }
-        
+
 
 
         /// <summary>
         /// Returns initalized performance calculator for specified ruleset(gamemode)<para/>
         /// Reuses provided calculator if possible
         /// </summary>
-        /// <param name="rulesetId"></param>
-        /// <param name="file"></param>
-        /// <param name="ppCalculator"></param>
+        /// <param name="rulesetId">osu! gamemode id</param>
+        /// <param name="file">.osu file to read</param>
+        /// <param name="ppCalculator">Existing <see cref="PpCalculator"/> instance, if any.</param>
         /// <returns></returns>
         public static PpCalculator GetPpCalculator(int rulesetId, string file, PpCalculator ppCalculator)
+            => InternalGetPpCalculator(rulesetId, file, ppCalculator, 0);
+
+        private static PpCalculator InternalGetPpCalculator(int rulesetId, string file, PpCalculator ppCalculator,
+            int retryCount)
         {
             if (rulesetId != ppCalculator?.RulesetId)
                 ppCalculator = GetPpCalculator(rulesetId);
-
-            ppCalculator?.PreProcess(new ProcessorWorkingBeatmap(file));
+            try
+            {
+                ppCalculator?.PreProcess(new ProcessorWorkingBeatmap(file));
+            }
+            catch (IOException)
+            {
+                //file is being used by another process..
+                if (retryCount < 5)
+                    return InternalGetPpCalculator(rulesetId, file, ppCalculator, ++retryCount);
+            }
 
             return ppCalculator;
         }
-
 
         /// <summary>
         /// Picks valid rulesetId for specified map ruleset
