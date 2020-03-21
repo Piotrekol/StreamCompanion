@@ -69,7 +69,11 @@ namespace osuOverlayLoader
 
             var result = Inject(dllLocation);
             Log(result.ToString());
-            await Task.Delay(2000);
+            if (!NoConsole)
+                await Task.Delay(2000);
+            else
+                Console.Write($@"{result.ErrorCode},{result.Win32Error},{result.InjectionResult}");
+
             BeforeExit();
             Environment.Exit((int)result.InjectionResult);
         }
