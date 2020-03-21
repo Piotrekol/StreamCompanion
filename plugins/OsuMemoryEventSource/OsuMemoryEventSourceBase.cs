@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -10,6 +12,7 @@ using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
+using Timer = System.Threading.Timer;
 
 namespace OsuMemoryEventSource
 {
@@ -35,7 +38,7 @@ namespace OsuMemoryEventSource
         protected IDatabaseController _databaseController;
         protected IModParser _modParser;
         protected ISettings _settings;
-        internal static ILogger Logger;
+        internal static IContextAwareLogger Logger;
         protected IOsuMemoryReader _memoryReader;
         protected MemoryListener _memoryListener;
 
@@ -111,7 +114,29 @@ namespace OsuMemoryEventSource
                 return;
             }
 
-            _memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
+            try
+            {
+                _memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
+            }
+            catch (Win32Exception ex)
+            {
+                //ERROR_ACCESS_DENIED
+                if (ex.NativeErrorCode == 5)
+                {
+                    var nl = Environment.NewLine;
+                    DisableTimer();
+                    MessageBox.Show("StreamCompanion doesn't have enough permissions to access osu! data." + nl +
+                                    "Majority of live tokens, pp counts, modded star rating will not work." + nl +
+                                    "Reading of live osu! data has been disabled for this StreamCompanion run, restart to try again.",
+                        "StreamCompanion - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    Logger.SetContextData("ErrorCode", ex.ErrorCode.ToString());
+                    Logger.SetContextData("NativeErrorCode", ex.NativeErrorCode.ToString());
+                    throw;
+                }
+            }
         }
         private void TimerCallback(object state)
         {
