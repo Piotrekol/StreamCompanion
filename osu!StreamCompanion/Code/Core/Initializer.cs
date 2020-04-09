@@ -105,8 +105,8 @@ namespace osu_StreamCompanion.Code.Core
 
         public void Exit()
         {
-            Settings.Save();
             DiContainer.Container.Dispose();
+            Settings.Save();
         }
     }
 }
