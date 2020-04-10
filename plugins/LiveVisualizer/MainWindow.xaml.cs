@@ -22,11 +22,23 @@ namespace LiveVisualizer
             this.frameholderTimer.Content = new Chart(data, $"{nameof(IWpfVisualizerData.Configuration)}.{nameof(IWpfVisualizerData.Configuration.ChartProgressColor)}", true);
         }
 
+        public void ForceGraphUpdate()
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(ForceGraphUpdate);
+                return;
+            }
+
+            ((Chart)frameholder.Content).chart.Update();
+            ((Chart)frameholderTimer.Content).chart.Update();
+        }
+
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
         }
-
+        
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var data = (IWpfVisualizerData)DataContext;
