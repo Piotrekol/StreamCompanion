@@ -218,6 +218,12 @@ namespace OsuMemoryEventSource
             _liveTokens["100"] = new LiveToken(_tokenSetter("100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C100);
             _liveTokens["50"] = new LiveToken(_tokenSetter("50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C50);
             _liveTokens["miss"] = new LiveToken(_tokenSetter("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.CMiss);
+            _liveTokens["playTime"] = new LiveToken(_tokenSetter("playTime", 0d, TokenType.Live, "{0:mm\\:ss}", 0d), () =>
+            {
+                if (_rawData.PlayTime != 0)
+                    return TimeSpan.FromMilliseconds(_rawData.PlayTime);
+                return TimeSpan.Zero;
+            });
             _liveTokens["time"] = new LiveToken(_tokenSetter("time", 0d, TokenType.Live, "{0:0.00}", 0d), () =>
             {
                 if (_rawData.PlayTime != 0)
