@@ -199,6 +199,7 @@
     <Compile Include="Code\Helpers\ListExtensions.cs" />
     <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
     <Compile Include="Code\Core\Loggers\MainLogger.cs" />
+    <Compile Include="Code\Modules\TokensPreview\DrawingControl.cs" />
     <Compile Include="Code\Modules\TokensPreview\TokensPreview.cs" />
     <Compile Include="Code\Modules\TokensPreview\TokensPreviewSettings.cs">
       <SubType>UserControl</SubType>

@@ -48,34 +48,58 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             {
             }
         }
-        public void Clear()
-        {
-
-        }
 
         private List<KeyValuePair<string, IToken>> liveTokens = null;
         public void Add(Dictionary<string, IToken> replacements)
         {
             if (InvokeRequired)
             {
-                BeginInvoke((MethodInvoker)(() => { Add(replacements); }));
+                BeginInvoke((MethodInvoker) (() => { Add(replacements); }));
                 return;
             }
 
             var notHidden = replacements.Where(x => (x.Value.Type & TokenType.Hidden) == 0).ToList();
-            var normal = notHidden.Where(t => t.Value.Type == TokenType.Normal);
+            var normal = notHidden.Where(t => t.Value.Type == TokenType.Normal).ToList();
             var live = notHidden.Where(t => t.Value.Type == TokenType.Live).ToList();
 
-            var size = AddHeader("Live tokens (avaliable only when playing or watching)", 20);
-            size.Height += 25;
-            size += ProcessReplacements(live, 5, size.Height);
+            DrawingControl.SuspendDrawing(this);
+            try
+            {
+                var currentRect = new Size(0, 25);
+                currentRect += AddHeader("Live tokens (not always avaliable, not saved to files on disk)", currentRect.Height);
+                currentRect += DrawTokens(live, currentRect.Height);
+                currentRect.Height += 10;
+                currentRect += AddHeader("Regular tokens", currentRect.Height);
+                currentRect += DrawTokens(normal, currentRect.Height);
 
-            size.Height += 5;
-            size += AddHeader("Regular tokens", size.Height);
-            size += ProcessReplacements(normal, 5, size.Height);
+                liveTokens = live;
+                label_ListedNum.Text = notHidden.Count.ToString();
+            }
+            finally
+            {
+                DrawingControl.ResumeDrawing(this);
+            }
+        }
 
-            liveTokens = live;
-            label_ListedNum.Text = notHidden.Count.ToString();
+        private Size DrawTokens(IEnumerable<KeyValuePair<string, IToken>> tokens, int startHeight)
+        {
+            var size = new Size(0, 0);
+            var tokensByPlugin = tokens.GroupBy(kv => kv.Value.PluginName).OrderBy(k => k.Key);
+            foreach (var tokensGroup in tokensByPlugin)
+            {
+                size.Height += 2;
+                size += DrawSection($"plugin: {tokensGroup.Key}", tokensGroup.ToList(), size.Height + startHeight);
+            }
+
+            return size;
+        }
+
+        private Size DrawSection(string sectionName, IEnumerable<KeyValuePair<string, IToken>> tokens, int startHeight)
+        {
+            var size = AddHeader(sectionName, startHeight);
+            size.Height += 2;
+            size += ProcessReplacements(tokens, 5, startHeight + size.Height);
+            return size;
         }
 
         private Size ProcessReplacements(IEnumerable<KeyValuePair<string, IToken>> replacements, int xPosition = 30, int yPosition = 30)
@@ -106,7 +130,10 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             foreach (var tokenKv in replacementsCopy)
             {
                 string labelName = "V" + tokenKv.Key;
-                var labelRect = AddLabel(labelName, tokenKv.Value.FormatedValue, maxLabelWidth + 10, yPosition + 2);
+                var value = tokenKv.Value.FormatedValue;
+                if (value.Length > 150)
+                    value = value.Substring(0, 150)+"...(Preview truncated)";
+                var labelRect = AddLabel(labelName, value, maxLabelWidth + 10, yPosition + 2);
                 lineWidths.Add(labelRect.Width);
                 yPosition += Math.Max(labelRect.Height, buttonRect.Height);
             }
@@ -126,6 +153,7 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             }
             else
             {
+                p.VerticalScroll.Value = 0;
                 control = new T
                 {
                     Location = new Point(xPosition, yPosition),
@@ -178,6 +206,7 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             }
             else
             {
+                p.VerticalScroll.Value = 0;
                 label = new Label
                 {
                     Location = new Point(2, yPosition),
