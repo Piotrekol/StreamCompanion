@@ -174,7 +174,6 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"mode", null},
                     {"source", null},
                     {"dir", null},
-                    {"lb", null},
                 };
             }
             else
@@ -221,9 +220,10 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"mode", bm.PlayMode.GetHashCode().ToString()},
                     {"source", bm.Source},
                     {"dir", bm.Dir},
-                    {"lb", Environment.NewLine},
                 };
             }
+
+            dict["lb"] = Environment.NewLine;
 
             return dict;
         }
