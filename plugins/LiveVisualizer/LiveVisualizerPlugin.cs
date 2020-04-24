@@ -21,6 +21,7 @@ namespace LiveVisualizer
         private MainWindow _visualizerWindow;
         private PpCalculator.PpCalculator _ppCalculator;
         private readonly object _ppCalculatorLock = new object();
+        private CancellationTokenSource cts = new CancellationTokenSource();
 
         private List<KeyValuePair<string, IToken>> _liveTokens;
         private IToken _ppToken;
@@ -309,6 +310,9 @@ namespace LiveVisualizer
                 }
 
                 Thread.Sleep(22);
+
+                if (cts.Token.IsCancellationRequested)
+                    return;
             }
         }
 
@@ -342,6 +346,8 @@ namespace LiveVisualizer
 
         public override void Dispose()
         {
+            cts.Cancel();
+            _visualizerWindow.Close();
             base.Dispose();
         }
 
