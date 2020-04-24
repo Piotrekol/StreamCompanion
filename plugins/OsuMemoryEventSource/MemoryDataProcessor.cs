@@ -285,9 +285,17 @@ namespace OsuMemoryEventSource
         {
             foreach (var liveToken in _liveTokens)
             {
-                if (liveToken.Value.Token.CanSave(status))
+                try
                 {
-                    liveToken.Value.Update(status);
+                    if (liveToken.Value.Token.CanSave(status))
+                    {
+                        liveToken.Value.Update(status);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.Data["liveTokenName"] = liveToken.Key;
+                    throw;
                 }
             }
             _tokensUpdated();
