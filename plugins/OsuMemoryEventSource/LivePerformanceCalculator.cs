@@ -19,29 +19,29 @@ namespace OsuMemoryEventSource
         private string _currentOsuFileLocation = null;
         private PlayMode _currentPlayMode;
 
-        private PpCalculator.PpCalculator _ppCalculator = null;
+        public PpCalculator.PpCalculator PpCalculator { get; private set; }
 
         public void SetCurrentMap(IBeatmap beatmap, string mods, string osuFileLocation, PlayMode playMode)
         {
             if (beatmap == null)
             {
-                _ppCalculator = null;
+                PpCalculator = null;
                 return;
             }
-
+            
             _currentBeatmap = beatmap;
             _currentMods = mods;
             _currentOsuFileLocation = osuFileLocation;
             _currentPlayMode = playMode;
 
-            _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, _ppCalculator);
+            PpCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, PpCalculator);
 
-            if (_ppCalculator == null)
+            if (PpCalculator == null)
                 return;
 
-            _ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            PpCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            _ppCalculator.PreProcess(osuFileLocation);
+            PpCalculator.PreProcess(osuFileLocation);
         }
 
 
@@ -49,27 +49,27 @@ namespace OsuMemoryEventSource
         {
             double pp = double.NaN;
 
-            if (_ppCalculator == null || _currentPlayMode == PlayMode.OsuMania)
+            if (PpCalculator == null || _currentPlayMode == PlayMode.OsuMania)
                 return pp;
 
             try
             {
                 if (PlayTime <= 0)
                 {
-                    _ppCalculator.Goods = 0;
-                    _ppCalculator.Mehs = 0;
-                    _ppCalculator.Combo = null;
-                    _ppCalculator.PercentCombo = 100;
-                    return _ppCalculator.Calculate(); //fc pp
+                    PpCalculator.Goods = 0;
+                    PpCalculator.Mehs = 0;
+                    PpCalculator.Combo = null;
+                    PpCalculator.PercentCombo = 100;
+                    return PpCalculator.Calculate(); //fc pp
                 }
 
-                var comboLeft = _ppCalculator.GetMaxCombo((int)PlayTime);
+                var comboLeft = PpCalculator.GetMaxCombo((int)PlayTime);
 
                 var newMaxCombo = Math.Max(Play.MaxCombo, comboLeft + Play.Combo);
 
-                _ppCalculator.Combo = newMaxCombo;
+                PpCalculator.Combo = newMaxCombo;
 
-                pp = _ppCalculator.Calculate(null);
+                pp = PpCalculator.Calculate(null);
 
             }
             catch { }
@@ -92,15 +92,15 @@ namespace OsuMemoryEventSource
         public double PPIfBeatmapWouldEndNow()
         {
 
-            if (_ppCalculator != null && PlayTime > 0)
+            if (PpCalculator != null && PlayTime > 0)
                 try
                 {
-                    _ppCalculator.Goods = Play.C100;
-                    _ppCalculator.Mehs = Play.C50;
-                    _ppCalculator.Misses = Play.CMiss;
-                    _ppCalculator.Combo = Play.MaxCombo;
-                    _ppCalculator.Score = Play.Score;
-                    var pp = _ppCalculator.Calculate(PlayTime, attribs);
+                    PpCalculator.Goods = Play.C100;
+                    PpCalculator.Mehs = Play.C50;
+                    PpCalculator.Misses = Play.CMiss;
+                    PpCalculator.Combo = Play.MaxCombo;
+                    PpCalculator.Score = Play.Score;
+                    var pp = PpCalculator.Calculate(PlayTime, attribs);
                     if (!double.IsInfinity(pp))
                     {
                         switch (_currentPlayMode)
@@ -138,18 +138,18 @@ namespace OsuMemoryEventSource
         {
             double pp = double.NaN;
 
-            if (_ppCalculator == null || _currentPlayMode == PlayMode.OsuMania)
+            if (PpCalculator == null || _currentPlayMode == PlayMode.OsuMania)
                 return pp;
 
             try
             {
-                _ppCalculator.Goods = Play.C100;
-                _ppCalculator.Mehs = Play.C50;
-                _ppCalculator.Misses = 0;
-                _ppCalculator.Combo = null;
-                _ppCalculator.PercentCombo = 100;
-                _ppCalculator.Score = Play.Score;
-                pp = _ppCalculator.Calculate(PlayTime, null);
+                PpCalculator.Goods = Play.C100;
+                PpCalculator.Mehs = Play.C50;
+                PpCalculator.Misses = 0;
+                PpCalculator.Combo = null;
+                PpCalculator.PercentCombo = 100;
+                PpCalculator.Score = Play.Score;
+                pp = PpCalculator.Calculate(PlayTime, null);
 
                 if (double.IsInfinity(pp))
                 {

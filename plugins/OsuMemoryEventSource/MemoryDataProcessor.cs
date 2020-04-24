@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CollectionManager.DataTypes;
 using StreamCompanionTypes.Interfaces.Services;
 
 namespace OsuMemoryEventSource
@@ -229,6 +230,19 @@ namespace OsuMemoryEventSource
                 if (_rawData.PlayTime != 0)
                     return _rawData.PlayTime / 1000d;
                 return 0d;
+            });
+            _liveTokens["timeLeft"] = new LiveToken(_tokenSetter("timeLeft", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero), () =>
+            {
+                var beatmapLength = _rawData.PpCalculator?.WorkingBeatmap?.Length;
+                if (beatmapLength.HasValue)
+                {
+                    var timeLeft = TimeSpan.FromMilliseconds(beatmapLength.Value) - (TimeSpan)_liveTokens["mapPosition"].Token.Value;
+                    return timeLeft.Ticks <= 0
+                        ? TimeSpan.Zero
+                        : timeLeft;
+                }
+
+                return TimeSpan.Zero;
             });
             _liveTokens["combo"] = new LiveToken(_tokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.Combo);
             _liveTokens["score"] = new LiveToken(_tokenSetter("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, OsuStatus.Playing), () => _rawData.Play.Score);

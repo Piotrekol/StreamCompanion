@@ -13,7 +13,7 @@ namespace PpCalculator
 {
     public abstract class PpCalculator
     {
-        public WorkingBeatmap WorkingBeatmap { get; private set; }
+        public ProcessorWorkingBeatmap WorkingBeatmap { get; private set; }
         public IBeatmap PlayableBeatmap { get; private set; }
         public abstract Ruleset Ruleset { get; }
 
