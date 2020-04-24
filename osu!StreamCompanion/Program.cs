@@ -2,6 +2,7 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -144,6 +145,7 @@ namespace osu_StreamCompanion
             else
             {
 #if DEBUG
+                WaitForDebugger((Exception) e.ExceptionObject);
                 throw (Exception)e.ExceptionObject;
 #endif
 #pragma warning disable 162
@@ -159,7 +161,33 @@ namespace osu_StreamCompanion
 #pragma warning restore 162
             }
         }
-        
+#if DEBUG
+        private static void WaitForDebugger(Exception ex)
+        {
+            var result = MessageBox.Show($"Unhandled error: attach debugger?{Environment.NewLine}" +
+                                         $"press Yes to attach local debugger{Environment.NewLine}" +
+                                         $"press No to wait for debugger (Application will freeze){Environment.NewLine}" +
+                                         $"press cancel to ignore and continue error handling as usual{Environment.NewLine}" +
+                                         $"{ex}", "Error - attach debugger?",MessageBoxButtons.YesNoCancel);
+            switch (result)
+            {
+                case DialogResult.Cancel:
+                    return;
+                case DialogResult.Yes:
+                    Debugger.Launch();
+                    break;
+                case DialogResult.No:
+                    break;
+            }
+
+            while (!Debugger.IsAttached)
+            {
+                Thread.Sleep(100);
+            }
+
+            Debugger.Break();
+        }
+#endif
         private static (bool SendReport, string Message) GetErrorData()
         {
             // ReSharper disable ConditionIsAlwaysTrueOrFalse
@@ -191,7 +219,9 @@ namespace osu_StreamCompanion
                 ex.Data.Add("netFramework", GetDotNetVersion.Get45PlusFromRegistry());
 
                 var errorConsensus = GetErrorData();
-
+#if DEBUG
+                WaitForDebugger(ex);
+#endif
 #if WITHSENTRY
                 if (errorConsensus.SendReport)
                 {
