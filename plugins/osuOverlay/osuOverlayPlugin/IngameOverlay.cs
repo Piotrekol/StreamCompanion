@@ -119,6 +119,7 @@ namespace osuOverlay
 
             try
             {
+                InjectionResult lastResult = InjectionResult.GameProcessNotFound;
                 while (true)
                 {
                     if (token.IsCancellationRequested)
@@ -126,11 +127,12 @@ namespace osuOverlay
 
                     if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
-                        var isAlreadyInjected = RunHelperProcess(true, true).ExitCode == 0;
+                        var helperProcessResult = RunHelperProcess(true, true);
+                        var isAlreadyInjected = helperProcessResult.ExitCode == 0;
                         int exitCode = 0;
                         if (!isAlreadyInjected)
                         {
-                            if (_currentOsuProcess == null && GetOsuProcess() != null)
+                            if (_currentOsuProcess == null && GetOsuProcess() != null && lastResult != InjectionResult.Timeout)
                             {
                                 _ = Task.Run(() =>
                                 {
@@ -140,9 +142,10 @@ namespace osuOverlay
                                 });
                             }
 
-                            var helperProcessResult = RunHelperProcess(true);
+                            helperProcessResult = RunHelperProcess(true);
                             exitCode = helperProcessResult.ExitCode;
                             HandleHelperProcessResult(helperProcessResult, true);
+                            lastResult = (InjectionResult)helperProcessResult.ExitCode;
                         }
 
                         if (exitCode == 0)
@@ -196,6 +199,7 @@ namespace osuOverlay
                     }
 
                 case (int)InjectionResult.GameProcessNotFound:
+                case (int)InjectionResult.Timeout:
                 case (int)InjectionResult.Success:
                     return;
             }

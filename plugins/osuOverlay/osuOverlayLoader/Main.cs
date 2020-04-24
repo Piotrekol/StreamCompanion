@@ -10,7 +10,6 @@ namespace osuOverlayLoader
     public class Main : ApplicationContext
     {
         public bool NoConsole = false;
-
         private void Log(string message)
         {
             if (NoConsole)
@@ -51,6 +50,8 @@ namespace osuOverlayLoader
             }
 
             Environment.ExitCode = 1;
+            if (NoConsole)
+                _ = Task.Run(TimeoutCheck);
 
             while (GetOsuProcess() != null)
             {
@@ -78,6 +79,22 @@ namespace osuOverlayLoader
 
             BeforeExit();
             Environment.Exit((int)result.InjectionResult);
+        }
+
+        private async Task TimeoutCheck()
+        {
+            if (!NoConsole)
+                return;
+            var stopTime = Process.GetCurrentProcess().StartTime.AddSeconds(30);
+            while (true)
+            {
+                await Task.Delay(500);
+                if (DateTime.Now > stopTime)
+                {
+                    Console.Write($@"0,0,{DllInjectionResult.Timeout}");
+                    Environment.Exit((int)DllInjectionResult.Timeout);
+                }
+            }
         }
 
         private void BeforeExit()
