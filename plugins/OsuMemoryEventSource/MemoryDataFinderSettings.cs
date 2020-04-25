@@ -18,7 +18,7 @@ namespace OsuMemoryEventSource
             _settings = settings;
 
             checkBox_enableSmoothPp.Checked = _settings.Get<bool>(Helpers.EnablePpSmoothing);
-
+            checkBox_saveLiveTokensToDisk.Checked = _settings.Get<bool>(OsuMemoryEventSourceBase.SaveLiveTokensOnDisk);
             bool isFallback = _settings.Get<bool>(_names.OsuFallback);
             if (isFallback)
             {
@@ -50,6 +50,12 @@ namespace OsuMemoryEventSource
         {
             if (init) return;
             _settings.Add(Helpers.EnablePpSmoothing.Name, checkBox_enableSmoothPp.Checked, true);
+        }
+
+        private void checkBox_saveLiveTokensToDisk_CheckedChanged(object sender, EventArgs e)
+        {
+            if (init) return;
+            _settings.Add(OsuMemoryEventSourceBase.SaveLiveTokensOnDisk.Name, checkBox_saveLiveTokensToDisk.Checked, true);
         }
     }
 }

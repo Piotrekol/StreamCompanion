@@ -31,6 +31,7 @@
             this.checkBox_EnableMemoryFinder = new System.Windows.Forms.CheckBox();
             this.checkBox_EnableMemoryPooling = new System.Windows.Forms.CheckBox();
             this.checkBox_enableSmoothPp = new System.Windows.Forms.CheckBox();
+            this.checkBox_saveLiveTokensToDisk = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // checkBox_EnableMemoryFinder
@@ -69,15 +70,28 @@
             this.checkBox_enableSmoothPp.UseVisualStyleBackColor = true;
             this.checkBox_enableSmoothPp.CheckedChanged += new System.EventHandler(this.checkBox_enableSmoothPp_CheckedChanged);
             // 
+            // checkBox_saveLiveTokensToDisk
+            // 
+            this.checkBox_saveLiveTokensToDisk.AutoSize = true;
+            this.checkBox_saveLiveTokensToDisk.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.checkBox_saveLiveTokensToDisk.Location = new System.Drawing.Point(3, 72);
+            this.checkBox_saveLiveTokensToDisk.Name = "checkBox_saveLiveTokensToDisk";
+            this.checkBox_saveLiveTokensToDisk.Size = new System.Drawing.Size(361, 17);
+            this.checkBox_saveLiveTokensToDisk.TabIndex = 8;
+            this.checkBox_saveLiveTokensToDisk.Text = "Output live tokens to text files on disk (SLOW, NOT RECOMMENDED)";
+            this.checkBox_saveLiveTokensToDisk.UseVisualStyleBackColor = true;
+            this.checkBox_saveLiveTokensToDisk.CheckedChanged += new System.EventHandler(this.checkBox_saveLiveTokensToDisk_CheckedChanged);
+            // 
             // MemoryDataFinderSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox_saveLiveTokensToDisk);
             this.Controls.Add(this.checkBox_enableSmoothPp);
             this.Controls.Add(this.checkBox_EnableMemoryPooling);
             this.Controls.Add(this.checkBox_EnableMemoryFinder);
             this.Name = "MemoryDataFinderSettings";
-            this.Size = new System.Drawing.Size(591, 199);
+            this.Size = new System.Drawing.Size(591, 94);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -88,5 +102,6 @@
         private System.Windows.Forms.CheckBox checkBox_EnableMemoryFinder;
         private System.Windows.Forms.CheckBox checkBox_EnableMemoryPooling;
         private System.Windows.Forms.CheckBox checkBox_enableSmoothPp;
+        private System.Windows.Forms.CheckBox checkBox_saveLiveTokensToDisk;
     }
 }

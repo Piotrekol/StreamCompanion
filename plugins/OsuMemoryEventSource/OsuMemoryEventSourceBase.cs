@@ -19,8 +19,9 @@ namespace OsuMemoryEventSource
     public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataConsumer,
          IOsuEventSource, ITokensSource
     {
-        protected SettingNames _names = SettingNames.Instance;
+        public static ConfigEntry SaveLiveTokensOnDisk = new ConfigEntry(nameof(SaveLiveTokensOnDisk), false);
 
+        protected SettingNames _names = SettingNames.Instance;
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
         internal static Tokens.TokenSetter TokenSetter;
 
@@ -50,7 +51,9 @@ namespace OsuMemoryEventSource
 
         protected bool MemoryPoolingIsEnabled = false;
 
-        public OsuMemoryEventSourceBase(IContextAwareLogger logger, ISettings settings, IDatabaseController databaseControler, IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers)
+        public OsuMemoryEventSourceBase(IContextAwareLogger logger, ISettings settings,
+            IDatabaseController databaseControler, IModParser modParser,
+            List<IHighFrequencyDataConsumer> highFrequencyDataConsumers, ISaver saver)
         {
             _settings = settings;
             _databaseController = databaseControler;
@@ -79,7 +82,7 @@ namespace OsuMemoryEventSource
                 _timer = new Timer(TimerCallback, null, 250, Int32.MaxValue);
 
 
-            _memoryListener = new MemoryListener(settings, logger);
+            _memoryListener = new MemoryListener(settings, saver, logger);
             _memoryListener.NewOsuEvent += async (s, args) =>
             {
                 while (NewOsuEvent == null)
@@ -186,6 +189,7 @@ namespace OsuMemoryEventSource
             lock (_lockingObject)
             {
                 timerDisposed.Set();
+                DisableTimer();
                 _timer?.Dispose();
                 _memoryListener?.Dispose();
             }

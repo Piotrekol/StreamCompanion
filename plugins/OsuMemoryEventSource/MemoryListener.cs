@@ -30,13 +30,13 @@ namespace OsuMemoryEventSource
         public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettings _settings;
 
-        public MemoryListener(ISettings settings, IContextAwareLogger logger)
+        public MemoryListener(ISettings settings, ISaver saver, IContextAwareLogger logger)
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
 
             _memoryDataProcessor = new MemoryDataProcessor(settings, logger);
-            _patternsDispatcher = new PatternsDispatcher();
+            _patternsDispatcher = new PatternsDispatcher(settings, saver);
             _memoryDataProcessor.TokensUpdated += (_, status) => _patternsDispatcher.TokensUpdated(status);
             _memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
         }

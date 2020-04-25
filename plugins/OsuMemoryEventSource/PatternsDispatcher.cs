@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -5,13 +6,25 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace OsuMemoryEventSource
 {
-    public class PatternsDispatcher
+    public class PatternsDispatcher : IDisposable
     {
+        private readonly ISettings _settings;
+        private readonly ISaver _saver;
         public List<IHighFrequencyDataConsumer> HighFrequencyDataConsumers { get; set; }
         public BlockingCollection<IOutputPattern> OutputPatterns = new BlockingCollection<IOutputPattern>();
+        public bool SaveLiveTokensOnDisk { get; private set; }
+
+        public PatternsDispatcher(ISettings settings, ISaver saver)
+        {
+            _settings = settings;
+            _saver = saver;
+            _settings.SettingUpdated += SettingUpdated;
+            SettingUpdated(this, new SettingUpdated(OsuMemoryEventSourceBase.SaveLiveTokensOnDisk.Name));
+        }
 
         public void SetOutputPatterns(IList<IOutputPattern> patterns)
         {
@@ -53,6 +66,11 @@ namespace OsuMemoryEventSource
             }
         }
 
+        public void Dispose()
+        {
+            _settings.SettingUpdated -= SettingUpdated;
+        }
+
         private void SetOutput(IOutputPattern p, string value)
         {
             void WriteToHandlers(string name, string content)
@@ -63,6 +81,9 @@ namespace OsuMemoryEventSource
             //Standard output
             WriteToHandlers(p.Name, value.Replace("\r", ""));
 
+            if (SaveLiveTokensOnDisk)
+                _saver.Save($"{p.Name}.txt", value);
+
             //ingameOverlay
             if (p.ShowInOsu)
             {
@@ -71,6 +92,14 @@ namespace OsuMemoryEventSource
                 var config = $"{p.XPosition} {p.YPosition} {p.Color.R} {p.Color.G} {p.Color.B} {p.Color.A} {p.FontName.Replace(' ', '/')} {p.FontSize} {p.Aligment}";
                 WriteToHandlers(configName, config);
                 WriteToHandlers(valueName, value);
+            }
+        }
+
+        private void SettingUpdated(object sender, SettingUpdated e)
+        {
+            if (e.Name == OsuMemoryEventSourceBase.SaveLiveTokensOnDisk.Name)
+            {
+                SaveLiveTokensOnDisk = _settings.Get<bool>(OsuMemoryEventSourceBase.SaveLiveTokensOnDisk);
             }
         }
     }
