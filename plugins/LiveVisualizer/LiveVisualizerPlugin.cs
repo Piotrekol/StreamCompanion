@@ -174,10 +174,11 @@ namespace LiveVisualizer
             var interval = 1500;
             int time = 0;
 
-            if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko))
+            if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko || playMode == PlayMode.OsuMania))
             {
                 ppCalculator.Mods = mapSearchResult.Mods?.WorkingMods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-               
+                ppCalculator.Score = 1_000_000;
+
                 while (time + strainLength / 2 < mapLength)
                 {
                     if (Cts.Token.IsCancellationRequested)
