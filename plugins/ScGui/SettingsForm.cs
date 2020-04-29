@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -9,7 +10,7 @@ namespace ScGui
     public partial class SettingsForm : Form
     {
         private readonly List<ISettingsSource> _settingsList;
-
+        private List<(ISettingsSource settingsSource, UserControl Control)> _settingsInUse = new List<(ISettingsSource settingsSource, UserControl Control)>();
         private class UserControlPostion
         {
             public int TabNumber = -1;
@@ -27,21 +28,25 @@ namespace ScGui
             AddTab("Click counter");
             AddTab("Map matching");
 
-            //add UserControls and tabs
-            foreach (var setting in _settingsList)
+            //add tabs
+            foreach (var settingGroupName in _settingsList.Select(x=>x.SettingGroup).Distinct())
             {
-                int tabNumber;
-                var control = (UserControl)setting.GetUiSettings();
-                if(control==null)
-                    continue;
-                //If group tab doesn't exist - create it
-                if (!_groupControlPostions.ContainsKey(setting.SettingGroup))
-                {
-                    tabNumber = AddTab(setting.SettingGroup);
-                }
-                else
-                    tabNumber = _groupControlPostions[setting.SettingGroup].TabNumber;
+                if (!_groupControlPostions.ContainsKey(settingGroupName))
+                    AddTab(settingGroupName);
+            }
 
+            PrepareCurrentTab();
+        }
+
+        private void PrepareCurrentTab()
+        {
+            var tabNumber = this.tabControl.SelectedIndex;
+            var groupName = tabControl.TabPages[this.tabControl.SelectedIndex].Text;
+            foreach (var setting in _settingsList.Where(s => s.SettingGroup == groupName))
+            {
+                var control = (UserControl)setting.GetUiSettings();
+                if (control == null)
+                    continue;
                 //get control to add
                 //set proper control postion
                 control.Location = new Point(_groupControlPostions[setting.SettingGroup].StartWidth, _groupControlPostions[setting.SettingGroup].StartHeight);
@@ -51,6 +56,8 @@ namespace ScGui
                 _groupControlPostions[setting.SettingGroup].StartHeight += control.Height;
                 if (setting.SettingGroup == "Tokens Preview")
                     tabControl.TabPages[tabNumber].Controls[0].Dock = DockStyle.Fill;
+
+                _settingsInUse.Add((setting, control));
             }
         }
 
@@ -62,12 +69,26 @@ namespace ScGui
             return tabNumber;
         }
 
+        private void FreeControlsInUse()
+        {
+            foreach (var setting in _settingsInUse)
+            {
+                _groupControlPostions[setting.settingsSource.SettingGroup].StartHeight -= setting.Control.Height;
+
+                setting.settingsSource.Free();
+            }
+            _settingsInUse.Clear();
+        }
+
         private void SettingsForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            foreach (var setting in _settingsList)
-            {
-               setting.Free();
-            }
+            FreeControlsInUse();
+        }
+
+        private void tabControl_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            FreeControlsInUse();
+            PrepareCurrentTab();
         }
     }
 }
