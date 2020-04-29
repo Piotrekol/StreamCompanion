@@ -91,12 +91,6 @@ namespace OsuMemoryEventSource
                 return result;
             }
 
-            var b = _databaseController?.GetBeatmap(mapId);
-            if (b != null)
-            {
-                result.BeatmapsFound.Add(b);
-            }
-
             return result;
         }
 
