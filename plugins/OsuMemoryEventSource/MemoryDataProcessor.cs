@@ -215,6 +215,8 @@ namespace OsuMemoryEventSource
             });
 
             _liveTokens["acc"] = new LiveToken(_tokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Acc);
+            _liveTokens["katsu"] = new LiveToken(_tokenSetter("katsu", _rawData.Play.CKatsu, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.CKatsu);
+            _liveTokens["geki"] = new LiveToken(_tokenSetter("geki", _rawData.Play.CGeki, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.CGeki);
             _liveTokens["300"] = new LiveToken(_tokenSetter("300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C300);
             _liveTokens["100"] = new LiveToken(_tokenSetter("100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C100);
             _liveTokens["50"] = new LiveToken(_tokenSetter("50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.C50);
