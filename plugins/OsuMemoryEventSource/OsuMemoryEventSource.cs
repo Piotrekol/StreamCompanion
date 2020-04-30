@@ -55,13 +55,12 @@ namespace OsuMemoryEventSource
 
             if (searchArgs == null)
                 throw new ArgumentException(nameof(searchArgs));
-            
+
             var result = new MapSearchResult(searchArgs);
 
             if (!Started || !_settings.Get<bool>(_names.EnableMemoryScanner))
                 return result;
 
-            int mapId = _memoryReader.GetMapId();
             int mods = 0;
 
             if (searchArgs.Status == OsuStatus.Playing)
@@ -75,20 +74,13 @@ namespace OsuMemoryEventSource
                 result.Mods = GetMods(_memoryReader.GetMods());
             }
 
-            Logger?.Log(">Got {0} & {1} from memory", LogLevel.Advanced, mapId.ToString(), mods.ToString());
+            Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Advanced);
 
             Mods eMods = result.Mods?.Mods ?? Mods.Omod;
-            if (mapId > 200_000_000 || mapId < 0 || Helpers.IsInvalidCombination(eMods))
+            if (Helpers.IsInvalidCombination(eMods))
             {
                 Logger?.Log("Sanity check tiggered - invalidating last result", LogLevel.Advanced);
                 result.Mods = null;
-                return result;
-            }
-
-            if (mapId == 0)
-            {
-                Logger?.Log("Map has no ID", LogLevel.Advanced);
-                return result;
             }
 
             return result;
