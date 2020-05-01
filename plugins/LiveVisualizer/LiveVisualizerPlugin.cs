@@ -234,7 +234,7 @@ namespace LiveVisualizer
                 _ppCalculator = ppCalculator;
             }
 
-            _visualizerWindow.ForceGraphUpdate();
+            _visualizerWindow?.ForceGraphUpdate();
         }
         private void SetAxisValues()
         {
