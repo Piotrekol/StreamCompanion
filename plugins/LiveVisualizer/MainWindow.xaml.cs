@@ -22,11 +22,11 @@ namespace LiveVisualizer
             this.frameholderTimer.Content = new Chart(data, $"{nameof(IWpfVisualizerData.Configuration)}.{nameof(IWpfVisualizerData.Configuration.ChartProgressColor)}", true);
         }
 
-        public void ForceGraphUpdate()
+        public void ForceChartUpdate()
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(ForceGraphUpdate);
+                Dispatcher.Invoke(ForceChartUpdate);
                 return;
             }
 
