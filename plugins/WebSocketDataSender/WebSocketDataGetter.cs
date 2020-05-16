@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -33,7 +34,7 @@ namespace WebSocketDataSender
         private DataContainer _mapDataContainer = new DataContainer();
         private WebSocketServer webSocketServer;
 
-        public WebSocketDataGetter(ISettings settings)
+        public WebSocketDataGetter(ISettings settings, ILogger logger)
         {
             _settings = settings;
             if (!_settings.Get<bool>(Enabled))
@@ -47,8 +48,15 @@ namespace WebSocketDataSender
 
             webSocketServer.AddWebSocketService("/StreamCompanion/LiveData/Stream", () => new StreamDataProvider(_liveDataContainer));
             webSocketServer.AddWebSocketService("/StreamCompanion/MapData/Stream", () => new StreamDataProvider(_mapDataContainer));
-
-            webSocketServer.Start();
+            try
+            {
+                webSocketServer.Start();
+            }
+            catch (System.Net.Sockets.SocketException e)
+            {
+                logger.Log("Could not start web socket server!", LogLevel.Basic);
+                logger.Log(e, LogLevel.Advanced);
+            }
         }
         public void Dispose()
         {
