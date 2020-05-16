@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -105,7 +106,15 @@ namespace osuOverlay
                 {
                     if (token.IsCancellationRequested)
                     {
-                        _osuLoaderProcess?.Kill();
+                        try
+                        {
+                            _osuLoaderProcess?.Kill();
+                        }
+                        catch (Win32Exception ex)
+                        {
+                            _logger.Log(ex, LogLevel.Debug);
+                        }
+
                         return new HelperProcessResult(-2, 0, 0, string.Empty);
                     }
                 }
