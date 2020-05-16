@@ -132,7 +132,7 @@ namespace osu_StreamCompanion
             }
             else
             {
-                System.Environment.Exit(1);
+                System.Environment.Exit(0);
             }
         }
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
