@@ -8,11 +8,24 @@ namespace osu_StreamCompanion.Code.Core.Loggers
     class MainLogger : IContextAwareLogger
     {
         private List<ILogger> _loggers = new List<ILogger>();
+        public IReadOnlyList<ILogger> Loggers => _loggers.AsReadOnly();
 
         public void AddLogger(ILogger logger)
         {
             _loggers.Add(logger);
         }
+
+        public void RemoveLogger(ILogger logger)
+        {
+            if (_loggers.Contains(logger))
+            {
+                if(logger is IDisposable disposableLogger)
+                    disposableLogger.Dispose();
+
+                _loggers.Remove(logger);
+            }
+        }
+
         public void Log(object logMessage, LogLevel logLevel, params string[] vals)
         {
             for (int i = 0; i < _loggers.Count; i++)

@@ -199,6 +199,13 @@
     <Compile Include="Code\Helpers\ListExtensions.cs" />
     <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
     <Compile Include="Code\Core\Loggers\MainLogger.cs" />
+    <Compile Include="Code\Modules\Logger\LoggerSettings.cs" />
+    <Compile Include="Code\Modules\Logger\LoggerSettingsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Code\Modules\Logger\LoggerSettingsUserControl.Designer.cs">
+      <DependentUpon>LoggerSettingsUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Code\Modules\TokensPreview\DrawingControl.cs" />
     <Compile Include="Code\Modules\TokensPreview\TokensPreview.cs" />
     <Compile Include="Code\Modules\TokensPreview\TokensPreviewSettings.cs">
@@ -293,6 +300,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Code\Modules\Logger\LoggerSettingsUserControl.resx">
+      <DependentUpon>LoggerSettingsUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Code\Modules\TokensPreview\TokensPreviewSettings.resx">
       <DependentUpon>TokensPreviewSettings.cs</DependentUpon>
     </EmbeddedResource>
