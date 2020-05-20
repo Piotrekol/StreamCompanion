@@ -292,7 +292,7 @@ namespace OsuMemoryEventSource
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
 
-            HitErrors = _tokenSetter("HitErrors", new List<int>(), TokenType.Live | TokenType.Hidden, defaultValue: new List<int>(), whitelist: OsuStatus.Playing);
+            _liveTokens["HitErrors"] = new LiveToken(_tokenSetter("HitErrors", new List<int>(), TokenType.Live,",", new List<int>(), OsuStatus.Playing),() => _rawData.HitErrors);
 
             _liveTokens["LocalTime"] = new LiveToken(_tokenSetter("LocalTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
         }
