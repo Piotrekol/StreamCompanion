@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using StreamCompanionTypes.DataTypes;
 
 namespace OsuSongsFolderWatcher
@@ -7,12 +6,8 @@ namespace OsuSongsFolderWatcher
     public static class BeatmapHelpers
     {
         public static Beatmap ReadBeatmap(string fullPath)
-        {
-            Console.WriteLine("reading beatmap located at {0}", fullPath);
+            => OsuFileParser.Instance.ReadBeatmapData(fullPath);
 
-            var beatmap = OsuFileParser.Instance.ReadBeatmapData(fullPath);
-            return beatmap;
-        }
         public static string GetDiffFromString(string msnString)
         {
             if (msnString.Contains("]") && msnString.Contains("["))

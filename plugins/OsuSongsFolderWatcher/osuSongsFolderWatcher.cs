@@ -66,7 +66,8 @@ namespace OsuSongsFolderWatcher
 
         private void Watcher_FileChanged(object sender, FileSystemEventArgs e)
         {
-            Watcher_FileCreated(sender, e);
+            _logger.Log($"Modified osu file: {e.FullPath}", LogLevel.Debug);
+            _filesChanged.Enqueue(e);
         }
 
         private void ConsumerTask()
@@ -80,12 +81,13 @@ namespace OsuSongsFolderWatcher
                         Beatmap beatmap = null;
                         _settings.Add(_names.LoadingRawBeatmaps.Name, true);
                         Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
-                        _logger.Log("Processing new beatmap", LogLevel.Debug);
+                        _logger.Log($">Processing beatmap located at {fsArgs.FullPath}", LogLevel.Debug);
+
                         beatmap = BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
 
                         _databaseController.StoreTempBeatmap(beatmap);
                         
-                        _logger.Log("Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Debug, beatmap.ArtistRoman,
+                        _logger.Log(">Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Basic, beatmap.ArtistRoman,
                             beatmap.TitleRoman, beatmap.DiffName);
                         if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
                         {
@@ -93,7 +95,7 @@ namespace OsuSongsFolderWatcher
                         }
 
                         if (fsArgs.ChangeType == WatcherChangeTypes.Changed && lastMapSearchArgs != null)
-                        {
+                        {//TODO: this seems to spam with events whenever map gets loaded in osu...
                             var l = lastMapSearchArgs;
                             NewOsuEvent?.Invoke(this, new MapSearchArgs($"OsuMemory-FolderWatcherReplay")
                             {
@@ -119,8 +121,8 @@ namespace OsuSongsFolderWatcher
         private readonly ConcurrentQueue<FileSystemEventArgs> _filesChanged = new ConcurrentQueue<FileSystemEventArgs>();
         private void Watcher_FileCreated(object sender, FileSystemEventArgs e)
         {
+            _logger.Log($"New osu file: {e.FullPath}", LogLevel.Debug);
             _filesChanged.Enqueue(e);
-            _logger.Log("New osu file: " + e.FullPath, LogLevel.Debug);
         }
 
         public void Dispose()

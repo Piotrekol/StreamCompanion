@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
@@ -49,8 +50,12 @@ namespace osu_StreamCompanion.Code.Core.Loggers
                     prefix += "\t";
                     message = message.Substring(1);
                 }
+
+                if (message.TryFormat(out var result, vals))
+                    message = result;
+
                 message = prefix + message;
-                Console.WriteLine(@"{0}{1} - {2}",$"[{loglvevel.ToString().Substring(0, 3)}] ", DateTime.Now.ToString("T"), string.Format(message, vals));
+                Console.WriteLine(@"{0}{1} - {2}", $"[{loglvevel.ToString().Substring(0, 3)}] ", DateTime.Now.ToString("T"), message);
             }
         }
     }

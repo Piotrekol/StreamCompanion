@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
@@ -47,15 +48,22 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             {
                 string message = logMessage.ToString();
                 if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
-                    lock(_lockingObject)
-                        File.AppendAllText(CurrentLogSaveLocation, string.Format(message, vals) + Environment.NewLine);
+                {
+                    lock (_lockingObject)
+                    {
+                        if (message.TryFormat(out var result, vals))
+                            message = result;
+
+                        File.AppendAllText(CurrentLogSaveLocation, message + Environment.NewLine);
+                    }
+                }
             }
             catch
             {
                 if (SaveDirectoryExists())
                     throw;
 
-                lock(_lockingObject)
+                lock (_lockingObject)
                     CreateLogsDirectory();
 
                 Log(logMessage, loglvevel, vals);
