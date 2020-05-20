@@ -60,10 +60,12 @@
   <ItemGroup>
     <Reference Include="CollectionManager, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CollectionManager.1.0.6\lib\net471\CollectionManager.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="StreamCompanionTypes, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\StreamCompanionTypes.3.0.0\lib\net471\StreamCompanionTypes.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />

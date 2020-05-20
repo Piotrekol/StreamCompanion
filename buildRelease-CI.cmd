@@ -26,6 +26,8 @@ rm ./Output/Plugins/*.pdb
 REM remove misc files
 rm ./Output/*.xml
 rm "./Output/StreamCompanion Updater.exe.config"
+rm "./Output/Plugins/StreamCompanionTypes.dll"
+rm "./Output/Plugins/CollectionManager.dll"
 
 cd ..
 REM clean installer folder
