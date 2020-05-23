@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using osuOverlayLoader;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
@@ -20,7 +21,6 @@ namespace osuOverlay
         public string SettingGroup { get; } = "General";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
-        private Process _osuLoaderProcess;
 
         private Process _currentOsuProcess;
         private bool _pauseProcessTracking;
@@ -53,7 +53,7 @@ namespace osuOverlay
             if (_settings.Get<bool>(PluginSettings.EnableIngameOverlay))
             {
                 CopyFreeType();
-
+                progressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug));
                 Task.Run(() => WatchForProcessStart(cancellationToken.Token), cancellationToken.Token);
             }
         }
@@ -71,64 +71,22 @@ namespace osuOverlay
             return null;
         }
 
-        private class HelperProcessResult
+        private bool IsAlreadyInjected()
         {
-            public int ExitCode { get; }
-            public int ErrorCode { get; }
-            public int Win32ErrorCode { get; }
-            public string Result { get; }
-
-            public HelperProcessResult(int ExitCode, int ErrorCode, int Win32ErrorCode, string Result)
-            {
-                this.ExitCode = ExitCode;
-                this.ErrorCode = ErrorCode;
-                this.Win32ErrorCode = Win32ErrorCode;
-                this.Result = Result;
-            }
-
-            public override string ToString() => $"{(InjectionResult)ExitCode}({ExitCode}),{ErrorCode},{Win32ErrorCode},{Result}";
+            return loader.IsAlreadyInjected(GetFullDllLocation());
         }
 
+        Loader loader = new Loader();
+        private Progress<string> progressReporter;
+        private Task<InjectionResult> Inject()
+        {
+            return loader.Inject(GetFullDllLocation(), progressReporter, cancellationToken.Token);
+        }
         public async Task WatchForProcessStart(CancellationToken token)
         {
-            HelperProcessResult RunHelperProcess(bool silent, bool checkInjectionStatus = false)
-            {
-                var proc = new ProcessStartInfo
-                {
-                    FileName = Path.Combine("Plugins", "bin", "osuOverlayLoader.exe"),
-                    Arguments = $"\"{GetFullDllLocation()}\" {silent.ToString().ToLower()} {checkInjectionStatus.ToString().ToLower()}",
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true
-                };
-                _osuLoaderProcess = Process.Start(proc);
-                while (_osuLoaderProcess?.WaitForExit(100) == false)
-                {
-                    if (token.IsCancellationRequested)
-                    {
-                        try
-                        {
-                            _osuLoaderProcess?.Kill();
-                        }
-                        catch (Win32Exception ex)
-                        {
-                            _logger.Log(ex, LogLevel.Debug);
-                        }
-
-                        return new HelperProcessResult(-2, 0, 0, string.Empty);
-                    }
-                }
-
-                var resultData = _osuLoaderProcess.StandardOutput.ReadToEnd().Split(',');
-                if (resultData.Length != 3)
-                    return new HelperProcessResult(-3, 0, 0, string.Empty);
-
-                return new HelperProcessResult(_osuLoaderProcess?.ExitCode ?? -1, Convert.ToInt32(resultData[0]), Convert.ToInt32(resultData[1]), resultData[2]);
-            }
-
             try
             {
-                InjectionResult lastResult = InjectionResult.GameProcessNotFound;
+                var lastResult = DllInjectionResult.GameProcessNotFound;
                 while (true)
                 {
                     if (token.IsCancellationRequested)
@@ -137,16 +95,14 @@ namespace osuOverlay
                     if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
                         _logger.Log("Checking osu! overlay injection status.", LogLevel.Advanced);
-                        var helperProcessResult = RunHelperProcess(true, true);
-                        var isAlreadyInjected = helperProcessResult.ExitCode == 0;
-                        int exitCode = 0;
-                        if (isAlreadyInjected)
+                        var resultCode = DllInjectionResult.Success;
+                        if (IsAlreadyInjected())
                         {
                             _logger.Log("Already injected & running.", LogLevel.Advanced);
                         }
                         else
                         {
-                            if (_currentOsuProcess == null && GetOsuProcess() != null && lastResult != InjectionResult.Timeout)
+                            if (_currentOsuProcess == null && GetOsuProcess() != null && lastResult != DllInjectionResult.Timeout)
                             {
                                 _ = Task.Run(() =>
                                 {
@@ -157,13 +113,13 @@ namespace osuOverlay
                             }
                             _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Basic);
 
-                            helperProcessResult = RunHelperProcess(true);
-                            exitCode = helperProcessResult.ExitCode;
-                            HandleHelperProcessResult(helperProcessResult, true);
-                            lastResult = (InjectionResult)helperProcessResult.ExitCode;
+                            var result = await Inject();
+                            resultCode = result.ResultCode;
+                            HandleInjectionResult(result, true);
+                            lastResult = result.ResultCode;
                         }
 
-                        if (exitCode == 0)
+                        if (resultCode == DllInjectionResult.Success)
                         {
                             if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                             {
@@ -184,28 +140,22 @@ namespace osuOverlay
             {
             }
         }
-        private void HandleHelperProcessResult(HelperProcessResult helperProcessResult, bool showErrors = false)
+        private void HandleInjectionResult(InjectionResult helperProcessResult, bool showErrors = false)
         {
             string message = null;
-            switch (helperProcessResult.ExitCode)
+            switch (helperProcessResult.ResultCode)
             {
-                case -1:
-                    message = "Could not spawn helper process";
-                    break;
-                case -3:
-                    message = "helper process exited without returning any data. Consider reinstalling ingameOverlay plugin.";
-                    break;
-                case (int)InjectionResult.DllNotFound:
+                case DllInjectionResult.DllNotFound:
                     message =
                         "Could not find osuOverlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
                     break;
-                case (int)InjectionResult.InjectionFailed:
+                case DllInjectionResult.InjectionFailed:
                     {
                         //ERROR_ACCESS_DENIED
                         if (helperProcessResult.Win32ErrorCode == 5)
                         {
                             message =
-                                $"Your antivirus has blocked an attempt to add ingame overlay to osu!. in order to fix this you need to add \"{GetFullLoaderExeLocation()}\" to your antivirus exceptions";
+                                $"Your antivirus has blocked an attempt to add ingame overlay to osu!.";
                         }
                         else
                             message =
@@ -213,17 +163,17 @@ namespace osuOverlay
                         break;
                     }
 
-                case (int)InjectionResult.GameProcessNotFound:
-                case (int)InjectionResult.Timeout:
+                case DllInjectionResult.GameProcessNotFound:
+                case DllInjectionResult.Timeout:
                     return;
-                case (int)InjectionResult.Success:
+                case DllInjectionResult.Success:
                     _logger.Log("Injection success.", LogLevel.Basic);
                     return;
             }
             _logger.Log($"Injection failed: {message}", LogLevel.Basic);
             _logger.Log($"{helperProcessResult}", LogLevel.Advanced);
 
-            if (showErrors && helperProcessResult.ExitCode != (int)InjectionResult.GameProcessNotFound && !cancellationToken.IsCancellationRequested)
+            if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound && !cancellationToken.IsCancellationRequested)
             {
                 MessageBox.Show(message + Environment.NewLine + Environment.NewLine + $"Ingame Overlay result: {helperProcessResult}", "StreamCompanion - ingameOverlay Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -259,8 +209,6 @@ namespace osuOverlay
 
         private string GetFullFreeTypeLocation() => Path.Combine(GetFilesFolder(), "FreeType.dll");
         private string GetFullDllLocation() => Path.Combine(GetFilesFolder(), "osuOverlay.dll");
-        private string GetFullBinLocation() => Path.Combine(GetFilesFolder(), "bin");
-        private string GetFullLoaderExeLocation() => Path.Combine(GetFullBinLocation(), "osuOverlayLoader.exe");
         public void Free()
         {
             _overlaySettings?.Dispose();
@@ -290,8 +238,6 @@ namespace osuOverlay
         public void Dispose()
         {
             _overlaySettings?.Dispose();
-
-            _osuLoaderProcess?.Kill();
             cancellationToken.Cancel();
             _currentOsuProcess?.Dispose();
         }
