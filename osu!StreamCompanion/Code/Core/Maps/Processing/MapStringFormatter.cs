@@ -40,18 +40,21 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             if (mapSearchArgs == null)
                 return;
-
+            var eventData = new
+            {
+                mapId = mapSearchArgs.MapId.ToString(),
+                raw = mapSearchArgs.Raw,
+                hash = mapSearchArgs.MapHash,
+                playMode = mapSearchArgs.PlayMode?.ToString() ?? "null",
+                eventType = mapSearchArgs.EventType,
+                sourceName = mapSearchArgs.SourceName
+            }.ToString();
+            _logger.Log($"Received event: {eventData}", LogLevel.Debug);
             //TODO: priority system for IOsuEventSource 
             if (mapSearchArgs.SourceName.Contains("OsuMemory"))
             {
                 TasksMemory.Clear();
-                _logger.SetContextData("OsuMemory_event", new
-                {
-                    mapId = mapSearchArgs.MapId.ToString(),
-                    raw = mapSearchArgs.Raw,
-                    hash = mapSearchArgs.MapHash,
-                    playMode = mapSearchArgs.PlayMode?.ToString() ?? "null"
-                }.ToString());
+                _logger.SetContextData("OsuMemory_event", eventData);
 
                 TasksMemory.Push(mapSearchArgs);
             }
