@@ -53,7 +53,7 @@ namespace osu_StreamCompanion.Code.Core
 
             mainLogger.AddLogger(new FileLogger(saver, Settings));
 #if !DEBUG
-            _logger.AddLogger(new SentryLogger());
+            mainLogger.AddLogger(new SentryLogger());
 #endif
             _logger.Log("Created DI container", LogLevel.Basic);
         }
