@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Caching;
 using System.Threading;
 using System.Windows.Forms;
 using StreamCompanionTypes;
@@ -22,6 +26,19 @@ namespace OsuSongsFolderWatcher
         private IDatabaseController _databaseController;
         private int _numberOfBeatmapsCurrentlyBeingLoaded = 0;
         private Thread _consumerThread;
+        private readonly ConcurrentQueue<FileSystemEventArgs> filesChanged = new ConcurrentQueue<FileSystemEventArgs>();
+        private readonly MemoryCache memoryCache;
+        private readonly CacheItemPolicy cacheItemPolicy;
+
+        private void OnItemRemoved(CacheEntryRemovedArguments args)
+        {
+            if (args.RemovedReason != CacheEntryRemovedReason.Expired)
+                return;
+
+            var fsEvent = (FileSystemEventArgs)args.CacheItem.Value;
+            _logger.Log($"Queued for processing: {fsEvent.FullPath}", LogLevel.Advanced);
+            filesChanged.Enqueue((FileSystemEventArgs)args.CacheItem.Value);
+        }
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(OsuSongsFolderWatcher);
@@ -45,10 +62,18 @@ namespace OsuSongsFolderWatcher
                 dir = Path.Combine(dir, "Songs\\");
             }
 
+
             if (Directory.Exists(dir))
             {
+                MemoryCacheHelpers.IncreaseCachePoolingFrequency();
+                memoryCache = MemoryCache.Default;
+                cacheItemPolicy = new CacheItemPolicy
+                {
+                    RemovedCallback = OnItemRemoved,
+                    SlidingExpiration = TimeSpan.FromMilliseconds(250)
+                };
+
                 _watcher = new FileSystemWatcher(dir, "*.osu");
-                _watcher.Created += Watcher_FileCreated;
                 _watcher.Changed += Watcher_FileChanged;
                 _watcher.IncludeSubdirectories = true;
                 _watcher.EnableRaisingEvents = true;
@@ -67,7 +92,8 @@ namespace OsuSongsFolderWatcher
         private void Watcher_FileChanged(object sender, FileSystemEventArgs e)
         {
             _logger.Log($"Modified osu file: {e.FullPath}", LogLevel.Debug);
-            _filesChanged.Enqueue(e);
+
+            memoryCache.AddOrGetExisting(e.FullPath, e, cacheItemPolicy);
         }
 
         private void ConsumerTask()
@@ -76,17 +102,17 @@ namespace OsuSongsFolderWatcher
             {
                 while (true)
                 {
-                    if (_filesChanged.TryDequeue(out var fsArgs))
+                    memoryCache.Get("dummy");
+                    if (filesChanged.TryDequeue(out var fsArgs))
                     {
-                        Beatmap beatmap = null;
                         _settings.Add(_names.LoadingRawBeatmaps.Name, true);
                         Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
                         _logger.Log($">Processing beatmap located at {fsArgs.FullPath}", LogLevel.Debug);
 
-                        beatmap = BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
+                        var beatmap = BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
 
                         _databaseController.StoreTempBeatmap(beatmap);
-                        
+
                         _logger.Log(">Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Basic, beatmap.ArtistRoman,
                             beatmap.TitleRoman, beatmap.DiffName);
                         if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
@@ -94,9 +120,14 @@ namespace OsuSongsFolderWatcher
                             _settings.Add(_names.LoadingRawBeatmaps.Name, false);
                         }
 
-                        if (fsArgs.ChangeType == WatcherChangeTypes.Changed && lastMapSearchArgs != null)
-                        {//TODO: this seems to spam with events whenever map gets loaded in osu...
-                            var l = lastMapSearchArgs;
+                        if (fsArgs.ChangeType == WatcherChangeTypes.Changed && lastMapSearchArgs != null
+                        && (
+                            (lastMapSearchArgs.Artist == beatmap.Artist
+                             && lastMapSearchArgs.Title == beatmap.Title
+                             && lastMapSearchArgs.Diff == beatmap.DiffName
+                            ) || lastMapSearchArgs.MapId == beatmap.MapId
+                        ))
+                        {
                             NewOsuEvent?.Invoke(this, new MapSearchArgs($"OsuMemory-FolderWatcherReplay")
                             {
                                 Artist = beatmap.Artist,
@@ -105,8 +136,8 @@ namespace OsuSongsFolderWatcher
                                 Diff = beatmap.DiffName,
                                 EventType = OsuEventType.MapChange,
                                 PlayMode = beatmap.PlayMode,
-                                Status = l.Status,
-                                MapId = -123//bogus id to force string search
+                                Status = lastMapSearchArgs.Status,
+                                MapId = beatmap.MapId > 0 ? beatmap.MapId : -123
                             });
                         }
                     }
@@ -115,14 +146,7 @@ namespace OsuSongsFolderWatcher
             }
             catch (ThreadAbortException)
             {
-                return;
             }
-        }
-        private readonly ConcurrentQueue<FileSystemEventArgs> _filesChanged = new ConcurrentQueue<FileSystemEventArgs>();
-        private void Watcher_FileCreated(object sender, FileSystemEventArgs e)
-        {
-            _logger.Log($"New osu file: {e.FullPath}", LogLevel.Debug);
-            _filesChanged.Enqueue(e);
         }
 
         public void Dispose()
