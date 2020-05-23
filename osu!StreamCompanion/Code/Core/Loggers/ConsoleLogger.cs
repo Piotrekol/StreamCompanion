@@ -29,7 +29,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             Console.Title = "StreamCompanion logs";
             Console.SetOut(TextWriter.Synchronized(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true }));
 #if !DEBUG
-            Console.WindowWidth = Console.LargestWindowWidth-Convert.ToInt32(Console.LargestWindowWidth/3);
+            Console.WindowWidth = Console.LargestWindowWidth - Convert.ToInt32(Console.LargestWindowWidth / 3);
 #endif
         }
 
@@ -42,21 +42,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
         {
             if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
-            {
-                string message = logMessage.ToString();
-                string prefix = string.Empty;
-                while (message.StartsWith(">"))
-                {
-                    prefix += "\t";
-                    message = message.Substring(1);
-                }
-
-                if (message.TryFormat(out var result, vals))
-                    message = result;
-
-                message = prefix + message;
-                Console.WriteLine(@"{0}{1} - {2}", $"[{loglvevel.ToString().Substring(0, 3)}] ", DateTime.Now.ToString("T"), message);
-            }
+                Console.WriteLine(logMessage.ToString());
         }
     }
 }

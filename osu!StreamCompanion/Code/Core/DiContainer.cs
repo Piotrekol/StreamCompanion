@@ -29,7 +29,16 @@ namespace osu_StreamCompanion.Code.Core
         {
             var di = new DependencyInjectionContainer();
 
-            di.Configure(x => x.ExportDefault(typeof(MainLogger)));
+            di.Configure(x => x.ExportFactory((StaticInjectionContext context) =>
+                {
+                    var pluginName = context.TargetInfo.InjectionType?.Name;
+                    if (pluginName == null)
+                        return MainLogger.Instance;
+
+                    return (IContextAwareLogger)new PluginLogger(MainLogger.Instance, pluginName);
+                })
+                    .As<ILogger>().As<IContextAwareLogger>());
+
             di.Configure(x => x.ExportDefault(typeof(Settings)));
             di.Configure(x => x.ExportDefault(typeof(MainWindowUpdater)));
             di.Configure(x => x.ExportDefault(typeof(MainSaver)));
@@ -41,7 +50,7 @@ namespace osu_StreamCompanion.Code.Core
             di.Configure(x => x.ExportFuncWithContext<Delegates.Exit>((scope, context, arg3) =>
               {
                   var logger = scope.Locate<IContextAwareLogger>();
-                  logger.SetContextData("exiting","1");
+                  logger.SetContextData("exiting", "1");
                   var isModule = context.TargetInfo.InjectionType.GetInterfaces().Contains(typeof(IModule));
                   if (isModule)
                   {
@@ -78,7 +87,7 @@ namespace osu_StreamCompanion.Code.Core
                 di.Configure(x => x.ExportDefault(module));
             }
 
-            RegisterPlugins(di,di.Locate<ILogger>());
+            RegisterPlugins(di, di.Locate<ILogger>());
 
             return di;
         });

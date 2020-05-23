@@ -46,15 +46,11 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             try
             {
-                string message = logMessage.ToString();
                 if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
                 {
                     lock (_lockingObject)
                     {
-                        if (message.TryFormat(out var result, vals))
-                            message = result;
-
-                        File.AppendAllText(CurrentLogSaveLocation, message + Environment.NewLine);
+                        File.AppendAllText(CurrentLogSaveLocation, logMessage + Environment.NewLine);
                     }
                 }
             }

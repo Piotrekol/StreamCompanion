@@ -20,7 +20,7 @@ namespace osu_StreamCompanion.Code.Core
 {
     internal class Initializer : ApplicationContext
     {
-        private readonly MainLogger _logger;
+        private readonly ILogger _logger;
         private readonly SettingNames _names = SettingNames.Instance;
         public readonly Settings Settings;
 
@@ -30,7 +30,8 @@ namespace osu_StreamCompanion.Code.Core
 
             var di = DiContainer.Container;
 
-            _logger = di.Locate<MainLogger>();
+            var mainLogger = MainLogger.Instance;
+            _logger = mainLogger;
             Settings = di.Locate<Settings>();
             if (!string.IsNullOrEmpty(settingsProfileName))
             {
@@ -43,14 +44,14 @@ namespace osu_StreamCompanion.Code.Core
 
             if (Settings.Get<bool>(_names.Console))
             {
-                _logger.AddLogger(new ConsoleLogger(Settings));
+                mainLogger.AddLogger(new ConsoleLogger(Settings));
             }
             else
             {
-                _logger.AddLogger(new EmptyLogger());
+                mainLogger.AddLogger(new EmptyLogger());
             }
 
-            _logger.AddLogger(new FileLogger(saver, Settings));
+            mainLogger.AddLogger(new FileLogger(saver, Settings));
 #if !DEBUG
             _logger.AddLogger(new SentryLogger());
 #endif

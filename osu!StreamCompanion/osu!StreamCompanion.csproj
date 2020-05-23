@@ -180,6 +180,7 @@
     <Compile Include="Code\Core\DiContainer.cs" />
     <Compile Include="Code\Core\Initializer.cs" />
     <Compile Include="Code\Core\Loggers\FileLogger.cs" />
+    <Compile Include="Code\Core\Loggers\PluginLogger.cs" />
     <Compile Include="Code\Core\Loggers\SentryLogger.cs" />
     <Compile Include="Code\Core\Maps\Processing\MapDataGetter.cs" />
     <Compile Include="Code\Core\Savers\TextSaver.cs" />

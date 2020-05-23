@@ -136,10 +136,15 @@ namespace osuOverlay
 
                     if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
+                        _logger.Log("Checking osu! overlay injection status.", LogLevel.Advanced);
                         var helperProcessResult = RunHelperProcess(true, true);
                         var isAlreadyInjected = helperProcessResult.ExitCode == 0;
                         int exitCode = 0;
-                        if (!isAlreadyInjected)
+                        if (isAlreadyInjected)
+                        {
+                            _logger.Log("Already injected & running.", LogLevel.Advanced);
+                        }
+                        else
                         {
                             if (_currentOsuProcess == null && GetOsuProcess() != null && lastResult != InjectionResult.Timeout)
                             {
@@ -150,6 +155,7 @@ namespace osuOverlay
                                         "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 });
                             }
+                            _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Basic);
 
                             helperProcessResult = RunHelperProcess(true);
                             exitCode = helperProcessResult.ExitCode;
@@ -209,9 +215,13 @@ namespace osuOverlay
 
                 case (int)InjectionResult.GameProcessNotFound:
                 case (int)InjectionResult.Timeout:
+                    return;
                 case (int)InjectionResult.Success:
+                    _logger.Log("Injection success.", LogLevel.Basic);
                     return;
             }
+            _logger.Log($"Injection failed: {message}", LogLevel.Basic);
+            _logger.Log($"{helperProcessResult}", LogLevel.Advanced);
 
             if (showErrors && helperProcessResult.ExitCode != (int)InjectionResult.GameProcessNotFound && !cancellationToken.IsCancellationRequested)
             {
