@@ -192,7 +192,7 @@ namespace OsuMemoryEventSource
             }
         }
 
-        private IToken HitErrors;
+        private bool providedDataForSkinPathException = false;
         private void InitLiveTokens()
         {
             var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
@@ -207,9 +207,14 @@ namespace OsuMemoryEventSource
                 }
                 catch (ArgumentException ex)
                 {
-                    _logger.SetContextData("!skin!",$"{_liveTokens["skin"].Token.Value}");
-                    _logger.SetContextData("osuSkinsDirectory", $"{osuSkinsDirectory}");
-                    _logger.Log(ex, LogLevel.Error);
+                    if (!providedDataForSkinPathException)
+                    {
+                        providedDataForSkinPathException = true;
+                        _logger.SetContextData("!skin!", $"{_liveTokens["skin"].Token.Value}");
+                        _logger.SetContextData("osuSkinsDirectory", $"{osuSkinsDirectory}");
+                        _logger.Log(ex, LogLevel.Error);
+                    }
+
                     return string.Empty;
                 }
             });
