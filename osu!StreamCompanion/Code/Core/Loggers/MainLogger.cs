@@ -6,11 +6,14 @@ using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {
-    class MainLogger : IContextAwareLogger
+    internal class MainLogger : IContextAwareLogger
     {
         public static MainLogger Instance = new MainLogger();
         private List<ILogger> _loggers = new List<ILogger>();
         public IReadOnlyList<ILogger> Loggers => _loggers.AsReadOnly();
+
+        private MainLogger()
+        { }
 
         public void AddLogger(ILogger logger)
         {

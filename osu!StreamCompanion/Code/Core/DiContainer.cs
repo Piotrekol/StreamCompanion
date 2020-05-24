@@ -28,7 +28,7 @@ namespace osu_StreamCompanion.Code.Core
         private static Lazy<DependencyInjectionContainer> LazyContainer = new Lazy<DependencyInjectionContainer>(() =>
         {
             var di = new DependencyInjectionContainer();
-
+            di.Configure(x => x.ExportFactory(() => MainLogger.Instance));
             di.Configure(x => x.ExportFactory((StaticInjectionContext context) =>
                 {
                     var pluginName = context.TargetInfo.InjectionType?.Name;
