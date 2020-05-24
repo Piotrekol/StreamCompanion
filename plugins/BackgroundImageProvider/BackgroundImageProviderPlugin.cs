@@ -42,14 +42,18 @@ namespace BackgroundImageProvider
                 if (map.FoundBeatmaps)
                 {
                     var imageLocation = map.BeatmapsFound[0].GetImageLocation(_settings);
-                    if (_lastCopiedFileLocation != imageLocation && !string.IsNullOrEmpty(imageLocation))
+                    if (!string.IsNullOrEmpty(imageLocation))
                     {
-                        if (File.Exists(_saveLocation))
-                            File.Delete(_saveLocation);
+                        if (_lastCopiedFileLocation != imageLocation)
+                        {
+                            if (File.Exists(_saveLocation))
+                                File.Delete(_saveLocation);
 
-                        File.Copy(imageLocation, _saveLocation);
-                        _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
-                        _lastCopiedFileLocation = imageLocation;
+                            File.Copy(imageLocation, _saveLocation);
+                            _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
+                            _lastCopiedFileLocation = imageLocation;
+                        }
+
                         return;
                     }
                 }
