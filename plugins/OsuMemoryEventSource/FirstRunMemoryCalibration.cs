@@ -172,8 +172,8 @@ namespace OsuMemoryEventSource
             public string MapName { get; }
             public int MapSetId { get; }
             public List<int> Diffs { get; }
-            public string DownloadLink => $"https://osu.ppy.sh/d/{MapSetId}";
-            public string SetLink => $"https://osu.ppy.sh/s/{MapSetId}";
+            public string DownloadLink => $"https://osu.ppy.sh/beatmapsets/{MapSetId}/download";
+            public string SetLink => $"https://osu.ppy.sh/beatmapsets/{MapSetId}/download";
 
             public Map(string mapName, int mapSetId, List<int> diffs)
             {
