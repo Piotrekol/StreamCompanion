@@ -78,9 +78,17 @@ namespace osuOverlay
 
         Loader loader = new Loader();
         private Progress<string> progressReporter;
-        private Task<InjectionResult> Inject()
+        private async Task<InjectionResult> Inject()
         {
-            return loader.Inject(GetFullDllLocation(), progressReporter, cancellationToken.Token);
+            try
+            {
+                return await loader.Inject(GetFullDllLocation(), progressReporter,
+                    cancellationToken.Token);
+            }
+            catch (TaskCanceledException)
+            {
+                return new InjectionResult(DllInjectionResult.Cancelled, 0, 0, "Task cancelled");
+            }
         }
         public async Task WatchForProcessStart(CancellationToken token)
         {
@@ -154,15 +162,15 @@ namespace osuOverlay
                         //ERROR_ACCESS_DENIED
                         if (helperProcessResult.Win32ErrorCode == 5)
                         {
-                            message =
-                                $"Your antivirus has blocked an attempt to add ingame overlay to osu!.";
+                            message = $"Your antivirus has blocked an attempt to add ingame overlay to osu!.";
                         }
                         else
-                            message =
-                                "Could not add overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
+                        {
+                            message = "Could not add overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
+                        }
                         break;
                     }
-
+                case DllInjectionResult.Cancelled:
                 case DllInjectionResult.GameProcessNotFound:
                 case DllInjectionResult.Timeout:
                     return;
