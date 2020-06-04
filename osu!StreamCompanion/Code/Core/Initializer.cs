@@ -61,7 +61,7 @@ namespace osu_StreamCompanion.Code.Core
         public void Start()
         {
             _logger.Log("Booting up...", LogLevel.Basic);
-
+            DiContainer.Container.Locate<Updater>();
             DiContainer.Container.Locate<FirstRun>();
 
             DiContainer.Container.Locate<IDatabaseController>();
@@ -99,7 +99,6 @@ namespace osu_StreamCompanion.Code.Core
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
 
             DiContainer.Container.Locate<MapStringFormatter>();
-            DiContainer.Container.Locate<Updater>();
 
             _logger.Log("Started!", LogLevel.Basic);
         }
