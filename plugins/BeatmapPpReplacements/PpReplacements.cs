@@ -4,8 +4,7 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
-using System.Linq;
-using StreamCompanionTypes.Enums;
+using System.Collections.Generic;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 
@@ -25,89 +24,115 @@ namespace BeatmapPpReplacements
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
+        private readonly Dictionary<TokenMode, Dictionary<string, PpValue>> ppTokenDefinitions;
+
+        private delegate double PpValue(string mods = "");
+        enum TokenMode
+        {
+            Osu,
+            Mania
+        }
 
         public PpReplacements(ISettings settings)
         {
             _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter(Name);
+
+            ppTokenDefinitions = new Dictionary<TokenMode, Dictionary<string, PpValue>>
+            {
+                {TokenMode.Osu,new Dictionary<string, PpValue>
+                {
+                    {"SSPP",(mods)=>GetPp(_ppCalculator, 100d)},
+                    {"99.9PP",(mods)=>GetPp(_ppCalculator, 99.9d)},
+                    {"99PP",(mods)=>GetPp(_ppCalculator, 99d)},
+                    {"98PP",(mods)=>GetPp(_ppCalculator, 98d)},
+                    {"95PP",(mods)=>GetPp(_ppCalculator, 95d)},
+                    {"90PP",(mods)=>GetPp(_ppCalculator, 90d)},
+                    {"mSSPP",(mods)=>GetPp(_ppCalculator, 100d, mods)},
+                    {"m99.9PP",(mods)=>GetPp(_ppCalculator, 99.9d, mods)},
+                    {"m99PP",(mods)=>GetPp(_ppCalculator, 99d, mods)},
+                    {"m98PP",(mods)=>GetPp(_ppCalculator, 98d, mods)},
+                    {"m95PP",(mods)=>GetPp(_ppCalculator, 95d, mods)},
+                    {"m90PP",(mods)=>GetPp(_ppCalculator, 90d, mods)},
+                }
+                },
+                {TokenMode.Mania,new Dictionary<string,PpValue>
+                {
+                    {"1 000 000PP",(mods)=>GetPp(_ppCalculator, 0, "", 1_000_000)},
+                    {"990 000PP",(mods)=>GetPp(_ppCalculator, 0, "", 990_000)},
+                    {"950 000PP",(mods)=>GetPp(_ppCalculator, 0, "", 950_000)},
+                    {"900 000PP",(mods)=>GetPp(_ppCalculator, 0, "", 900_000)},
+                    {"800 000PP",(mods)=>GetPp(_ppCalculator, 0, "", 800_000)},
+                    {"700 000PP",(mods)=>GetPp(_ppCalculator, 0, "", 700_000)},
+                    {"600 000PP",(mods)=>GetPp(_ppCalculator, 0, "", 600_000)},
+                    {"m1 000 000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 1_000_000)},
+                    {"m990 000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 990_000)},
+                    {"m950 000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 950_000)},
+                    {"m900 000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 900_000)},
+                    {"m800 000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 800_000)},
+                    {"m700 000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 700_000)},
+                    {"m600 000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 600_000)},
+                }
+                }
+            };
+
+            ResetTokens(TokenMode.Osu);
+            ResetTokens(TokenMode.Mania);
+        }
+
+        private void ResetTokens(TokenMode tokenMode)
+        {
+            foreach (var tokenDefinition in ppTokenDefinitions[tokenMode])
+            {
+                _tokenSetter(tokenDefinition.Key, null, format: PpFormat);
+            }
         }
 
         public void CreateTokens(MapSearchResult map)
         {
-            foreach (var tokenkv in Tokens.AllTokens.Where(t => t.Value.PluginName == Name))
-            {
-                tokenkv.Value.Reset();
-            }
 
             if (!map.FoundBeatmaps ||
                 !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+            {
+                ResetTokens(TokenMode.Osu);
+                ResetTokens(TokenMode.Mania);
+                _tokenSetter("GameMode", null);
+                _tokenSetter("MaxCombo", -1);
                 return;
-
+            }
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-
             var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null);
-
             _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, _ppCalculator);
-
-            if (_ppCalculator == null)
-                return;//Ctb not supported :(
-
-            if (playMode == PlayMode.OsuMania)
-                _ppCalculator.Score = 1_000_000;
-            else
-                _ppCalculator.Score = 0;
-
-            _ppCalculator.Mods = null;
-
             _tokenSetter("GameMode", playMode.ToString());
 
-            string mods = "";
+            if (_ppCalculator == null)
+            {//Ctb not supported :(
+                ResetTokens(TokenMode.Osu);
+                ResetTokens(TokenMode.Mania);
+                _tokenSetter("MaxCombo", -1);
+                return;
+            }
 
-            if (playMode == PlayMode.OsuMania)
+            _ppCalculator.Score = playMode == PlayMode.OsuMania
+                ? 1_000_000
+                : 0;
+            _ppCalculator.Mods = null;
+            var mods = map.Mods?.WorkingMods ?? "";
+            var tokenMode = playMode == PlayMode.OsuMania
+                ? TokenMode.Mania
+                : TokenMode.Osu;
+
+            foreach (var tokenDefinition in ppTokenDefinitions[tokenMode])
             {
-                _tokenSetter("1 000 000PP", GetPp(_ppCalculator, 0, mods, 1_000_000), format: PpFormat);
-                _tokenSetter("990 000PP", GetPp(_ppCalculator, 0, mods, 990_000), format: PpFormat);
-                _tokenSetter("950 000PP", GetPp(_ppCalculator, 0, mods, 950_000), format: PpFormat);
-                _tokenSetter("900 000PP", GetPp(_ppCalculator, 0, mods, 900_000), format: PpFormat);
-                _tokenSetter("800 000PP", GetPp(_ppCalculator, 0, mods, 800_000), format: PpFormat);
-                _tokenSetter("700 000PP", GetPp(_ppCalculator, 0, mods, 700_000), format: PpFormat);
-                _tokenSetter("600 000PP", GetPp(_ppCalculator, 0, mods, 600_000), format: PpFormat);
+                _tokenSetter(tokenDefinition.Key, tokenDefinition.Value(mods), format: PpFormat);
             }
-            else
-            {
-                _tokenSetter("SSPP", GetPp(_ppCalculator, 100d), format: PpFormat);
-                _tokenSetter("99.9PP", GetPp(_ppCalculator, 99.9d), format: PpFormat);
-                _tokenSetter("99PP", GetPp(_ppCalculator, 99d), format: PpFormat);
-                _tokenSetter("98PP", GetPp(_ppCalculator, 98d), format: PpFormat);
-                _tokenSetter("95PP", GetPp(_ppCalculator, 95d), format: PpFormat);
-                _tokenSetter("90PP", GetPp(_ppCalculator, 90d), format: PpFormat);
-            }
+
             _tokenSetter("MaxCombo", _ppCalculator.GetMaxCombo());
 
-
-            mods = map.Mods?.WorkingMods ?? "";
-
-            if (playMode == PlayMode.OsuMania)
-            {
-                _tokenSetter("m1 000 000PP", GetPp(_ppCalculator, 0, mods, 1_000_000), format: PpFormat);
-                _tokenSetter("m990 000PP", GetPp(_ppCalculator, 0, mods, 990_000), format: PpFormat);
-                _tokenSetter("m950 000PP", GetPp(_ppCalculator, 0, mods, 950_000), format: PpFormat);
-                _tokenSetter("m900 000PP", GetPp(_ppCalculator, 0, mods, 900_000), format: PpFormat);
-                _tokenSetter("m800 000PP", GetPp(_ppCalculator, 0, mods, 800_000), format: PpFormat);
-                _tokenSetter("m700 000PP", GetPp(_ppCalculator, 0, mods, 700_000), format: PpFormat);
-                _tokenSetter("m600 000PP", GetPp(_ppCalculator, 0, mods, 600_000), format: PpFormat);
-            }
-            else
-            {
-                _tokenSetter("mSSPP", GetPp(_ppCalculator, 100d, mods), format: PpFormat);
-                _tokenSetter("m99.9PP", GetPp(_ppCalculator, 99.9d, mods), format: PpFormat);
-                _tokenSetter("m99PP", GetPp(_ppCalculator, 99d, mods), format: PpFormat);
-                _tokenSetter("m98PP", GetPp(_ppCalculator, 98d, mods), format: PpFormat);
-                _tokenSetter("m95PP", GetPp(_ppCalculator, 95d, mods), format: PpFormat);
-                _tokenSetter("m90PP", GetPp(_ppCalculator, 90d, mods), format: PpFormat);
-            }
+            ResetTokens(tokenMode == TokenMode.Osu ? TokenMode.Mania : TokenMode.Osu);
         }
+
         private double GetPp(PpCalculator.PpCalculator ppCalculator, double acc, string mods = "", int score = 0)
         {
             ppCalculator.Accuracy = acc;
