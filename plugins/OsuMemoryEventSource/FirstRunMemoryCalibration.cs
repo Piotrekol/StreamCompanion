@@ -98,7 +98,6 @@ namespace OsuMemoryEventSource
                     Invoke((MethodInvoker) delegate
                     {
                         SetCalibrationText("Searching. It can take up to 20 seconds.");
-                        button_Skip.Enabled = false;
                     });
 
                     var mods = Helpers.ExecWithTimeout(async token =>
@@ -126,7 +125,6 @@ namespace OsuMemoryEventSource
                             var resultText =
                                 $"Something went wrong(mods: {(Mods)mods}). Try again(start map again) or continue with DISABLED memory";
                             SetCalibrationText(resultText);
-                            button_Skip.Enabled = true;
                         }
                     });
                 }
