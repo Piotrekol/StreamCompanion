@@ -2,18 +2,19 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "StreamCompanion"
-#define MyAppVersion "1.0"
 #define MyAppPublisher "Piotrekol"
 #define MyAppURL "https://osustats.ppy.sh/"
 #define MyAppExeName "osu!StreamCompanion.exe"
 
+#define FilesRoot "..\build\Output\"
+#define ApplicationVersion GetFileVersion(FilesRoot +'osu!StreamCompanion.exe')
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{F6C83F00-59ED-493E-8310-181BB5B37A03}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
+AppVersion={#ApplicationVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -37,7 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "..\build\Output\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: {#FilesRoot}*; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]

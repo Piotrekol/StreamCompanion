@@ -2,19 +2,19 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "StreamCompanion - ingameOverlay plugin"
-#define MyAppVersion "1.0"
 #define MyAppPublisher "Piotrekol"
 #define MyAppURL "https://osustats.ppy.sh/"
-
 #define AppId "{F6C83F00-59ED-493E-8310-181BB5B37A03}"
 
+#define FilesRoot "..\build\Release_unsafe\"
+#define ApplicationVersion GetFileVersion(FilesRoot +'Plugins\osuOverlayPlugin.dll')
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{#AppId}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
+AppVersion={#ApplicationVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -38,7 +38,7 @@ UpdateUninstallLogAppName=no
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "..\build\Release_unsafe\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: {#FilesRoot}*; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 [Code]
 
