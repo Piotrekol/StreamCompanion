@@ -17,8 +17,8 @@ namespace OsuMemoryEventSource
     {
         public string SettingGroup { get; } = "Map matching";
         public int Priority { get; set; } = 100;
-        public OsuMemoryEventSource(IContextAwareLogger logger, ISettings settings, IDatabaseController databaseController, 
-            IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers, 
+        public OsuMemoryEventSource(IContextAwareLogger logger, ISettings settings, IDatabaseController databaseController,
+            IModParser modParser, List<IHighFrequencyDataConsumer> highFrequencyDataConsumers,
             ISaver saver) : base(logger, settings, databaseController, modParser, highFrequencyDataConsumers, saver)
         {
         }
@@ -95,7 +95,7 @@ namespace OsuMemoryEventSource
         {
             if (_firstRunMemoryCalibration == null || _firstRunMemoryCalibration.IsDisposed)
             {
-                _firstRunMemoryCalibration = new FirstRunMemoryCalibration(_memoryReader, _settings);
+                _firstRunMemoryCalibration = new FirstRunMemoryCalibration(_memoryReader, _settings, Logger);
             }
 
             NewOsuEvent += (s, args) =>

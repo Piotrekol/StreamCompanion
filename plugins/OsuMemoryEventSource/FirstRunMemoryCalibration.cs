@@ -40,6 +40,7 @@ namespace OsuMemoryEventSource
         private readonly Random rnd = new Random();
         private Map _currentMap;
         private volatile bool Passed;
+        private ILogger _logger;
 
         public event EventHandler<FirstRunCompletedEventArgs> Completed;
 
@@ -57,10 +58,11 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public FirstRunMemoryCalibration(IOsuMemoryReader reader, ISettings settings)
+        public FirstRunMemoryCalibration(IOsuMemoryReader reader, ISettings settings, ILogger logger)
         {
             memoryReader = reader;
             _settings = settings;
+            _logger = logger;
 
             InitializeComponent();
             pictureBox1.Image = StreamCompanionHelper.StreamCompanionLogo();
@@ -75,7 +77,7 @@ namespace OsuMemoryEventSource
         {
             if (label_CalibrationResult.InvokeRequired)
             {
-                Invoke((MethodInvoker) delegate { SetCalibrationText(text); });
+                Invoke((MethodInvoker)delegate { SetCalibrationText(text); });
                 return;
             }
 
@@ -84,21 +86,25 @@ namespace OsuMemoryEventSource
 
         public void GotMemory(int mapId, OsuStatus status, string mapString)
         {
-            if (!IsHandleCreated) return;
+            if (!IsHandleCreated) 
+                return;
+
+            _logger.Log($"FirstRun: mapId: {mapId}, status: {status}, mapString: {mapString}", LogLevel.Debug);
+            _logger.Log($"FirstRun: looking for: {CurrentMap}", LogLevel.Debug);
             lock (_lockingObject)
             {
-                Invoke((MethodInvoker) delegate
-                {
-                    label_memoryStatus.Text =
-                        $"{status}, id:{mapId}, valid mapset:{CurrentMap.BelongsToSet(mapId)}";
-                });
+                Invoke((MethodInvoker)delegate
+               {
+                   label_memoryStatus.Text =
+                       $"{status}, id:{mapId}, is valid mapset:{CurrentMap.BelongsToSet(mapId)}";
+               });
 
                 if (CurrentMap.BelongsToSet(mapId) && status == OsuStatus.Playing)
                 {
-                    Invoke((MethodInvoker) delegate
-                    {
-                        SetCalibrationText("Searching. It can take up to 20 seconds.");
-                    });
+                    Invoke((MethodInvoker)delegate
+                   {
+                       SetCalibrationText("Searching. It can take up to 20 seconds.");
+                   });
 
                     var mods = Helpers.ExecWithTimeout(async token =>
                     {
@@ -114,19 +120,19 @@ namespace OsuMemoryEventSource
 
                     Passed = mods == ExpectedMods;
 
-                    Invoke((MethodInvoker) delegate
-                    {
-                        if (Passed)
-                        {
-                            button_Skip_Click(this, EventArgs.Empty);
-                        }
-                        else
-                        {
-                            var resultText =
-                                $"Something went wrong(mods: {(Mods)mods}). Try again(start map again) or continue with DISABLED memory";
-                            SetCalibrationText(resultText);
-                        }
-                    });
+                    Invoke((MethodInvoker)delegate
+                   {
+                       if (Passed)
+                       {
+                           Completed?.Invoke(this, new FirstRunCompletedEventArgs { ControlCompletionStatus = FirstRunStatus.Ok });
+                       }
+                       else
+                       {
+                           var resultText =
+                               $"Something went wrong(mods: {(Mods)mods}). Maybe try again with another map?";
+                           SetCalibrationText(resultText);
+                       }
+                   });
                 }
             }
         }
@@ -157,21 +163,12 @@ namespace OsuMemoryEventSource
             SetNextMap();
         }
 
-        private void button_Skip_Click(object sender, EventArgs e)
-        {
-            _settings.Add(_names.EnableMemoryScanner.Name, Passed);
-            _settings.Add(_names.EnableMemoryPooling.Name, Passed);
-
-            Completed?.Invoke(this, new FirstRunCompletedEventArgs {ControlCompletionStatus = FirstRunStatus.Ok});
-        }
-
         private class Map
         {
             public string MapName { get; }
             public int MapSetId { get; }
             public List<int> Diffs { get; }
-            public string DownloadLink => $"https://osu.ppy.sh/d/{MapSetId}";
-            public string SetLink => $"https://osu.ppy.sh/s/{MapSetId}";
+            public string DownloadLink => $"https://osu.ppy.sh/beatmapsets/{MapSetId}/download";
 
             public Map(string mapName, int mapSetId, List<int> diffs)
             {
@@ -184,6 +181,9 @@ namespace OsuMemoryEventSource
             {
                 return Diffs.Contains(mapId);
             }
+
+            public override string ToString()
+                => $"{MapName}; setId: {MapSetId}; diffIds:[{string.Join(",", Diffs)}]";
         }
     }
 }

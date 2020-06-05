@@ -66,7 +66,7 @@
             // 
             // label_CalibrationResult
             // 
-            this.label_CalibrationResult.Location = new System.Drawing.Point(3, 142);
+            this.label_CalibrationResult.Location = new System.Drawing.Point(3, 173);
             this.label_CalibrationResult.Name = "label_CalibrationResult";
             this.label_CalibrationResult.Size = new System.Drawing.Size(385, 30);
             this.label_CalibrationResult.TabIndex = 12;
@@ -74,9 +74,9 @@
             // 
             // linkLabel_mapDL
             // 
-            this.linkLabel_mapDL.Location = new System.Drawing.Point(137, 105);
+            this.linkLabel_mapDL.Location = new System.Drawing.Point(3, 136);
             this.linkLabel_mapDL.Name = "linkLabel_mapDL";
-            this.linkLabel_mapDL.Size = new System.Drawing.Size(250, 31);
+            this.linkLabel_mapDL.Size = new System.Drawing.Size(384, 31);
             this.linkLabel_mapDL.TabIndex = 13;
             this.linkLabel_mapDL.TabStop = true;
             this.linkLabel_mapDL.Text = "Click here for map download";
@@ -94,7 +94,7 @@
             // 
             // label_memoryStatus
             // 
-            this.label_memoryStatus.Location = new System.Drawing.Point(3, 174);
+            this.label_memoryStatus.Location = new System.Drawing.Point(3, 205);
             this.label_memoryStatus.Name = "label_memoryStatus";
             this.label_memoryStatus.Size = new System.Drawing.Size(385, 17);
             this.label_memoryStatus.TabIndex = 17;
