@@ -33,12 +33,20 @@ namespace osu_StreamCompanion.Code.Core
             var mainLogger = MainLogger.Instance;
             _logger = mainLogger;
             Settings = di.Locate<Settings>();
+
             if (!string.IsNullOrEmpty(settingsProfileName))
             {
                 Settings.ConfigFileName = Settings.ConfigFileName.Replace(".ini", $".{settingsProfileName}.ini");
             }
 
             Settings.Load();
+
+            if ((Control.ModifierKeys & Keys.Shift) != 0 &&
+                (Control.ModifierKeys & Keys.Control) != 0)
+            {
+                Settings.Add(SettingNames.Instance.Console.Name, true, true);
+                Settings.Add(SettingNames.Instance.LogLevel.Name, LogLevel.Error.GetHashCode(), true);
+            }
 
             var saver = di.Locate<MainSaver>();
 
