@@ -28,9 +28,9 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             AllocConsole();
             Console.Title = "StreamCompanion logs";
             Console.SetOut(TextWriter.Synchronized(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true }));
-#if !DEBUG
-            Console.WindowWidth = Console.LargestWindowWidth - Convert.ToInt32(Console.LargestWindowWidth / 3);
-#endif
+            
+            if (Console.LargestWindowWidth > 0)
+                Console.WindowWidth = Console.LargestWindowWidth - Convert.ToInt32(Console.LargestWindowWidth / 3);
         }
 
 
