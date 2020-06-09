@@ -95,7 +95,7 @@ namespace BackgroundImageProvider
                 _logger.SetContextData("backgroundImageFilename", fileInfo.Name);
                 _logger.SetContextData("backgroundImageSize", fileInfo.Length.ToString());
                 _logger.SetContextData("backgroundImageExternalExceptionCode", ex.ErrorCode.ToString());
-                _logger.Log(ex, LogLevel.Error);
+                _logger.Log(ex, LogLevel.Debug);
                 return string.Empty;
             }
         }
