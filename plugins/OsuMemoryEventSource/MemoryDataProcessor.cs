@@ -192,29 +192,28 @@ namespace OsuMemoryEventSource
             }
         }
 
-        private bool providedDataForSkinPathException = false;
         private void InitLiveTokens()
         {
             var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
             var notPlaying = (OsuStatus)(OsuStatus.All - OsuStatus.Playing);
             _liveTokens["status"] = new LiveToken(_tokenSetter("status", OsuStatus.Null, TokenType.Live, "", OsuStatus.Null), null);
-            _liveTokens["skin"] = new LiveToken(_tokenSetter("skin", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () =>_reader?.GetSkinFolderName() ?? string.Empty);
+            _liveTokens["skin"] = new LiveToken(_tokenSetter("skin", string.Empty, TokenType.Live, null, string.Empty, notPlaying),
+                () =>
+                {
+                    //TODO: memoryReader sometimes returns malformed skinName string
+                    var name = _reader?.GetSkinFolderName() ?? string.Empty;
+                    return name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 
+                        ? string.Empty 
+                        : name;
+                });
             _liveTokens["skinPath"] = new LiveToken(_tokenSetter("skinPath", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () =>
             {
                 try
                 {
                     return Path.Combine(osuSkinsDirectory, (string) _liveTokens["skin"].Token.Value);
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
-                    if (!providedDataForSkinPathException)
-                    {
-                        providedDataForSkinPathException = true;
-                        _logger.SetContextData("!skin!", $"{_liveTokens["skin"].Token.Value}");
-                        _logger.SetContextData("osuSkinsDirectory", $"{osuSkinsDirectory}");
-                        _logger.Log(ex, LogLevel.Error);
-                    }
-
                     return string.Empty;
                 }
             });
