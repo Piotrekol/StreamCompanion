@@ -34,7 +34,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         public void Log(object logMessage, LogLevel logLevel, string pluginName, params string[] vals)
         {
             var (message, prefix) = GetPrefix(logMessage.ToString(), logLevel, pluginName);
-            InternalLog(message, logLevel, prefix, vals);
+            InternalLog(logMessage is Exception ? logMessage : message, logLevel, prefix, vals);
         }
 
         private (string NewMessage, string Prefix) GetPrefix(string logMessage, LogLevel logLevel, string pluginName)
@@ -55,25 +55,31 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         }
         protected void InternalLog(object logMessage, LogLevel logLevel, string messagePrefix, params string[] vals)
         {
-            string message = logMessage.ToString();
-
-
-            if (message.TryFormat(out var result, vals))
-                message = result;
-
-            message = string.Format(@"{0}{1}", messagePrefix, message);
-
-            for (int i = 0; i < _loggers.Count; i++)
+            if (logMessage is string message)
             {
-                _loggers[i].Log(message, logLevel, vals);
-            }
+                if (message.TryFormat(out var result, vals))
+                    message = result;
 
+                message = $@"{messagePrefix}{message}";
+
+                foreach (var logger in _loggers)
+                {
+                    logger.Log(message, logLevel, vals);
+                }
+            }
+            else
+            {
+                foreach (var logger in _loggers)
+                {
+                    logger.Log(logMessage, logLevel, vals);
+                }
+            }
         }
 
         public void Log(object logMessage, LogLevel logLevel, params string[] vals)
         {
             var (message, prefix) = GetPrefix(logMessage.ToString(), logLevel, null);
-            InternalLog(message, logLevel, prefix, vals);
+            InternalLog(logMessage is Exception ? logMessage : message, logLevel, prefix, vals);
         }
 
         public void SetContextData(string key, string value)
