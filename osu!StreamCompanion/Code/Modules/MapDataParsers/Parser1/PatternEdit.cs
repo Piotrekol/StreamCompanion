@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
@@ -172,14 +173,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Task.Run(() => textBoxUpdateLoop(replacements));
             }
         }
+
         private void textBox_formating_TextChanged(object sender, EventArgs e)
         {
             if (!this.IsHandleCreated || this.IsDisposed || Current == null)
                 return;
 
             var isMemoryPattern = Current.MemoryFormatTokens.Select(s => s.ToLower()).Any(textBox_formating.Text.ToLower().Contains);
-            label_warning.Visible = isMemoryPattern;
-
 
             if (_replacements == null)
                 textBox_preview.Text = "Change map in osu! to see preview";
@@ -193,7 +193,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     currentStatus = OsuStatus.All;
                 }
 
-                var result = OutputPattern.FormatPattern(toFormat, _replacements, saveEvent, currentStatus);
+                var result = string.Empty;
+                if (OutputPattern.CanSave(toFormat, _replacements, saveEvent, currentStatus))
+                {
+                    var formulas = JaceEngine.Instance.CompileFormulas(toFormat);
+                    result = OutputPattern.FormatPattern(toFormat, _replacements, formulas);
+                    isMemoryPattern |= formulas.Any(kv => kv.Value.TokensUsed.Any(x => Current.MemoryFormatTokens.Contains($"!{x}!")));
+                }
                 longFormat = result.Length > 250;
                 result = Sanitize(result);
 
@@ -209,6 +215,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
                 textBox_preview.Text = result;
             }
+
+            label_warning.Visible = isMemoryPattern;
         }
 
         private void checkBox_ShowIngame_CheckedChanged(object sender, EventArgs e)
