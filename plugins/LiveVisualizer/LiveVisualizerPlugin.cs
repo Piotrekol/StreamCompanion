@@ -73,7 +73,7 @@ namespace LiveVisualizer
                     break;
                 case nameof(IVisualizerConfiguration.AutoSizeAxisY):
                 case nameof(IVisualizerConfiguration.ChartCutoffsSet):
-                    SetAxisValues();
+                    SetAxisValues(VisualizerData.Display.Strains?.ToList());
                     break;
 
             }
@@ -111,12 +111,12 @@ namespace LiveVisualizer
 
             VisualizerData.Configuration = JsonConvert.DeserializeObject<VisualizerConfiguration>(config);
         }
-        
+
         protected override void ResetSettings()
         {
             LoadConfiguration(true);
         }
-        
+
         private void EnableVisualizer(bool enable)
         {
             if (enable)
@@ -160,12 +160,12 @@ namespace LiveVisualizer
             }
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-            
+
             var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
                 mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
 
             var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-            
+
             var strains = new Dictionary<int, double>(300);
 
             //Length refers to beatmap time, not song total time
@@ -220,9 +220,9 @@ namespace LiveVisualizer
                 VisualizerData.Display.Strains = new ChartValues<double>();
 
             VisualizerData.Display.Strains.Clear();
-            VisualizerData.Display.Strains.AddRange(strains.Select(s => s.Value));
-
-            SetAxisValues();
+            var strainValues = strains.Select(kv => kv.Value).ToList();
+            SetAxisValues(strainValues);
+            VisualizerData.Display.Strains.AddRange(strainValues);
 
             var imageLocation = Path.Combine(mapSearchResult.BeatmapsFound[0]
                 .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), workingBeatmap.BackgroundFile ?? "");
@@ -237,15 +237,20 @@ namespace LiveVisualizer
             _visualizerWindow?.ForceChartUpdate();
         }
 
-        private void SetAxisValues()
+        private void SetAxisValues(IReadOnlyList<double> strainValues)
         {
-            if (VisualizerData.Display.Strains != null && VisualizerData.Display.Strains.Any())
+            if (strainValues != null && strainValues.Any())
             {
-                var strainsMax = VisualizerData.Display.Strains.Max();
+                var strainsMax = strainValues.Max();
                 VisualizerData.Configuration.MaxYValue = getMaxY(strainsMax);
                 VisualizerData.Configuration.AxisYStep = GetAxisYStep(double.IsNaN(VisualizerData.Configuration.MaxYValue)
                     ? strainsMax
                     : VisualizerData.Configuration.MaxYValue);
+            }
+            else
+            {
+                VisualizerData.Configuration.MaxYValue = 200;
+                VisualizerData.Configuration.AxisYStep = 100;
             }
         }
 
