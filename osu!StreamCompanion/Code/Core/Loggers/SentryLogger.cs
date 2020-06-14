@@ -14,7 +14,8 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             "https://2a3c77450ec84295b6a6d426b2fdd9b5@sentry.io/107853";
         public static RavenClient RavenClient { get; } = new RavenClient(RavenDsn);
 
-        public static Dictionary<string,string> ContextData { get; } = new Dictionary<string, string>();
+        public static Dictionary<string, string> ContextData { get; } = new Dictionary<string, string>();
+        private object _lockingObject = new object();
         public SentryLogger()
         {
             RavenClient.Release = Program.ScVersion;
@@ -33,14 +34,18 @@ namespace osu_StreamCompanion.Code.Core.Loggers
                 else
                     sentryEvent = new SentryEvent(string.Format(logMessage.ToString(), vals));
 
-                sentryEvent.Extra = ContextData;
-                RavenClient.Capture(sentryEvent);
+                lock (_lockingObject)
+                {
+                    sentryEvent.Extra = ContextData;
+                    RavenClient.Capture(sentryEvent);
+                }
             }
         }
 
         public void SetContextData(string key, string value)
         {
-            ContextData[key] = value;
+            lock (_lockingObject)
+                ContextData[key] = value;
         }
     }
 }
