@@ -154,6 +154,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             }
             catch (ObjectDisposedException) { }
             catch (InvalidAsynchronousStateException) { }
+            catch (InvalidOperationException) { }
         }
 
         private string Sanitize(string inputFormat)
