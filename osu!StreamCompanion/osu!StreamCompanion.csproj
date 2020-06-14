@@ -136,6 +136,9 @@
     <Reference Include="Grace, Version=7.1.0.0, Culture=neutral, PublicKeyToken=b7d24c6367970497, processorArchitecture=MSIL">
       <HintPath>..\packages\Grace.7.1.0-Beta768\lib\net45\Grace.dll</HintPath>
     </Reference>
+    <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jace.1.0.0\lib\netstandard1.6\Jace.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
       <Private>False</Private>
@@ -147,8 +150,8 @@
     <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpRaven.2.4.0\lib\net471\SharpRaven.dll</HintPath>
     </Reference>
-    <Reference Include="StreamCompanionTypes, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamCompanionTypes.3.1.0\lib\net471\StreamCompanionTypes.dll</HintPath>
+    <Reference Include="StreamCompanionTypes, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamCompanionTypes.4.0.1\lib\net471\StreamCompanionTypes.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
