@@ -50,11 +50,12 @@
             this.UpdateText.AutoSize = true;
             this.UpdateText.BackColor = System.Drawing.Color.Transparent;
             this.UpdateText.ForeColor = System.Drawing.Color.Black;
-            this.UpdateText.Location = new System.Drawing.Point(176, 9);
-            this.UpdateText.MaximumSize = new System.Drawing.Size(345, 60);
-            this.UpdateText.MinimumSize = new System.Drawing.Size(345, 60);
+            this.UpdateText.Location = new System.Drawing.Point(205, 10);
+            this.UpdateText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.UpdateText.MaximumSize = new System.Drawing.Size(402, 69);
+            this.UpdateText.MinimumSize = new System.Drawing.Size(402, 69);
             this.UpdateText.Name = "UpdateText";
-            this.UpdateText.Size = new System.Drawing.Size(345, 60);
+            this.UpdateText.Size = new System.Drawing.Size(402, 69);
             this.UpdateText.TabIndex = 1;
             this.UpdateText.Tag = "Update";
             this.UpdateText.Text = "_UpdateText_";
@@ -62,18 +63,20 @@
             // 
             // button_OpenSettings
             // 
-            this.button_OpenSettings.Location = new System.Drawing.Point(49, 4);
+            this.button_OpenSettings.Location = new System.Drawing.Point(57, 5);
+            this.button_OpenSettings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button_OpenSettings.Name = "button_OpenSettings";
-            this.button_OpenSettings.Size = new System.Drawing.Size(54, 23);
+            this.button_OpenSettings.Size = new System.Drawing.Size(63, 27);
             this.button_OpenSettings.TabIndex = 2;
             this.button_OpenSettings.Text = "Settings";
             this.button_OpenSettings.UseVisualStyleBackColor = true;
             // 
             // button_About
             // 
-            this.button_About.Location = new System.Drawing.Point(109, 4);
+            this.button_About.Location = new System.Drawing.Point(127, 5);
+            this.button_About.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button_About.Name = "button_About";
-            this.button_About.Size = new System.Drawing.Size(54, 23);
+            this.button_About.Size = new System.Drawing.Size(63, 27);
             this.button_About.TabIndex = 3;
             this.button_About.Text = "About";
             this.button_About.UseVisualStyleBackColor = true;
@@ -84,9 +87,10 @@
             this.BeatmapsLoaded.AutoSize = true;
             this.BeatmapsLoaded.BackColor = System.Drawing.Color.Transparent;
             this.BeatmapsLoaded.ForeColor = System.Drawing.Color.Beige;
-            this.BeatmapsLoaded.Location = new System.Drawing.Point(76, 30);
+            this.BeatmapsLoaded.Location = new System.Drawing.Point(89, 35);
+            this.BeatmapsLoaded.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.BeatmapsLoaded.Name = "BeatmapsLoaded";
-            this.BeatmapsLoaded.Size = new System.Drawing.Size(102, 13);
+            this.BeatmapsLoaded.Size = new System.Drawing.Size(108, 15);
             this.BeatmapsLoaded.TabIndex = 4;
             this.BeatmapsLoaded.Text = "_BeatmapsLoaded_";
             this.BeatmapsLoaded.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label_MouseDown);
@@ -96,11 +100,12 @@
             this.NowPlaying.AutoSize = true;
             this.NowPlaying.BackColor = System.Drawing.Color.Transparent;
             this.NowPlaying.ForeColor = System.Drawing.Color.Beige;
-            this.NowPlaying.Location = new System.Drawing.Point(20, 105);
-            this.NowPlaying.MaximumSize = new System.Drawing.Size(618, 26);
-            this.NowPlaying.MinimumSize = new System.Drawing.Size(618, 26);
+            this.NowPlaying.Location = new System.Drawing.Point(23, 121);
+            this.NowPlaying.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.NowPlaying.MaximumSize = new System.Drawing.Size(721, 30);
+            this.NowPlaying.MinimumSize = new System.Drawing.Size(721, 30);
             this.NowPlaying.Name = "NowPlaying";
-            this.NowPlaying.Size = new System.Drawing.Size(618, 26);
+            this.NowPlaying.Size = new System.Drawing.Size(721, 30);
             this.NowPlaying.TabIndex = 7;
             this.NowPlaying.Text = resources.GetString("NowPlaying.Text");
             this.NowPlaying.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -109,9 +114,10 @@
             // 
             // exit_button
             // 
-            this.exit_button.Location = new System.Drawing.Point(588, 4);
+            this.exit_button.Location = new System.Drawing.Point(686, 5);
+            this.exit_button.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.exit_button.Name = "exit_button";
-            this.exit_button.Size = new System.Drawing.Size(59, 23);
+            this.exit_button.Size = new System.Drawing.Size(69, 27);
             this.exit_button.TabIndex = 8;
             this.exit_button.Text = "Exit";
             this.exit_button.UseVisualStyleBackColor = true;
@@ -155,9 +161,10 @@
             // 
             // button_hide
             // 
-            this.button_hide.Location = new System.Drawing.Point(523, 4);
+            this.button_hide.Location = new System.Drawing.Point(610, 5);
+            this.button_hide.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button_hide.Name = "button_hide";
-            this.button_hide.Size = new System.Drawing.Size(59, 23);
+            this.button_hide.Size = new System.Drawing.Size(69, 27);
             this.button_hide.TabIndex = 9;
             this.button_hide.Text = "Hide";
             this.button_hide.UseVisualStyleBackColor = true;
@@ -165,11 +172,11 @@
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(659, 171);
+            this.ClientSize = new System.Drawing.Size(769, 197);
             this.Controls.Add(this.button_hide);
             this.Controls.Add(this.exit_button);
             this.Controls.Add(this.NowPlaying);
@@ -180,6 +187,7 @@
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "MainForm";
             this.Text = "osu!StreamCompanion by Piotrekol";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseDown);
