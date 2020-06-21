@@ -20,6 +20,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <OutputPath>..\build\Debug\</OutputPath>
@@ -63,7 +64,6 @@
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Code\Misc\ImpatientWebClient.cs">
@@ -99,6 +99,11 @@
     <Compile Update="Code\Modules\osuPathReslover\osuPathResolverSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\btn_donate_92x26.png" />
@@ -123,7 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CollectionManager" Version="1.0.6" />
-    <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Grace" Version="7.1.0-Beta768" />
     <PackageReference Include="Jace" Version="1.0.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -140,11 +144,15 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.111.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111.0" />
-    <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.111.0" />
-    <PackageReference Include="System.Data.SQLite.Linq" Version="1.0.111.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
     <PackageReference Include="System.Security.AccessControl" Version="4.5.0" />
     <PackageReference Include="System.Security.Principal.Windows" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\build\Debug</OutputPath>
