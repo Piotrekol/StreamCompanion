@@ -43,7 +43,7 @@ namespace PpCalculator
 
         protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
 
-        public int? RulesetId => Ruleset.LegacyID;
+        public int? RulesetId => Ruleset.RulesetInfo.ID;
 
 
         public void PreProcess(ProcessorWorkingBeatmap workingBeatmap)

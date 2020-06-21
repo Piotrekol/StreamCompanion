@@ -13,7 +13,6 @@ using osu.Game.Rulesets.Taiko;
 using System;
 using System.IO;
 using System.Linq;
-using osu.Framework.Graphics.Video;
 using osu.Game.IO;
 
 namespace PpCalculator
@@ -58,8 +57,6 @@ namespace PpCalculator
 
         protected override IBeatmap GetBeatmap() => beatmap;
         protected override Texture GetBackground() => null;
-        protected override VideoSprite GetVideo() => null;
-
         protected override Track GetTrack() => null;
 
         public static Ruleset GetRulesetFromLegacyID(int id)
