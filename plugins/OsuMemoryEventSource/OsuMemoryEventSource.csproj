@@ -1,167 +1,69 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsuMemoryEventSource</RootNamespace>
-    <AssemblyName>OsuMemoryEventSource</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug_temp\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release_temp\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug_temp\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\Release_temp\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="FirstRunMemoryCalibration.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="FirstRunMemoryCalibration.Designer.cs">
-      <DependentUpon>FirstRunMemoryCalibration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers.cs" />
-    <Compile Include="InterpolatedValue.cs" />
-    <Compile Include="LiveToken.cs" />
-    <Compile Include="MemoryDataFinderSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MemoryDataFinderSettings.Designer.cs">
-      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MemoryDataProcessor.cs" />
-    <Compile Include="LivePerformanceCalculator.cs" />
-    <Compile Include="MemoryListener.cs" />
-    <Compile Include="OsuMemoryEventSource.cs" />
-    <Compile Include="OsuMemoryEventSourceBase.cs" />
-    <Compile Include="PatternsDispatcher.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\submodules\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj">
-      <Project>{d117800f-072d-4ae4-9679-3e2a129a1a3c}</Project>
-      <Name>OsuMemoryDataProvider</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
-    <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
-      <Project>{3d97e9c4-a884-4664-a40c-f19c4533aa00}</Project>
-      <Name>PpCalculator</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FirstRunMemoryCalibration.resx">
-      <DependentUpon>FirstRunMemoryCalibration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MemoryDataFinderSettings.resx">
-      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="StreamCompanionTypes">
-      <Version>3.0.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>mkdir "$(TargetDir)\..\$(ConfigurationName)"
-mkdir "$(TargetDir)\..\$(ConfigurationName)\Dlls"
+﻿<Project>
+	<Import Sdk="Microsoft.NET.Sdk.WindowsDesktop" Project="Sdk.props" />
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+		<OutputType>Library</OutputType>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+		<OutputPath>bin\Debug_temp\</OutputPath>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+		<OutputPath>bin\Release_temp\</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+		<OutputPath>bin\Debug_temp\</OutputPath>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+		<OutputPath>bin\Release_temp\</OutputPath>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Update="FirstRunMemoryCalibration.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="MemoryDataFinderSettings.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
+			<Private>false</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+		</ProjectReference>
+		<ProjectReference Include="..\..\submodules\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj">
+			<Private>true</Private>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="StreamCompanionTypes">
+			<Version>3.0.0</Version>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+	</ItemGroup>
+	<Import Sdk="Microsoft.NET.Sdk.WindowsDesktop" Project="Sdk.targets" />
 
-copy "$(TargetDir)\FFmpeg.AutoGen.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\FFmpeg.AutoGen.dll"
-copy "$(TargetDir)\Humanizer.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Humanizer.dll"
-copy "$(TargetDir)\JetBrains.Annotations.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\JetBrains.Annotations.dll"
-copy "$(TargetDir)\ManagedBass.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ManagedBass.dll"
-copy "$(TargetDir)\ManagedBass.Fx.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ManagedBass.Fx.dll"
-copy "$(TargetDir)\Markdig.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Markdig.dll"
-copy "$(TargetDir)\netstandard.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\netstandard.dll"
-copy "$(TargetDir)\Newtonsoft.Json.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Newtonsoft.Json.dll"
-copy "$(TargetDir)\nunit.framework.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\nunit.framework.dll"
-copy "$(TargetDir)\osu.Framework.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Framework.dll"
-copy "$(TargetDir)\osu.Game.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Catch.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Catch.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Mania.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Mania.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Osu.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Osu.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Taiko.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Taiko.dll"
-copy "$(TargetDir)\osuTK.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osuTK.dll"
-copy "$(TargetDir)\PpCalculator.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\PpCalculator.dll"
-copy "$(TargetDir)\Remotion.Linq.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Remotion.Linq.dll"
-copy "$(TargetDir)\SQLitePCLRaw.batteries_green.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.batteries_green.dll"
-copy "$(TargetDir)\SQLitePCLRaw.batteries_v2.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.batteries_v2.dll"
-copy "$(TargetDir)\SQLitePCLRaw.core.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.core.dll"
-copy "$(TargetDir)\SQLitePCLRaw.provider.e_sqlite3.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.provider.e_sqlite3.dll"
-copy "$(TargetDir)\System.Memory.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Memory.dll"
-copy "$(TargetDir)\System.ObjectModel.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.ObjectModel.dll"
-copy "$(TargetDir)\System.Runtime.CompilerServices.Unsafe.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Runtime.CompilerServices.Unsafe.dll"
-copy "$(TargetDir)\System.Runtime.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Runtime.dll"
-copy "$(TargetDir)\System.Runtime.InteropServices.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Runtime.InteropServices.dll"
-copy "$(TargetDir)\System.Threading.Tasks.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Threading.Tasks.dll"
-copy "$(TargetDir)\System.ValueTuple.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.ValueTuple.dll"
-copy "$(TargetDir)\System.Numerics.Vectors.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Numerics.Vectors.dll"
+	<PropertyGroup>
+		<PostBuildEvent>
+			mkdir "$(TargetDir)..\cleanedOutput\Dlls"
+			del /q "$(TargetDir)..\cleanedOutput"
 
+			xcopy /q "$(TargetDir)OsuMemoryEventSource.dll" "$(TargetDir)..\cleanedOutput"
+			xcopy /q "$(TargetDir)ProcessMemoryDataFinder.dll" "$(TargetDir)..\cleanedOutput\Dlls"
+			xcopy /q "$(TargetDir)OsuMemoryDataProvider.dll" "$(TargetDir)..\cleanedOutput\Dlls"
 
-copy "$(TargetDir)\OsuMemoryEventSource.dll" "$(TargetDir)\..\$(ConfigurationName)\OsuMemoryEventSource.dll"
-copy "$(TargetDir)\ProcessMemoryDataFinder.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ProcessMemoryDataFinder.dll"
-copy "$(TargetDir)\OsuMemoryDataProvider.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\OsuMemoryDataProvider.dll"
-
-mkdir "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls"
-copy "$(TargetDir)\..\$(ConfigurationName)\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\"
-copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"</PostBuildEvent>
-  </PropertyGroup>
+			CALL "$(SolutionDir)build\copyPlugin.bat" "$(TargetDir)..\cleanedOutput\" "$(ConfigurationName)"
+		</PostBuildEvent>
+	</PropertyGroup>
 </Project>

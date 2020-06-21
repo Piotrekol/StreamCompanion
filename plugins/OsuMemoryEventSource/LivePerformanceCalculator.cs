@@ -4,7 +4,6 @@ using PpCalculator;
 using System;
 using System.Collections.Generic;
 using StreamCompanionTypes.DataTypes;
-using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace OsuMemoryEventSource
 {
