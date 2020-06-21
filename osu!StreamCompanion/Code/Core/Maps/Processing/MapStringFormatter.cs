@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -18,7 +18,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly MainMapDataGetter _mainMapDataGetter;
         private ISettings _settings;
 
-        private Thread ConsumerThread;
+        private CancellationTokenSource cts = new CancellationTokenSource();
         private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
         private ConcurrentStack<MapSearchArgs> TasksMemory = new ConcurrentStack<MapSearchArgs>();
 
@@ -30,10 +30,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
                 source.NewOsuEvent += NewOsuEvent;
             }
-            ConsumerThread = new Thread(ConsumerTask);
-
+            
             _logger = logger;
-            ConsumerThread.Start();
+            Task.Run(ConsumerTask);
         }
 
         private void NewOsuEvent(object sender, MapSearchArgs mapSearchArgs)
@@ -80,6 +79,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 var memorySearchFailed = false;
                 while (true)
                 {
+                    if (cts.IsCancellationRequested)
+                        return;
                     if (counter % 400 == 0)
                     {//more or less every 2 seconds given 5ms delay at end.
                         counter = 0;
@@ -159,7 +160,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         public void Dispose()
         {
-            ConsumerThread?.Abort();
+            cts.Cancel();
         }
     }
 }
