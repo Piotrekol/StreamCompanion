@@ -36,8 +36,8 @@ namespace LiveVisualizer
             set
             {
                 _ppToken = value.FirstOrDefault(t => t.Key == "PpIfMapEndsNow").Value;
-                _hit100Token = value.FirstOrDefault(t => t.Key == "100").Value;
-                _hit50Token = value.FirstOrDefault(t => t.Key == "50").Value;
+                _hit100Token = value.FirstOrDefault(t => t.Key == "c100").Value;
+                _hit50Token = value.FirstOrDefault(t => t.Key == "c50").Value;
                 _hitMissToken = value.FirstOrDefault(t => t.Key == "miss").Value;
                 _timeToken = value.FirstOrDefault(t => t.Key == "time").Value;
                 _statusToken = value.FirstOrDefault(t => t.Key == "status").Value;
