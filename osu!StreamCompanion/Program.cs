@@ -12,12 +12,14 @@ using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core.Loggers;
 using SharpRaven.Data;
 using System.IO;
+using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v200223.22";
+        public static string ScVersion ="v200621.21";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 
@@ -27,11 +29,13 @@ namespace osu_StreamCompanion
         [STAThread]
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
             string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value.ToString();
             string mutexId = string.Format("Global\\{{{0}}}", appGuid);
 
             string settingsProfileName = GetSettingsProfileNameFromArgs(args)?.Trim();
-            if(!string.IsNullOrEmpty(settingsProfileName) && settingsProfileName.IndexOfAny(Path.GetInvalidFileNameChars()) >=0)
+            if (!string.IsNullOrEmpty(settingsProfileName) && settingsProfileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
                 // settingsProfileName contains chars not valid for a filename
                 MessageBox.Show(settingsProfileName + " is an invalid settings profile name", "Error");
@@ -81,6 +85,26 @@ namespace osu_StreamCompanion
                 }
 #pragma warning restore 162
 
+        }
+
+        private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+        {
+            ILogger logger = null;
+            if (DiContainer.LazyContainer.IsValueCreated)
+                logger = DiContainer.Container.Locate<ILogger>();
+
+            logger?.Log($"Resolving assembly: {args.Name}", LogLevel.Debug);
+            if (string.IsNullOrEmpty(args.Name))
+                return null;
+
+            var fileName = $"{args.Name.Split(',')[0]}.dll";
+            var expectedFilePath = Path.Combine(DiContainer.PluginsLocation, "Dlls", fileName);
+            if (File.Exists(expectedFilePath))
+            {
+                return Assembly.LoadFrom(expectedFilePath);
+            }
+            
+            return null;
         }
 
         private static string GetSettingsProfileNameFromArgs(string[] args)
@@ -145,7 +169,7 @@ namespace osu_StreamCompanion
             else
             {
 #if DEBUG
-                WaitForDebugger((Exception) e.ExceptionObject);
+                WaitForDebugger((Exception)e.ExceptionObject);
                 throw (Exception)e.ExceptionObject;
 #endif
 #pragma warning disable 162
@@ -168,7 +192,7 @@ namespace osu_StreamCompanion
                                          $"press Yes to attach local debugger{Environment.NewLine}" +
                                          $"press No to wait for debugger (Application will freeze){Environment.NewLine}" +
                                          $"press cancel to ignore and continue error handling as usual{Environment.NewLine}" +
-                                         $"{ex}", "Error - attach debugger?",MessageBoxButtons.YesNoCancel);
+                                         $"{ex}", "Error - attach debugger?", MessageBoxButtons.YesNoCancel);
             switch (result)
             {
                 case DialogResult.Cancel:

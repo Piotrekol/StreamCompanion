@@ -22,10 +22,10 @@ namespace osu_StreamCompanion.Code.Core
 {
     internal static class DiContainer
     {
-        private static string PluginsLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+        public static readonly string PluginsLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
 
         public static DependencyInjectionContainer Container => LazyContainer.Value;
-        private static Lazy<DependencyInjectionContainer> LazyContainer = new Lazy<DependencyInjectionContainer>(() =>
+        public static Lazy<DependencyInjectionContainer> LazyContainer = new Lazy<DependencyInjectionContainer>(() =>
         {
             var di = new DependencyInjectionContainer();
             di.Configure(x => x.ExportFactory(() => MainLogger.Instance));
