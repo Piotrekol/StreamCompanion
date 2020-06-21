@@ -19,7 +19,7 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v200621.21";
+        public static string ScVersion ="v200621.22";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 
@@ -93,7 +93,7 @@ namespace osu_StreamCompanion
             if (DiContainer.LazyContainer.IsValueCreated)
                 logger = DiContainer.Container.Locate<ILogger>();
 
-            logger?.Log($"Resolving assembly: {args.Name}", LogLevel.Debug);
+            logger?.Log($"Resolving assembly: {args.Name} | Requestor: {args.RequestingAssembly?.FullName}", LogLevel.Debug);
             if (string.IsNullOrEmpty(args.Name))
                 return null;
 
