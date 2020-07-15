@@ -327,13 +327,18 @@ namespace LiveVisualizer
         private double getMaxY(double maxValue)
         {
             if (!AutomaticAxisControlIsEnabled)
+            {
                 foreach (var cutoff in VisualizerData.Configuration.ChartCutoffsSet)
                 {
-                    if (maxValue < cutoff)
+                    if (maxValue < cutoff && cutoff > 0)
                         return cutoff;
                 }
+            }
 
-            return Math.Ceiling(maxValue);
+            var maxY = Math.Ceiling(maxValue);
+            return maxY > 0
+                ? maxY
+                : 200;
         }
 
         private double GetAxisYStep(double maxYValue)
