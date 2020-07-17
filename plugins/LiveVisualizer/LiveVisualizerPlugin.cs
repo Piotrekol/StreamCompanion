@@ -51,7 +51,7 @@ namespace LiveVisualizer
         private IModsEx _lastMods = null;
 
 
-        public LiveVisualizerPlugin(ILogger logger, ISettings settings) : base(settings)
+        public LiveVisualizerPlugin(IContextAwareLogger logger, ISettings settings) : base(logger, settings)
         {
             VisualizerData = new VisualizerDataModel();
 
@@ -234,7 +234,24 @@ namespace LiveVisualizer
                 _ppCalculator = ppCalculator;
             }
 
+            UpdateContextLoggerData();
+
             _visualizerWindow?.ForceChartUpdate();
+        }
+
+        private void UpdateContextLoggerData()
+        {
+            string serialized;
+            try
+            {
+                serialized = JsonConvert.SerializeObject(VisualizerData.Configuration);
+            }
+            catch (Exception e)
+            {
+                serialized = e.ToString();
+            }
+
+            Logger.SetContextData("LiveVisualizer_Configuration", serialized);
         }
 
         private void SetAxisValues(IReadOnlyList<double> strainValues)

@@ -17,6 +17,7 @@ namespace LiveVisualizer
         protected CancellationTokenSource Cts = new CancellationTokenSource();
         private LiveVisualizerSettings _liveVisualizerSettings;
         protected ISettings Settings;
+        protected readonly IContextAwareLogger Logger;
         protected IWpfVisualizerData VisualizerData;
         private Task processNewMapTask;
         private bool disposed = false;
@@ -28,8 +29,9 @@ namespace LiveVisualizer
         public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "Visualizer";
 
-        public LiveVisualizerPluginBase(ISettings settings)
+        public LiveVisualizerPluginBase(IContextAwareLogger logger, ISettings settings)
         {
+            Logger = logger;
             Settings = settings;
         }
         public virtual void Dispose()
