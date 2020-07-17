@@ -88,7 +88,7 @@ namespace LiveVisualizer
 
         private void LoadConfiguration(bool reset = false)
         {
-            var config = Settings.Get<string>(ConfigEntrys.LiveVisualizerConfig);
+            var rawConfig = Settings.Get<string>(ConfigEntrys.LiveVisualizerConfig);
 
             if (reset)
             {
@@ -103,13 +103,17 @@ namespace LiveVisualizer
 
             }
 
-            if (reset || config == ConfigEntrys.LiveVisualizerConfig.Default<string>())
+            if (reset || rawConfig == ConfigEntrys.LiveVisualizerConfig.Default<string>())
             {
                 VisualizerData.Configuration.ChartCutoffsSet = new SortedSet<int>(new[] { 30, 60, 100, 200, 350 });
                 return;
             }
 
-            VisualizerData.Configuration = JsonConvert.DeserializeObject<VisualizerConfiguration>(config);
+            var config = JsonConvert.DeserializeObject<VisualizerConfiguration>(rawConfig);
+            config.AxisYStep = 100;
+            config.MaxYValue = 200;
+
+            VisualizerData.Configuration = config;
         }
 
         protected override void ResetSettings()
@@ -234,26 +238,8 @@ namespace LiveVisualizer
                 _ppCalculator = ppCalculator;
             }
 
-            UpdateContextLoggerData();
-
             _visualizerWindow?.ForceChartUpdate();
         }
-
-        private void UpdateContextLoggerData()
-        {
-            string serialized;
-            try
-            {
-                serialized = JsonConvert.SerializeObject(VisualizerData.Configuration);
-            }
-            catch (Exception e)
-            {
-                serialized = e.ToString();
-            }
-
-            Logger.SetContextData("LiveVisualizer_Configuration", serialized);
-        }
-
         private void SetAxisValues(IReadOnlyList<double> strainValues)
         {
             if (strainValues != null && strainValues.Any())
