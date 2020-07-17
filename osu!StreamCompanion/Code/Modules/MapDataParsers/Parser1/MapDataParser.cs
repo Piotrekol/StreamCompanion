@@ -75,7 +75,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _patterns.Add(new OutputPattern()
             {
                 Name = "livepp_hits",
-                Pattern = "!100!x100 !50!x50 !miss!xMiss",
+                Pattern = "!c100!x100 !c50!x50 !miss!xMiss",
                 SaveEvent = OsuStatus.Playing
             });
             _patterns.Add(new OutputPattern()
