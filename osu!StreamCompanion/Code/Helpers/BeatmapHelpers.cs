@@ -43,7 +43,7 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.CircleSize = (float)reader.GetDouble(i); i++;
             beatmap.HpDrainRate = (float)reader.GetDouble(i); i++;
             beatmap.OverallDifficulty = (float)reader.GetDouble(i); i++;
-            beatmap.SliderVelocity = reader.GetDouble(i); i++;
+            beatmap.SliderVelocity = reader.SafeGetDouble(i); i++;
             beatmap.DrainingTime = reader.GetInt32(i); i++;
             beatmap.TotalTime = reader.GetInt32(i); i++;
             beatmap.PreviewTime = reader.GetInt32(i); i++;
@@ -53,8 +53,7 @@ namespace osu_StreamCompanion.Code.Helpers
             /*beatmap.MapRating =*/ reader.GetInt32(i); i++;
             beatmap.Offset = (short)reader.GetInt32(i); i++;
 
-            var stackLeniency = reader.SafeGetDouble(i); i++;
-            beatmap.StackLeniency = double.IsNaN(stackLeniency) ? 0 : (float)stackLeniency;//TODO: (CollectionManager) StackLeniency has to be nullable
+            beatmap.StackLeniency = (float)reader.SafeGetDouble(i); i++;
 
             beatmap.PlayMode = (PlayMode)reader.GetByte(i); i++;
             beatmap.Source = reader.GetString(i); i++;
