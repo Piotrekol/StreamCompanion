@@ -130,8 +130,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CollectionManager, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CollectionManager.1.0.6\lib\net471\CollectionManager.dll</HintPath>
+    <Reference Include="CollectionManager, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CollectionManager.1.0.7\lib\net471\CollectionManager.dll</HintPath>
     </Reference>
     <Reference Include="Grace, Version=7.1.0.0, Culture=neutral, PublicKeyToken=b7d24c6367970497, processorArchitecture=MSIL">
       <HintPath>..\packages\Grace.7.1.0-Beta768\lib\net45\Grace.dll</HintPath>
@@ -150,8 +150,8 @@
     <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpRaven.2.4.0\lib\net471\SharpRaven.dll</HintPath>
     </Reference>
-    <Reference Include="StreamCompanionTypes, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StreamCompanionTypes.4.0.1\lib\net471\StreamCompanionTypes.dll</HintPath>
+    <Reference Include="StreamCompanionTypes, Version=4.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamCompanionTypes.4.0.3\lib\net471\StreamCompanionTypes.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>

@@ -279,6 +279,8 @@ namespace osu_StreamCompanion.Code.Helpers
             }
             else
             {
+                var sv = bm.SliderVelocity.HasValue ? bm.SliderVelocity.Value : double.NaN;
+                var sl = bm.StackLeniency.HasValue ? bm.StackLeniency.Value : double.NaN;
                 dict = new Dictionary<string, string>
                 {
                     {"!TitleRoman!", bm.TitleRoman},
@@ -310,7 +312,7 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"!cs!", bm.CircleSize.ToString(CultureInfo.InvariantCulture)},
                     {"!hp!", bm.HpDrainRate.ToString(CultureInfo.InvariantCulture)},
                     {"!od!", bm.OverallDifficulty.ToString(CultureInfo.InvariantCulture)},
-                    {"!sv!", bm.SliderVelocity.ToString(CultureInfo.InvariantCulture)},
+                    {"!sv!", sv.ToString(CultureInfo.InvariantCulture)},
 
                     {"!starsNomod!", bm.StarsNomod.ToString("##.###", CultureInfo.InvariantCulture)},
                     {"!drainingtime!", bm.DrainingTime.ToString()},
@@ -320,7 +322,7 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"!dl!", bm.MapLink},
                     {"!mapsetid!", bm.MapSetId.ToString()},
                     {"!threadid!", bm.ThreadId.ToString()},
-                    {"!SL!", bm.StackLeniency.ToString(CultureInfo.InvariantCulture)},
+                    {"!SL!", sl.ToString(CultureInfo.InvariantCulture)},
                     {"!mode!", bm.PlayMode.GetHashCode().ToString()},
                     {"!source!", bm.Source},
                     {"!dir!", bm.Dir},
