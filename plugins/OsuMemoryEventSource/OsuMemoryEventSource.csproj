@@ -93,11 +93,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\submodules\ProcessMemoryDataFinder\OsuMemoryDataProvider\OsuMemoryDataProvider.csproj">
-      <Project>{d117800f-072d-4ae4-9679-3e2a129a1a3c}</Project>
-      <Name>OsuMemoryDataProvider</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
     <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
       <Project>{3d97e9c4-a884-4664-a40c-f19c4533aa00}</Project>
       <Name>PpCalculator</Name>
@@ -115,6 +110,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="OsuMemoryDataProvider">
+      <Version>0.0.2</Version>
+    </PackageReference>
     <PackageReference Include="StreamCompanionTypes">
       <Version>3.0.0</Version>
     </PackageReference>
