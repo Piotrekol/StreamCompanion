@@ -110,6 +110,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="OsuMemoryDataProvider">
+      <Version>0.0.2</Version>
+    </PackageReference>
     <PackageReference Include="StreamCompanionTypes">
       <Version>3.0.0</Version>
     </PackageReference>
