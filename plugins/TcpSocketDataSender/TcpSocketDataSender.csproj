@@ -55,8 +55,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CollectionManager, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CollectionManager.1.0.6\lib\net471\CollectionManager.dll</HintPath>
+    <Reference Include="CollectionManager, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CollectionManager.1.0.7\lib\net471\CollectionManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -72,8 +72,8 @@
       <HintPath>..\..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="StreamCompanionTypes, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\StreamCompanionTypes.3.0.0\lib\net471\StreamCompanionTypes.dll</HintPath>
+    <Reference Include="StreamCompanionTypes, Version=4.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\StreamCompanionTypes.4.0.3\lib\net471\StreamCompanionTypes.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
