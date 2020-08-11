@@ -75,6 +75,7 @@ namespace OsuSongsFolderWatcher
 
                 _watcher = new FileSystemWatcher(dir, "*.osu");
                 _watcher.Changed += Watcher_FileChanged;
+                _watcher.Created += Watcher_FileChanged;
                 _watcher.IncludeSubdirectories = true;
                 _watcher.EnableRaisingEvents = true;
                 _consumerThread = new Thread(ConsumerTask);
