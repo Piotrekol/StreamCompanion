@@ -1,4 +1,4 @@
-﻿using osu.Game.Beatmaps;
+using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
@@ -59,6 +59,10 @@ namespace PpCalculator
 
         public double Calculate(double startTime, double endTime = double.NaN, Dictionary<string, double> categoryAttribs = null)
         {
+            if (double.IsNaN(startTime) || startTime <= 0d)
+            {
+                return Calculate(endTime, categoryAttribs);
+            }
 
             var orginalWorkingBeatmap = WorkingBeatmap;
             var tempMap = new Beatmap();
@@ -80,7 +84,7 @@ namespace PpCalculator
             return result;
         }
 
-        public double Calculate(double? time = null, Dictionary<string, double> categoryAttribs = null)
+        public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
         {
             if (WorkingBeatmap == null)
                 return -1d;
@@ -104,8 +108,8 @@ namespace PpCalculator
                 createPerformanceCalculator = true;
             }
 
-            IReadOnlyList<HitObject> hitObjects = time.HasValue
-                ? PlayableBeatmap.HitObjects.Where(h => h.StartTime <= time).ToList()
+            IReadOnlyList<HitObject> hitObjects = endTime.HasValue
+                ? PlayableBeatmap.HitObjects.Where(h => h.StartTime <= endTime).ToList()
                 : PlayableBeatmap.HitObjects;
 
             int beatmapMaxCombo = GetMaxCombo(hitObjects);
@@ -128,23 +132,16 @@ namespace PpCalculator
                 ResetPerformanceCalculator = false;
             }
 
-            double pp;
-
-            if (time.HasValue)
-                pp = PerformanceCalculator.Calculate(time.Value, categoryAttribs);
-            else
+            try
             {
-                try
-                {
-                    pp = PerformanceCalculator.Calculate(categoryAttribs);
-                }
-                catch (InvalidOperationException)
-                {
-                    pp = -1;
-                }
+                return endTime.HasValue 
+                    ? PerformanceCalculator.Calculate(endTime.Value, categoryAttribs) 
+                    : PerformanceCalculator.Calculate(categoryAttribs);
             }
-
-            return pp;
+            catch (InvalidOperationException)
+            {
+                return -1;
+            }
         }
 
 
