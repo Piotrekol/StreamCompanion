@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using osu.Framework.Graphics.Video;
 using osu.Game.IO;
+using osu.Game.Rulesets.Objects.Types;
 
 namespace PpCalculator
 {
@@ -25,7 +26,17 @@ namespace PpCalculator
     {
         private readonly Beatmap beatmap;
         public int RulesetID => beatmap.BeatmapInfo.RulesetID;
-        public double Length => beatmap.HitObjects.Any() ? beatmap.HitObjects.Last().StartTime : 0;
+        public double Length
+        {
+            get
+            {
+                if (!beatmap.HitObjects.Any())
+                    return 0;
+
+                var hitObject = beatmap.HitObjects.Last();
+                return (hitObject as IHasEndTime)?.EndTime ?? hitObject.StartTime;
+            }
+        }
 
         public string BackgroundFile => beatmap.Metadata.BackgroundFile;
         /// <summary>
@@ -37,7 +48,7 @@ namespace PpCalculator
             : this(readFromFile(file), beatmapId)
         {
         }
-        
+
         internal ProcessorWorkingBeatmap(Beatmap beatmap, int? beatmapId = null)
             : base(beatmap.BeatmapInfo, null)
         {
