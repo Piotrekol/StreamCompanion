@@ -299,7 +299,7 @@ namespace LiveVisualizer
                                     _ppCalculator.Mehs = null;
                                     _ppCalculator.Misses = 0;
                                     _ppCalculator.Accuracy = 100;
-                                    var pp = Math.Round(_ppCalculator.Calculate(0, VisualizerData.Display.CurrentTime));
+                                    var pp = Math.Round(_ppCalculator.Calculate(VisualizerData.Display.CurrentTime, null));
                                     VisualizerData.Display.Pp = pp < 0 ? 0 : pp;
                                 }
                             }
