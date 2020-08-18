@@ -90,6 +90,22 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Pattern = "!mods!",
                 SaveEvent = OsuStatus.Playing
             });
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "ingameOverlay_testPattern",
+                Pattern = "This is test pattern for ingameOverlay, \r\nYou should be able to see it ingame after installing and enabling overlay plugin",
+                ShowInOsu = true,
+                SaveEvent = OsuStatus.All
+            });
+            _patterns.Add(new OutputPattern()
+            {
+                Name = "ExamplePatternCalc",
+                //https://github.com/pieterderycke/Jace/wiki
+                //all numerical tokens
+                Pattern = "map completion: {min((time*1000/totalTime)*100,100) :0.0}%",
+                SaveEvent = OsuStatus.All
+            });
+            
         }
         private void PatternsOnListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
         {
