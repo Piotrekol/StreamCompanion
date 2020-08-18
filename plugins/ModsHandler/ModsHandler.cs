@@ -5,6 +5,7 @@ using StreamCompanionTypes.Interfaces;
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
@@ -67,6 +68,7 @@ namespace ModsHandler
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
 
                 _tokenSetter("mods", map.Mods?.ShownMods);
+                _tokenSetter("internalMods", map.Mods, TokenType.Hidden);
                 _tokenSetter("mAR", Math.Round(c["AR"], 2));
                 _tokenSetter("mCS", Math.Round(c["CS"], 2));
                 _tokenSetter("mOD", Math.Round(c["OD"], 2));

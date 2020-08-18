@@ -25,6 +25,23 @@ namespace OsuMemoryEventSource
         private readonly IContextAwareLogger _logger;
         private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
+        private IToken _internalModsToken;
+        private Mods CurrentMods
+        {
+            get
+            {
+                if (_internalModsToken == null)
+                {
+                    if (Tokens.AllTokens.ContainsKey("internalMods"))
+                        _internalModsToken = Tokens.AllTokens["internalMods"];
+                    else
+                        return Mods.Omod;
+                }
+
+                return ((IModsEx)_internalModsToken.Value).Mods;
+            }
+        }
+
         private enum InterpolatedValueName
         {
             PpIfMapEndsNow,
@@ -202,15 +219,15 @@ namespace OsuMemoryEventSource
                 {
                     //TODO: memoryReader sometimes returns malformed skinName string
                     var name = _reader?.GetSkinFolderName() ?? string.Empty;
-                    return name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 
-                        ? string.Empty 
+                    return name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
+                        ? string.Empty
                         : name;
                 });
             _liveTokens["skinPath"] = new LiveToken(_tokenSetter("skinPath", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () =>
             {
                 try
                 {
-                    return Path.Combine(osuSkinsDirectory, (string) _liveTokens["skin"].Token.Value);
+                    return Path.Combine(osuSkinsDirectory, (string)_liveTokens["skin"].Token.Value);
                 }
                 catch (ArgumentException)
                 {
@@ -295,8 +312,16 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
-
-            _liveTokens["HitErrors"] = new LiveToken(_tokenSetter("HitErrors", new List<int>(), TokenType.Live,",", new List<int>(), OsuStatus.Playing),() => _rawData.HitErrors);
+            _liveTokens["ConvertedUnstableRate"] = new LiveToken(_tokenSetter("ConvertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
+            {
+                var ur = (double)_liveTokens["UnstableRate"].Token.Value;
+                if ((CurrentMods & Mods.Dt) != 0)
+                    return ur / 1.5d;
+                if ((CurrentMods & Mods.Ht) != 0)
+                    return ur / 0.75d;
+                return ur;
+            });
+            _liveTokens["HitErrors"] = new LiveToken(_tokenSetter("HitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), OsuStatus.Playing), () => _rawData.HitErrors);
 
             _liveTokens["LocalTime"] = new LiveToken(_tokenSetter("LocalTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
         }
