@@ -112,6 +112,9 @@ namespace PpCalculator
                 ? PlayableBeatmap.HitObjects.Where(h => h.StartTime <= endTime).ToList()
                 : PlayableBeatmap.HitObjects;
 
+            if (!hitObjects.Any())
+                return 0d;
+
             int beatmapMaxCombo = GetMaxCombo(hitObjects);
 
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
