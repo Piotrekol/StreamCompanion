@@ -1,5 +1,5 @@
 
-### ![StreamCompanion](https://upload.hubza.co.uk/i/gate-b-logo-text.png)
+### ![StreamCompanion](images/logo.png)
  **StreamCompanion** is a program directed towards osu! streamers, with functions such as a *pp counter* and *map information*
 
 ### Functions 
