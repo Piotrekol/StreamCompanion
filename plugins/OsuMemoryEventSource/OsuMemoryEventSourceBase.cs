@@ -23,6 +23,7 @@ namespace OsuMemoryEventSource
 
         protected SettingNames _names = SettingNames.Instance;
         public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
+        internal static Tokens.TokenSetter LiveTokenSetter;
         internal static Tokens.TokenSetter TokenSetter;
 
         public OsuStatus SearchModes { get; } = OsuStatus.All;
@@ -60,7 +61,8 @@ namespace OsuMemoryEventSource
             _modParser = modParser;
             _highFrequencyDataConsumers = highFrequencyDataConsumers;
             Logger = logger;
-            TokenSetter = Tokens.CreateTokenSetter(Name);
+            LiveTokenSetter = Tokens.CreateTokenSetter(Name);
+            TokenSetter = Tokens.CreateTokenSetter($"{Name}-Regular");
             _memoryReader = OsuMemoryReader.Instance;
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
