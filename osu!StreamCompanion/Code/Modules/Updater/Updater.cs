@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Services;
 
@@ -13,6 +15,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 {
     class Updater : IModule
     {
+        private readonly ILogger _logger;
         private IMainWindowModel _mainWindowHandle;
         private const string baseGithubUrl = "https://api.github.com/repos/Piotrekol/StreamCompanion";
         private const string githubUpdateUrl = baseGithubUrl + "/releases/latest";
@@ -23,6 +26,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 
         public Updater(ILogger logger, IMainWindowModel mainWindowHandle)
         {
+            _logger = logger;
             _mainWindowHandle = mainWindowHandle;
             _mainWindowHandle.OnUpdateTextClicked += _mainWindowHandle_OnUpdateTextClicked;
             Start(logger);
@@ -34,7 +38,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             Started = true;
             CheckForUpdates();
         }
-        
+
         private Dictionary<string, string> GetChangelog()
         {
             Dictionary<string, string> log = null;
@@ -49,24 +53,31 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             return log;
         }
 
-        private void SetErrorMessage(string baseMsg)
+        private async Task SetErrorMessage(string baseMsg)
         {
-            string ret = baseMsg+" ";
+            if (userDelayTask != null)
+                await userDelayTask;
+            string ret = baseMsg + " ";
             if (exception != null)
                 ret += exception.Message;
-            setStatus(ret);
+            _logger.Log($"Error: {ret}", LogLevel.Debug);
+            await SetStatus(ret);
         }
+
+        private Task userDelayTask;
         private void CheckForUpdates()
         {
-            new Thread(() =>
+            Task.Run(async () =>
             {
-                setStatus("Checking for updates...");
+                await SetStatus("Checking for updates...");
+                userDelayTask = Task.Delay(500);
                 string rawData = GetStringData(githubUpdateUrl);
                 if (string.IsNullOrWhiteSpace(rawData))
                 {
-                    SetErrorMessage("Could not get update information. - rawData");
+                    await SetErrorMessage("Could not get update information - rawData");
                     return;
                 }
+
                 JObject json;
                 try
                 {
@@ -74,13 +85,14 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                 }
                 catch (JsonReaderException)
                 {
-                    SetErrorMessage("Could not get update information. - invalidJson");
+                    await SetErrorMessage("Could not get update information - invalidJson");
                     return;
                 }
+
                 var newestReleaseVersion = json["tag_name"].ToString();
                 if (string.IsNullOrWhiteSpace(newestReleaseVersion))
                 {
-                    SetErrorMessage("Could not get update information. - newestRelease");
+                    await SetErrorMessage("Could not get update information - newestRelease");
                 }
                 else if (Helpers.Helpers.GetDateFromVersionString(newestReleaseVersion) > _currentVersion)
                 {
@@ -96,9 +108,10 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                             }
 
                         }
+
                         if (asset == null)
                         {
-                            SetErrorMessage("Could not find file to download!");
+                            await SetErrorMessage("Could not find file to download");
                             return;
                         }
 
@@ -110,22 +123,22 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                             DownloadPageUrl = json["html_url"].ToString(),
                             Changelog = GetChangelog()
                         };
-                        setStatus(string.Format("Update is avaliable! running: {0} , avaliable: {1}",
-                            Program.ScVersion, newestReleaseVersion));
+                        await SetStatus(string.Format("Update to version {0} is available",
+                            newestReleaseVersion));
 
                         ShowUpdateWindow(container);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         exception = e;
-                        SetErrorMessage("There was a problem with update information.");
+                        await SetErrorMessage("There was a problem with update information");
                     }
                 }
                 else
                 {
-                    setStatus(string.Format("No new updates found ({0})", Program.ScVersion));
+                    await SetStatus("No new updates found");
                 }
-            }).Start();
+            });
         }
 
         private UpdateForm _updateForm = null;
@@ -164,9 +177,12 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             });
             return ret ?? string.Empty;
         }
-        
-        private void setStatus(string status)
+
+        private async Task SetStatus(string status)
         {
+            if (userDelayTask != null)
+                await userDelayTask;
+
             _mainWindowHandle.UpdateText = status;
         }
 

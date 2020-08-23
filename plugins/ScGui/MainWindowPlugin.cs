@@ -1,0 +1,178 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+using CollectionManager.DataTypes;
+using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
+
+namespace ScGui
+{
+    class MainWindowPlugin : IPlugin, IMapDataConsumer
+    {
+        private readonly SettingNames _names = SettingNames.Instance;
+        public static ConfigEntry minimizeToTaskbar = new ConfigEntry($"{nameof(ScGui)}_minimizeToTaskbar", false);
+        private ISettings _settings;
+        private MainWindow _mainWindow;
+        private SettingsForm _settingsForm = null;
+        private NotifyIcon _notifyIcon;
+
+        private IMainWindowModel _mainWindowModel;
+        private readonly Delegates.Exit _exitAction;
+        private List<ISettingsSource> _settingsList;
+
+        public string Description { get; } = "";
+        public string Name { get; } = "StreamCompanion GUI";
+        public string Author { get; } = "Piotrekol";
+        public string Url { get; } = "";
+        public string UpdateUrl { get; } = "";
+
+        private NotifyIcon CreateNotifyIcon()
+        {
+            var cms = new ContextMenuStrip
+            {
+                Items =
+                {
+                    new ToolStripMenuItem("Show",null,(_, __) => ShowWindow()),
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Minimize to taskbar",null,(_,__)=>
+                    {
+                        _settings.Add(minimizeToTaskbar.Name, !_settings.Get<bool>(minimizeToTaskbar));
+                    }){Checked = _settings.Get<bool>(minimizeToTaskbar), CheckOnClick = true},
+                    new ToolStripMenuItem("Start minimized",null,(_,__)=>
+                    {
+                        _settings.Add(_names.StartHidden.Name, !_settings.Get<bool>(_names.StartHidden));
+                    }){Checked = _settings.Get<bool>(_names.StartHidden), CheckOnClick = true},
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Close",null,(_, __) => Quit(false))
+                }
+            };
+            var notifyIcon = new NotifyIcon()
+            {
+                ContextMenuStrip = cms,
+                Text = "StreamCompanion",
+                Icon = Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly().Location),
+                Visible = true
+            };
+
+            notifyIcon.MouseDoubleClick += (_, __) => ShowWindow();
+
+            return notifyIcon;
+        }
+        public MainWindowPlugin(ISettings settings, IMainWindowModel mainWindowModel, IEnumerable<ISettingsSource> settingsSources, Delegates.Exit exitAction)
+        {
+            _settings = settings;
+            _mainWindowModel = mainWindowModel;
+            _exitAction = exitAction;
+            _settingsList = settingsSources.ToList();
+
+            if (!_settings.Get<bool>(_names.StartHidden))
+                ShowWindow();
+
+            _notifyIcon = CreateNotifyIcon();
+        }
+
+
+        private void ShowWindow()
+        {
+            if (_mainWindow == null)
+            {
+                _mainWindow = new MainWindow(_mainWindowModel, _settings);
+                _mainWindow.OnOpenSettingsClicked += (_, __) =>
+                {
+                    if (_settingsForm != null)
+                    {
+                        _settingsForm.Focus();
+                        return;
+                    }
+                    _settingsForm = new SettingsForm(_settingsList);
+                    _settingsForm.Closed += SettingsFormOnClosed;
+                    _settingsForm.Show();
+                };
+                _mainWindow.Closed += (_, __) => Quit(true);
+                _mainWindow.OnOpenInfoClicked += (_, __) =>
+                {
+                    var aboutFrm = new AboutForm();
+                    aboutFrm.ShowDialog();
+                };
+                _mainWindow.OnUpdateClicked += (sender, args) => _mainWindowModel.UpdateTextClicked(sender, args);
+                _mainWindow.Show();
+
+            }
+            else if (_mainWindow.WindowState == WindowState.Minimized)
+            {
+                _mainWindow.Show();
+                _mainWindow.Dispatcher.Invoke(async () =>
+                {
+                    _mainWindow.Focusable = true;
+                    while (!_mainWindow.IsFocused)
+                    {
+                        _mainWindow.Focus();
+                        await Task.Delay(5);
+                    }
+                });
+
+            }
+        }
+
+        private void Quit(bool fromClosedEvent)
+        {
+            if (!fromClosedEvent && _mainWindow != null)
+            {
+                _mainWindow.Close();
+                return;
+            }
+
+            _settingsForm?.Close();
+            if (_notifyIcon != null)
+                _notifyIcon.Visible = false;
+            _settings.Save();
+            _exitAction?.Invoke("User pressed exit");
+        }
+
+        private void SettingsFormOnClosed(object sender, EventArgs e)
+        {
+            _settingsForm.Closed -= SettingsFormOnClosed;
+            _settingsForm?.Dispose();
+            _settingsForm = null;
+        }
+
+        public void SetNewMap(MapSearchResult map)
+        {
+            if (map.FoundBeatmaps)
+            {
+
+                var foundMap = map.BeatmapsFound[0];
+                var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
+                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.EventSource != "Msn")
+                {
+                    nowPlaying += $" [{foundMap.DiffName}] {map.Mods?.ShownMods ?? ""}";
+                    nowPlaying += $"{Environment.NewLine}NoMod:{foundMap.StarsNomod:##.###}";
+
+                    var mods = map.Mods?.Mods ?? Mods.Omod;
+                    var token = Tokens.AllTokens.FirstOrDefault(t => t.Key.ToLower() == "mstars").Value;
+                    if (mods != Mods.Omod && token != null)
+                    {
+                        nowPlaying += $"Modded: {token.Value:##.###} {map.Action}";
+                    }
+                    else
+                        nowPlaying += $"{map.Action}";
+                }
+                _mainWindowModel.NowPlaying = nowPlaying;
+            }
+            else
+            {
+                _mainWindowModel.NowPlaying = "Map data not found: " + map.MapSearchString;
+            }
+        }
+    }
+}

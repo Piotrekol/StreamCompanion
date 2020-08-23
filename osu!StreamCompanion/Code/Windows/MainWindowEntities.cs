@@ -46,27 +46,35 @@ namespace osu_StreamCompanion.Code.Windows
             }
         }
 
+        private string _version;
+        public string Version
+        {
+            get { return _version; }
+            set
+            {
+                _version = value;
+                RaisePropertyChanged("Version");
+            }
+        }
+
         public MainWindowUpdater()
         {
             BeatmapsLoaded = "Beatmaps not loaded";
             NowPlaying = "Nothing is playing at the moment";
             UpdateText = string.Format("No updates found ({0})", "v121212.13");
+            Version = Program.ScVersion;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string propertyName)
         {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public event EventHandler OnUpdateTextClicked;
         public void UpdateTextClicked(object sender, EventArgs e)
         {
-            if (OnUpdateTextClicked != null) OnUpdateTextClicked(sender, null);
+            OnUpdateTextClicked?.Invoke(sender, null);
         }
     }
 }
