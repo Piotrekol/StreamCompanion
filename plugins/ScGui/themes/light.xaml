@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     >
     <Style TargetType="{x:Type Window}">
-        <Setter Property="FontFamily" Value="./#Comfortaa Light" />
+        <Setter Property="FontFamily" Value="../#Comfortaa Light" />
         <Setter Property="FontSize" Value="12" />
     </Style>
     <SolidColorBrush x:Key="NpTextColor" Color="#13516c"/>
