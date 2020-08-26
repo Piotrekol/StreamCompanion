@@ -36,6 +36,11 @@ namespace ScGui
 
         public void SetTheme(string themeName)
         {
+            if (themeName == "System default")
+                themeName = WindowsThemeHelper.GetWindowsTheme() == WindowsThemeHelper.WindowsTheme.Light
+                    ? "Light"
+                    : "Dark";
+                    
             Resources.MergedDictionaries[0].Source = new Uri($"./themes/{themeName}.xaml", UriKind.Relative);
         }
         private void OnStateChanged(object sender, EventArgs e)
