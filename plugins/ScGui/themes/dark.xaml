@@ -1,0 +1,13 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        >
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="FontFamily" Value="./#Comfortaa Light" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+    <SolidColorBrush x:Key="NpTextColor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="BottomBackgroundColor" Color="#1e1e1e"/>
+    <SolidColorBrush x:Key="TopBackgroundColor" Color="#131313"/>
+    <Color x:Key="GradientStartColor" A="60" R="255" G="255" B="255" />
+</ResourceDictionary>

@@ -17,10 +17,11 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ScGui
 {
-    class MainWindowPlugin : IPlugin, IMapDataConsumer
+    class MainWindowPlugin : IPlugin, IMapDataConsumer, ISettingsSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
         public static ConfigEntry minimizeToTaskbar = new ConfigEntry($"{nameof(ScGui)}_minimizeToTaskbar", false);
+        public static ConfigEntry Theme = new ConfigEntry($"{nameof(ScGui)}_theme", "light");
         private ISettings _settings;
         private MainWindow _mainWindow;
         private SettingsForm _settingsForm = null;
@@ -35,6 +36,7 @@ namespace ScGui
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
+        public string SettingGroup { get; } = "General";
 
         private NotifyIcon CreateNotifyIcon()
         {
@@ -71,9 +73,11 @@ namespace ScGui
         public MainWindowPlugin(ISettings settings, IMainWindowModel mainWindowModel, IEnumerable<ISettingsSource> settingsSources, Delegates.Exit exitAction)
         {
             _settings = settings;
+            _settings.SettingUpdated += SettingUpdated;
             _mainWindowModel = mainWindowModel;
             _exitAction = exitAction;
             _settingsList = settingsSources.ToList();
+            _settingsList.Add(this);
 
             if (!_settings.Get<bool>(_names.StartHidden))
                 ShowWindow();
@@ -81,6 +85,13 @@ namespace ScGui
             _notifyIcon = CreateNotifyIcon();
         }
 
+        private void SettingUpdated(object sender, SettingUpdated e)
+        {
+            if (e.Name == Theme.Name)
+            {
+                _mainWindow?.SetTheme(_settings.Get<string>(Theme));
+            }
+        }
 
         private void ShowWindow()
         {
@@ -173,6 +184,22 @@ namespace ScGui
             {
                 _mainWindowModel.NowPlaying = "Map data not found: " + map.MapSearchString;
             }
+        }
+
+        public void Free()
+        {
+            _scGuiSettings?.Dispose();
+        }
+
+        private ScGuiSettings _scGuiSettings = null;
+        public object GetUiSettings()
+        {
+            if (_scGuiSettings == null || _scGuiSettings.IsDisposed)
+            {
+                _scGuiSettings = new ScGuiSettings(_settings);
+            }
+
+            return _scGuiSettings;
         }
     }
 }

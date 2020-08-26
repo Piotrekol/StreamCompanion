@@ -25,12 +25,19 @@ namespace ScGui
 
             _settings = settings;
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+
             InitializeComponent();
+
+            SetTheme(_settings.Get<string>(MainWindowPlugin.Theme));
             Style = (Style)FindResource(typeof(Window));
             DataContext = data;
             StateChanged += OnStateChanged;
         }
 
+        public void SetTheme(string themeName)
+        {
+            Resources.MergedDictionaries[0].Source = new Uri($"./themes/{themeName}.xaml", UriKind.Relative);
+        }
         private void OnStateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized && _settings.Get<bool>(MainWindowPlugin.minimizeToTaskbar))
