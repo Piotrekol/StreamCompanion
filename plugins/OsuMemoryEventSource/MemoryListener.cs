@@ -4,6 +4,7 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using CollectionManager.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -115,6 +116,11 @@ namespace OsuMemoryEventSource
                 var enableSmoothing = _settings.Get<bool>(Helpers.EnablePpSmoothing);
                 _memoryDataProcessor.ToggleSmoothing(enableSmoothing);
             }
+        }
+
+        public void CreateTokens(MapSearchResult map)
+        {
+            _memoryDataProcessor.Mods = map.Mods?.Mods ?? Mods.Omod;
         }
     }
 }

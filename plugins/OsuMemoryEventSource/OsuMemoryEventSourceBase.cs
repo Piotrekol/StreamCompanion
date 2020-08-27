@@ -101,7 +101,7 @@ namespace OsuMemoryEventSource
 
         public void CreateTokens(MapSearchResult map)
         {
-            //No need to do anything, tokens are created in MemoryDataProcessor.InitLiveTokens() and are constantly updated(live)
+            _memoryListener.CreateTokens(map);
         }
 
         public void SetNewMap(MapSearchResult map)

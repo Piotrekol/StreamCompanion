@@ -26,22 +26,7 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
-        private IToken _internalModsToken;
-        private Mods CurrentMods
-        {
-            get
-            {
-                if (_internalModsToken == null)
-                {
-                    if (Tokens.AllTokens.ContainsKey("internalMods"))
-                        _internalModsToken = Tokens.AllTokens["internalMods"];
-                    else
-                        return Mods.Omod;
-                }
-
-                return ((IModsEx)_internalModsToken.Value).Mods;
-            }
-        }
+        public Mods Mods { get; set; }
 
         private enum InterpolatedValueName
         {
@@ -316,9 +301,9 @@ namespace OsuMemoryEventSource
             _liveTokens["ConvertedUnstableRate"] = new LiveToken(_liveTokenSetter("ConvertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
             {
                 var ur = (double)_liveTokens["UnstableRate"].Token.Value;
-                if ((CurrentMods & Mods.Dt) != 0)
+                if ((Mods & Mods.Dt) != 0)
                     return ur / 1.5d;
-                if ((CurrentMods & Mods.Ht) != 0)
+                if ((Mods & Mods.Ht) != 0)
                     return ur / 0.75d;
                 return ur;
             });
