@@ -21,7 +21,7 @@ namespace ScGui
     {
         private readonly SettingNames _names = SettingNames.Instance;
         public static ConfigEntry minimizeToTaskbar = new ConfigEntry($"{nameof(ScGui)}_minimizeToTaskbar", false);
-        public static ConfigEntry Theme = new ConfigEntry($"{nameof(ScGui)}_theme", "light");
+        public static ConfigEntry Theme = new ConfigEntry($"{nameof(ScGui)}_theme", "System default");
         private ISettings _settings;
         private MainWindow _mainWindow;
         private SettingsForm _settingsForm = null;
