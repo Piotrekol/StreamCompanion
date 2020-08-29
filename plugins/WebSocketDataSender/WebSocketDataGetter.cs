@@ -1,7 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using EmbedIO;
+using EmbedIO.Actions;
+using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -9,8 +16,7 @@ using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
-using WebSocketSharp;
-using WebSocketSharp.Server;
+
 
 namespace WebSocketDataSender
 {
@@ -26,15 +32,14 @@ namespace WebSocketDataSender
         public bool Started { get; set; }
         public string SettingGroup { get; } = "Output patterns";
 
-        public static ConfigEntry Enabled = new ConfigEntry("webSocketEnabled", false);
-        public static ConfigEntry WebSocketPort = new ConfigEntry("webSocketPort", 80);
-        public static ConfigEntry WebSocketAddress = new ConfigEntry("webSocketAddress", "127.0.0.1");
+        public static ConfigEntry Enabled = new ConfigEntry("httpServerEnabled", false);
+        public static ConfigEntry WebSocketPort = new ConfigEntry("httpServerPort", 28390);
+        public static ConfigEntry WebSocketAddress = new ConfigEntry("httpServerAddress", "http://*");
 
         private DataContainer _liveDataContainer = new DataContainer();
         private DataContainer _mapDataContainer = new DataContainer();
-        private WebSocketServer webSocketServer;
-
-        public WebSocketDataGetter(ISettings settings, ILogger logger)
+        private HttpServer _server;
+        public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver)
         {
             _settings = settings;
             if (!_settings.Get<bool>(Enabled))
@@ -42,22 +47,107 @@ namespace WebSocketDataSender
                 return;
             }
 
-            webSocketServer = new WebSocketServer(IPAddress.Parse(_settings.Get<string>(WebSocketAddress)), _settings.Get<int>(WebSocketPort));
-            webSocketServer.ReuseAddress = true;
-            webSocketServer.WaitTime = TimeSpan.FromSeconds(30);
+            var baseAddress = $"{_settings.Get<string>(WebSocketAddress)}:{_settings.Get<int>(WebSocketPort)}";
+            var saveDir = Path.Combine(saver.SaveDirectory, "web");
+            if (!Directory.Exists(saveDir))
+                Directory.CreateDirectory(saveDir);
 
-            webSocketServer.AddWebSocketService("/StreamCompanion/LiveData/Stream", () => new StreamDataProvider(_liveDataContainer));
-            webSocketServer.AddWebSocketService("/StreamCompanion/MapData/Stream", () => new StreamDataProvider(_mapDataContainer));
-            try
+            var modules = new List<(string Description, IWebModule Module)>
             {
-                webSocketServer.Start();
-            }
-            catch (System.Net.Sockets.SocketException e)
+                ("WebSocket stream of output patterns containing live tokens", new WebSocketDataEndpoint("/liveData", true, _liveDataContainer)),
+                ("WebSocket stream of output patterns with do not contain live tokens", new WebSocketDataEndpoint("/mapData", true, _mapDataContainer)),
+                ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
+                ("Current beatmap background image", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
+            };
+
+            _server = new HttpServer(baseAddress, saveDir, logger, modules);
+        }
+
+        private async Task SendCurrentBeatmapImage(IHttpContext context)
+        {
+            using (var responseStream = context.OpenResponseStream())
             {
-                logger.Log("Could not start web socket server!", LogLevel.Basic);
-                logger.Log(e, LogLevel.Advanced);
+                if (Tokens.AllTokens.TryGetValue("backgroundImageLocation", out var imageToken) &&
+                    !string.IsNullOrEmpty((string)imageToken.Value))
+                {
+                    var location = (string)imageToken.Value;
+
+                    context.Response.ContentType = "image/jpeg";
+
+                    if (File.Exists(location))
+                    {
+                        using (var fs = new FileStream(location, FileMode.Open, FileAccess.Read))
+                        {
+                            if (context.Request.QueryString.ContainsKey("width") || context.Request.QueryString.ContainsKey("height"))
+                            {
+                                int.TryParse(context.Request.QueryString["width"], out var desiredWidth);
+                                int.TryParse(context.Request.QueryString["height"], out var desiredHeight);
+
+                                using (var img = Image.FromStream(fs))
+                                {
+                                    using (var resizedImg = ResizeImage(img, 
+                                        desiredWidth == 0 ? (int?)null : desiredWidth, 
+                                        desiredHeight == 0 ? (int?)null : desiredHeight)
+                                    )
+                                    {
+                                        resizedImg.Save(responseStream, ImageFormat.Jpeg);
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                await fs.CopyToAsync(responseStream);
+                            }
+                        }
+                    }
+                }
             }
         }
+        /// <summary>
+        /// Resize the image to the specified width and height.
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="width">The width to resize to.</param>
+        /// <param name="height">The height to resize to.</param>
+        /// <returns>The resized image.</returns>
+        public static Bitmap ResizeImage(Image image, int? width, int? height)
+        {
+            if((!width.HasValue || width == 0) && (!height.HasValue || height == 0))
+                throw new ArgumentNullException("width","Both width and height cannot be null. Provide value for at least one of them.");
+                
+            double ratioX = (double)(width ?? double.MaxValue)/ (double)image.Width;
+            double ratioY = (double)(height ?? double.MaxValue) / (double)image.Height;
+            // use whichever multiplier is smaller
+            double ratio = ratioX < ratioY ? ratioX : ratioY;
+
+            // now we can get the new height and width
+            int newHeight = Convert.ToInt32(image.Height * ratio);
+            int newWidth = Convert.ToInt32(image.Width * ratio);
+
+            var destRect = new Rectangle(0, 0, newWidth, newHeight);
+            var destImage = new Bitmap(newWidth, newHeight);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
+
         public void Dispose()
         {
         }
@@ -84,61 +174,6 @@ namespace WebSocketDataSender
             _mapDataContainer.Data = json;
         }
 
-
-        internal class DataContainer
-        {
-            public volatile string Data;
-        }
-
-        internal class DataProvider : WebSocketBehavior
-        {
-            protected readonly DataContainer DataContainer;
-
-            public DataProvider(DataContainer dataContainer)
-            {
-                DataContainer = dataContainer;
-            }
-
-            protected override Task OnMessage(MessageEventArgs e)
-            {
-                Send(DataContainer.Data);
-                return Task.CompletedTask;
-            }
-        }
-
-        internal class StreamDataProvider : DataProvider
-        {
-            public StreamDataProvider(DataContainer dataContainer) : base(dataContainer)
-            {
-                Task.Run(SendLoop);
-            }
-
-            public async Task SendLoop()
-            {
-                string lastSentData = string.Empty;
-                var counter = 0;
-                while (true)
-                {
-                    await Task.Delay(33);
-                    if (lastSentData != DataContainer.Data)
-                    {
-                        lastSentData = DataContainer.Data;
-                        await Send(lastSentData);
-                    }
-
-                    //check for connection status every ~50s
-                    if (counter++ == 1500)
-                    {
-                        if (State == WebSocketState.Closed)
-                        {
-                            return;
-                        }
-
-                        counter = 0;
-                    }
-                }
-            }
-        }
 
         public void Free()
         {

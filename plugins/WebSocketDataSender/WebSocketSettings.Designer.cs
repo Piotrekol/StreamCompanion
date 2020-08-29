@@ -36,9 +36,9 @@
             this.checkBox_EnableWebSocketOutput.AutoSize = true;
             this.checkBox_EnableWebSocketOutput.Location = new System.Drawing.Point(4, 2);
             this.checkBox_EnableWebSocketOutput.Name = "checkBox_EnableWebSocketOutput";
-            this.checkBox_EnableWebSocketOutput.Size = new System.Drawing.Size(236, 17);
+            this.checkBox_EnableWebSocketOutput.Size = new System.Drawing.Size(122, 17);
             this.checkBox_EnableWebSocketOutput.TabIndex = 1;
-            this.checkBox_EnableWebSocketOutput.Text = "Enable WebSocketServer output of patterns";
+            this.checkBox_EnableWebSocketOutput.Text = "Enable Web overlay";
             this.checkBox_EnableWebSocketOutput.UseVisualStyleBackColor = true;
             // 
             // WebSocketSettings
