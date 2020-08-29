@@ -7,6 +7,7 @@
 #define MyAppExeName "osu!StreamCompanion.exe"
 
 #define FilesRoot "..\build\Output\"
+#define OverlayFilesRoot "..\webOverlay\"
 #define ApplicationVersion GetFileVersion(FilesRoot +'osu!StreamCompanion.exe')
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -39,6 +40,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: {#FilesRoot}*; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: {#OverlayFilesRoot}*; DestDir: "{app}\Files\Web"; Flags: ignoreversion recursesubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
@@ -46,6 +48,7 @@ Name: {app}; Permissions: users-modify
 Name: "{app}\Files"; Permissions: users-modify
 Name: "{app}\Files\Images"; Permissions: users-modify
 Name: "{app}\Files\Logs"; Permissions: users-modify
+Name: "{app}\Files\Web"; Permissions: users-modify
 Name: "{app}\Plugins"; Permissions: users-modify
 Name: "{app}\Plugins\Dlls"; Permissions: users-modify
 [Icons]
