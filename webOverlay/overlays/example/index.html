@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>sup</title>
   <link href="./main.css" rel="stylesheet">
   <!-- This is a development version of Vue.js -->
@@ -15,11 +14,11 @@
 
 <body>
   <div id="app" v-cloak>
-    <Background class="overlayBox">
-      <div style="flex: 0 0 100%;">
-        <h2>{{getToken('MapArtistTitle')}}</h1>
-      </div>
-      {{tokens}}</br>
+    <Background class="mainOverlayBox">
+      <div class="box hitBox hit100">{{getToken('c100')}}</div>
+      <div class="box hitBox hit50">{{getToken('c50')}}</div>
+      <div class="box hitBox hitMiss">{{getToken('miss')}}</div>
+      <div class="box ppBox">{{getToken('PpIfMapEndsNow',0)}}pp</div>
     </Background>
   </div>
   <script src="./main.js" type="module"></script>

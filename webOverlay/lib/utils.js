@@ -16,13 +16,20 @@ function watchTokens(tokenList, onTokensUpdated) {
     let rws = new ReconnectingWebSocket("ws://localhost:28390/tokens", null, {
         automaticOpen: false,
     });
+    rws.watchedTokens = tokenList;
+
     rws.onopen = () => {
-        rws.send(JSON.stringify(tokenList))
+        rws.send(JSON.stringify(rws.watchedTokens))
     };
     rws.onmessage = (eventData) => {
         onTokensUpdated(JSON.parse(eventData.data));
     };
 
+    rws.AddTokens = (tokens) => {
+        rws.watchedTokens = [...new Set([...rws.watchedTokens, ...tokens])];
+        if (rws.readyState === 1)
+            rws.send(JSON.stringify(rws.watchedTokens))
+    }
     rws.open();
     return rws;
 }
@@ -31,4 +38,14 @@ function watchTokensVue(tokenList, vueThis) {
     return watchTokens(tokenList, (tokens) => {
         mergeObjects(vueThis, vueThis.tokens, tokens);
     });
+}
+function _GetToken(rws, tokens, tokenName, decimalPlaces) {
+    if (tokens.hasOwnProperty(tokenName)) {
+        if (decimalPlaces !== undefined && decimalPlaces !== null)
+            return Number(tokens[tokenName]).toFixed(decimalPlaces);
+        return tokens[tokenName];
+    }
+    if (rws.watchedTokens.indexOf(tokenName) === -1)
+        rws.AddTokens([tokenName]);
+    return '';
 }
