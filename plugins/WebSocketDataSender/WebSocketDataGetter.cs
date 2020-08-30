@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using EmbedIO;
 using EmbedIO.Actions;
@@ -57,10 +59,21 @@ namespace WebSocketDataSender
                 ("WebSocket stream of output patterns containing live tokens", new WebSocketDataEndpoint("/liveData", true, _liveDataContainer)),
                 ("WebSocket stream of output patterns with do not contain live tokens", new WebSocketDataEndpoint("/mapData", true, _mapDataContainer)),
                 ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
+                ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
                 ("Current beatmap background image", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
             };
 
             _server = new HttpServer(baseAddress, saveDir, logger, modules);
+        }
+
+        private Task SendAllTokens(IHttpContext context)
+        {
+            if (context.Request.QueryString.ContainsKey("debug") && context.Request.QueryString["debug"] == "1")
+            {
+                return context.SendDataAsync(Tokens.AllTokens);
+            }
+
+            return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens.ToDictionary(k => k.Key, v => v.Value.Value)), "text", Encoding.Default);
         }
 
         private async Task SendCurrentBeatmapImage(IHttpContext context)
