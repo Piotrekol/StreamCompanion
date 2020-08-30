@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageExtensions.cs" />
     <Compile Include="DataContainer.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="WebSocketDataEndpoint.cs" />
