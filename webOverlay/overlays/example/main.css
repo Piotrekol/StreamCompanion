@@ -1,67 +1,65 @@
-:root {
-    --hit300Background: rgb(255, 127, 80, 0.8);
-    --hit100Background: rgba(0, 128, 0, 0.8);
-    --hit50Background: rgba(238, 130, 238, 0.8);
-    --hitMissBackground: rgba(255, 0, 0, 0.8);
-    --scale: 1
+* {
+    padding: 0px;
+    margin: 0px;
+    font-family: comfortaa;
 }
-@font-face {
-    font-family: Comfortaa;
-    src: url(/lib/Comfortaa.ttf);
-  }
 
-html {
-    font-family: Comfortaa,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-    font-weight: 600;
-    font-size: calc(25px * var(--scale));
-    text-shadow: 0 1px 1px rgba(0,0,0,0.75);
-    color: rgba(255,255,255,0.95);
+.hit-100 {
+    background-color: #0de479;
 }
-*, ::after, ::before {
-    box-sizing: border-box;
-    border-width: 0;
-}
-body {
-    display: block;
-    margin: 0;
-}
-[v-cloak] { display: none; }
 
-.mainOverlayBox{
-    width: calc(550px * var(--scale));
-    height: calc(100px * var(--scale));
-    overflow: visible;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
+.hit-50 {
+    background-color: #ffbb00;
 }
-.box{
-    display: flex;
-    min-width: calc(80px * var(--scale));
-    height: calc(50px * var(--scale));
+
+.hit-miss {
+    background-color: #ff0040;
+}
+
+.hit-text {
+    color: white;
+    justify-self: center;
     text-align: center;
-    padding: 0px 6px 0px 6px;
-    align-items: center;
-    justify-content: center;
 }
-.hitBox{
-    margin-left: calc(30px * var(--scale));
-    border-radius: calc(12px * var(--scale));
+
+.hit {
+    align-self: center;
+    padding: 10px 15px;
+    font-size: 18px;
+    margin-right: 10px;
+    border-radius: 200px;
+    min-width: 12px;
 }
-.ppBox{
+
+.box {
+    border-radius: 200px
+}
+
+.box {
+    padding: 25px;
+    padding-left: 27px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.inner {
+    display: flex;
+}
+
+.hits {
+    display: flex;
+}
+
+.pp {
+    color: white;
     margin-left: auto;
-    margin-right: calc(10px * var(--scale));
+    align-self: center;
 }
-.hit300{
-    background: var(--hit300Background);
-}
-.hit100{
-    background: var(--hit100Background);
-}
-.hit50{
-    background: var(--hit50Background);
-}
-.hitMiss{
-    background: var(--hitMissBackground);
+
+.ds {
+    filter: drop-shadow(0px 0px 5px #0004);
 }
