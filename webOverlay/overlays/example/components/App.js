@@ -10,9 +10,10 @@ const app = {
     Background: background
   },
   computed: {
+    isPlaying: function() { return _IsPlaying(this.rws, this.tokens)}
   },
   methods: {
-    getToken: function (tokenName,decimalPlaces) { return _GetToken(this.rws, this.tokens, tokenName,decimalPlaces) }
+    getToken: function (tokenName,decimalPlaces) { return _GetToken(this.rws, this.tokens, tokenName,decimalPlaces) },
   },
   created: function () {
     //either request all tokens upfront

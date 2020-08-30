@@ -18,7 +18,7 @@
   <div id="app" v-cloak>
     <Background class="box">
       <div class="inner">
-        <div class="ds hits">
+        <div class="ds hits" :class="{hide: !isPlaying}">
           <div class="hit hit-100">
             <p class="hit-text">{{getToken('c100')}}</p>
           </div>
@@ -28,6 +28,9 @@
           <div class="hit hit-miss">
             <p class="hit-text">{{getToken('miss')}}</p>
           </div>
+        </div>
+      <div class="hit hit-50" style="opacity:0" :class="{hide: isPlaying}">
+          <p class="hit-text">0</p>
         </div>
         <h1 class="ds pp">
           {{getToken('PpIfMapEndsNow',1)}}pp

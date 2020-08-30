@@ -64,3 +64,7 @@
     filter: drop-shadow(0px 0px 5px #0004);
 }
 [v-cloak] { display: none; }
+
+.hide {
+    display: none;
+}

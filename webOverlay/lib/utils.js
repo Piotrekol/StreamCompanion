@@ -49,3 +49,8 @@ function _GetToken(rws, tokens, tokenName, decimalPlaces) {
         rws.AddTokens([tokenName]);
     return '';
 }
+
+function _IsPlaying(rws, tokens) {
+    //2 = playing, 32 = results screen
+    return [2, 32].indexOf(_GetToken(rws, tokens, 'status')) > -1;
+}
