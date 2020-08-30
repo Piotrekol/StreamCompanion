@@ -143,14 +143,13 @@ namespace LiveVisualizer
 
         protected override void ProcessNewMap(MapSearchResult mapSearchResult)
         {
-            var isValidResult = IsValidBeatmap(mapSearchResult, out var mapLocation) ||
-                                !(mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods &&
-                                  _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5);
+            var isValidResult = IsValidBeatmap(mapSearchResult, out var mapLocation) 
+                                || !IsSameMap(mapSearchResult, mapLocation);
             StrainsResult localStrainsResult;
             lock (_strainsLock)
             {
+                isValidResult &= _strainsResult.MapLocation == mapLocation && _strainsResult != null;
                 localStrainsResult = _strainsResult;
-                isValidResult &= _strainsResult.MapLocation == mapLocation;
             }
 
             if (VisualizerData == null || !isValidResult)
