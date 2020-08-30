@@ -150,7 +150,7 @@ namespace LiveVisualizer
             lock (_strainsLock)
             {
                 localStrainsResult = _strainsResult;
-                isValidResult |= _strainsResult.MapLocation == mapLocation;
+                isValidResult &= _strainsResult.MapLocation == mapLocation;
             }
 
             if (VisualizerData == null || !isValidResult)
