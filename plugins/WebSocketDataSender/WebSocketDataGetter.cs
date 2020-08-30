@@ -120,6 +120,7 @@ namespace WebSocketDataSender
 
         public void Dispose()
         {
+            _server?.Dispose();
         }
 
         public void Handle(string content)
