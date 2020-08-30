@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using EmbedIO.WebSockets;
 using StreamCompanionTypes.DataTypes;
@@ -51,7 +52,7 @@ namespace WebSocketDataSender
                 await Task.Delay(33);
                 lock (watchedTokens)
                 {
-                    if (context.CancellationToken.IsCancellationRequested)
+                    if (context.WebSocket.State != WebSocketState.Open)
                         return;
 
                     for (var i = 0; i < watchedTokens.Count; i++)
