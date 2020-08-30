@@ -12,7 +12,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 namespace LiveVisualizer
 {
     public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternGenerator,
-        ISettingsSource, IDisposable
+        ISettingsSource,ITokensSource, IDisposable
     {
         protected CancellationTokenSource Cts = new CancellationTokenSource();
         private LiveVisualizerSettings _liveVisualizerSettings;
@@ -21,6 +21,7 @@ namespace LiveVisualizer
         protected IWpfVisualizerData VisualizerData;
         private Task processNewMapTask;
         private bool disposed = false;
+        protected Tokens.TokenSetter TokenSetter;
 
         public string Description { get; } = "";
         public string Name { get; } = "LiveVisualizer";
@@ -33,7 +34,9 @@ namespace LiveVisualizer
         {
             Logger = logger;
             Settings = settings;
+            TokenSetter = Tokens.CreateTokenSetter(nameof(LiveVisualizerPlugin));
         }
+
         public virtual void Dispose()
         {
             disposed = true;
@@ -78,5 +81,6 @@ namespace LiveVisualizer
         protected abstract void ResetSettings();
 
         protected abstract void ProcessNewMap(MapSearchResult mapSearchResult);
+        public abstract void CreateTokens(MapSearchResult map);
     }
 }

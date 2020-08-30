@@ -4,6 +4,7 @@ using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -21,6 +22,7 @@ namespace LiveVisualizer
         private MainWindow _visualizerWindow;
         private PpCalculator.PpCalculator _ppCalculator;
         private readonly object _ppCalculatorLock = new object();
+        private readonly object _strainsLock = new object();
         private CancellationTokenSource cts = new CancellationTokenSource();
 
         private List<KeyValuePair<string, IToken>> _liveTokens;
@@ -30,6 +32,8 @@ namespace LiveVisualizer
         private IToken _hitMissToken;
         private IToken _timeToken;
         private IToken _statusToken;
+
+        private IToken _strainsToken;
         private List<KeyValuePair<string, IToken>> Tokens
         {
             get => _liveTokens;
@@ -49,16 +53,14 @@ namespace LiveVisualizer
         private string _lastMapLocation = string.Empty;
         private string _lastMapHash = string.Empty;
         private IModsEx _lastMods = null;
-
+        private StrainsResult _strainsResult;
 
         public LiveVisualizerPlugin(IContextAwareLogger logger, ISettings settings) : base(logger, settings)
         {
             VisualizerData = new VisualizerDataModel();
-
+            _strainsToken = TokenSetter("MapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
             LoadConfiguration();
-
             EnableVisualizer(VisualizerData.Configuration.Enable);
-
             VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
 
             Task.Run(async () => { await UpdateLiveTokens(); });
@@ -141,11 +143,17 @@ namespace LiveVisualizer
 
         protected override void ProcessNewMap(MapSearchResult mapSearchResult)
         {
-            if (VisualizerData == null ||
-                !mapSearchResult.FoundBeatmaps ||
-                !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
-                (mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods && _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5)
-            )
+            var isValidResult = IsValidBeatmap(mapSearchResult, out var mapLocation) ||
+                                !(mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods &&
+                                  _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5);
+            StrainsResult localStrainsResult;
+            lock (_strainsLock)
+            {
+                localStrainsResult = _strainsResult;
+                isValidResult |= _strainsResult.MapLocation == mapLocation;
+            }
+
+            if (VisualizerData == null || !isValidResult)
             {
                 if (!mapSearchResult.FoundBeatmaps && VisualizerData != null)
                 {
@@ -163,51 +171,7 @@ namespace LiveVisualizer
                 return;
             }
 
-            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-
-            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
-                mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
-
-            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-
-            var strains = new Dictionary<int, double>(300);
-
-            //Length refers to beatmap time, not song total time
-            var mapLength = workingBeatmap.Length;
-            var strainLength = 5000;
-            var interval = 1500;
-            int time = 0;
-
-            if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko || playMode == PlayMode.OsuMania))
-            {
-                ppCalculator.Mods = mapSearchResult.Mods?.WorkingMods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                ppCalculator.Score = 1_000_000;
-
-                while (time + strainLength / 2 < mapLength)
-                {
-                    if (Cts.Token.IsCancellationRequested)
-                        return;
-
-                    var a = new Dictionary<string, double>();
-                    var strain = ppCalculator.Calculate(time, time + strainLength, a);
-
-                    if (double.IsNaN(strain) || strain < 0)
-                        strain = 0;
-                    else if (strain > 2000)
-                        strain = 2000;//lets not freeze everything with aspire/fancy 100* maps
-
-                    strains.Add(time, strain);
-                    time += interval;
-                }
-            }
-            else
-            {
-                while (time + strainLength / 2 < mapLength)
-                {
-                    strains.Add(time, 50);
-                    time += interval;
-                }
-            }
+            var strains = localStrainsResult.Strains;//new Dictionary<int, double>(300);
 
             VisualizerData.Display.DisableChartAnimations = strains.Count >= 400; //10min+ maps
 
@@ -215,7 +179,7 @@ namespace LiveVisualizer
             _lastMods = mapSearchResult.Mods;
             _lastMapHash = mapSearchResult.BeatmapsFound[0].Md5;
 
-            VisualizerData.Display.TotalTime = mapLength;
+            VisualizerData.Display.TotalTime = localStrainsResult.WorkingBeatmap.Length;
 
             VisualizerData.Display.Title = Tokens.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
             VisualizerData.Display.Artist = Tokens.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
@@ -229,17 +193,96 @@ namespace LiveVisualizer
             VisualizerData.Display.Strains.AddRange(strainValues);
 
             var imageLocation = Path.Combine(mapSearchResult.BeatmapsFound[0]
-                .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), workingBeatmap.BackgroundFile ?? "");
+                .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), localStrainsResult.WorkingBeatmap.BackgroundFile ?? "");
 
             VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
 
             lock (_ppCalculatorLock)
             {
-                _ppCalculator = ppCalculator;
+                _ppCalculator = localStrainsResult.PpCalculator;
             }
 
             _visualizerWindow?.ForceChartUpdate();
         }
+
+        private bool IsSameMap(MapSearchResult mapSearchResult, string mapLocation)
+            => mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods &&
+               _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5;
+
+        private bool IsValidBeatmap(MapSearchResult mapSearchResult, out string mapLocation)
+        {
+            mapLocation = string.Empty;
+            return mapSearchResult.FoundBeatmaps
+                   && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out mapLocation);
+        }
+        public override void CreateTokens(MapSearchResult mapSearchResult)
+        {
+            if (!IsValidBeatmap(mapSearchResult, out var mapLocation) || IsSameMap(mapSearchResult, mapLocation))
+                return;
+
+            var result = GetStrains(mapLocation, mapSearchResult.PlayMode);
+
+            lock (_strainsLock)
+            {
+                _strainsResult = result;
+            }
+
+            _strainsToken.Value = result.Strains;
+        }
+
+        private static StrainsResult GetStrains(string mapLocation, PlayMode? desiredPlayMode)
+        {
+            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
+
+            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
+                desiredPlayMode.HasValue ? (int?)desiredPlayMode : null);
+
+            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
+
+            //Length refers to beatmap time, not song total time
+            var mapLength = workingBeatmap.Length;
+            var strainLength = 5000;
+            var interval = 1500;
+            var time = 0;
+            var strains = new Dictionary<int, double>(300);
+
+            if (ppCalculator == null)
+            {
+                while (time + strainLength / 2 < mapLength)
+                {
+                    strains.Add(time, 50);
+                    time += interval;
+                }
+            }
+            else if (playMode == PlayMode.Osu || playMode == PlayMode.Taiko || playMode == PlayMode.OsuMania)
+            {
+
+                var a = new Dictionary<string, double>();
+                while (time + strainLength / 2 < mapLength)
+                {
+                    var strain = ppCalculator.Calculate(time, time + strainLength, a);
+
+                    if (double.IsNaN(strain) || strain < 0)
+                        strain = 0;
+                    else if (strain > 2000)
+                        strain = 2000; //lets not freeze everything with aspire/fancy 100* maps
+
+                    strains.Add(time, strain);
+                    time += interval;
+                    a.Clear();
+                }
+            }
+
+            return new StrainsResult
+            {
+                Strains = strains,
+                PpCalculator = ppCalculator,
+                WorkingBeatmap = workingBeatmap,
+                PlayMode = playMode,
+                MapLocation = mapLocation
+            };
+        }
+
         private void SetAxisValues(IReadOnlyList<double> strainValues)
         {
             if (strainValues != null && strainValues.Any())
@@ -362,9 +405,17 @@ namespace LiveVisualizer
         public override void Dispose()
         {
             cts.Cancel();
-            _visualizerWindow.Close();
+            _visualizerWindow?.Close();
             base.Dispose();
         }
 
+        private class StrainsResult
+        {
+            public Dictionary<int, double> Strains;
+            public PpCalculator.PpCalculator PpCalculator;
+            public ProcessorWorkingBeatmap WorkingBeatmap;
+            public PlayMode PlayMode;
+            public string MapLocation;
+        }
     }
 }
