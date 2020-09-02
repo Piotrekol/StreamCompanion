@@ -38,13 +38,6 @@ namespace WebSocketDataSender
             }
             var endpoints = string.Join(Environment.NewLine, modulesList.Select(x => $"{x.Module.BaseRoute} - {x.Description}"));
 
-#if DEBUG
-            //A little hack to grab overlay files directly from git repository
-            var newRootPath = Path.Combine(rootPath, "..", "..", "..", "..", "webOverlay");
-            if (Directory.Exists(newRootPath))
-                rootPath = newRootPath;
-#endif
-
             server
                 .WithModule(new ActionModule("/help", HttpVerbs.Any, ctx =>
             {

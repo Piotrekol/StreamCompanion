@@ -33,6 +33,7 @@ namespace WebSocketDataSender
         public string UpdateUrl { get; } = "";
         public bool Started { get; set; }
         public string SettingGroup { get; } = "Output patterns";
+        private string HttpContentRoot;
 
         public static ConfigEntry Enabled = new ConfigEntry("httpServerEnabled", false);
         public static ConfigEntry WebSocketPort = new ConfigEntry("httpServerPort", 28390);
@@ -50,9 +51,15 @@ namespace WebSocketDataSender
             }
 
             var baseAddress = $"{_settings.Get<string>(WebSocketAddress)}:{_settings.Get<int>(WebSocketPort)}";
-            var saveDir = Path.Combine(saver.SaveDirectory, "web");
-            if (!Directory.Exists(saveDir))
-                Directory.CreateDirectory(saveDir);
+            HttpContentRoot = Path.Combine(saver.SaveDirectory, "web");
+            if (!Directory.Exists(HttpContentRoot))
+                Directory.CreateDirectory(HttpContentRoot);
+#if DEBUG
+            //A little hack to grab overlay files directly from git repository
+            var newRootPath = Path.Combine(HttpContentRoot, "..", "..", "..", "..", "webOverlay");
+            if (Directory.Exists(newRootPath))
+                HttpContentRoot = newRootPath;
+#endif
 
             var modules = new List<(string Description, IWebModule Module)>
             {
@@ -61,9 +68,17 @@ namespace WebSocketDataSender
                 ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
                 ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
                 ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
+                ("List of avaliable overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
             };
 
-            _server = new HttpServer(baseAddress, saveDir, logger, modules);
+            _server = new HttpServer(baseAddress, HttpContentRoot, logger, modules);
+        }
+
+        private Task ListOverlays(IHttpContext context)
+        {
+            return context.SendStringAsync(
+                JsonConvert.SerializeObject(Directory.EnumerateDirectories(Path.Combine(HttpContentRoot, "overlays")).Select(x => Path.GetFileName(x))),
+                "application/json", Encoding.UTF8);
         }
 
         private Task SendAllTokens(IHttpContext context)
