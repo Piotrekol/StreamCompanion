@@ -17,7 +17,7 @@ const background = {
 
         boxStyle: function () {
             return `
-            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)),url(${this.backgroundUrl});`
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)),url(${this.backgroundUrl});`
         }
     },
     watch: {

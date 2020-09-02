@@ -1,8 +1,17 @@
-Number.prototype.pad = function(size) {
+Number.prototype.pad = function (size) {
     var s = String(this);
-    while (s.length < (size || 2)) {s = "0" + s;}
+    while (s.length < (size || 2)) { s = "0" + s; }
     return s;
-  }
+}
+
+let OsuStatus = {
+    Null: 0,
+    Listening: 1,
+    Playing: 2,
+    Watching: 8,
+    Editing: 16,
+    ResultsScreen: 32
+}
 
 function mergeObjects(vueThis, target, source) {
     for (const [key, value] of Object.entries(source)) {
@@ -56,7 +65,14 @@ function _GetToken(rws, tokens, tokenName, decimalPlaces) {
     return '';
 }
 
+
+function _IsInStatus(rws, tokens, osuStatuses) {
+    if(Array.isArray(osuStatuses))
+        return osuStatuses.indexOf(_GetToken(rws, tokens, 'status')) > -1;
+        
+    return _GetToken(rws, tokens, 'status') == osuStatuses
+}
+
 function _IsPlaying(rws, tokens) {
-    //2 = playing, 32 = results screen
-    return [2, 32].indexOf(_GetToken(rws, tokens, 'status')) > -1;
+    return _IsInStatus(rws, tokens, [OsuStatus.Playing, OsuStatus.ResultsScreen]);
 }
