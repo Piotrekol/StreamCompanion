@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.WebSockets;
+using System.Threading.Tasks;
 using EmbedIO.WebSockets;
 
 namespace WebSocketDataSender
@@ -24,7 +25,7 @@ namespace WebSocketDataSender
             string lastSentData = string.Empty;
             while (true)
             {
-                if(context.CancellationToken.IsCancellationRequested)
+                if(context.WebSocket.State != WebSocketState.Open)
                     return;
                 await Task.Delay(33);
                 if (lastSentData != _dataContainer.Data)

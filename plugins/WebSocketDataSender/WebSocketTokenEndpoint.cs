@@ -23,12 +23,15 @@ namespace WebSocketDataSender
 
         protected override Task OnClientDisconnectedAsync(IWebSocketContext context)
         {
-            if (watchedTokensPerContext.ContainsKey(context.Id))
+            lock (_lockingObject)
             {
-                var watchedTokens = watchedTokensPerContext[context.Id];
-                lock (watchedTokens)
+                if (watchedTokensPerContext.ContainsKey(context.Id))
                 {
-                    watchedTokensPerContext.Remove(context.Id);
+                    var watchedTokens = watchedTokensPerContext[context.Id];
+                    lock (watchedTokens)
+                    {
+                        watchedTokensPerContext.Remove(context.Id);
+                    }
                 }
             }
 
@@ -38,7 +41,8 @@ namespace WebSocketDataSender
         protected override Task OnClientConnectedAsync(IWebSocketContext context)
         {
             var task = base.OnClientConnectedAsync(context);
-            watchedTokensPerContext.Add(context.Id, new Dictionary<string, object>());
+            lock (_lockingObject)
+                watchedTokensPerContext.Add(context.Id, new Dictionary<string, object>());
             Task.Run(() => SendLoop(context));
             return task;
         }
@@ -46,7 +50,10 @@ namespace WebSocketDataSender
         public async Task SendLoop(IWebSocketContext context)
         {
             var tokenKVs = new SortedList<string, object>(50);
-            var watchedTokens = watchedTokensPerContext[context.Id];
+            Dictionary<string, object> watchedTokens;
+            lock (_lockingObject)
+                watchedTokens = watchedTokensPerContext[context.Id];
+
             while (true)
             {
                 await Task.Delay(33);
@@ -81,8 +88,11 @@ namespace WebSocketDataSender
         protected override Task OnMessageReceivedAsync(IWebSocketContext context, byte[] buffer, IWebSocketReceiveResult result)
         {
             var str = Encoding.GetString(buffer);
+            Dictionary<string, object> watchedTokens;
 
-            var watchedTokens = watchedTokensPerContext[context.Id];
+            lock (_lockingObject)
+                watchedTokens = watchedTokensPerContext[context.Id];
+
             lock (watchedTokens)
             {
                 watchedTokens.Clear();

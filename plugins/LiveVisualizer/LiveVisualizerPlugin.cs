@@ -143,12 +143,12 @@ namespace LiveVisualizer
 
         protected override void ProcessNewMap(MapSearchResult mapSearchResult)
         {
-            var isValidResult = IsValidBeatmap(mapSearchResult, out var mapLocation) 
+            var isValidResult = IsValidBeatmap(mapSearchResult, out var mapLocation)
                                 || !IsSameMap(mapSearchResult, mapLocation);
             StrainsResult localStrainsResult;
             lock (_strainsLock)
             {
-                isValidResult &= _strainsResult.MapLocation == mapLocation && _strainsResult != null;
+                isValidResult &= _strainsResult != null && _strainsResult.MapLocation == mapLocation;
                 localStrainsResult = _strainsResult;
             }
 
