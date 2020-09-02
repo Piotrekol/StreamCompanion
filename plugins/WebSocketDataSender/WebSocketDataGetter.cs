@@ -35,9 +35,9 @@ namespace WebSocketDataSender
         public string SettingGroup { get; } = "Output patterns";
         private string HttpContentRoot;
 
-        public static ConfigEntry Enabled = new ConfigEntry("httpServerEnabled", false);
-        public static ConfigEntry WebSocketPort = new ConfigEntry("httpServerPort", 28390);
-        public static ConfigEntry WebSocketAddress = new ConfigEntry("httpServerAddress", "http://*");
+        public static ConfigEntry Enabled = new ConfigEntry("httpServerEnabled", true);
+        public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 28390);
+        public static ConfigEntry HttpServerAddress = new ConfigEntry("httpServerAddress", "http://localhost");
 
         private DataContainer _liveDataContainer = new DataContainer();
         private DataContainer _mapDataContainer = new DataContainer();
@@ -50,7 +50,7 @@ namespace WebSocketDataSender
                 return;
             }
 
-            var baseAddress = $"{_settings.Get<string>(WebSocketAddress)}:{_settings.Get<int>(WebSocketPort)}";
+            var baseAddress = $"{_settings.Get<string>(HttpServerAddress)}:{_settings.Get<int>(HttpServerPort)}";
             HttpContentRoot = Path.Combine(saver.SaveDirectory, "web");
             if (!Directory.Exists(HttpContentRoot))
                 Directory.CreateDirectory(HttpContentRoot);
