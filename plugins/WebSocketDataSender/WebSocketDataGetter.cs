@@ -71,9 +71,26 @@ namespace WebSocketDataSender
                 ("List of avaliable overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
             };
 
+            var configurationLocation = Path.Combine(HttpContentRoot, "lib", "consts.js");
+            if (File.Exists(configurationLocation))
+                SetWebOverlayJavaScriptConfiguration(configurationLocation, new Uri(baseAddress.Replace("*","localhost")));
+
             _server = new HttpServer(baseAddress, HttpContentRoot, logger, modules);
         }
 
+        private void SetWebOverlayJavaScriptConfiguration(string configurationFileLocation, Uri uri)
+        {
+            var fileContents = File.ReadAllLines(configurationFileLocation);
+            for (int i = 0; i < fileContents.Length; i++)
+            {
+                if (fileContents[i].StartsWith("let autoConfig"))
+                {
+                    fileContents[i] = $"let autoConfig = {JsonConvert.SerializeObject(new { uri.Scheme, uri.Host, uri.Port })};";
+                    break;
+                }
+            }
+            File.WriteAllLines(configurationFileLocation, fileContents);
+        }
         private Task ListOverlays(IHttpContext context)
         {
             return context.SendStringAsync(

@@ -4,15 +4,6 @@ Number.prototype.pad = function (size) {
     return s;
 }
 
-let OsuStatus = {
-    Null: 0,
-    Listening: 1,
-    Playing: 2,
-    Watching: 8,
-    Editing: 16,
-    ResultsScreen: 32
-}
-
 function mergeObjects(vueThis, target, source) {
     for (const [key, value] of Object.entries(source)) {
         if (target.hasOwnProperty(key))
@@ -28,7 +19,7 @@ function preloadImage(url, id, cb) {
 }
 
 function watchTokens(tokenList, onTokensUpdated) {
-    let rws = new ReconnectingWebSocket("ws://localhost:28390/tokens", null, {
+    let rws = new ReconnectingWebSocket(`${window.overlay.config.getWs()}/tokens`, null, {
         automaticOpen: false,
     });
     rws.watchedTokens = tokenList;
@@ -74,5 +65,5 @@ function _IsInStatus(rws, tokens, osuStatuses) {
 }
 
 function _IsPlaying(rws, tokens) {
-    return _IsInStatus(rws, tokens, [OsuStatus.Playing, OsuStatus.ResultsScreen]);
+    return _IsInStatus(rws, tokens, [window.overlay.osuStatus.Playing, window.overlay.osuStatus.ResultsScreen]);
 }

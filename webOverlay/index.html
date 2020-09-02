@@ -10,7 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;700&display=swap" rel="stylesheet">
     <!-- This is a development version of Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
+    <script src="/lib/consts.js"></script>
+
 </head>
 <style>
     * {
@@ -67,23 +68,23 @@
                     target="_blank">StreamCompanion</a>.</h1>
             <div class="notes">
                 <div>Click on any name to open it in separate page.</div>
-                <div>To edit or create new one navigate to StreamCompanion <kbd>Files/web/overlays/</kbd> folder. Make sure
+                <div>To edit or create new one navigate to StreamCompanion <kbd>Files/web/overlays/</kbd> folder. Make
+                    sure
                     to read <kbd>README</kbd> inside of example overlays.</div>
             </div>
             <div class="preview" v-for="overlayName in overlays">
                 <h2><a :href="overlayUrl(overlayName)" target="_blank">{{overlayName}}</a></h3>
                     <h3 v-if="loadedOverlays.indexOf(overlayName)==-1">Loading...</h3>
-                    <iframe :id="overlayName" frameBorder="0"
-                        style="overflow:hidden;height:0px;width:100%" :src="overlayUrl(overlayName)"
-                        onload='javascript:autosize(this);'>
+                    <iframe :id="overlayName" frameBorder="0" style="overflow:hidden;height:0px;width:100%"
+                        :src="overlayUrl(overlayName)" onload='javascript:autosize(this);'>
                     </iframe>
             </div>
         </div>
         <div class="box">
             <h3>Links:</h3>
-            <div><a href="http://localhost:28390/overlays/" target="_blank">Overlays index</a></div>
-            <div><a href="http://localhost:28390/help" target="_blank">List of functional endpoints</a></div>
-            <div><a href="http://localhost:28390/json" target="_blank">All tokens output</a></div>
+            <div><a :href="`${config.getUrl()}/overlays/`" target="_blank">Overlays index</a></div>
+            <div><a :href="`${config.getUrl()}/help`" target="_blank">List of functional endpoints</a></div>
+            <div><a :href="`${config.getUrl()}/json`" target="_blank">All tokens output</a></div>
             <div><a href="https://discord.gg/N854wYZ" target="_blank">Discord</a></div>
         </div>
     </div>
@@ -94,20 +95,23 @@
                 vue.loadedOverlays.push(iframe.id);
             }, 250);
         }
+
         let vue = new Vue({
             el: '#app',
             data: ({
                 overlays: [],
-                loadedOverlays: []
+                loadedOverlays: [],
+                config:{}
             }),
             methods: {
                 overlayUrl: function (name) {
-                    return `http://localhost:28390/overlays/${name}/`
+                    return `${config.getUrl()}/overlays/${name}/`
                 }
             },
             created: function () {
+                this.config = window.overlay.config
                 let t = this;
-                fetch(`http://localhost:28390/overlayList`)
+                fetch(`${config.getUrl()}/overlayList`)
                     .then(response => response.json())
                     .then(data => t.overlays = data);
             }

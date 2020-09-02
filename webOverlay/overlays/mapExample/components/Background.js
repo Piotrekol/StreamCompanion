@@ -24,7 +24,7 @@ const background = {
         imageDiskLocation() {
             let t = this;
             var currId = t.backgroundId += 1
-            preloadImage(`http://127.0.0.1:28390/backgroundImage?width=700&mapset=${t.tokens.mapsetid}&dummyData=${encodeURIComponent(t.tokens.Md5)}`, currId, (url, id) => {
+            preloadImage(`${window.overlay.config.getUrl()}/backgroundImage?width=700&mapset=${t.tokens.mapsetid}&dummyData=${encodeURIComponent(t.tokens.Md5)}`, currId, (url, id) => {
                 if (t.backgroundId !== id)
                     return;
                 t.backgroundUrl = url;
