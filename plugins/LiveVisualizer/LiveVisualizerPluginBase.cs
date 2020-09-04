@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using StreamCompanionTypes.Enums;
+using System.Diagnostics;
+using System.IO;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
-using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
+using WebSocketDataSender;
 
 namespace LiveVisualizer
 {
-    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternGenerator,
-        ISettingsSource,ITokensSource, IDisposable
+    public abstract class LiveVisualizerPluginBase : IPlugin, ISettingsSource, IDisposable
     {
-        protected CancellationTokenSource Cts = new CancellationTokenSource();
         private LiveVisualizerSettings _liveVisualizerSettings;
         protected ISettings Settings;
+        private readonly ISaver _saver;
         protected readonly IContextAwareLogger Logger;
-        protected IWpfVisualizerData VisualizerData;
-        private Task processNewMapTask;
-        private bool disposed = false;
+        protected IVisualizerConfiguration VisualizerConfiguration;
         protected Tokens.TokenSetter TokenSetter;
 
         public string Description { get; } = "";
@@ -30,37 +25,18 @@ namespace LiveVisualizer
         public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "Visualizer";
 
-        public LiveVisualizerPluginBase(IContextAwareLogger logger, ISettings settings)
+        public LiveVisualizerPluginBase(IContextAwareLogger logger, ISettings settings, ISaver saver)
         {
             Logger = logger;
             Settings = settings;
+            _saver = saver;
             TokenSetter = Tokens.CreateTokenSetter(nameof(LiveVisualizerPlugin));
         }
 
         public virtual void Dispose()
         {
-            disposed = true;
             _liveVisualizerSettings?.Dispose();
         }
-
-        public async void SetNewMap(MapSearchResult mapSearchResult)
-        {
-            if (disposed)
-                return;
-
-            Cts.Cancel();
-            if (processNewMapTask != null)
-                await processNewMapTask.ConfigureAwait(false);
-
-            if (processNewMapTask == null || processNewMapTask.IsCanceled || processNewMapTask.IsFaulted ||
-                processNewMapTask.IsCompleted)
-            {
-                Cts = new CancellationTokenSource();
-                processNewMapTask = Task.Run(() => ProcessNewMap(mapSearchResult), Cts.Token);
-            }
-        }
-
-        public abstract List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status);
 
         public void Free()
         {
@@ -71,16 +47,20 @@ namespace LiveVisualizer
         {
             if (_liveVisualizerSettings == null || _liveVisualizerSettings.IsDisposed)
             {
-                _liveVisualizerSettings = new LiveVisualizerSettings(Settings, VisualizerData.Configuration);
+                var filesLocation = WebSocketDataGetter.HttpContentRoot(_saver);
+                var webUrl = WebSocketDataGetter.BaseAddress(Settings);
+                _liveVisualizerSettings = new LiveVisualizerSettings(Settings, VisualizerConfiguration);
                 _liveVisualizerSettings.ResetSettings += (_, __) => ResetSettings();
+                _liveVisualizerSettings.OpenWebUrl += (_, __) => Process.Start(webUrl);
+                _liveVisualizerSettings.OpenFilesFolder += (_, __) => Process.Start("explorer.exe", filesLocation);
+                _liveVisualizerSettings.FilesLocation = filesLocation;
+                _liveVisualizerSettings.WebUrl = webUrl;
+
             }
 
             return _liveVisualizerSettings;
         }
 
         protected abstract void ResetSettings();
-
-        protected abstract void ProcessNewMap(MapSearchResult mapSearchResult);
-        public abstract void CreateTokens(MapSearchResult map);
     }
 }
