@@ -22,7 +22,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace WebSocketDataSender
 {
-    public class WebSocketDataGetter : IPlugin, IMapDataConsumer, ISettingsSource, IDisposable,
+    public class WebSocketDataGetter : IPlugin, IMapDataConsumer, IDisposable,
         IHighFrequencyDataConsumer
     {
         private ISettings _settings;
@@ -175,23 +175,6 @@ namespace WebSocketDataSender
             }
             var json = JsonConvert.SerializeObject(output);
             _mapDataContainer.Data = json;
-        }
-
-
-        public void Free()
-        {
-            _webSocketSettings?.Dispose();
-        }
-
-        private WebSocketSettings _webSocketSettings;
-        public object GetUiSettings()
-        {
-            if (_webSocketSettings == null || _webSocketSettings.IsDisposed)
-            {
-                _webSocketSettings = new WebSocketSettings(_settings);
-            }
-
-            return _webSocketSettings;
         }
     }
 }
