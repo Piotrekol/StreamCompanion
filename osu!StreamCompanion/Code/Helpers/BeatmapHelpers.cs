@@ -71,7 +71,7 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.Somestuff = reader.GetInt16(i); i++;
             beatmap.DeSerializeStars((byte[])reader.GetValue(i)); i++;
             i++; // beatmapChecksum
-            beatmap.MainBpm = reader.GetDouble(i);
+            beatmap.MainBpm = reader.SafeGetDouble(i); i++;
         }
 
         private static void WriteAll(this MemoryStream ms, int value)
