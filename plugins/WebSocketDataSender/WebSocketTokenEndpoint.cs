@@ -68,7 +68,11 @@ namespace WebSocketDataSender
                         if (!_tokens.ContainsKey(watchedToken.Key))
                             continue;
                         var tokenValue = _tokens[watchedToken.Key].Value;
-                        if (tokenValue != watchedToken.Value)
+
+                        var valueIsDifferent = (tokenValue is double tv)
+                            ? watchedToken.Value==null || Math.Abs(tv - (double) watchedToken.Value) > double.Epsilon
+                            : tokenValue != watchedToken.Value;
+                        if (valueIsDifferent)
                         {
                             watchedTokens[watchedToken.Key] = tokenValue;
                             tokenKVs[watchedToken.Key] = tokenValue;
@@ -108,7 +112,7 @@ namespace WebSocketDataSender
                     watchedTokens.Clear();
                     foreach (var tokenName in tokenNames)
                     {
-                        watchedTokens[tokenName] = string.Empty;
+                        watchedTokens[tokenName] = null;
                     }
                 }
 
