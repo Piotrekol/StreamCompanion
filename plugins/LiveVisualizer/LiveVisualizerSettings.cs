@@ -11,6 +11,11 @@ namespace LiveVisualizer
         private readonly ISettings _settings;
         private readonly IVisualizerConfiguration _configuration;
         public EventHandler ResetSettings;
+        public EventHandler OpenFilesFolder;
+        public EventHandler OpenWebUrl;
+
+        public string WebUrl { set => label_webUrl.Text = value; }
+        public string FilesLocation { set => label_localFiles.Text = value; }
 
         public LiveVisualizerSettings(ISettings settings, IVisualizerConfiguration configuration)
         {
@@ -26,8 +31,6 @@ namespace LiveVisualizer
             BindColorPicker(color_chartPrimary, () => _configuration.ChartColor, color => _configuration.ChartColor = color);
             BindColorPicker(color_chartProgress, () => _configuration.ChartProgressColor, color => _configuration.ChartProgressColor = color);
             BindColorPicker(color_imageDimming, () => _configuration.ImageDimColor, color => _configuration.ImageDimColor = color);
-            BindColorPicker(color_textArtist, () => _configuration.ArtistTextColor, color => _configuration.ArtistTextColor = color);
-            BindColorPicker(color_textTitle, () => _configuration.TitleTextColor, color => _configuration.TitleTextColor = color);
             BindColorPicker(color_ppBackground, () => _configuration.PpBackgroundColor, color => _configuration.PpBackgroundColor = color);
             BindColorPicker(color_hit100Background, () => _configuration.Hit100BackgroundColor, color => _configuration.Hit100BackgroundColor = color);
             BindColorPicker(color_hit50Background, () => _configuration.Hit50BackgroundColor, color => _configuration.Hit50BackgroundColor = color);
@@ -94,6 +97,16 @@ namespace LiveVisualizer
                     frm.Close();
                 }
             }
+        }
+
+        private void button_openInBrowser_Click(object sender, EventArgs e)
+        {
+            OpenWebUrl?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void button_openFilesLocation_Click(object sender, EventArgs e)
+        {
+            OpenFilesFolder?.Invoke(this, EventArgs.Empty);
         }
     }
 }
