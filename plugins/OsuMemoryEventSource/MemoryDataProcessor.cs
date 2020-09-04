@@ -27,6 +27,7 @@ namespace OsuMemoryEventSource
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public Mods Mods { get; set; }
+        private IToken _strainsToken;
 
         private enum InterpolatedValueName
         {
@@ -37,9 +38,10 @@ namespace OsuMemoryEventSource
             StrainPpIfMapEndsNow,
             PpIfRestFced,
             NoChokePp,
+            SimulatedPp,
             UnstableRate,
-
         }
+
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
@@ -54,11 +56,11 @@ namespace OsuMemoryEventSource
 
             ToggleSmoothing(enablePpSmoothing);
 
+            _strainsToken = _tokenSetter("MapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
             InitLiveTokens();
 
             Task.Run(InterpolatedValueThreadWork, cancellationTokenSource.Token);
             Task.Run(TokenThreadWork, cancellationTokenSource.Token);
-
         }
 
         public Task TokenThreadWork()
@@ -106,6 +108,7 @@ namespace OsuMemoryEventSource
             {
             }
         }
+
         public void SetNewMap(MapSearchResult map)
         {
             lock (_lockingObject)
@@ -113,19 +116,16 @@ namespace OsuMemoryEventSource
                 if ((map.Action & OsuStatus.ResultsScreen) != 0)
                     return;
 
-
                 if (map.FoundBeatmaps &&
-                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation) &&
-                    (map.Action & (OsuStatus.Playing | OsuStatus.Watching)) != 0)
+                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.WorkingMods ?? "";
 
                     _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
                         (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
+
                 }
-                else
-                    _rawData.SetCurrentMap(null, "", null, PlayMode.Osu);
             }
         }
 
@@ -293,6 +293,17 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
                 return InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
             });
+
+            _liveTokens["NoChokePp"] = new LiveToken(_liveTokenSetter("NoChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            {
+                InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
+                return InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
+            });
+            _liveTokens["simulatedPp"] = new LiveToken(_liveTokenSetter("simulatedPp", InterpolatedValues[InterpolatedValueName.SimulatedPp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.All), () =>
+            {
+                InterpolatedValues[InterpolatedValueName.SimulatedPp].Set(_rawData.SimulatedPp());
+                return InterpolatedValues[InterpolatedValueName.SimulatedPp].Current;
+            });
             _liveTokens["UnstableRate"] = new LiveToken(_liveTokenSetter("UnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
@@ -350,7 +361,58 @@ namespace OsuMemoryEventSource
             return Math.Sqrt(variance / hitErrors.Count) * 10;
         }
 
+        private static StrainsResult GetStrains(string mapLocation, PlayMode? desiredPlayMode)
+        {
+            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
 
+            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
+                desiredPlayMode.HasValue ? (int?)desiredPlayMode : null);
+
+            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
+
+            //Length refers to beatmap time, not song total time
+            var mapLength = workingBeatmap.Length;
+            var strainLength = 5000;
+            var interval = 1500;
+            var time = 0;
+            var strains = new Dictionary<int, double>(300);
+
+            if (ppCalculator == null)
+            {
+                while (time + strainLength / 2 < mapLength)
+                {
+                    strains.Add(time, 50);
+                    time += interval;
+                }
+            }
+            else if (playMode == PlayMode.Osu || playMode == PlayMode.Taiko || playMode == PlayMode.OsuMania)
+            {
+
+                var a = new Dictionary<string, double>();
+                while (time + strainLength / 2 < mapLength)
+                {
+                    var strain = ppCalculator.Calculate(time, time + strainLength, a);
+
+                    if (double.IsNaN(strain) || strain < 0)
+                        strain = 0;
+                    else if (strain > 2000)
+                        strain = 2000; //lets not freeze everything with aspire/fancy 100* maps
+
+                    strains.Add(time, strain);
+                    time += interval;
+                    a.Clear();
+                }
+            }
+
+            return new StrainsResult
+            {
+                Strains = strains,
+                PpCalculator = ppCalculator,
+                WorkingBeatmap = workingBeatmap,
+                PlayMode = playMode,
+                MapLocation = mapLocation
+            };
+        }
         public void Dispose()
         {
             cancellationTokenSource.Cancel();
@@ -364,6 +426,22 @@ namespace OsuMemoryEventSource
             {
                 v.Value.ChangeSpeed(speed);
             }
+        }
+
+        private class StrainsResult
+        {
+            public Dictionary<int, double> Strains;
+            public PpCalculator.PpCalculator PpCalculator;
+            public ProcessorWorkingBeatmap WorkingBeatmap;
+            public PlayMode PlayMode;
+            public string MapLocation;
+        }
+
+        public void CreateTokens(MapSearchResult mapSearchResult)
+        {
+            Mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
+            if (mapSearchResult.FoundBeatmaps && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+                _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
         }
     }
 }

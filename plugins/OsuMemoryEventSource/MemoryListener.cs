@@ -120,7 +120,7 @@ namespace OsuMemoryEventSource
 
         public void CreateTokens(MapSearchResult map)
         {
-            _memoryDataProcessor.Mods = map.Mods?.Mods ?? Mods.Omod;
+            _memoryDataProcessor.CreateTokens(map);
         }
     }
 }

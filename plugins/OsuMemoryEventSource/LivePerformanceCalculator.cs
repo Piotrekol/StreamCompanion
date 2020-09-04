@@ -44,7 +44,6 @@ namespace OsuMemoryEventSource
             PpCalculator.PreProcess(osuFileLocation);
         }
 
-
         public double PPIfRestFCed()
         {
             double pp = double.NaN;
@@ -149,6 +148,33 @@ namespace OsuMemoryEventSource
                 PpCalculator.Combo = null;
                 PpCalculator.PercentCombo = 100;
                 PpCalculator.Score = Play.Score;
+                pp = PpCalculator.Calculate(PlayTime, null);
+
+                if (double.IsInfinity(pp))
+                {
+                    pp = Double.NaN;
+                }
+            }
+            catch { }
+
+            return pp;
+        }
+
+        public double SimulatedPp()
+        {
+            double pp = double.NaN;
+
+            if (PpCalculator == null || _currentPlayMode == PlayMode.OsuMania)
+                return pp;
+
+            try
+            {
+                PpCalculator.Goods = null;
+                PpCalculator.Mehs = null;
+                PpCalculator.Misses = 0;
+                PpCalculator.Combo = null;
+                PpCalculator.PercentCombo = 100;
+                PpCalculator.Score = 1_000_000;
                 pp = PpCalculator.Calculate(PlayTime, null);
 
                 if (double.IsInfinity(pp))
