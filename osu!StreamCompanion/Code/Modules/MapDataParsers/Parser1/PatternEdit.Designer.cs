@@ -206,6 +206,7 @@
             // 
             // panel_showInOsu
             // 
+            this.panel_showInOsu.Controls.Add(this.comboBox_font);
             this.panel_showInOsu.Controls.Add(this.comboBox_align);
             this.panel_showInOsu.Controls.Add(this.label9);
             this.panel_showInOsu.Controls.Add(this.numericUpDown_colorAlpha);
@@ -215,7 +216,6 @@
             this.panel_showInOsu.Controls.Add(this.numericUpDown_fontSize);
             this.panel_showInOsu.Controls.Add(this.label3);
             this.panel_showInOsu.Controls.Add(this.label_TestText);
-            this.panel_showInOsu.Controls.Add(this.comboBox_font);
             this.panel_showInOsu.Controls.Add(this.panel_ColorPreview);
             this.panel_showInOsu.Controls.Add(this.numericUpDown_XPosition);
             this.panel_showInOsu.Controls.Add(this.numericUpDown_YPosition);
@@ -278,7 +278,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(265, 30);
+            this.label4.Location = new System.Drawing.Point(265, 6);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 13);
             this.label4.TabIndex = 29;
@@ -286,7 +286,7 @@
             // 
             // numericUpDown_fontSize
             // 
-            this.numericUpDown_fontSize.Location = new System.Drawing.Point(323, 28);
+            this.numericUpDown_fontSize.Location = new System.Drawing.Point(323, 4);
             this.numericUpDown_fontSize.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -309,7 +309,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(286, 8);
+            this.label3.Location = new System.Drawing.Point(139, 33);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(31, 13);
             this.label3.TabIndex = 27;
@@ -329,9 +329,9 @@
             // 
             this.comboBox_font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_font.FormattingEnabled = true;
-            this.comboBox_font.Location = new System.Drawing.Point(323, 3);
+            this.comboBox_font.Location = new System.Drawing.Point(178, 28);
             this.comboBox_font.Name = "comboBox_font";
-            this.comboBox_font.Size = new System.Drawing.Size(78, 21);
+            this.comboBox_font.Size = new System.Drawing.Size(223, 21);
             this.comboBox_font.TabIndex = 24;
             this.comboBox_font.SelectedIndexChanged += new System.EventHandler(this.comboBox_font_SelectedIndexChanged);
             // 
