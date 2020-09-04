@@ -91,7 +91,10 @@
     <script type="text/javascript">
         function autosize(iframe) {
             setTimeout(() => {
-                iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px"
+                if(iframe.contentWindow.document.body.scrollHeight>0)
+                    iframe.style.height = iframe.contentWindow.document.body.scrollHeight+20 + "px"
+                else
+                    iframe.style.height = '200px'
                 vue.loadedOverlays.push(iframe.id);
             }, 250);
         }
