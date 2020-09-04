@@ -9,7 +9,9 @@ using EmbedIO.Actions;
 using EmbedIO.Files;
 using EmbedIO.WebApi;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces.Services;
+using Swan.Logging;
+using ILogger = StreamCompanionTypes.Interfaces.Services.ILogger;
+using LogLevel = Swan.Logging.LogLevel;
 
 namespace WebSocketDataSender
 {
@@ -25,11 +27,14 @@ namespace WebSocketDataSender
         private static WebServer CreateWebServer(string url, string rootPath, ILogger logger,
             IEnumerable<(string Description, IWebModule Module)> modules)
         {
+            Logger.NoLogging();
+            Logger.RegisterLogger(new HttpLogger(logger));
             var server = new WebServer(o => o
                     .WithUrlPrefix(url)
                     .WithMode(HttpListenerMode.EmbedIO))
                 .WithLocalSessionManager()
                 .WithModule(new ActionModule("/ping", HttpVerbs.Get, ctx => ctx.SendDataAsync("pong")));
+            
 
             var modulesList = modules.ToList();
             foreach (var module in modulesList)
@@ -52,6 +57,27 @@ namespace WebSocketDataSender
         public void Dispose()
         {
             _server?.Dispose();
+        }
+        private class HttpLogger : Swan.Logging.ILogger
+        {
+            private readonly ILogger _logger;
+
+            public HttpLogger(ILogger logger)
+            {
+                _logger = logger;
+            }
+            public void Log(LogMessageReceivedEventArgs logEvent)
+            {
+                _logger.Log(logEvent.Message, StreamCompanionTypes.Enums.LogLevel.Debug);
+            }
+
+            public LogLevel LogLevel { get; } = LogLevel.Info;
+
+            public void Dispose()
+            {
+
+            }
+
         }
     }
 }
