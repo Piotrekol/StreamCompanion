@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using EmbedIO;
@@ -13,11 +11,9 @@ using EmbedIO.Actions;
 using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
-using StreamCompanionTypes.Interfaces.Sources;
 
 
 namespace WebSocketDataSender
@@ -26,40 +22,43 @@ namespace WebSocketDataSender
         IHighFrequencyDataConsumer
     {
         private ISettings _settings;
+        private readonly ISaver _saver;
         public string Description { get; } = "Provides beatmap and live map data using websockets";
         public string Name { get; } = nameof(WebSocketDataGetter);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
         public bool Started { get; set; }
-        public string SettingGroup { get; } = "Output patterns";
-        private string HttpContentRoot;
-
-        public static ConfigEntry Enabled = new ConfigEntry("httpServerEnabled", true);
-        public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 28390);
-        public static ConfigEntry HttpServerAddress = new ConfigEntry("httpServerAddress", "http://localhost");
 
         private DataContainer _liveDataContainer = new DataContainer();
         private DataContainer _mapDataContainer = new DataContainer();
         private HttpServer _server;
+
+        public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 28390);
+        public static ConfigEntry HttpServerAddress = new ConfigEntry("httpServerAddress", "http://localhost");
+
+        public static string BaseAddress(ISettings settings) => BindAddress(settings).Replace("*", "localhost");
+        public static string BindAddress(ISettings settings) => $"{settings.Get<string>(HttpServerAddress)}:{settings.Get<int>(HttpServerPort)}";
+
+        public static string HttpContentRoot(ISaver saver)
+        {
+            var httpContentRoot = Path.Combine(saver.SaveDirectory, "web");
+            if (!Directory.Exists(httpContentRoot))
+                Directory.CreateDirectory(httpContentRoot);
+#if DEBUG
+            //A little hack to grab overlay files directly from git repository
+            var newRootPath = Path.Combine(httpContentRoot, "..", "..", "..", "..", "webOverlay");
+            if (Directory.Exists(newRootPath))
+                httpContentRoot = newRootPath;
+#endif
+            return httpContentRoot;
+        }
+
         public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver)
         {
             _settings = settings;
-            if (!_settings.Get<bool>(Enabled))
-            {
-                return;
-            }
+            _saver = saver;
 
-            var baseAddress = $"{_settings.Get<string>(HttpServerAddress)}:{_settings.Get<int>(HttpServerPort)}";
-            HttpContentRoot = Path.Combine(saver.SaveDirectory, "web");
-            if (!Directory.Exists(HttpContentRoot))
-                Directory.CreateDirectory(HttpContentRoot);
-#if DEBUG
-            //A little hack to grab overlay files directly from git repository
-            var newRootPath = Path.Combine(HttpContentRoot, "..", "..", "..", "..", "webOverlay");
-            if (Directory.Exists(newRootPath))
-                HttpContentRoot = newRootPath;
-#endif
 
             var modules = new List<(string Description, IWebModule Module)>
             {
@@ -68,14 +67,22 @@ namespace WebSocketDataSender
                 ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
                 ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
                 ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
-                ("List of avaliable overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
+                ("List of available overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
+                ("All StreamCompanion settings", new ActionModule("/settings",HttpVerbs.Get,GetSettings)),
             };
 
-            var configurationLocation = Path.Combine(HttpContentRoot, "lib", "consts.js");
+            var configurationLocation = Path.Combine(HttpContentRoot(saver), "lib", "consts.js");
             if (File.Exists(configurationLocation))
-                SetWebOverlayJavaScriptConfiguration(configurationLocation, new Uri(baseAddress.Replace("*","localhost")));
+                SetWebOverlayJavaScriptConfiguration(configurationLocation, new Uri(BaseAddress(_settings)));
 
-            _server = new HttpServer(baseAddress, HttpContentRoot, logger, modules);
+            _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
+        }
+
+        private Task GetSettings(IHttpContext context)
+        {
+            //TODO: remove dynamic call after upgrading StreamCompanionTypes
+            var allSettings = ((dynamic)_settings).SettingsEntries as IReadOnlyDictionary<string, object>;
+            return context.SendDataAsync(allSettings);
         }
 
         private void SetWebOverlayJavaScriptConfiguration(string configurationFileLocation, Uri uri)
@@ -94,7 +101,7 @@ namespace WebSocketDataSender
         private Task ListOverlays(IHttpContext context)
         {
             return context.SendStringAsync(
-                JsonConvert.SerializeObject(Directory.EnumerateDirectories(Path.Combine(HttpContentRoot, "overlays")).Select(x => Path.GetFileName(x))),
+                JsonConvert.SerializeObject(Directory.EnumerateDirectories(Path.Combine(HttpContentRoot(_saver), "overlays")).Select(x => Path.GetFileName(x))),
                 "application/json", Encoding.UTF8);
         }
 
