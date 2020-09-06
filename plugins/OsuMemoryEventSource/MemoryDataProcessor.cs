@@ -234,7 +234,7 @@ namespace OsuMemoryEventSource
                     return TimeSpan.FromMilliseconds(_rawData.PlayTime);
                 return TimeSpan.Zero;
             });
-            _liveTokens["time"] = new LiveToken(_liveTokenSetter("time", 0d, TokenType.Live, "{0:0.00}", 0d), () =>
+            _liveTokens["time"] = new LiveToken(_liveTokenSetter("time", 0d, TokenType.Live, "{0:0.000}", 0d), () =>
             {
                 if (_rawData.PlayTime != 0)
                     return _rawData.PlayTime / 1000d;
@@ -310,6 +310,8 @@ namespace OsuMemoryEventSource
             _liveTokens["HitErrors"] = new LiveToken(_liveTokenSetter("HitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), OsuStatus.Playing), () => _rawData.HitErrors);
 
             _liveTokens["LocalTime"] = new LiveToken(_liveTokenSetter("LocalTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
+
+            _liveTokens["ISOTime"] = new LiveToken(_liveTokenSetter("ISOTime", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All), () => DateTime.UtcNow.ToString("o"));
         }
 
         private void UpdateLiveTokens(OsuStatus status)
