@@ -5,7 +5,7 @@ const background = {
         <slot />
     </div>
   `,
-  props:['dimcolor'],
+    props: ['dimcolor'],
     data: () => ({
         tokens: { 'backgroundImageLocation': '' },
         backgroundUrl: '',

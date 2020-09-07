@@ -57,6 +57,12 @@ const app = {
         bottomHeight: s.BottomHeight//most likely to be renamed
       };
     },
+    progressChartSettings(){
+      return {
+        backgroundColor: this.overlaySettings.chartProgressColor,
+        yAxesFontColor: 'transparent'
+      }
+    },
     chartStyle() {
       if (Object.keys(this.overlaySettings).length === 0)
         return `height:200px`;
