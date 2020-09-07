@@ -293,12 +293,6 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
                 return InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
             });
-
-            _liveTokens["NoChokePp"] = new LiveToken(_liveTokenSetter("NoChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
-            {
-                InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
-                return InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
-            });
             _liveTokens["simulatedPp"] = new LiveToken(_liveTokenSetter("simulatedPp", InterpolatedValues[InterpolatedValueName.SimulatedPp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.All), () =>
             {
                 InterpolatedValues[InterpolatedValueName.SimulatedPp].Set(_rawData.SimulatedPp());
@@ -350,12 +344,12 @@ namespace OsuMemoryEventSource
 
             double sum = hitErrors.Sum();
 
-            double avarage = sum / hitErrors.Count;
+            double average = sum / hitErrors.Count;
             double variance = 0;
 
             foreach (var hit in hitErrors)
             {
-                variance += Math.Pow(hit - avarage, 2);
+                variance += Math.Pow(hit - average, 2);
             }
 
             return Math.Sqrt(variance / hitErrors.Count) * 10;

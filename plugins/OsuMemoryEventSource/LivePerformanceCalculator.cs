@@ -4,7 +4,6 @@ using PpCalculator;
 using System;
 using System.Collections.Generic;
 using StreamCompanionTypes.DataTypes;
-using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 
 namespace OsuMemoryEventSource
 {
@@ -13,10 +12,6 @@ namespace OsuMemoryEventSource
         public PlayContainer Play { get; set; } = new PlayContainer();
         public int PlayTime { get; set; }
         public List<int> HitErrors { get; set; }
-
-        private IBeatmap _currentBeatmap = null;
-        private string _currentMods;
-        private string _currentOsuFileLocation = null;
         private PlayMode _currentPlayMode;
 
         public PpCalculator.PpCalculator PpCalculator { get; private set; }
@@ -28,19 +23,13 @@ namespace OsuMemoryEventSource
                 PpCalculator = null;
                 return;
             }
-            
-            _currentBeatmap = beatmap;
-            _currentMods = mods;
-            _currentOsuFileLocation = osuFileLocation;
+
             _currentPlayMode = playMode;
-
             PpCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, PpCalculator);
-
             if (PpCalculator == null)
                 return;
 
             PpCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
             PpCalculator.PreProcess(osuFileLocation);
         }
 
@@ -164,7 +153,7 @@ namespace OsuMemoryEventSource
         {
             double pp = double.NaN;
 
-            if (PpCalculator == null || _currentPlayMode == PlayMode.OsuMania)
+            if (PpCalculator == null)
                 return pp;
 
             try
