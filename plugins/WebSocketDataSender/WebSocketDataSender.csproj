@@ -115,7 +115,6 @@
     <Compile Include="ImageExtensions.cs" />
     <Compile Include="DataContainer.cs" />
     <Compile Include="HttpServer.cs" />
-    <Compile Include="TokenExtensions.cs" />
     <Compile Include="WebSocketDataEndpoint.cs" />
     <Compile Include="WebSocketDataGetter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

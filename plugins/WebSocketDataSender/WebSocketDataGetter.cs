@@ -112,7 +112,7 @@ namespace WebSocketDataSender
                 return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens), "text", Encoding.UTF8);
             }
 
-            return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens.ToDictionary(k => k.Key, v => v.Value.WebSocketValue())), "text", Encoding.UTF8);
+            return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens.ToDictionary(k => k.Key, v => v.Value.Value)), "text", Encoding.UTF8);
         }
 
         private async Task SendCurrentBeatmapImage(IHttpContext context)
