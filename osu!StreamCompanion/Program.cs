@@ -17,7 +17,7 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v200223.22";
+        public static string ScVersion ="v200908.19";
         private static Initializer _initializer;
         private const bool AllowMultiInstance = false;
 

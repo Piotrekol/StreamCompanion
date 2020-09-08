@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>pp Display Example</title>
+  <link href="./main.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap" rel="stylesheet">
+
+  <!-- This is a development version of Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/lib/reconnecting-websocket.js"></script>
+  <script src="/lib/consts.js"></script>
+  <script src="/lib/utils.js"></script>
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <Background class="box">
+      <div class="inner">
+        <div class="ds hits" :class="{hide: !isPlaying}">
+          <div class="hit hit-100">
+            <p class="hit-text">{{getToken('c100')}}</p>
+          </div>
+          <div class="hit hit-50">
+            <p class="hit-text">{{getToken('c50')}}</p>
+          </div>
+          <div class="hit hit-miss">
+            <p class="hit-text">{{getToken('miss')}}</p>
+          </div>
+        </div>
+        <div class="hit hit-50" style="opacity:0" :class="{hide: isPlaying}">
+          <p class="hit-text">0</p>
+        </div>
+        <h1 class="ds pp">
+          {{getToken('PpIfMapEndsNow',1)}}pp
+        </h1>
+      </div>
+    </Background>
+  </div>
+  <script src="./main.js" type="module"></script>
+</body>
+
+</html>
