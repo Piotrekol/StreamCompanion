@@ -109,10 +109,10 @@ namespace WebSocketDataSender
         {
             if (context.Request.QueryString.ContainsKey("debug") && context.Request.QueryString["debug"] == "1")
             {
-                return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens), "text", Encoding.UTF8);
+                return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens), "application/json", Encoding.UTF8);
             }
 
-            return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens.ToDictionary(k => k.Key, v => v.Value.Value)), "text", Encoding.UTF8);
+            return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens.ToDictionary(k => k.Key, v => v.Value.Value)), "application/json", Encoding.UTF8);
         }
 
         private async Task SendCurrentBeatmapImage(IHttpContext context)
