@@ -31,7 +31,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
         public void CreateTokens(MapSearchResult map)
         {
             Dictionary<string, object> dict;
-            var OsuFileLocationToken = _tokenSetter("OsuFileLocation", null);
+            var OsuFileLocationToken = _tokenSetter("osuFileLocation", null);
             if (map.FoundBeatmaps)
             {
                 dict = map.BeatmapsFound[0].GetTokens();

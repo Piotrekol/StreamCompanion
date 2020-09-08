@@ -112,13 +112,13 @@ namespace ClickCounter
         private void MouseListener_OnRightMouseDown(object sender, EventArgs e)
         {
             _rightMouseCount++;
-            UpdateValue("M1", _rightMouseCount.ToString());
+            UpdateValue("m1", _rightMouseCount.ToString());
         }
 
         private void _mouseListener_OnLeftMouseDown(object sender, EventArgs e)
         {
             _leftMouseCount++;
-            UpdateValue("M2", _rightMouseCount.ToString());
+            UpdateValue("m2", _rightMouseCount.ToString());
         }
 
         private void UnHookAll()
@@ -305,11 +305,11 @@ namespace ClickCounter
         {
             for (int i = 0; i < _keyList.Count; i++)
             {
-                _tokenSetter($"{_filenames[_keyList[i]]}", _keyCount[_keyList[i]]);
+                _tokenSetter($"key-{_filenames[_keyList[i]].ToLowerInvariant()}", _keyCount[_keyList[i]]);
             }
 
-            _tokenSetter("M1", _rightMouseCount);
-            _tokenSetter("M2", _leftMouseCount);
+            _tokenSetter("m1", _rightMouseCount);
+            _tokenSetter("m2", _leftMouseCount);
         }
     }
 }

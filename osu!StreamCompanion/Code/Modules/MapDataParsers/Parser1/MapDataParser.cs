@@ -57,7 +57,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _patterns.Add(new OutputPattern()
             {
                 Name = "np_all",
-                Pattern = "!MapArtistTitle! !MapDiff! CS:!cs! AR:!ar! OD:!od! HP:!hp!",
+                Pattern = "!mapArtistTitle! !mapDiff! CS:!cs! AR:!ar! OD:!od! HP:!hp!",
                 SaveEvent = OsuStatus.All
             });
             _patterns.Add(new OutputPattern()
@@ -81,7 +81,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             _patterns.Add(new OutputPattern()
             {
                 Name = "livepp_current_pp",
-                Pattern = "!PpIfMapEndsNow!",
+                Pattern = "!ppIfMapEndsNow!",
                 SaveEvent = OsuStatus.Playing
             });
             _patterns.Add(new OutputPattern()
