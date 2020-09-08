@@ -25,7 +25,7 @@ namespace WebSocketDataSender
             string lastSentData = string.Empty;
             while (true)
             {
-                if(context.WebSocket.State != WebSocketState.Open)
+                if (context.WebSocket.State != WebSocketState.Open)
                     return;
                 await Task.Delay(33);
                 if (lastSentData != _dataContainer.Data)

@@ -70,7 +70,7 @@ namespace WebSocketDataSender
                         var tokenValue = _tokens[watchedToken.Key].Value;
 
                         var valueIsDifferent = (tokenValue is double tv)
-                            ? watchedToken.Value==null || Math.Abs(tv - (double) watchedToken.Value) > double.Epsilon
+                            ? watchedToken.Value == null || Math.Abs(tv - (double)watchedToken.Value) > double.Epsilon
                             : tokenValue != watchedToken.Value;
                         if (valueIsDifferent)
                         {

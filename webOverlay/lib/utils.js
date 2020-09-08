@@ -58,9 +58,9 @@ function _GetToken(rws, tokens, tokenName, decimalPlaces) {
 
 
 function _IsInStatus(rws, tokens, osuStatuses) {
-    if(Array.isArray(osuStatuses))
+    if (Array.isArray(osuStatuses))
         return osuStatuses.indexOf(_GetToken(rws, tokens, 'status')) > -1;
-        
+
     return _GetToken(rws, tokens, 'status') == osuStatuses
 }
 

@@ -91,8 +91,8 @@
     <script type="text/javascript">
         function autosize(iframe) {
             setTimeout(() => {
-                if(iframe.contentWindow.document.body.scrollHeight>0)
-                    iframe.style.height = iframe.contentWindow.document.body.scrollHeight+20 + "px"
+                if (iframe.contentWindow.document.body.scrollHeight > 0)
+                    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 20 + "px"
                 else
                     iframe.style.height = '200px'
                 vue.loadedOverlays.push(iframe.id);
@@ -104,7 +104,7 @@
             data: ({
                 overlays: [],
                 loadedOverlays: [],
-                config:{}
+                config: {}
             }),
             methods: {
                 overlayUrl: function (name) {

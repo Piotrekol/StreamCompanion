@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Map Display Example</title>
+    <title>Live Overlay</title>
     <link href="./main.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;700&display=swap" rel="stylesheet">
     <!-- This is a development version of Vue.js -->
@@ -17,9 +17,7 @@
 
 <body>
     <div id="app" class="app" v-cloak>
-        <Background 
-        :dimcolor="overlaySettings.imageDimColor"
-        class="box">
+        <Background :dimcolor="overlaySettings.imageDimColor" class="box">
             <div class="inner" :class="{hide: settings.HideDiffText}">
                 <h1 class="title">
                     {{getToken('MapArtistTitle')}}

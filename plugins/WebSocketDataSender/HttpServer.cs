@@ -34,7 +34,7 @@ namespace WebSocketDataSender
                     .WithMode(HttpListenerMode.EmbedIO))
                 .WithLocalSessionManager()
                 .WithModule(new ActionModule("/ping", HttpVerbs.Get, ctx => ctx.SendDataAsync("pong")));
-            
+
 
             var modulesList = modules.ToList();
             foreach (var module in modulesList)

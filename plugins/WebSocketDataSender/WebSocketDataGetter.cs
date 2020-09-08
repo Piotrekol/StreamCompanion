@@ -177,7 +177,7 @@ namespace WebSocketDataSender
             Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var s in map.FormatedStrings)
             {
-                if (!s.IsMemoryFormat) //memory pattern is handled elsewhere
+                if (!s.IsMemoryFormat)
                     output[s.Name] = s.GetFormatedPattern();
             }
             var json = JsonConvert.SerializeObject(output);

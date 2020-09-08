@@ -12,11 +12,11 @@ const app = {
   computed: {
     totalTime: function () {
       let time = this.getToken('totaltime');
-      return Math.round((time/1000)/60).pad()+":"+Math.round((time/1000)%60).pad();
+      return Math.round((time / 1000) / 60).pad() + ":" + Math.round((time / 1000) % 60).pad();
     }
   },
   methods: {
-    getToken: function (tokenName,decimalPlaces) { return _GetToken(this.rws, this.tokens, tokenName,decimalPlaces) }
+    getToken: function (tokenName, decimalPlaces) { return _GetToken(this.rws, this.tokens, tokenName, decimalPlaces) }
   },
   created: function () {
     //either request all tokens upfront

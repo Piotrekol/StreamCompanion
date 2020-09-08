@@ -24,12 +24,12 @@ const app = {
     ppValue() {
       if (this.isPlaying)
         return this.getToken('PpIfMapEndsNow', 1)
-      if(this.overlaySettings.simulatePPWhenListening)
+      if (this.overlaySettings.simulatePPWhenListening)
         return this.getToken('simulatedPp', 1)
       return 0;
     },
-    mapProgress(){
-      return this.getToken('time') / (this.getToken('totaltime')/1000);
+    mapProgress() {
+      return this.getToken('time') / (this.getToken('totaltime') / 1000);
     },
     overlaySettings() {
       if (Object.keys(this.settings).length === 0)
@@ -57,7 +57,7 @@ const app = {
         bottomHeight: s.BottomHeight//most likely to be renamed
       };
     },
-    progressChartSettings(){
+    progressChartSettings() {
       return {
         backgroundColor: this.overlaySettings.chartProgressColor,
         yAxesFontColor: 'transparent'
@@ -68,8 +68,8 @@ const app = {
         return `height:200px`;
       return `height:${this.overlaySettings.chartHeight}px;`
     },
-    progressChartStyle(){
-      return `clip-path: inset(0px ${100-this.mapProgress*100}% 0px 0px);`
+    progressChartStyle() {
+      return `clip-path: inset(0px ${100 - this.mapProgress * 100}% 0px 0px);`
     },
     hitsStyle() {
       if (!this.overlaySettings.ppBackgroundColor)
