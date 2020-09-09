@@ -56,7 +56,7 @@ namespace OsuMemoryEventSource
 
             ToggleSmoothing(enablePpSmoothing);
 
-            _strainsToken = _tokenSetter("MapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
+            _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
             InitLiveTokens();
 
             Task.Run(InterpolatedValueThreadWork, cancellationTokenSource.Token);
@@ -255,40 +255,40 @@ namespace OsuMemoryEventSource
             });
             _liveTokens["combo"] = new LiveToken(_liveTokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.Combo);
             _liveTokens["score"] = new LiveToken(_liveTokenSetter("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, OsuStatus.Playing), () => _rawData.Play.Score);
-            _liveTokens["CurrentMaxCombo"] = new LiveToken(_liveTokenSetter("CurrentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.MaxCombo);
-            _liveTokens["PlayerHp"] = new LiveToken(_liveTokenSetter("PlayerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Hp);
+            _liveTokens["currentMaxCombo"] = new LiveToken(_liveTokenSetter("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.MaxCombo);
+            _liveTokens["playerHp"] = new LiveToken(_liveTokenSetter("playerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Hp);
 
-            _liveTokens["PpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("PpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["ppIfMapEndsNow"] = new LiveToken(_liveTokenSetter("ppIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Set(_rawData.PPIfBeatmapWouldEndNow());
                 return InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current;
             });
-            _liveTokens["AimPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("AimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["aimPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("aimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current;
             });
-            _liveTokens["SpeedPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("SpeedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["speedPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("speedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Set(_rawData.SpeedPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current;
             });
-            _liveTokens["AccPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("AccPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["accPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("accPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Set(_rawData.AccPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current;
             });
-            _liveTokens["StrainPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("StrainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["strainPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("strainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Set(_rawData.StrainPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current;
             });
-            _liveTokens["PpIfRestFced"] = new LiveToken(_liveTokenSetter("PpIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["ppIfRestFced"] = new LiveToken(_liveTokenSetter("ppIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
                 return InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
             });
-            _liveTokens["NoChokePp"] = new LiveToken(_liveTokenSetter("NoChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["noChokePp"] = new LiveToken(_liveTokenSetter("noChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
                 return InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
@@ -298,23 +298,23 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.SimulatedPp].Set(_rawData.SimulatedPp());
                 return InterpolatedValues[InterpolatedValueName.SimulatedPp].Current;
             });
-            _liveTokens["UnstableRate"] = new LiveToken(_liveTokenSetter("UnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["unstableRate"] = new LiveToken(_liveTokenSetter("unstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
-            _liveTokens["ConvertedUnstableRate"] = new LiveToken(_liveTokenSetter("ConvertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["convertedUnstableRate"] = new LiveToken(_liveTokenSetter("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
             {
-                var ur = (double)_liveTokens["UnstableRate"].Token.Value;
+                var ur = (double)_liveTokens["unstableRate"].Token.Value;
                 if ((Mods & Mods.Dt) != 0)
                     return ur / 1.5d;
                 if ((Mods & Mods.Ht) != 0)
                     return ur / 0.75d;
                 return ur;
             });
-            _liveTokens["HitErrors"] = new LiveToken(_liveTokenSetter("HitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), OsuStatus.Playing), () => _rawData.HitErrors);
+            _liveTokens["hitErrors"] = new LiveToken(_liveTokenSetter("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), OsuStatus.Playing), () => _rawData.HitErrors);
 
-            _liveTokens["LocalTime"] = new LiveToken(_liveTokenSetter("LocalTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
+            _liveTokens["localTime"] = new LiveToken(_liveTokenSetter("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
         }
 
         private void UpdateLiveTokens(OsuStatus status)

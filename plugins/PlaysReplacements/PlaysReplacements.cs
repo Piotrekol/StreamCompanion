@@ -33,8 +33,8 @@ namespace PlaysReplacements
                 lastMapSearchString = map.MapSearchString;
             }
 
-            _tokenSetter("Plays", Plays);
-            _tokenSetter("Retrys", Retrys);
+            _tokenSetter("plays", Plays);
+            _tokenSetter("retrys", Retrys);
         }
 
     }

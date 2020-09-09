@@ -78,12 +78,7 @@ namespace WebSocketDataSender
             _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
         }
 
-        private Task GetSettings(IHttpContext context)
-        {
-            //TODO: remove dynamic call after upgrading StreamCompanionTypes
-            var allSettings = ((dynamic)_settings).SettingsEntries as IReadOnlyDictionary<string, object>;
-            return context.SendDataAsync(allSettings);
-        }
+        private Task GetSettings(IHttpContext context) => context.SendDataAsync(_settings.SettingsEntries);
 
         private void SetWebOverlayJavaScriptConfiguration(string configurationFileLocation, Uri uri)
         {

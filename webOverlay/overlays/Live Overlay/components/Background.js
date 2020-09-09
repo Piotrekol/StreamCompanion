@@ -24,7 +24,7 @@ const background = {
         imageDiskLocation() {
             let t = this;
             var currId = t.backgroundId += 1
-            preloadImage(`${window.overlay.config.getUrl()}/backgroundImage?width=2000&mapset=${t.tokens.mapsetid}&dummyData=${encodeURIComponent(t.tokens.Md5)}`, currId, (url, id) => {
+            preloadImage(`${window.overlay.config.getUrl()}/backgroundImage?width=2000&mapset=${t.tokens.mapsetid}&dummyData=${encodeURIComponent(t.tokens.md5)}`, currId, (url, id) => {
                 if (t.backgroundId !== id)
                     return;
                 t.backgroundUrl = url;
@@ -32,7 +32,7 @@ const background = {
         }
     },
     created: function () {
-        watchTokensVue(['backgroundImageLocation', 'Md5', 'mapsetid'], this);
+        watchTokensVue(['backgroundImageLocation', 'md5', 'mapsetid'], this);
     }
 }
 
