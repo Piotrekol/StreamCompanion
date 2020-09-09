@@ -23,8 +23,6 @@ REM remove debug symbols
 rm ./Output/*.pdb
 rm ./Output/Plugins/*.pdb
 
-dir
-
 REM remove misc files
 rm ./Output/*.xml
 rm ./Output/StreamCompanion Updater.exe.config
