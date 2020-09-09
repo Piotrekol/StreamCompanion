@@ -122,14 +122,10 @@ namespace ScGui
             else if (_mainWindow.WindowState == WindowState.Minimized)
             {
                 _mainWindow.Show();
-                _mainWindow.Dispatcher.Invoke(async () =>
+                _mainWindow.Dispatcher.Invoke(() =>
                 {
                     _mainWindow.Focusable = true;
-                    while (!_mainWindow.IsFocused)
-                    {
-                        _mainWindow.Focus();
-                        await Task.Delay(5);
-                    }
+                    _mainWindow.Focus();
                 });
 
             }
