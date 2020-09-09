@@ -28,6 +28,8 @@ namespace OsuMemoryEventSource
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public Mods Mods { get; set; }
         private IToken _strainsToken;
+        private IToken _skinToken;
+        private IToken _skinPathToken;
 
         private enum InterpolatedValueName
         {
@@ -57,6 +59,10 @@ namespace OsuMemoryEventSource
             ToggleSmoothing(enablePpSmoothing);
 
             _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
+
+            _skinToken = _tokenSetter("skin", string.Empty, TokenType.Normal, null, string.Empty);
+            _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
+
             InitLiveTokens();
 
             Task.Run(InterpolatedValueThreadWork, cancellationTokenSource.Token);
@@ -197,29 +203,7 @@ namespace OsuMemoryEventSource
 
         private void InitLiveTokens()
         {
-            var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
-            var notPlaying = (OsuStatus)(OsuStatus.All - OsuStatus.Playing);
             _liveTokens["status"] = new LiveToken(_tokenSetter("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null), null);
-            _liveTokens["skin"] = new LiveToken(_liveTokenSetter("skin", string.Empty, TokenType.Live, null, string.Empty, notPlaying),
-                () =>
-                {
-                    //TODO: memoryReader sometimes returns malformed skinName string
-                    var name = _reader?.GetSkinFolderName() ?? string.Empty;
-                    return name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
-                        ? string.Empty
-                        : name;
-                });
-            _liveTokens["skinPath"] = new LiveToken(_liveTokenSetter("skinPath", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () =>
-            {
-                try
-                {
-                    return Path.Combine(osuSkinsDirectory, (string)_liveTokens["skin"].Token.Value);
-                }
-                catch (ArgumentException)
-                {
-                    return string.Empty;
-                }
-            });
 
             _liveTokens["acc"] = new LiveToken(_liveTokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Acc);
             _liveTokens["katsu"] = new LiveToken(_liveTokenSetter("katsu", _rawData.Play.CKatsu, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.CKatsu);
@@ -436,6 +420,30 @@ namespace OsuMemoryEventSource
             Mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
             if (mapSearchResult.FoundBeatmaps && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
+
+            SetSkinTokens();
+        }
+
+        private void SetSkinTokens()
+        {
+            var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
+
+            var skinName = _reader?.GetSkinFolderName() ?? string.Empty;
+            _skinToken.Value = skinName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
+                ? string.Empty
+                : skinName;
+
+            string skinPath;
+            try
+            {
+                skinPath = Path.Combine(osuSkinsDirectory, (string)_skinToken.Value);
+            }
+            catch (ArgumentException)
+            {
+                skinPath = string.Empty;
+            }
+
+            _skinPathToken.Value = skinPath;
         }
     }
 }
