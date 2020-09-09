@@ -23,12 +23,14 @@ REM remove debug symbols
 rm ./Output/*.pdb
 rm ./Output/Plugins/*.pdb
 
+dir
+
 REM remove misc files
 rm ./Output/*.xml
-rm "./Output/StreamCompanion Updater.exe.config"
-rm "./Output/Plugins/StreamCompanionTypes.dll"
-rm "./Output/Plugins/CollectionManager.dll"
-rm "./Output/Plugins/System.*"
+rm ./Output/StreamCompanion Updater.exe.config
+rm ./Output/Plugins/StreamCompanionTypes.dll
+rm ./Output/Plugins/CollectionManager.dll
+rm ./Output/Plugins/System.*
 
 cd ..
 REM clean installer folder
