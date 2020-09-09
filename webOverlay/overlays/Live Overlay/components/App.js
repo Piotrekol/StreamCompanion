@@ -20,10 +20,10 @@ const app = {
       return Math.round((time / 1000) / 60).pad() + ":" + Math.round((time / 1000) % 60).pad();
     },
     isPlaying() { return _IsPlaying(this.rws, this.tokens) },
-    mapStrains() { return Object.entries(this.tokens.MapStrains || {}); },
+    mapStrains() { return Object.entries(this.tokens.mapStrains || {}); },
     ppValue() {
       if (this.isPlaying)
-        return this.getToken('PpIfMapEndsNow', 1)
+        return this.getToken('ppIfMapEndsNow', 1)
       if (this.overlaySettings.simulatePPWhenListening)
         return this.getToken('simulatedPp', 1)
       return 0;
@@ -100,7 +100,7 @@ const app = {
   },
   created: function () {
     //either request all tokens upfront
-    this.rws = watchTokensVue(['MapStrains'], this);
+    this.rws = watchTokensVue(['mapStrains'], this);
     //or request them later using helper getToken method above
     //this.rws = watchTokensVue([], this);
     let t = this;
