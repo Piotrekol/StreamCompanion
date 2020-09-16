@@ -9,6 +9,7 @@ namespace LiveVisualizer
         bool SimulatePPWhenListening { get; set; }
         bool HideDiffText { get; set; }
         bool HideMapStats { get; set; }
+        bool HideChartLegend { get; set; }
         string Font { get; set; }
         double ChartHeight { get; set; }
 

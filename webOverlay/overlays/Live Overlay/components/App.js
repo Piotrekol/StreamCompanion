@@ -46,15 +46,14 @@ const app = {
         hit100BackgroundColor: this.convertSettingsColor(s.Hit100BackgroundColor),
         hit50BackgroundColor: this.convertSettingsColor(s.Hit50BackgroundColor),
         hitMissBackgroundColor: this.convertSettingsColor(s.HitMissBackgroundColor),
+        yAxesFontColor: s.HideChartLegend ? 'transparent' : 'white',
 
-        autoSizeAxisY: s.AutoSizeAxisY,
         simulatePPWhenListening: s.SimulatePPWhenListening,
-        enableRoundedCorners: s.EnableRoundedCorners,
         hideDiffText: s.HideDiffText,
         hideMapStats: s.HideMapStats,
+        hideChartLegend: s.HideChartLegend,
 
-        chartHeight: s.ChartHeight,
-        bottomHeight: s.BottomHeight//most likely to be renamed
+        chartHeight: s.ChartHeight
       };
     },
     progressChartSettings() {

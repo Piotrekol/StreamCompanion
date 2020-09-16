@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox_hideChartLegend = new System.Windows.Forms.CheckBox();
             this.checkBox_hideMapStats = new System.Windows.Forms.CheckBox();
             this.checkBox_hideDiffText = new System.Windows.Forms.CheckBox();
             this.button_miniCounter = new System.Windows.Forms.Button();
@@ -37,10 +38,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.numericUpDown_chartHeight = new System.Windows.Forms.NumericUpDown();
             this.groupBox_chartColors = new System.Windows.Forms.GroupBox();
-            this.button_openInBrowser = new System.Windows.Forms.Button();
-            this.button_openFilesLocation = new System.Windows.Forms.Button();
-            this.label_webUrl = new System.Windows.Forms.Label();
-            this.label_localFiles = new System.Windows.Forms.Label();
             this.color_ppBackground = new LiveVisualizer.ColorPickerWithPreview();
             this.color_hit100Background = new LiveVisualizer.ColorPickerWithPreview();
             this.color_hit50Background = new LiveVisualizer.ColorPickerWithPreview();
@@ -48,6 +45,10 @@
             this.color_chartPrimary = new LiveVisualizer.ColorPickerWithPreview();
             this.color_chartProgress = new LiveVisualizer.ColorPickerWithPreview();
             this.color_imageDimming = new LiveVisualizer.ColorPickerWithPreview();
+            this.button_openInBrowser = new System.Windows.Forms.Button();
+            this.button_openFilesLocation = new System.Windows.Forms.Button();
+            this.label_webUrl = new System.Windows.Forms.Label();
+            this.label_localFiles = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).BeginInit();
             this.groupBox_chartColors.SuspendLayout();
@@ -55,6 +56,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkBox_hideChartLegend);
             this.panel1.Controls.Add(this.checkBox_hideMapStats);
             this.panel1.Controls.Add(this.checkBox_hideDiffText);
             this.panel1.Controls.Add(this.button_miniCounter);
@@ -65,8 +67,18 @@
             this.panel1.Controls.Add(this.groupBox_chartColors);
             this.panel1.Location = new System.Drawing.Point(0, 61);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(650, 244);
+            this.panel1.Size = new System.Drawing.Size(650, 268);
             this.panel1.TabIndex = 1;
+            // 
+            // checkBox_hideChartLegend
+            // 
+            this.checkBox_hideChartLegend.AutoSize = true;
+            this.checkBox_hideChartLegend.Location = new System.Drawing.Point(10, 202);
+            this.checkBox_hideChartLegend.Name = "checkBox_hideChartLegend";
+            this.checkBox_hideChartLegend.Size = new System.Drawing.Size(110, 17);
+            this.checkBox_hideChartLegend.TabIndex = 57;
+            this.checkBox_hideChartLegend.Text = "Hide chart legend";
+            this.checkBox_hideChartLegend.UseVisualStyleBackColor = true;
             // 
             // checkBox_hideMapStats
             // 
@@ -91,7 +103,7 @@
             // button_miniCounter
             // 
             this.button_miniCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_miniCounter.Location = new System.Drawing.Point(456, 215);
+            this.button_miniCounter.Location = new System.Drawing.Point(456, 239);
             this.button_miniCounter.Name = "button_miniCounter";
             this.button_miniCounter.Size = new System.Drawing.Size(81, 23);
             this.button_miniCounter.TabIndex = 50;
@@ -102,7 +114,7 @@
             // button_reset
             // 
             this.button_reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_reset.Location = new System.Drawing.Point(543, 215);
+            this.button_reset.Location = new System.Drawing.Point(543, 239);
             this.button_reset.Name = "button_reset";
             this.button_reset.Size = new System.Drawing.Size(97, 23);
             this.button_reset.TabIndex = 49;
@@ -123,7 +135,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 202);
+            this.label6.Location = new System.Drawing.Point(7, 230);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(67, 13);
             this.label6.TabIndex = 44;
@@ -131,7 +143,7 @@
             // 
             // numericUpDown_chartHeight
             // 
-            this.numericUpDown_chartHeight.Location = new System.Drawing.Point(80, 198);
+            this.numericUpDown_chartHeight.Location = new System.Drawing.Point(80, 226);
             this.numericUpDown_chartHeight.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -161,44 +173,6 @@
             this.groupBox_chartColors.TabIndex = 42;
             this.groupBox_chartColors.TabStop = false;
             this.groupBox_chartColors.Text = "Chart colors";
-            // 
-            // button_openInBrowser
-            // 
-            this.button_openInBrowser.Location = new System.Drawing.Point(4, 3);
-            this.button_openInBrowser.Name = "button_openInBrowser";
-            this.button_openInBrowser.Size = new System.Drawing.Size(194, 23);
-            this.button_openInBrowser.TabIndex = 3;
-            this.button_openInBrowser.Text = "Open overlay in browser";
-            this.button_openInBrowser.UseVisualStyleBackColor = true;
-            this.button_openInBrowser.Click += new System.EventHandler(this.button_openInBrowser_Click);
-            // 
-            // button_openFilesLocation
-            // 
-            this.button_openFilesLocation.Location = new System.Drawing.Point(4, 32);
-            this.button_openFilesLocation.Name = "button_openFilesLocation";
-            this.button_openFilesLocation.Size = new System.Drawing.Size(194, 23);
-            this.button_openFilesLocation.TabIndex = 4;
-            this.button_openFilesLocation.Text = "Open overlay files location";
-            this.button_openFilesLocation.UseVisualStyleBackColor = true;
-            this.button_openFilesLocation.Click += new System.EventHandler(this.button_openFilesLocation_Click);
-            // 
-            // label_webUrl
-            // 
-            this.label_webUrl.AutoSize = true;
-            this.label_webUrl.Location = new System.Drawing.Point(204, 8);
-            this.label_webUrl.Name = "label_webUrl";
-            this.label_webUrl.Size = new System.Drawing.Size(52, 13);
-            this.label_webUrl.TabIndex = 0;
-            this.label_webUrl.Text = "<webUrl>";
-            // 
-            // label_localFiles
-            // 
-            this.label_localFiles.AutoSize = true;
-            this.label_localFiles.Location = new System.Drawing.Point(204, 37);
-            this.label_localFiles.Name = "label_localFiles";
-            this.label_localFiles.Size = new System.Drawing.Size(78, 13);
-            this.label_localFiles.TabIndex = 5;
-            this.label_localFiles.Text = "<filesLocation>";
             // 
             // color_ppBackground
             // 
@@ -319,6 +293,44 @@
             this.color_imageDimming.Size = new System.Drawing.Size(290, 21);
             this.color_imageDimming.TabIndex = 40;
             // 
+            // button_openInBrowser
+            // 
+            this.button_openInBrowser.Location = new System.Drawing.Point(4, 3);
+            this.button_openInBrowser.Name = "button_openInBrowser";
+            this.button_openInBrowser.Size = new System.Drawing.Size(194, 23);
+            this.button_openInBrowser.TabIndex = 3;
+            this.button_openInBrowser.Text = "Open overlay in browser";
+            this.button_openInBrowser.UseVisualStyleBackColor = true;
+            this.button_openInBrowser.Click += new System.EventHandler(this.button_openInBrowser_Click);
+            // 
+            // button_openFilesLocation
+            // 
+            this.button_openFilesLocation.Location = new System.Drawing.Point(4, 32);
+            this.button_openFilesLocation.Name = "button_openFilesLocation";
+            this.button_openFilesLocation.Size = new System.Drawing.Size(194, 23);
+            this.button_openFilesLocation.TabIndex = 4;
+            this.button_openFilesLocation.Text = "Open overlay files location";
+            this.button_openFilesLocation.UseVisualStyleBackColor = true;
+            this.button_openFilesLocation.Click += new System.EventHandler(this.button_openFilesLocation_Click);
+            // 
+            // label_webUrl
+            // 
+            this.label_webUrl.AutoSize = true;
+            this.label_webUrl.Location = new System.Drawing.Point(204, 8);
+            this.label_webUrl.Name = "label_webUrl";
+            this.label_webUrl.Size = new System.Drawing.Size(52, 13);
+            this.label_webUrl.TabIndex = 0;
+            this.label_webUrl.Text = "<webUrl>";
+            // 
+            // label_localFiles
+            // 
+            this.label_localFiles.AutoSize = true;
+            this.label_localFiles.Location = new System.Drawing.Point(204, 37);
+            this.label_localFiles.Name = "label_localFiles";
+            this.label_localFiles.Size = new System.Drawing.Size(78, 13);
+            this.label_localFiles.TabIndex = 5;
+            this.label_localFiles.Text = "<filesLocation>";
+            // 
             // LiveVisualizerSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -329,7 +341,7 @@
             this.Controls.Add(this.button_openInBrowser);
             this.Controls.Add(this.panel1);
             this.Name = "LiveVisualizerSettings";
-            this.Size = new System.Drawing.Size(650, 305);
+            this.Size = new System.Drawing.Size(650, 329);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).EndInit();
@@ -360,5 +372,6 @@
         private System.Windows.Forms.Button button_openFilesLocation;
         private System.Windows.Forms.Label label_webUrl;
         private System.Windows.Forms.Label label_localFiles;
+        private System.Windows.Forms.CheckBox checkBox_hideChartLegend;
     }
 }

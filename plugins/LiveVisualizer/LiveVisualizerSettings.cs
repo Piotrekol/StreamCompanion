@@ -27,6 +27,7 @@ namespace LiveVisualizer
             checkBox_simulatePP.Checked = _configuration.SimulatePPWhenListening;
             checkBox_hideDiffText.Checked = _configuration.HideDiffText;
             checkBox_hideMapStats.Checked = _configuration.HideMapStats;
+            checkBox_hideChartLegend.Checked = _configuration.HideChartLegend;
 
             BindColorPicker(color_chartPrimary, () => _configuration.ChartColor, color => _configuration.ChartColor = color);
             BindColorPicker(color_chartProgress, () => _configuration.ChartProgressColor, color => _configuration.ChartProgressColor = color);
@@ -39,9 +40,15 @@ namespace LiveVisualizer
             checkBox_hideDiffText.CheckedChanged += CheckBox_hideDiffTextOnCheckedChanged;
             checkBox_hideMapStats.CheckedChanged += CheckBox_hideMapStatsOnCheckedChanged;
             checkBox_simulatePP.CheckedChanged += CheckBoxSimulatePpOnCheckedChanged;
+            checkBox_hideChartLegend.CheckedChanged += CheckBox_hideChartLegendOnCheckedChanged;
 
             numericUpDown_chartHeight.Value = ((decimal)_configuration.ChartHeight).Clamp(numericUpDown_chartHeight.Minimum, numericUpDown_chartHeight.Maximum);
             numericUpDown_chartHeight.ValueChanged += NumericUpDownChartHeightOnValueChanged;
+        }
+
+        private void CheckBox_hideChartLegendOnCheckedChanged(object sender, EventArgs e)
+        {
+            _configuration.HideChartLegend = checkBox_hideChartLegend.Checked;
         }
 
         private void CheckBox_hideMapStatsOnCheckedChanged(object sender, EventArgs e)

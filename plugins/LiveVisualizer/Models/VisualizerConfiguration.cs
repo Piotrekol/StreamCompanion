@@ -15,6 +15,7 @@ namespace LiveVisualizer
         public bool SimulatePPWhenListening { get; set; } = true;
         public bool HideDiffText { get; set; } = false;
         public bool HideMapStats { get; set; } = false;
+        public bool HideChartLegend { get; set; } = false;
         public string Font { get; set; } = "Arial";
         public double ChartHeight { get; set; } = 150;
         public Color BackgroundColor { get; set; } = Color.FromArgb(255, 0, 0, 0);
