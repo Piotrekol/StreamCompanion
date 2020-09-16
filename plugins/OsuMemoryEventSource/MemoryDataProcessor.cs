@@ -27,6 +27,9 @@ namespace OsuMemoryEventSource
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public Mods Mods { get; set; }
+        private IToken _strainsToken;
+        private IToken _skinToken;
+        private IToken _skinPathToken;
 
         private enum InterpolatedValueName
         {
@@ -37,9 +40,10 @@ namespace OsuMemoryEventSource
             StrainPpIfMapEndsNow,
             PpIfRestFced,
             NoChokePp,
+            SimulatedPp,
             UnstableRate,
-
         }
+
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
@@ -54,11 +58,15 @@ namespace OsuMemoryEventSource
 
             ToggleSmoothing(enablePpSmoothing);
 
+            _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
+
+            _skinToken = _tokenSetter("skin", string.Empty, TokenType.Normal, null, string.Empty);
+            _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
+
             InitLiveTokens();
 
             Task.Run(InterpolatedValueThreadWork, cancellationTokenSource.Token);
             Task.Run(TokenThreadWork, cancellationTokenSource.Token);
-
         }
 
         public Task TokenThreadWork()
@@ -106,6 +114,7 @@ namespace OsuMemoryEventSource
             {
             }
         }
+
         public void SetNewMap(MapSearchResult map)
         {
             lock (_lockingObject)
@@ -113,19 +122,16 @@ namespace OsuMemoryEventSource
                 if ((map.Action & OsuStatus.ResultsScreen) != 0)
                     return;
 
-
                 if (map.FoundBeatmaps &&
-                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation) &&
-                    (map.Action & (OsuStatus.Playing | OsuStatus.Watching)) != 0)
+                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.WorkingMods ?? "";
 
                     _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
                         (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
+
                 }
-                else
-                    _rawData.SetCurrentMap(null, "", null, PlayMode.Osu);
             }
         }
 
@@ -197,29 +203,7 @@ namespace OsuMemoryEventSource
 
         private void InitLiveTokens()
         {
-            var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
-            var notPlaying = (OsuStatus)(OsuStatus.All - OsuStatus.Playing);
             _liveTokens["status"] = new LiveToken(_tokenSetter("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null), null);
-            _liveTokens["skin"] = new LiveToken(_liveTokenSetter("skin", string.Empty, TokenType.Live, null, string.Empty, notPlaying),
-                () =>
-                {
-                    //TODO: memoryReader sometimes returns malformed skinName string
-                    var name = _reader?.GetSkinFolderName() ?? string.Empty;
-                    return name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
-                        ? string.Empty
-                        : name;
-                });
-            _liveTokens["skinPath"] = new LiveToken(_liveTokenSetter("skinPath", string.Empty, TokenType.Live, null, string.Empty, notPlaying), () =>
-            {
-                try
-                {
-                    return Path.Combine(osuSkinsDirectory, (string)_liveTokens["skin"].Token.Value);
-                }
-                catch (ArgumentException)
-                {
-                    return string.Empty;
-                }
-            });
 
             _liveTokens["acc"] = new LiveToken(_liveTokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Acc);
             _liveTokens["katsu"] = new LiveToken(_liveTokenSetter("katsu", _rawData.Play.CKatsu, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.CKatsu);
@@ -234,7 +218,7 @@ namespace OsuMemoryEventSource
                     return TimeSpan.FromMilliseconds(_rawData.PlayTime);
                 return TimeSpan.Zero;
             });
-            _liveTokens["time"] = new LiveToken(_liveTokenSetter("time", 0d, TokenType.Live, "{0:0.000}", 0d), () =>
+            _liveTokens["time"] = new LiveToken(_liveTokenSetter("time", 0d, TokenType.Live, "{0:0.00}", 0d), () =>
             {
                 if (_rawData.PlayTime != 0)
                     return _rawData.PlayTime / 1000d;
@@ -255,63 +239,66 @@ namespace OsuMemoryEventSource
             });
             _liveTokens["combo"] = new LiveToken(_liveTokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.Combo);
             _liveTokens["score"] = new LiveToken(_liveTokenSetter("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, OsuStatus.Playing), () => _rawData.Play.Score);
-            _liveTokens["CurrentMaxCombo"] = new LiveToken(_liveTokenSetter("CurrentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.MaxCombo);
-            _liveTokens["PlayerHp"] = new LiveToken(_liveTokenSetter("PlayerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Hp);
+            _liveTokens["currentMaxCombo"] = new LiveToken(_liveTokenSetter("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, OsuStatus.Playing), () => _rawData.Play.MaxCombo);
+            _liveTokens["playerHp"] = new LiveToken(_liveTokenSetter("playerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () => _rawData.Play.Hp);
 
-            _liveTokens["PpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("PpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["ppIfMapEndsNow"] = new LiveToken(_liveTokenSetter("ppIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Set(_rawData.PPIfBeatmapWouldEndNow());
                 return InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current;
             });
-            _liveTokens["AimPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("AimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["aimPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("aimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current;
             });
-            _liveTokens["SpeedPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("SpeedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["speedPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("speedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Set(_rawData.SpeedPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current;
             });
-            _liveTokens["AccPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("AccPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["accPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("accPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Set(_rawData.AccPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current;
             });
-            _liveTokens["StrainPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("StrainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["strainPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("strainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Set(_rawData.StrainPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current;
             });
-            _liveTokens["PpIfRestFced"] = new LiveToken(_liveTokenSetter("PpIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["ppIfRestFced"] = new LiveToken(_liveTokenSetter("ppIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
                 return InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
             });
-            _liveTokens["NoChokePp"] = new LiveToken(_liveTokenSetter("NoChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["noChokePp"] = new LiveToken(_liveTokenSetter("noChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
                 return InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
             });
-            _liveTokens["UnstableRate"] = new LiveToken(_liveTokenSetter("UnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["simulatedPp"] = new LiveToken(_liveTokenSetter("simulatedPp", InterpolatedValues[InterpolatedValueName.SimulatedPp].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.All), () =>
+            {
+                InterpolatedValues[InterpolatedValueName.SimulatedPp].Set(_rawData.SimulatedPp());
+                return InterpolatedValues[InterpolatedValueName.SimulatedPp].Current;
+            });
+            _liveTokens["unstableRate"] = new LiveToken(_liveTokenSetter("unstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
             {
                 InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
-            _liveTokens["ConvertedUnstableRate"] = new LiveToken(_liveTokenSetter("ConvertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
+            _liveTokens["convertedUnstableRate"] = new LiveToken(_liveTokenSetter("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, OsuStatus.Playing), () =>
             {
-                var ur = (double)_liveTokens["UnstableRate"].Token.Value;
+                var ur = (double)_liveTokens["unstableRate"].Token.Value;
                 if ((Mods & Mods.Dt) != 0)
                     return ur / 1.5d;
                 if ((Mods & Mods.Ht) != 0)
                     return ur / 0.75d;
                 return ur;
             });
-            _liveTokens["HitErrors"] = new LiveToken(_liveTokenSetter("HitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), OsuStatus.Playing), () => _rawData.HitErrors);
-
-            _liveTokens["LocalTime"] = new LiveToken(_liveTokenSetter("LocalTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
-
-            _liveTokens["ISOTime"] = new LiveToken(_liveTokenSetter("ISOTime", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All), () => DateTime.UtcNow.ToString("o"));
+            _liveTokens["hitErrors"] = new LiveToken(_liveTokenSetter("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), OsuStatus.Playing), () => _rawData.HitErrors);
+            _liveTokens["localTimeISO"] = new LiveToken(_liveTokenSetter("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All), () => DateTime.UtcNow.ToString("o"));
+            _liveTokens["localTime"] = new LiveToken(_liveTokenSetter("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
         }
 
         private void UpdateLiveTokens(OsuStatus status)
@@ -341,18 +328,69 @@ namespace OsuMemoryEventSource
 
             double sum = hitErrors.Sum();
 
-            double avarage = sum / hitErrors.Count;
+            double average = sum / hitErrors.Count;
             double variance = 0;
 
             foreach (var hit in hitErrors)
             {
-                variance += Math.Pow(hit - avarage, 2);
+                variance += Math.Pow(hit - average, 2);
             }
 
             return Math.Sqrt(variance / hitErrors.Count) * 10;
         }
 
+        private static StrainsResult GetStrains(string mapLocation, PlayMode? desiredPlayMode)
+        {
+            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
 
+            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
+                desiredPlayMode.HasValue ? (int?)desiredPlayMode : null);
+
+            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
+
+            //Length refers to beatmap time, not song total time
+            var mapLength = workingBeatmap.Length;
+            var strainLength = 5000;
+            var interval = 1500;
+            var time = 0;
+            var strains = new Dictionary<int, double>(300);
+
+            if (ppCalculator == null)
+            {
+                while (time + strainLength / 2 < mapLength)
+                {
+                    strains.Add(time, 50);
+                    time += interval;
+                }
+            }
+            else if (playMode == PlayMode.Osu || playMode == PlayMode.Taiko || playMode == PlayMode.OsuMania)
+            {
+
+                var a = new Dictionary<string, double>();
+                while (time + strainLength / 2 < mapLength)
+                {
+                    var strain = ppCalculator.Calculate(time, time + strainLength, a);
+
+                    if (double.IsNaN(strain) || strain < 0)
+                        strain = 0;
+                    else if (strain > 2000)
+                        strain = 2000; //lets not freeze everything with aspire/fancy 100* maps
+
+                    strains.Add(time, strain);
+                    time += interval;
+                    a.Clear();
+                }
+            }
+
+            return new StrainsResult
+            {
+                Strains = strains,
+                PpCalculator = ppCalculator,
+                WorkingBeatmap = workingBeatmap,
+                PlayMode = playMode,
+                MapLocation = mapLocation
+            };
+        }
         public void Dispose()
         {
             cancellationTokenSource.Cancel();
@@ -366,6 +404,46 @@ namespace OsuMemoryEventSource
             {
                 v.Value.ChangeSpeed(speed);
             }
+        }
+
+        private class StrainsResult
+        {
+            public Dictionary<int, double> Strains;
+            public PpCalculator.PpCalculator PpCalculator;
+            public ProcessorWorkingBeatmap WorkingBeatmap;
+            public PlayMode PlayMode;
+            public string MapLocation;
+        }
+
+        public void CreateTokens(MapSearchResult mapSearchResult)
+        {
+            Mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
+            if (mapSearchResult.FoundBeatmaps && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+                _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
+
+            SetSkinTokens();
+        }
+
+        private void SetSkinTokens()
+        {
+            var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
+
+            var skinName = _reader?.GetSkinFolderName() ?? string.Empty;
+            _skinToken.Value = skinName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
+                ? string.Empty
+                : skinName;
+
+            string skinPath;
+            try
+            {
+                skinPath = Path.Combine(osuSkinsDirectory, (string)_skinToken.Value);
+            }
+            catch (ArgumentException)
+            {
+                skinPath = string.Empty;
+            }
+
+            _skinPathToken.Value = skinPath;
         }
     }
 }

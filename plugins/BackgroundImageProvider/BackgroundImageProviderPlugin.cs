@@ -22,6 +22,7 @@ namespace BackgroundImageProvider
         private readonly IContextAwareLogger _logger;
         private Tokens.TokenSetter _tokenSetter;
         private IToken _imageToken;
+        private IToken _imageLocationToken;
         private string _saveLocation;
         private string _lastCopiedFileLocation;
         public static ConfigEntry EnableImageToken = new ConfigEntry($"{nameof(BackgroundImageProviderPlugin)}_EnableImageToken", false);
@@ -36,6 +37,7 @@ namespace BackgroundImageProvider
                 ? null
                 : $"Disabled, enable it in configuration manually under {EnableImageToken.Name}";
             _imageToken = _tokenSetter("backgroundImage", initialValue);
+            _imageLocationToken = _tokenSetter("backgroundImageLocation", string.Empty);
         }
 
         protected void InternalCreateTokens(MapSearchResult map, int retryCount)
@@ -56,7 +58,7 @@ namespace BackgroundImageProvider
                             if (_settings.Get<bool>(EnableImageToken))
                                 _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
 
-                            _lastCopiedFileLocation = imageLocation;
+                            _imageLocationToken.Value = _lastCopiedFileLocation = imageLocation;
                         }
 
                         return;
@@ -68,6 +70,7 @@ namespace BackgroundImageProvider
 
                 _imageToken.Value = null;
                 _lastCopiedFileLocation = null;
+                _imageLocationToken.Value = string.Empty;
             }
             catch (IOException)
             {

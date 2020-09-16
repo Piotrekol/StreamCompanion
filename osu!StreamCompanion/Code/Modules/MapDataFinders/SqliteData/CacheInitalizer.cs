@@ -1,4 +1,5 @@
 using System;
+using System.Data.SQLite;
 using System.IO;
 using System.Windows.Forms;
 using CollectionManager.Modules.FileIO.OsuDb;
@@ -58,8 +59,14 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                     }
                     catch (Exception e)
                     {
-                        _mainWindowHandle.BeatmapsLoaded = "loading osu!.db FAILED!";
-                        var osuDbLoadFailedException = new OsuDbLoadFailedException($"loading osu!.db FAILED\n{e.Message}", e);
+                        if (e.Message == "Connection was closed, statement was terminated")
+                        {
+                            _mainWindowHandle.BeatmapsLoaded = "loading of osu!.db aborted";
+                            return;
+                        }
+
+                        _mainWindowHandle.BeatmapsLoaded = "loading of osu!.db failed";
+                        var osuDbLoadFailedException = new OsuDbLoadFailedException($"loading of osu!.db failed\n{e.Message}", e);
                         osuDbLoadFailedException.Data["src"] = osudb;
                         osuDbLoadFailedException.Data["dest"] = newOsuFile;
                         osuDbLoadFailedException.Data["osuDbVersion"] = _osuDatabaseLoader.FileDate;

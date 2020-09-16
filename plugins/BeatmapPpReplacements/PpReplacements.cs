@@ -96,21 +96,21 @@ namespace BeatmapPpReplacements
             {
                 ResetTokens(TokenMode.Osu);
                 ResetTokens(TokenMode.Mania);
-                _tokenSetter("GameMode", null);
-                _tokenSetter("MaxCombo", -1);
+                _tokenSetter("gameMode", null);
+                _tokenSetter("maxCombo", -1);
                 return;
             }
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
             var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null);
             _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, _ppCalculator);
-            _tokenSetter("GameMode", playMode.ToString());
+            _tokenSetter("gameMode", playMode.ToString());
 
             if (_ppCalculator == null)
             {//Ctb not supported :(
                 ResetTokens(TokenMode.Osu);
                 ResetTokens(TokenMode.Mania);
-                _tokenSetter("MaxCombo", -1);
+                _tokenSetter("maxCombo", -1);
                 return;
             }
 
@@ -128,7 +128,7 @@ namespace BeatmapPpReplacements
                 _tokenSetter(tokenDefinition.Key, tokenDefinition.Value(mods), format: PpFormat);
             }
 
-            _tokenSetter("MaxCombo", _ppCalculator.GetMaxCombo());
+            _tokenSetter("maxCombo", _ppCalculator.GetMaxCombo());
 
             ResetTokens(tokenMode == TokenMode.Osu ? TokenMode.Mania : TokenMode.Osu);
         }

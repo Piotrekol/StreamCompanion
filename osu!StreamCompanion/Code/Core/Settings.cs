@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace osu_StreamCompanion.Code.Core
     public class Settings : ISettings
     {
         private readonly Dictionary<string, object> _settingsEntries = new Dictionary<string, object>();
+        public IReadOnlyDictionary<string, object> SettingsEntries { get; }
         private ILogger _logger;
         private readonly List<string> _rawLines = new List<string>();
         private readonly List<string> _backupRawLines = new List<string>();
@@ -26,6 +28,7 @@ namespace osu_StreamCompanion.Code.Core
         public Settings(ILogger logger)
         {
             _logger = logger;
+            SettingsEntries = new ReadOnlyDictionary<string, object>(_settingsEntries);
         }
 
         protected virtual void OnSettingUpdated(string settingName)
