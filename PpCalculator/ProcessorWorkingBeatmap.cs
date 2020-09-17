@@ -13,6 +13,7 @@ using osu.Game.Rulesets.Taiko;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using osu.Framework.Graphics.Video;
 using osu.Game.IO;
 using osu.Game.Rulesets.Objects.Types;
@@ -60,11 +61,25 @@ namespace PpCalculator
                 beatmap.BeatmapInfo.OnlineBeatmapID = beatmapId;
         }
 
-        private static Beatmap readFromFile(string filename)
+        private static Beatmap readFromFile(string filename,int retryCount=0)
         {
-            using (var stream = File.OpenRead(filename))
-            using (var streamReader = new LineBufferedReader(stream))
-                return Decoder.GetDecoder<Beatmap>(streamReader).Decode(streamReader);
+            try
+            {
+                using (var stream = File.OpenRead(filename))
+                using (var streamReader = new LineBufferedReader(stream))
+                    return Decoder.GetDecoder<Beatmap>(streamReader).Decode(streamReader);
+            }
+            catch (IOException)
+            {
+                //file is being used by another process..
+                if (retryCount < 10)
+                {
+                    Thread.Sleep(5);
+                    return readFromFile(filename, ++retryCount);
+                }
+
+                throw;
+            }
         }
 
         protected override IBeatmap GetBeatmap() => beatmap;
