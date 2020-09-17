@@ -6,7 +6,9 @@
     margin: 0px;
     font-family: comfortaa;
 }
-
+.clipPathAnimation{
+    transition: clip-path .3s;
+}
 .box {
     height: 100%;
 
