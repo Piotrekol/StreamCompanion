@@ -101,7 +101,7 @@ namespace OsuMemoryEventSource
 
         public void CreateTokens(MapSearchResult map)
         {
-            _memoryListener.CreateTokens(map);
+            _memoryListener?.CreateTokens(map);
         }
 
         public void SetNewMap(MapSearchResult map)
