@@ -71,28 +71,11 @@ namespace WebSocketDataSender
                 ("All StreamCompanion settings", new ActionModule("/settings",HttpVerbs.Get,GetSettings)),
             };
 
-            var configurationLocation = Path.Combine(HttpContentRoot(saver), "lib", "consts.js");
-            if (File.Exists(configurationLocation))
-                SetWebOverlayJavaScriptConfiguration(configurationLocation, new Uri(BaseAddress(_settings)));
-
             _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
         }
 
         private Task GetSettings(IHttpContext context) => context.SendDataAsync(_settings.SettingsEntries);
 
-        private void SetWebOverlayJavaScriptConfiguration(string configurationFileLocation, Uri uri)
-        {
-            var fileContents = File.ReadAllLines(configurationFileLocation);
-            for (int i = 0; i < fileContents.Length; i++)
-            {
-                if (fileContents[i].StartsWith("let autoConfig"))
-                {
-                    fileContents[i] = $"let autoConfig = {JsonConvert.SerializeObject(new { uri.Scheme, uri.Host, uri.Port })};";
-                    break;
-                }
-            }
-            File.WriteAllLines(configurationFileLocation, fileContents);
-        }
         private Task ListOverlays(IHttpContext context)
         {
             return context.SendStringAsync(

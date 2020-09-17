@@ -2,9 +2,9 @@
 let autoConfig = {"Scheme":"http","Host":"localhost","Port":28390};
 
 let config = {
-    scheme: autoConfig.Scheme,
-    host: autoConfig.Host,
-    port: autoConfig.Port,
+    scheme: window.location.protocol.slice(0, -1),
+    host: window.location.hostname,
+    port: window.location.port,
     getUrl: () => `${config.scheme}://${config.host}:${config.port}`,
     getWs: () => `ws://${config.host}:${config.port}`,
 }
