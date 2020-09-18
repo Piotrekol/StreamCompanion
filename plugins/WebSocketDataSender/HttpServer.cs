@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Threading.Tasks;
 using EmbedIO;
 using EmbedIO.Actions;
 using EmbedIO.Files;
@@ -21,9 +22,10 @@ namespace WebSocketDataSender
         public HttpServer(string baseUrl, string httpRootPath, ILogger logger, IEnumerable<(string Description, IWebModule Module)> modules)
         {
             _server = CreateWebServer(baseUrl, httpRootPath, logger, modules);
-            _server.RunAsync();
         }
 
+        public Task RunAsync() => _server.RunAsync();
+        
         private static WebServer CreateWebServer(string url, string rootPath, ILogger logger,
             IEnumerable<(string Description, IWebModule Module)> modules)
         {
@@ -53,6 +55,7 @@ namespace WebSocketDataSender
 
             return server;
         }
+
 
         public void Dispose()
         {

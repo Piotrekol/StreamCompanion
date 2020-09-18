@@ -4,13 +4,16 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using EmbedIO;
 using EmbedIO.Actions;
 using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -23,6 +26,9 @@ namespace WebSocketDataSender
     {
         private ISettings _settings;
         private readonly ISaver _saver;
+        private readonly Delegates.Restart _restarter;
+        private ILogger _logger;
+
         public string Description { get; } = "Provides beatmap and live map data using websockets";
         public string Name { get; } = nameof(WebSocketDataGetter);
         public string Author { get; } = "Piotrekol";
@@ -54,10 +60,12 @@ namespace WebSocketDataSender
             return httpContentRoot;
         }
 
-        public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver)
+        public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver, Delegates.Restart restarter)
         {
             _settings = settings;
             _saver = saver;
+            _restarter = restarter;
+            _logger = logger;
 
 
             var modules = new List<(string Description, IWebModule Module)>
@@ -72,6 +80,41 @@ namespace WebSocketDataSender
             };
 
             _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
+
+            Task.Run(RunServer);
+        }
+
+        private async Task RunServer()
+        {
+            try
+            {
+                await _server.RunAsync();
+            }
+            catch (SocketException ex)
+            {
+                if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                {
+                    var currentPort = _settings.Get<int>(HttpServerPort);
+                    var newPort = currentPort + 1;
+                    if (newPort > ushort.MaxValue)
+                        newPort = 20000;
+
+                    _settings.Add(HttpServerPort.Name, newPort);
+
+                    var userResult = MessageBox.Show(
+                        $"Web overlay couldn't start because there is something already running on port {currentPort} on your system.{Environment.NewLine}" +
+                        $"Port used has been automatically changed to {newPort} but Stream Companion restart is necessary to apply the changes.{Environment.NewLine}" +
+                        $"Restart now?", "Stream Companion Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                    if (userResult == DialogResult.Yes)
+                    {
+                        _restarter("Updated web overlay port number");
+                    }
+
+                    return;
+                }
+
+                throw;
+            }
         }
 
         private Task GetSettings(IHttpContext context) => context.SendDataAsync(_settings.SettingsEntries);
