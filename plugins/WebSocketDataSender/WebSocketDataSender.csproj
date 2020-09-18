@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -66,9 +66,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebOverlay\ColorHelpers.cs" />
+    <Compile Include="WebOverlay\ColorPickerWithPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WebOverlay\ColorPickerWithPreview.Designer.cs">
+      <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageExtensions.cs" />
     <Compile Include="DataContainer.cs" />
     <Compile Include="HttpServer.cs" />
+    <Compile Include="WebOverlay\Models\IOverlayConfiguration.cs" />
+    <Compile Include="WebOverlay\WebOverlay.cs" />
+    <Compile Include="WebOverlay\WebOverlaySettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WebOverlay\WebOverlaySettings.Designer.cs">
+      <DependentUpon>WebOverlaySettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WebOverlay\MathExtensions.cs" />
+    <Compile Include="WebOverlay\Models\OverlayConfiguration.cs" />
     <Compile Include="WebSocketDataEndpoint.cs" />
     <Compile Include="WebSocketDataGetter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +100,15 @@
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebOverlay\ColorPickerWithPreview.resx">
+      <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WebOverlay\WebOverlaySettings.resx">
+      <DependentUpon>WebOverlaySettings.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "$(TargetDir)\..\$(ConfigurationName)"
