@@ -1,6 +1,5 @@
 using CollectionManager.Enums;
 using Newtonsoft.Json;
-using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using System;
@@ -19,8 +18,6 @@ namespace LiveVisualizer
     public class LiveVisualizerPlugin : LiveVisualizerPluginBase
     {
         private MainWindow _visualizerWindow;
-        private PpCalculator.PpCalculator _ppCalculator;
-        private readonly object _ppCalculatorLock = new object();
         private CancellationTokenSource cts = new CancellationTokenSource();
 
         private List<KeyValuePair<string, IToken>> _liveTokens;
@@ -30,6 +27,9 @@ namespace LiveVisualizer
         private IToken _hitMissToken;
         private IToken _timeToken;
         private IToken _statusToken;
+        private IToken _simulatedPpToken;
+        private IToken _mapStrainsToken;
+
         private List<KeyValuePair<string, IToken>> Tokens
         {
             get => _liveTokens;
@@ -41,7 +41,11 @@ namespace LiveVisualizer
                 _hitMissToken = value.FirstOrDefault(t => t.Key == "miss").Value;
                 _timeToken = value.FirstOrDefault(t => t.Key == "time").Value;
                 _statusToken = value.FirstOrDefault(t => t.Key == "status").Value;
-
+                _simulatedPpToken = value.FirstOrDefault(t => t.Key == "simulatedPp").Value;
+                _mapStrainsToken = value.FirstOrDefault(t => t.Key == "mapStrains").Value;
+                _totalTimeToken = value.FirstOrDefault(t => t.Key == "totaltime").Value;
+                _backgroundImageLocationToken = value.FirstOrDefault(t => t.Key == "backgroundImageLocation").Value;
+                
                 _liveTokens = value;
             }
         }
@@ -49,6 +53,8 @@ namespace LiveVisualizer
         private string _lastMapLocation = string.Empty;
         private string _lastMapHash = string.Empty;
         private IModsEx _lastMods = null;
+        private IToken _totalTimeToken;
+        private IToken _backgroundImageLocationToken;
 
 
         public LiveVisualizerPlugin(IContextAwareLogger logger, ISettings settings) : base(logger, settings)
@@ -155,67 +161,18 @@ namespace LiveVisualizer
                     VisualizerData.Display.Strains?.Clear();
                     _lastMapLocation = null;
                     _lastMapHash = null;
-                    lock (_ppCalculatorLock)
-                    {
-                        _ppCalculator = null;
-                    }
                 }
                 return;
             }
 
-            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-
-            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
-                mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
-
-            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-
-            var strains = new Dictionary<int, double>(300);
-
-            //Length refers to beatmap time, not song total time
-            var mapLength = workingBeatmap.Length;
-            var strainLength = 5000;
-            var interval = 1500;
-            int time = 0;
-
-            if (ppCalculator != null && (playMode == PlayMode.Osu || playMode == PlayMode.Taiko || playMode == PlayMode.OsuMania))
-            {
-                ppCalculator.Mods = mapSearchResult.Mods?.WorkingMods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                ppCalculator.Score = 1_000_000;
-
-                while (time + strainLength / 2 < mapLength)
-                {
-                    if (Cts.Token.IsCancellationRequested)
-                        return;
-
-                    var a = new Dictionary<string, double>();
-                    var strain = ppCalculator.Calculate(time, time + strainLength, a);
-
-                    if (double.IsNaN(strain) || strain < 0)
-                        strain = 0;
-                    else if (strain > 2000)
-                        strain = 2000;//lets not freeze everything with aspire/fancy 100* maps
-
-                    strains.Add(time, strain);
-                    time += interval;
-                }
-            }
-            else
-            {
-                while (time + strainLength / 2 < mapLength)
-                {
-                    strains.Add(time, 50);
-                    time += interval;
-                }
-            }
-
+            var strains = (Dictionary<int, double>)_mapStrainsToken.Value;
             VisualizerData.Display.DisableChartAnimations = strains.Count >= 400; //10min+ maps
 
             _lastMapLocation = mapLocation;
             _lastMods = mapSearchResult.Mods;
             _lastMapHash = mapSearchResult.BeatmapsFound[0].Md5;
 
-            VisualizerData.Display.TotalTime = mapLength;
+            VisualizerData.Display.TotalTime = Convert.ToDouble(_totalTimeToken.Value);
 
             VisualizerData.Display.Title = Tokens.First(r => r.Key == "titleRoman").Value.Value?.ToString();
             VisualizerData.Display.Artist = Tokens.First(r => r.Key == "artistRoman").Value.Value?.ToString();
@@ -228,15 +185,9 @@ namespace LiveVisualizer
             SetAxisValues(strainValues);
             VisualizerData.Display.Strains.AddRange(strainValues);
 
-            var imageLocation = Path.Combine(mapSearchResult.BeatmapsFound[0]
-                .BeatmapDirectory(BeatmapHelpers.GetFullSongsLocation(Settings)), workingBeatmap.BackgroundFile ?? "");
+            var imageLocation = (string) _backgroundImageLocationToken.Value;
 
-            VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
-
-            lock (_ppCalculatorLock)
-            {
-                _ppCalculator = ppCalculator;
-            }
+             VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
 
             _visualizerWindow?.ForceChartUpdate();
         }
@@ -259,7 +210,6 @@ namespace LiveVisualizer
 
         public override List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status)
         {
-            //TODO: UHH... would be nice to have better way of sharing this data (instead of relying on Tokens with magic strings and blind value casts)
             Tokens = replacements.ToList();
 
             return null;
@@ -291,18 +241,8 @@ namespace LiveVisualizer
                         if (VisualizerData.Configuration.SimulatePPWhenListening &&
                             (status == OsuStatus.Editing || status == OsuStatus.Listening))
                         {
-                            lock (_ppCalculatorLock)
-                            {
-                                if (_ppCalculator != null)
-                                {
-                                    _ppCalculator.Goods = null;
-                                    _ppCalculator.Mehs = null;
-                                    _ppCalculator.Misses = 0;
-                                    _ppCalculator.Accuracy = 100;
-                                    var pp = Math.Round(_ppCalculator.Calculate(VisualizerData.Display.CurrentTime, null));
-                                    VisualizerData.Display.Pp = pp < 0 ? 0 : pp;
-                                }
-                            }
+                            var pp = Math.Round((double)(_simulatedPpToken?.Value ?? 0d));
+                            VisualizerData.Display.Pp = pp < 0 ? 0 : pp;
                         }
                         else
                         {

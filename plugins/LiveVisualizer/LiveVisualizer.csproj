@@ -110,11 +110,6 @@
     <Compile Include="Models\VisualizerDataModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
-      <Project>{3d97e9c4-a884-4664-a40c-f19c4533aa00}</Project>
-      <Name>PpCalculator</Name>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\WebSocketDataSender\WebSocketDataSender.csproj">
       <Project>{6074bc0f-2c6a-485c-a5c4-5aef3a3b8263}</Project>
       <Name>WebSocketDataSender</Name>
