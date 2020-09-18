@@ -13,7 +13,6 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private string saveDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Files" + Path.DirectorySeparatorChar);
         private string tempFileName = "StreamCompanion.Setup.tmp";
         private string setupFileName = "StreamCompanion.Setup.exe";
-        private string UpdaterExeName = "StreamCompanion Updater.exe";
         public UpdateForm(UpdateContainer container)
         {
             UpdateContainer = container;
@@ -81,7 +80,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             {
                 File.Move(fullTempSavePath, fullSavePath);
 
-                Process.Start(UpdaterExeName, string.Format("\"{0}\" \"{1}\"", fullSavePath, " /VERYSILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS"));
+                Process.Start(Updater.UpdaterExeName, string.Format("\"{0}\" \"{1}\"", fullSavePath, " /VERYSILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS"));
                 Program.SafeQuit();
             }
         }

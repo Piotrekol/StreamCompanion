@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,7 @@ using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Misc;
+using osu_StreamCompanion.Code.Modules.Updater;
 using osu_StreamCompanion.Code.Windows;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -77,10 +79,40 @@ namespace osu_StreamCompanion.Code.Core
                       logger.SetContextData("exiting", $"Yes - plugin:{context.TargetInfo.InjectionType.FullName}, with reason:{reason}");
                       Program.SafeQuit();
                   };
-
-
               }));
+            di.Configure(x => x.ExportFuncWithContext<Delegates.Restart>((scope, context, arg3) =>
+            {
+                var logger = scope.Locate<IContextAwareLogger>();
+                var isModule = context.TargetInfo.InjectionType.GetInterfaces().Contains(typeof(IModule));
+                if (isModule)
+                {
+                    return reason =>
+                    {
+                        logger.SetContextData("restarting", "from module");
+                        logger.Log("StreamCompanion is restarting", LogLevel.Basic);
+                        Program.SafeQuit();
+                    };
+                }
 
+                return o =>
+                {
+                    string reason = string.Empty;
+                    try
+                    {
+                        reason = o.ToString();
+                    }
+                    catch
+                    {
+                    }
+
+                    logger.Log("Plugin {0} has requested StreamCompanion restart! due to: {1}", LogLevel.Basic,
+                        context.TargetInfo.InjectionType.FullName, reason);
+                    logger.SetContextData("restarting", $"plugin:{context.TargetInfo.InjectionType.FullName}, with reason:{reason}");
+
+                    Process.Start(Updater.UpdaterExeName, Process.GetCurrentProcess().Id.ToString());
+                    Program.SafeQuit();
+                };
+            }));
             //Register all IModules from current assembly
             var modules = GetTypes<IModule>(Assembly.GetExecutingAssembly());
             foreach (var module in modules)

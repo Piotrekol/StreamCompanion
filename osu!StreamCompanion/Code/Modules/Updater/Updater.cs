@@ -23,6 +23,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private DateTime _currentVersion = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
         private Exception exception = null;
         public bool Started { get; set; }
+        internal static string UpdaterExeName = "StreamCompanion Updater.exe";
 
         public Updater(ILogger logger, IMainWindowModel mainWindowHandle)
         {
