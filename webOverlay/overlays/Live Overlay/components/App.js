@@ -83,15 +83,15 @@ const app = {
     getToken: function (tokenName, decimalPlaces) { return _GetToken(this.rws, this.tokens, tokenName, decimalPlaces) },
     convertSettingsColor(color) {
       //#argb => #rgba
-      return `#${color.slice(3)}${color.slice(1, 3)}`;
+      return color;//`#${color.slice(3)}${color.slice(1, 3)}`;
     },
-    getVisualizerSettings() {
+    getWebOverlaySettings() {
       let t = this;
       return fetch(`${config.getUrl()}/settings`)
         .then(response => response.json())
         .then(data => {
-          if (data.LiveVisualizer_Config)
-            mergeObjects(t, t.settings, JSON.parse(data.LiveVisualizer_Config));
+          if (data.WebOverlay_Config)
+            mergeObjects(t, t.settings, JSON.parse(data.WebOverlay_Config));
           else
             t.settings = {}
         });
@@ -104,9 +104,9 @@ const app = {
     //this.rws = watchTokensVue([], this);
     let t = this;
 
-    this.getVisualizerSettings().then(() => {
+    this.getWebOverlaySettings().then(() => {
       if (t.overlaySettings.EditMode)
-        setInterval(t.getVisualizerSettings, 500)
+        setInterval(t.getWebOverlaySettings, 500)
     });
   }
 }

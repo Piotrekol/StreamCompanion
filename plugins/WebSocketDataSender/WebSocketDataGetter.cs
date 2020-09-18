@@ -17,12 +17,13 @@ using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanionTypes.Interfaces.Sources;
 
 
 namespace WebSocketDataSender
 {
     public class WebSocketDataGetter : IPlugin, IMapDataConsumer, IDisposable,
-        IHighFrequencyDataConsumer
+        IHighFrequencyDataConsumer, ISettingsSource
     {
         private ISettings _settings;
         private readonly ISaver _saver;
@@ -34,7 +35,8 @@ namespace WebSocketDataSender
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
-        public bool Started { get; set; }
+        public string SettingGroup { get; } = "Web overlay";
+
 
         private DataContainer _liveDataContainer = new DataContainer();
         private DataContainer _mapDataContainer = new DataContainer();
@@ -42,6 +44,7 @@ namespace WebSocketDataSender
 
         public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 28390);
         public static ConfigEntry HttpServerAddress = new ConfigEntry("httpServerAddress", "http://localhost");
+        private WebOverlay.WebOverlay _webOverlay;
 
         public static string BaseAddress(ISettings settings) => BindAddress(settings).Replace("*", "localhost");
         public static string BindAddress(ISettings settings) => $"{settings.Get<string>(HttpServerAddress)}:{settings.Get<int>(HttpServerPort)}";
@@ -66,7 +69,7 @@ namespace WebSocketDataSender
             _saver = saver;
             _restarter = restarter;
             _logger = logger;
-
+            _webOverlay = new WebOverlay.WebOverlay(settings, saver);
 
             var modules = new List<(string Description, IWebModule Module)>
             {
@@ -204,5 +207,16 @@ namespace WebSocketDataSender
             var json = JsonConvert.SerializeObject(output);
             _mapDataContainer.Data = json;
         }
+
+        public void Free()
+        {
+            _webOverlay.Free();
+        }
+
+        public object GetUiSettings()
+        {
+            return _webOverlay.GetUiSettings();
+        }
+
     }
 }

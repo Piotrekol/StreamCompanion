@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Media;
+using System.Drawing;
 
-namespace LiveVisualizer
+namespace WebSocketDataSender.WebOverlay.Models
 {
-    public interface IVisualizerConfiguration : INotifyPropertyChanged
+    public interface IOverlayConfiguration : INotifyPropertyChanged
     {
         bool SimulatePPWhenListening { get; set; }
         bool HideDiffText { get; set; }
