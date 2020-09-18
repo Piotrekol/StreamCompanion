@@ -35,7 +35,7 @@ namespace LiveVisualizer
             get => _liveTokens;
             set
             {
-                _ppToken = value.FirstOrDefault(t => t.Key == "PpIfMapEndsNow").Value;
+                _ppToken = value.FirstOrDefault(t => t.Key == "ppIfMapEndsNow").Value;
                 _hit100Token = value.FirstOrDefault(t => t.Key == "c100").Value;
                 _hit50Token = value.FirstOrDefault(t => t.Key == "c50").Value;
                 _hitMissToken = value.FirstOrDefault(t => t.Key == "miss").Value;
@@ -217,8 +217,8 @@ namespace LiveVisualizer
 
             VisualizerData.Display.TotalTime = mapLength;
 
-            VisualizerData.Display.Title = Tokens.First(r => r.Key == "TitleRoman").Value.Value?.ToString();
-            VisualizerData.Display.Artist = Tokens.First(r => r.Key == "ArtistRoman").Value.Value?.ToString();
+            VisualizerData.Display.Title = Tokens.First(r => r.Key == "titleRoman").Value.Value?.ToString();
+            VisualizerData.Display.Artist = Tokens.First(r => r.Key == "artistRoman").Value.Value?.ToString();
 
             if (VisualizerData.Display.Strains == null)
                 VisualizerData.Display.Strains = new ChartValues<double>();
