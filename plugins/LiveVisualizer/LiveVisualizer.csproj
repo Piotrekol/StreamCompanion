@@ -110,13 +110,6 @@
     <Compile Include="Models\VisualizerDataModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebSocketDataSender\WebSocketDataSender.csproj">
-      <Project>{6074bc0f-2c6a-485c-a5c4-5aef3a3b8263}</Project>
-      <Name>WebSocketDataSender</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="ColorPickerWithPreview.resx">
       <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
     </EmbeddedResource>
@@ -160,36 +153,6 @@
   <PropertyGroup>
     <PostBuildEvent>mkdir "$(TargetDir)\..\$(ConfigurationName)"
 mkdir "$(TargetDir)\..\$(ConfigurationName)\Dlls"
-
-copy "$(TargetDir)\FFmpeg.AutoGen.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\FFmpeg.AutoGen.dll"
-copy "$(TargetDir)\Humanizer.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Humanizer.dll"
-copy "$(TargetDir)\JetBrains.Annotations.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\JetBrains.Annotations.dll"
-copy "$(TargetDir)\ManagedBass.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ManagedBass.dll"
-copy "$(TargetDir)\ManagedBass.Fx.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\ManagedBass.Fx.dll"
-copy "$(TargetDir)\Markdig.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Markdig.dll"
-copy "$(TargetDir)\netstandard.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\netstandard.dll"
-copy "$(TargetDir)\Newtonsoft.Json.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Newtonsoft.Json.dll"
-copy "$(TargetDir)\nunit.framework.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\nunit.framework.dll"
-copy "$(TargetDir)\osu.Framework.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Framework.dll"
-copy "$(TargetDir)\osu.Game.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Catch.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Catch.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Mania.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Mania.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Osu.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Osu.dll"
-copy "$(TargetDir)\osu.Game.Rulesets.Taiko.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osu.Game.Rulesets.Taiko.dll"
-copy "$(TargetDir)\osuTK.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\osuTK.dll"
-copy "$(TargetDir)\PpCalculator.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\PpCalculator.dll"
-copy "$(TargetDir)\Remotion.Linq.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Remotion.Linq.dll"
-copy "$(TargetDir)\SQLitePCLRaw.batteries_green.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.batteries_green.dll"
-copy "$(TargetDir)\SQLitePCLRaw.batteries_v2.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.batteries_v2.dll"
-copy "$(TargetDir)\SQLitePCLRaw.core.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.core.dll"
-copy "$(TargetDir)\SQLitePCLRaw.provider.e_sqlite3.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\SQLitePCLRaw.provider.e_sqlite3.dll"
-copy "$(TargetDir)\System.Memory.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Memory.dll"
-copy "$(TargetDir)\System.ObjectModel.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.ObjectModel.dll"
-copy "$(TargetDir)\System.Runtime.CompilerServices.Unsafe.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Runtime.CompilerServices.Unsafe.dll"
-copy "$(TargetDir)\System.Runtime.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Runtime.dll"
-copy "$(TargetDir)\System.Runtime.InteropServices.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Runtime.InteropServices.dll"
-copy "$(TargetDir)\System.Threading.Tasks.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.Threading.Tasks.dll"
-copy "$(TargetDir)\System.ValueTuple.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\System.ValueTuple.dll"
 
 copy "$(TargetDir)\LiveVisualizer.dll" "$(TargetDir)\..\$(ConfigurationName)\LiveVisualizer.dll"
 copy "$(TargetDir)\LiveCharts.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\LiveCharts.dll"
