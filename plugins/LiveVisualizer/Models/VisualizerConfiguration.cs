@@ -16,7 +16,7 @@ namespace LiveVisualizer
         public Color ChartProgressColor { get; set; } = Color.FromArgb(140, 255, 178, 227);
         public double MaxYValue { get; set; } = 350;
         public Color FillColor { get; set; } = Color.FromArgb(178, 255, 178, 227);
-        public bool Enable { get; set; } = true;
+        public bool Enable { get; set; } = false;
         public bool SimulatePPWhenListening { get; set; } = true;
         public bool EnableRoundedCorners { get; set; } = false;
         public string BottomHeight { get; set; } = "0.65*";
