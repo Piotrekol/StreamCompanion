@@ -111,7 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="OsuMemoryDataProvider">
-      <Version>0.0.3</Version>
+      <Version>0.0.4</Version>
     </PackageReference>
     <PackageReference Include="StreamCompanionTypes">
       <Version>4.1.1</Version>
