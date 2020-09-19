@@ -61,19 +61,9 @@ namespace OsuMemoryEventSource
             if (!Started || !_settings.Get<bool>(_names.EnableMemoryScanner))
                 return result;
 
-            int mods = 0;
-
-            if (searchArgs.Status == OsuStatus.Playing)
-            {
-                Thread.Sleep(250);
-                mods = _memoryReader.GetPlayingMods();
-                result.Mods = GetMods(mods);
-            }
-            else
-            {
-                result.Mods = GetMods(_memoryReader.GetMods());
-            }
-
+            var mods = ReadMods(searchArgs.Status);
+            result.Mods = GetModsEx(mods);
+            
             Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Advanced);
 
             Mods eMods = result.Mods?.Mods ?? Mods.Omod;
@@ -86,7 +76,34 @@ namespace OsuMemoryEventSource
             return result;
         }
 
-        private IModsEx GetMods(int modsValue)
+        private int ReadMods(OsuStatus osuStatus, int retryCount = 0)
+        {
+            int mods;
+            if (osuStatus == OsuStatus.Playing)
+            {
+                Thread.Sleep(250);
+                mods = _memoryReader.GetPlayingMods();
+            }
+            else
+            {
+                mods = _memoryReader.GetMods();
+            }
+
+            if ((mods < 0 || Helpers.IsInvalidCombination((Mods)mods)))
+            {
+                if (retryCount < 5)
+                {
+                    Logger.Log($"Mods read attempt failed - retrying (attempt {retryCount}); Status: {osuStatus}; read: {(Mods)mods}({mods})", LogLevel.Debug);
+                    return ReadMods(osuStatus, ++retryCount);
+                }
+
+                Logger.Log($"Mods read attempt failed after {retryCount} retries; Status: {osuStatus}", LogLevel.Debug);
+                mods = 0;
+            }
+
+            return mods;
+        }
+        private IModsEx GetModsEx(int modsValue)
         {
             return _modParser?.GetModsFromEnum(modsValue);
         }
