@@ -4,7 +4,6 @@ using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +30,9 @@ namespace OsuMemoryEventSource
         private IToken _skinToken;
         private IToken _skinPathToken;
 
+        private ushort _lastMisses = 0;
+        private ushort _lastCombo = 0;
+        private ushort _sliderBreaks = 0;
         private enum InterpolatedValueName
         {
             PpIfMapEndsNow,
@@ -125,6 +127,9 @@ namespace OsuMemoryEventSource
                 if (map.FoundBeatmaps &&
                     map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
+                    _sliderBreaks = 0;
+                    _lastMisses = 0;
+                    _lastCombo = 0;
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.WorkingMods ?? "";
 
@@ -299,6 +304,18 @@ namespace OsuMemoryEventSource
             _liveTokens["hitErrors"] = new LiveToken(_liveTokenSetter("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), OsuStatus.Playing), () => _rawData.HitErrors);
             _liveTokens["localTimeISO"] = new LiveToken(_liveTokenSetter("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All), () => DateTime.UtcNow.ToString("o"));
             _liveTokens["localTime"] = new LiveToken(_liveTokenSetter("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
+            _liveTokens["sliderBreaks"] = new LiveToken(_liveTokenSetter("sliderBreaks", 0, TokenType.Live, "{0}", 0, OsuStatus.Playing), () =>
+            {
+                var currentMisses = (ushort)_liveTokens["miss"].Token.Value;
+                var currentCombo = (ushort)_liveTokens["combo"].Token.Value;
+                if (_lastMisses < currentMisses && _lastCombo > currentCombo)
+                    _sliderBreaks++;
+
+                _lastMisses = currentMisses;
+                _lastCombo = currentCombo;
+
+                return _sliderBreaks;
+            });
         }
 
         private void UpdateLiveTokens(OsuStatus status)
