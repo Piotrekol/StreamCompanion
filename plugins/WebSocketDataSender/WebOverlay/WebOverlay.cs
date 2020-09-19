@@ -23,6 +23,7 @@ namespace WebSocketDataSender.WebOverlay
             _saver = saver;
             OverlayConfiguration = new OverlayConfiguration();
             LoadConfiguration();
+            SaveConfiguration();
             OverlayConfiguration.PropertyChanged += OverlayConfigurationPropertyChanged;
         }
 
