@@ -43,7 +43,7 @@ namespace ClickCounter
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public ClickCounter(ILogger logger, ISaver saver,ISettings settings, IEnumerable<IHighFrequencyDataConsumer> consumers)
+        public ClickCounter(ILogger logger, ISaver saver, ISettings settings, IEnumerable<IHighFrequencyDataConsumer> consumers)
         {
             _logger = logger;
             _saver = saver;
@@ -63,7 +63,7 @@ namespace ClickCounter
 
             _tokenSetter = Tokens.CreateTokenSetter(Name);
         }
-        
+
         public void HookAll()
         {
             _hooksThread = new Thread(() =>
@@ -123,6 +123,7 @@ namespace ClickCounter
 
         private void UnHookAll()
         {
+            _logger.Log("Unhooking devices", LogLevel.Debug);
             UnHookKeyboard();
             UnHookMouse();
         }
@@ -168,7 +169,7 @@ namespace ClickCounter
                 _keyPressed[args.VKCode] = true;
             }
         }
-        
+
         public void Free()
         {
             _frmSettings.checkBox_ResetOnRestart.CheckedChanged -= CheckBox_ResetOnRestart_CheckedChanged;
@@ -288,6 +289,7 @@ namespace ClickCounter
 #pragma warning restore 618
             _settings.Add(_names.RightMouseCount.Name, _rightMouseCount);
             _settings.Add(_names.LeftMouseCount.Name, _leftMouseCount);
+            _logger.Log($"Saved: {string.Join(",", keyCounts)}; RM:{_rightMouseCount} LM:{_leftMouseCount}", LogLevel.Debug);
         }
 
         public void SetSaveHandle(ISaver saver)
@@ -307,7 +309,7 @@ namespace ClickCounter
             {
                 _tokenSetter($"key-{RemoveWhitespace(_filenames[_keyList[i]].ToLowerInvariant())}", _keyCount[_keyList[i]]);
             }
-            
+
             _tokenSetter("m1", _rightMouseCount);
             _tokenSetter("m2", _leftMouseCount);
         }
