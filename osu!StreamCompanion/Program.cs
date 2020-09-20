@@ -2,6 +2,8 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -12,6 +14,7 @@ using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core.Loggers;
 using SharpRaven.Data;
 using System.IO;
+using System.Net.Sockets;
 
 namespace osu_StreamCompanion
 {
@@ -235,16 +238,13 @@ namespace osu_StreamCompanion
 
                 MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                var errorMessage = $"{ex.GetType().Name}: {ex.Message}{Environment.NewLine}{ex.StackTrace}";
-                if (ex is AggregateException aggEx)
+                var errorResult = GetExceptionText(ex);
+                foreach (var d in errorResult.Data)
                 {
-                    foreach (var innerException in aggEx.InnerExceptions)
-                    {
-                        errorMessage += $"{Environment.NewLine}{Environment.NewLine}{innerException.GetType().Name}: {innerException.Message}{Environment.NewLine}{innerException.StackTrace}";
-                    }
+                    ex.Data[d.Key] = d.Value;
                 }
 
-                var form = new Error(errorMessage, null);
+                var form = new Error(errorResult.Text, null);
                 form.ShowDialog();
             }
             finally
@@ -258,6 +258,36 @@ namespace osu_StreamCompanion
                     _initializer.ExitThread();
                 }
             }
+        }
+
+        private static (string Text, IDictionary<string, object> Data) GetExceptionText(Exception ex)
+        {
+            var exceptionMessage = string.Empty;
+            var dict = new Dictionary<string, object>();
+            exceptionMessage +=
+                $"{ex.GetType().Name}: {ex.Message}";
+            if (ex is SocketException socketEx)
+            {
+                ex.Data["SocketErrorCode"] = socketEx.SocketErrorCode.ToString();
+                ex.Data["ErrorCode"] = socketEx.ErrorCode.ToString();
+                exceptionMessage += $"{Environment.NewLine}SocketErrorCode: {socketEx.SocketErrorCode}, ErrorCode: {socketEx.ErrorCode}";
+            }
+
+            exceptionMessage += $"{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}{Environment.NewLine}";
+            if (ex is AggregateException aggEx)
+            {
+                foreach (var innerException in aggEx.InnerExceptions)
+                {
+                    var exResult = GetExceptionText(innerException);
+                    exceptionMessage += exResult.Text;
+                    foreach (var d in exResult.Data)
+                    {
+                        dict[d.Key] = d.Value;
+                    }
+                }
+            }
+
+            return (exceptionMessage, dict);
         }
     }
 }
