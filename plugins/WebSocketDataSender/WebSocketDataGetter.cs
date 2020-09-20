@@ -95,7 +95,7 @@ namespace WebSocketDataSender
             }
             catch (SocketException ex)
             {
-                if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse || ex.SocketErrorCode == SocketError.AccessDenied)
                 {
                     var currentPort = _settings.Get<int>(HttpServerPort);
                     var newPort = currentPort + 1;
@@ -115,7 +115,7 @@ namespace WebSocketDataSender
 
                     return;
                 }
-
+                
                 throw;
             }
         }
