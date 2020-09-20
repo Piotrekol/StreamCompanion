@@ -234,7 +234,17 @@ namespace osu_StreamCompanion
 #endif
 
                 MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                var form = new Error(ex.Message + Environment.NewLine + ex.StackTrace, null);
+
+                var errorMessage = $"{ex.GetType().Name}: {ex.Message}{Environment.NewLine}{ex.StackTrace}";
+                if (ex is AggregateException aggEx)
+                {
+                    foreach (var innerException in aggEx.InnerExceptions)
+                    {
+                        errorMessage += $"{Environment.NewLine}{Environment.NewLine}{innerException.GetType().Name}: {innerException.Message}{Environment.NewLine}{innerException.StackTrace}";
+                    }
+                }
+
+                var form = new Error(errorMessage, null);
                 form.ShowDialog();
             }
             finally
