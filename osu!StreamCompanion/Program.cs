@@ -225,6 +225,11 @@ namespace osu_StreamCompanion
 #if DEBUG
                 WaitForDebugger(ex);
 #endif
+                var errorResult = GetExceptionText(ex);
+                foreach (var d in errorResult.Data)
+                {
+                    ex.Data[d.Key] = d.Value;
+                }
 #if WITHSENTRY
                 if (errorConsensus.SendReport)
                 {
@@ -238,11 +243,7 @@ namespace osu_StreamCompanion
 
                 MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                var errorResult = GetExceptionText(ex);
-                foreach (var d in errorResult.Data)
-                {
-                    ex.Data[d.Key] = d.Value;
-                }
+                
 
                 var form = new Error(errorResult.Text, null);
                 form.ShowDialog();
