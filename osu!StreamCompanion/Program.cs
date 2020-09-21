@@ -15,6 +15,7 @@ using osu_StreamCompanion.Code.Core.Loggers;
 using SharpRaven.Data;
 using System.IO;
 using System.Net.Sockets;
+using StreamCompanionTypes.Enums;
 
 namespace osu_StreamCompanion
 {
@@ -121,8 +122,12 @@ namespace osu_StreamCompanion
             {
                 _initializer?.Exit();
             }
-            catch
+            catch (Exception ex)
             {
+                MainLogger.Instance.Log(ex, LogLevel.Error);
+                MessageBox.Show(
+                    $"There was a problem while shutting down Stream Companion. Some of the settings might have not been saved.{Environment.NewLine}{Environment.NewLine}{ex}",
+                    "Stream Companion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             Quit();
         }
