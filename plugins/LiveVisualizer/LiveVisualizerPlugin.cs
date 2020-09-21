@@ -301,8 +301,8 @@ namespace LiveVisualizer
 
         public override void Dispose()
         {
-            cts.Cancel();
-            _visualizerWindow.Close();
+            cts?.Cancel();
+            _visualizerWindow?.Close();
             base.Dispose();
         }
 

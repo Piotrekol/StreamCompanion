@@ -69,6 +69,8 @@ namespace osu_StreamCompanion.Code.Core
         public void Start()
         {
             _logger.Log("Booting up...", LogLevel.Basic);
+            _logger.Log($"Stream Companion Version: {Program.ScVersion}", LogLevel.Basic);
+
             DiContainer.Container.Locate<Updater>();
             DiContainer.Container.Locate<FirstRun>();
 
@@ -86,7 +88,7 @@ namespace osu_StreamCompanion.Code.Core
                 {
                     mapDataConsumer.SetNewMap(new MapSearchResult(new MapSearchArgs("dummy")));
                 }
-                catch (Exception) 
+                catch (Exception)
                 {
                     MessageBox.Show(
                         $"IngameOverlay plugin version is not valid for this version of StreamCompanion. {Environment.NewLine} Either update or remove it from plugins folder",
@@ -99,8 +101,8 @@ namespace osu_StreamCompanion.Code.Core
 
             foreach (var plugin in plugins)
             {
-                _logger.Log(">>plugin \"{0}\" by {1} ({2})", LogLevel.Advanced, plugin.Name, plugin.Author,
-                    plugin.GetType().FullName);
+                _logger.Log(">>plugin \"{0}\" by {1} ({2}) v:{3}", LogLevel.Advanced, plugin.Name, plugin.Author,
+                    plugin.GetType().FullName, plugin.GetType().Assembly.GetName().Version.ToString());
             }
 
             Settings.Add(_names.FirstRun.Name, false);
