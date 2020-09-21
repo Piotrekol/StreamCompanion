@@ -23,16 +23,13 @@ const app = {
       Object.assign(data.tokens, values);
     });
 
-    const getWebOverlaySettings = () => {
-      let t = this;
-      return fetch(`${config.getUrl()}/settings`)
+    const getWebOverlaySettings = () =>
+      fetch(`${config.getUrl()}/settings`)
         .then((response) => response.json())
         .then((responseData) => JSON.parse(responseData.WebOverlay_Config));
-    };
+
     getWebOverlaySettings().then((config) => {
       Object.assign(data.settings, config);
-      //if (config.EditMode)
-      //  setInterval(getWebOverlaySettings, 500)
     });
 
     let isPlaying = Vue.computed(() => _IsPlaying(data.rws, data.tokens));
@@ -40,8 +37,8 @@ const app = {
       Object.entries(data.tokens.mapStrains || {})
     );
     let ppValue = Vue.computed(() => {
-      if (isPlaying) return getToken('ppIfMapEndsNow', 1);
-      if (data.overlaySettings.simulatePPWhenListening)
+      if (isPlaying.value) return getToken('ppIfMapEndsNow', 1);
+      if (data.settings.SimulatePPWhenListening)
         return getToken('simulatedPp', 1);
       return 0;
     });
