@@ -1,25 +1,30 @@
-import background from './Background.js'
+import background from './Background.js';
 
 const app = {
   name: 'App',
-  data: () => ({
-    tokens: {},
-    rws: {},
-  }),
   components: {
-    Background: background
+    Background: background,
   },
-  computed: {
-    isPlaying: function () { return _IsPlaying(this.rws, this.tokens) }
-  },
-  methods: {
-    getToken: function (tokenName, decimalPlaces) { return _GetToken(this.rws, this.tokens, tokenName, decimalPlaces) },
-  },
-  created: function () {
-    //either request all tokens upfront
-    //this.rws = watchTokensVue(['backgroundImageLocation', 'MapArtistTitle', 'score', 'circles', 'Md5','c300','c100','c50','PpIfMapEndsNow'], this);
+  setup(props, context) {
+    const data = Vue.reactive({
+      tokens: {},
+      rws: {},
+    });
+
+    const getToken = (tokenName, decimalPlaces) =>
+      _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
+    let isPlaying = Vue.computed(() => _IsPlaying(data.rws, data.tokens));
+    //either request all tokens upfront by filling their names in array
     //or request them later using helper getToken method above
-    this.rws = watchTokensVue([], this);
-  }
-}
+    data.rws = watchTokens([], (values) => {
+      Object.assign(data.tokens, values);
+    });
+
+    return {
+      getToken,
+      isPlaying,
+    };
+  },
+};
+
 export default app;
