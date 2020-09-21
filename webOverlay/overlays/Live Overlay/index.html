@@ -8,7 +8,7 @@
     <link href="./main.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;700&display=swap" rel="stylesheet">
     <!-- This is a development version of Vue.js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue@3.0.0/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
     <script src="/lib/reconnecting-websocket.js"></script>
     <script src="/lib/consts.js"></script>
@@ -18,7 +18,7 @@
 <body>
     <div id="app" class="app" v-cloak>
         <Background :dimcolor="overlaySettings.imageDimColor" class="box">
-            <div class="inner" :class="{hide: settings.HideDiffText}">
+            <div class="inner" :class="{hide: overlaySettings.hideDiffText}">
                 <h1 class="title">
                     {{getToken('mapArtistTitle')}}
                 </h1>
@@ -35,7 +35,7 @@
             <div class="flexSpacer flexEnd" style="width:100%">
                 <div class="flexSpacer flexEnd" style="width:100%;position: absolute;">
 
-                    <div class="mapStats" :class="{hide: settings.HideMapStats}">
+                    <div class="mapStats" :class="{hide: overlaySettings.hideMapStats}">
                         <div><strong>SR</strong>{{getToken('mStars')}}</div>
                         <div><strong>CS</strong>{{getToken('cs')}}</div>
                         <div><strong>AR</strong>{{getToken('ar')}}</div>
