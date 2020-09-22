@@ -1,40 +1,48 @@
 const background = {
     name: 'backgroundContainer',
     template: `
-    <div :style="boxStyle">
-        <slot />
-    </div>
-  `,
-    data: () => ({
-        tokens: { 'backgroundImageLocation': '' },
+      <div :style="boxStyle">
+          <slot />
+      </div>
+    `,
+    setup(props, context) {
+      const data = Vue.reactive({
+        tokens: { backgroundImageLocation: '', md5: '', mapsetid: '' },
         backgroundUrl: '',
-        backgroundId: Number.MIN_SAFE_INTEGER
-    }),
-    computed: {
-        imageDiskLocation: function () {
-            return this.tokens.backgroundImageLocation
-        },
-
-        boxStyle: function () {
-            return `
-            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)),url(${this.backgroundUrl});`
+        backgroundId: Number.MIN_SAFE_INTEGER,
+        rws: {},
+      });
+      const boxStyle = Vue.computed(
+        () =>
+          `background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)),url(${data.backgroundUrl});`
+      );
+  
+      Vue.watch(
+        () => data.tokens.backgroundImageLocation,
+        () => {
+          var currId = (data.backgroundId += 1);
+          preloadImage(
+            `${window.overlay.config.getUrl()}/backgroundImage?width=700&mapset=${
+              data.tokens.mapsetid
+            }&dummyData=${encodeURIComponent(data.tokens.md5)}`,
+            currId,
+            (url, id) => {
+              if (data.backgroundId !== id) return;
+              data.backgroundUrl = url;
+            }
+          );
         }
+      );
+      data.rws = watchTokens(
+        ['backgroundImageLocation', 'md5', 'mapsetid'],
+        (values) => Object.assign(data.tokens, values)
+      );
+  
+      return {
+        boxStyle,
+      };
     },
-    watch: {
-        imageDiskLocation() {
-            let t = this;
-            var currId = t.backgroundId += 1
-            preloadImage(`${window.overlay.config.getUrl()}/backgroundImage?width=700&mapset=${t.tokens.mapsetid}&dummyData=${encodeURIComponent(t.tokens.md5)}`, currId, (url, id) => {
-                if (t.backgroundId !== id)
-                    return;
-                t.backgroundUrl = url;
-            })
-        }
-    },
-    created: function () {
-        watchTokensVue(['backgroundImageLocation', 'md5', 'mapsetid'], this);
-    }
-}
-
-
-export default background
+  };
+  
+  export default background;
+  

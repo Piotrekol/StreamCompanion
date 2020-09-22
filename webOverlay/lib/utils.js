@@ -46,6 +46,7 @@ function watchTokensVue(tokenList, vueThis) {
     });
 }
 function _GetToken(rws, tokens, tokenName, decimalPlaces) {
+    tokens[tokenName];//hack to inform vue3 that we are dependant on tokens object values
     if (tokens.hasOwnProperty(tokenName)) {
         if (decimalPlaces !== undefined && decimalPlaces !== null)
             return Number(tokens[tokenName]).toFixed(decimalPlaces);

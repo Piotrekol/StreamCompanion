@@ -1,6 +1,7 @@
 import App from './components/App.js';
 
-new Vue({
-  el: '#app',
+let app = Vue.createApp({
   ...App
 });
+
+app.mount('#app');
