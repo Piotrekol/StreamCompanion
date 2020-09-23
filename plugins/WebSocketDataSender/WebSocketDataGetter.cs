@@ -115,7 +115,7 @@ namespace WebSocketDataSender
 
                     return;
                 }
-                
+
                 throw;
             }
         }
@@ -154,19 +154,33 @@ namespace WebSocketDataSender
                     {
                         using (var fs = new FileStream(location, FileMode.Open, FileAccess.Read))
                         {
+
                             if (context.Request.QueryString.ContainsKey("width") || context.Request.QueryString.ContainsKey("height"))
                             {
                                 int.TryParse(context.Request.QueryString["width"], out var desiredWidth);
                                 int.TryParse(context.Request.QueryString["height"], out var desiredHeight);
 
+                                var crop = context.Request.QueryString.ContainsKey("crop") &&
+                                           context.Request.QueryString["crop"].ToLowerInvariant() == "true";
+
                                 using (var img = Image.FromStream(fs))
                                 {
-                                    using (var resizedImg = img.ResizeImage(
-                                        desiredWidth == 0 ? (int?)null : desiredWidth,
-                                        desiredHeight == 0 ? (int?)null : desiredHeight)
-                                    )
+                                    if (crop)
                                     {
-                                        resizedImg.Save(responseStream, ImageFormat.Jpeg);
+                                        using (var croppedImg = img.ResizeAndCropBitmap(desiredWidth, desiredHeight))
+                                        {
+                                            croppedImg.Save(responseStream, ImageFormat.Jpeg);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (var resizedImg = img.ResizeImage(
+                                            desiredWidth == 0 ? (int?)null : desiredWidth,
+                                            desiredHeight == 0 ? (int?)null : desiredHeight)
+                                        )
+                                        {
+                                            resizedImg.Save(responseStream, ImageFormat.Jpeg);
+                                        }
                                     }
                                 }
 
