@@ -58,17 +58,15 @@ namespace WebSocketDataSender
         }
         public static Bitmap ResizeAndCropBitmap(this Image image, int width, int height)
         {
-
             Rectangle cropRect = new Rectangle(0, 0, width, height);
             Bitmap target = new Bitmap(cropRect.Width, cropRect.Height);
-            image = ResizeImage(image, width, height, true);
 
-
+            using (var resizedImage = ResizeImage(image, width, height, true))
             using (Graphics g = Graphics.FromImage(target))
             {
-                var xOffset = Convert.ToInt32(Math.Floor((double)(image.Width - width) / 2));
-                var yOffset = Convert.ToInt32(Math.Floor((double)(image.Height - height) / 2));
-                g.DrawImage(image, cropRect, new Rectangle(xOffset, yOffset, target.Width, target.Height),
+                var xOffset = Convert.ToInt32(Math.Floor((double)(resizedImage.Width - width) / 2));
+                var yOffset = Convert.ToInt32(Math.Floor((double)(resizedImage.Height - height) / 2));
+                g.DrawImage(resizedImage, cropRect, new Rectangle(xOffset, yOffset, target.Width, target.Height),
                     GraphicsUnit.Pixel);
             }
 
