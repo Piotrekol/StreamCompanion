@@ -21,7 +21,7 @@
 			<Background>
 			</Background>
 			<div class="move">
-				<div :class="['progress', data.status == 2 ? 'pg-enabled' : '']" :style="`width: ${(data.time/data.totaltime*1000)*1000}px`"></div>
+				<div :class="['progress', data.status == 2 ? 'pg-enabled' : '']" :style="`width: ${mapProgress}%`"></div>
 				<div class="title">{{data.mapArtistTitle}}</div>
 				<div class="diffname">{{data.diffName}}
 					<div v-if="data.mods!=`` && data.mods != null && data.mods != `None`" class="modcolor">{{data.mods.split(",").join("")}}</div>

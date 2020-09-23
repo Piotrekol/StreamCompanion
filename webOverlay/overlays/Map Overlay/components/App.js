@@ -16,7 +16,11 @@ const app = {
 
     //use helper _IsPlaying method to update isPlaying value as necessary
     let isPlaying = Vue.computed(() => _IsPlaying(data.rws, data.tokens));
-
+    
+    //map pass percentage 
+    let mapProgress = Vue.computed(
+      () => ((getToken('time') / (getToken('totaltime') / 1000))*100).clamp(0,100)
+    );
     //start websocket connection to SC with some predefined tokens
     data.rws = watchTokens(
       [
@@ -49,6 +53,7 @@ const app = {
     //return all data & computed vars & methods that we want to use elsewhere in this component
     return {
       data: data.tokens,
+      mapProgress,
       getToken,
       isPlaying,
     };

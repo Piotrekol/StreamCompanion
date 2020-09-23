@@ -3,7 +3,10 @@ Number.prototype.pad = function (size) {
     while (s.length < (size || 2)) { s = "0" + s; }
     return s;
 }
-
+Number.prototype.clamp = function(min, max) {
+    return Math.min(Math.max(this, min), max);
+  };
+  
 function mergeObjects(vueThis, target, source) {
     for (const [key, value] of Object.entries(source)) {
         if (target.hasOwnProperty(key))
