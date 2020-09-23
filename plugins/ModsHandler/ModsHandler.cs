@@ -65,7 +65,7 @@ namespace ModsHandler
                     mods -= Mods.Nc;
                     mods |= Mods.Dt;
                 }
-                var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < 0.95 ? c["MinBpm"].ToString("0") : string.Format("{0:0}-{1:0}", c["MinBpm"], c["MaxBpm"]);
+                var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < float.Epsilon ? c["MinBpm"].ToString("0") : $"{c["MinBpm"]:0}-{c["MaxBpm"]:0} ({c["MainBpm"]:0})";
 
                 _tokenSetter("mods", map.Mods?.ShownMods);
                 _tokenSetter("mAR", Math.Round(c["AR"], 2));
@@ -76,6 +76,7 @@ namespace ModsHandler
                 _tokenSetter("mBpm", bpm);
                 _tokenSetter("mMaxBpm", c["MaxBpm"], format: "{0:0}");
                 _tokenSetter("mMinBpm", c["MinBpm"], format: "{0:0}");
+                _tokenSetter("mMainBpm", c["MainBpm"], format: "{0:0}");
             }
             else
             {
