@@ -77,7 +77,7 @@ namespace WebSocketDataSender
                 ("WebSocket stream of output patterns with do not contain live tokens", new WebSocketDataEndpoint("/mapData", true, _mapDataContainer)),
                 ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
                 ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
-                ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
+                ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio. Set \"crop\" query parameter to true to return image with exact size provided", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
                 ("List of available overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
                 ("All StreamCompanion settings", new ActionModule("/settings",HttpVerbs.Get,GetSettings)),
             };
@@ -160,8 +160,7 @@ namespace WebSocketDataSender
                                 int.TryParse(context.Request.QueryString["width"], out var desiredWidth);
                                 int.TryParse(context.Request.QueryString["height"], out var desiredHeight);
 
-                                var crop = context.Request.QueryString.ContainsKey("crop") &&
-                                           context.Request.QueryString["crop"].ToLowerInvariant() == "true";
+                                var crop = context.Request.QueryString.ContainsKey("crop") && new[] { "true", "1" }.Contains(context.Request.QueryString["crop"].ToLowerInvariant());
 
                                 using (var img = Image.FromStream(fs))
                                 {
