@@ -24,6 +24,7 @@ function preloadImage(url, id, cb) {
 function watchTokens(tokenList, onTokensUpdated) {
     let rws = new ReconnectingWebSocket(`${window.overlay.config.getWs()}/tokens`, null, {
         automaticOpen: false,
+        reconnectInterval: 3000
     });
     rws.watchedTokens = tokenList;
 
