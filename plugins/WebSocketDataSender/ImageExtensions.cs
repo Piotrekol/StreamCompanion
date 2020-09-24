@@ -25,7 +25,6 @@ namespace WebSocketDataSender
             double ratio;
 
             if (atMinimum)
-                // use whichever multiplier is smaller
                 ratio = ratioX > ratioY ? ratioX : ratioY;
             else
                 ratio = ratioX < ratioY ? ratioX : ratioY;
