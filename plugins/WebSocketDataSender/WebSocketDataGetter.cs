@@ -42,7 +42,7 @@ namespace WebSocketDataSender
         private DataContainer _mapDataContainer = new DataContainer();
         private HttpServer _server;
 
-        public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 28390);
+        public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 72727);
         public static ConfigEntry HttpServerAddress = new ConfigEntry("httpServerAddress", "http://localhost");
         private WebOverlay.WebOverlay _webOverlay;
 
