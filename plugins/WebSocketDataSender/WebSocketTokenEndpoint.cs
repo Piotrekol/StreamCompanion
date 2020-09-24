@@ -112,7 +112,8 @@ namespace WebSocketDataSender
                     watchedTokens.Clear();
                     foreach (var tokenName in tokenNames)
                     {
-                        watchedTokens[tokenName] = null;
+                        if (!string.IsNullOrEmpty(tokenName))
+                            watchedTokens[tokenName] = null;
                     }
                 }
 

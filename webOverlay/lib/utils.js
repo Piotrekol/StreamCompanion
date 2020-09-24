@@ -3,7 +3,10 @@ Number.prototype.pad = function (size) {
     while (s.length < (size || 2)) { s = "0" + s; }
     return s;
 }
-
+Number.prototype.clamp = function(min, max) {
+    return Math.min(Math.max(this, min), max);
+  };
+  
 function mergeObjects(vueThis, target, source) {
     for (const [key, value] of Object.entries(source)) {
         if (target.hasOwnProperty(key))
@@ -21,6 +24,7 @@ function preloadImage(url, id, cb) {
 function watchTokens(tokenList, onTokensUpdated) {
     let rws = new ReconnectingWebSocket(`${window.overlay.config.getWs()}/tokens`, null, {
         automaticOpen: false,
+        reconnectInterval: 3000
     });
     rws.watchedTokens = tokenList;
 
@@ -57,6 +61,11 @@ function _GetToken(rws, tokens, tokenName, decimalPlaces) {
     return '';
 }
 
+function _GetWebOverlaySettings(){
+      return fetch(`${config.getUrl()}/settings`)
+        .then((response) => response.json())
+        .then((responseData) => JSON.parse(responseData.WebOverlay_Config));
+}
 
 function _IsInStatus(rws, tokens, osuStatuses) {
     if (Array.isArray(osuStatuses))
