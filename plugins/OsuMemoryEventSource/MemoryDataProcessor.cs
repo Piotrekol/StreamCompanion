@@ -308,7 +308,7 @@ namespace OsuMemoryEventSource
             {
                 var currentMisses = (ushort)_liveTokens["miss"].Token.Value;
                 var currentCombo = (ushort)_liveTokens["combo"].Token.Value;
-                if (_lastMisses < currentMisses && _lastCombo > currentCombo)
+                if (_lastMisses == currentMisses && _lastCombo > currentCombo)
                     _sliderBreaks++;
 
                 _lastMisses = currentMisses;
