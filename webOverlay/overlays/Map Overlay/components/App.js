@@ -10,17 +10,23 @@ const app = {
     const data = Vue.reactive({
       tokens: {},
       rws: {},
+      settings: {
+        progressColor: 'yellow',
+      },
     });
     //map global _GetToken helper method
     const getToken = (tokenName, decimalPlaces) => _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
 
     //use helper _IsPlaying method to update isPlaying value as necessary
     let isPlaying = Vue.computed(() => _IsPlaying(data.rws, data.tokens));
-    
-    //map pass percentage 
-    let mapProgress = Vue.computed(
-      () => ((getToken('time') / (getToken('totaltime') / 1000))*100).clamp(0,100)
-    );
+
+    //map pass percentage
+    let mapProgress = Vue.computed(() => ((getToken('time') / (getToken('totaltime') / 1000)) * 100).clamp(0, 100));
+
+    _GetWebOverlaySettings().then((config) => {
+      if (config.ChartProgressColor) data.settings.progressColor = config.ChartProgressColor;
+    });
+
     //start websocket connection to SC with some predefined tokens
     data.rws = watchTokens(
       [
@@ -53,9 +59,10 @@ const app = {
     //return all data & computed vars & methods that we want to use elsewhere in this component
     return {
       data: data.tokens,
-      mapProgress,
       getToken,
       isPlaying,
+      mapProgress,
+      progressColor: Vue.computed(() => data.settings.progressColor),
     };
   },
 };

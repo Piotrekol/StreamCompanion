@@ -1,12 +1,13 @@
 .progress {
-    background-color: yellow;
+    /*background-color: yellow;*/
     height: 15px;
     transition: none;
     margin-bottom: 40px;
+    border-radius: 10px;
     opacity: 0;
 }
 .pg-enabled {
-    opacity: 0.3;
+    opacity: 1;
 }
 .attr {
     margin-top: 30px;
