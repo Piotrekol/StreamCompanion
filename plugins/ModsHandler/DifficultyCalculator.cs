@@ -25,6 +25,7 @@ namespace ModsHandler
             float hp = map.HpDrainRate;
             double minBpm = map.MinBpm;
             double maxBpm = map.MaxBpm;
+            double mainBpm = map.MainBpm;
             var retValue = new Dictionary<string, float>();
 
             if ((mods & Mods.MapChanging) == 0)
@@ -35,6 +36,7 @@ namespace ModsHandler
                 retValue.Add("HP", hp);
                 retValue.Add("MinBpm", (float)minBpm);
                 retValue.Add("MaxBpm", (float)maxBpm);
+                retValue.Add("MainBpm", (float)mainBpm);
                 return retValue;
             }
 
@@ -74,6 +76,7 @@ namespace ModsHandler
 
             minBpm *= modifier;
             maxBpm *= modifier;
+            mainBpm *= modifier;
 
             //ar 
             float ar_multiplier = 1;
@@ -120,6 +123,7 @@ namespace ModsHandler
             retValue.Add("HP", hp);
             retValue.Add("MinBpm", (float)minBpm);
             retValue.Add("MaxBpm", (float)maxBpm);
+            retValue.Add("MainBpm", (float)mainBpm);
 
             return retValue;
         }

@@ -192,9 +192,9 @@ namespace osu_StreamCompanion.Code.Helpers
                     {"osuFileName", bm.OsuFileName},
                     {"maxBpm", Math.Round(bm.MaxBpm, 2)},
                     {"minBpm", Math.Round(bm.MinBpm, 2)},
-                    {"bpm", bm.MinBpm == bm.MaxBpm
+                    {"bpm", Math.Abs(bm.MinBpm - bm.MaxBpm) < double.Epsilon
                         ? Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture)
-                        : string.Format("{0} - {1}",Math.Round(bm.MinBpm, 2).ToString(CultureInfo.InvariantCulture),Math.Round(bm.MaxBpm, 2).ToString(CultureInfo.InvariantCulture))
+                        : string.Format(CultureInfo.InvariantCulture, "{0:0.##} - {1:0.##} ({2:0.##})", bm.MinBpm, bm.MaxBpm, bm.MainBpm)
                     },
                     {"mainBpm", Math.Round(bm.MainBpm, 2) },
                     {"tags", bm.Tags},
