@@ -90,6 +90,7 @@ namespace osu_StreamCompanion.Code.Core
                     {
                         logger.SetContextData("restarting", "from module");
                         logger.Log("StreamCompanion is restarting", LogLevel.Basic);
+                        Process.Start(Updater.UpdaterExeName, Process.GetCurrentProcess().Id.ToString());
                         Program.SafeQuit();
                     };
                 }
