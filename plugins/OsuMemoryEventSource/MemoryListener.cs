@@ -77,6 +77,9 @@ namespace OsuMemoryEventSource
                     _lastMapSelectionMods = mapSelectionMods;
                     _lastMapHash = mapHash;
 
+                    status = status == OsuStatus.Playing && reader.IsReplay()
+                           ? OsuStatus.Watching
+                           : status;
 
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
