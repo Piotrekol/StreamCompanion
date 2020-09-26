@@ -65,31 +65,31 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 Name = "np_playing_details",
                 Pattern = "CS:!cs! AR:!ar! OD:!od! HP:!hp!",
-                SaveEvent = OsuStatus.Playing
+                SaveEvent = OsuStatus.Playing | OsuStatus.Watching
             });
             _patterns.Add(new OutputPattern()
             {
                 Name = "np_playing_DL",
                 Pattern = "!dl!",
-                SaveEvent = OsuStatus.Playing
+                SaveEvent = OsuStatus.Playing | OsuStatus.Watching
             });
             _patterns.Add(new OutputPattern()
             {
                 Name = "livepp_hits",
                 Pattern = "!c100!x100 !c50!x50 !miss!xMiss",
-                SaveEvent = OsuStatus.Playing
+                SaveEvent = OsuStatus.Playing | OsuStatus.Watching
             });
             _patterns.Add(new OutputPattern()
             {
                 Name = "livepp_current_pp",
                 Pattern = "!ppIfMapEndsNow!",
-                SaveEvent = OsuStatus.Playing
+                SaveEvent = OsuStatus.Playing | OsuStatus.Watching
             });
             _patterns.Add(new OutputPattern()
             {
                 Name = "current_mods",
                 Pattern = "!mods!",
-                SaveEvent = OsuStatus.Playing
+                SaveEvent = OsuStatus.Playing | OsuStatus.Watching
             });
             _patterns.Add(new OutputPattern()
             {

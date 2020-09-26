@@ -32,16 +32,20 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         public Dictionary<string, OsuStatus> SaveEvents = new Dictionary<string, OsuStatus>
         {
+            //TODO: replace this madness with checkboxes to pick individual events
             {"All",OsuStatus.All },
             {"Listening",OsuStatus.Listening },
             {"Playing",OsuStatus.Playing },
             {"Watching",OsuStatus.Watching },
             {"Editing",OsuStatus.Editing },
             {"Results screen",OsuStatus.ResultsScreen },
+            {"Playing & Watching",OsuStatus.Playing | OsuStatus.Watching },
             {"Listening & Results screen",OsuStatus.Listening | OsuStatus.ResultsScreen },
             {"Listening & Editing",OsuStatus.Editing | OsuStatus.Listening},
             {"Listening & Editing & Results screen",OsuStatus.Listening | OsuStatus.Editing | OsuStatus.ResultsScreen},
             {"Playing & Results screen",OsuStatus.ResultsScreen | OsuStatus.Playing},
+            {"Watching & Results screen",OsuStatus.Watching | OsuStatus.ResultsScreen },
+            {"Watching & Playing & Results screen",OsuStatus.Watching | OsuStatus.Playing | OsuStatus.ResultsScreen },
             {"Never",OsuStatus.Null }
         };
         public OutputPattern Current

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.checkBox_disableDiskSaving = new System.Windows.Forms.CheckBox();
-            this.patternEdit = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternEdit();
-            this.patternList = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternList();
             this.button_reset = new System.Windows.Forms.Button();
+            this.patternList = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternList();
+            this.patternEdit = new osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1.PatternEdit();
             this.SuspendLayout();
             // 
             // checkBox_disableDiskSaving
@@ -45,22 +45,6 @@
             this.checkBox_disableDiskSaving.Text = "Disable saving files on disk";
             this.checkBox_disableDiskSaving.UseVisualStyleBackColor = true;
             // 
-            // patternEdit
-            // 
-            this.patternEdit.Current = null;
-            this.patternEdit.InGameOverlayIsAvailable = false;
-            this.patternEdit.Location = new System.Drawing.Point(0, 223);
-            this.patternEdit.Name = "patternEdit";
-            this.patternEdit.Size = new System.Drawing.Size(601, 213);
-            this.patternEdit.TabIndex = 1;
-            // 
-            // patternList
-            // 
-            this.patternList.Location = new System.Drawing.Point(0, 0);
-            this.patternList.Name = "patternList";
-            this.patternList.Size = new System.Drawing.Size(640, 226);
-            this.patternList.TabIndex = 0;
-            // 
             // button_reset
             // 
             this.button_reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -71,6 +55,22 @@
             this.button_reset.Text = "Reset patterns";
             this.button_reset.UseVisualStyleBackColor = true;
             this.button_reset.Click += new System.EventHandler(this.button_reset_Click);
+            // 
+            // patternList
+            // 
+            this.patternList.Location = new System.Drawing.Point(0, 0);
+            this.patternList.Name = "patternList";
+            this.patternList.Size = new System.Drawing.Size(640, 226);
+            this.patternList.TabIndex = 0;
+            // 
+            // patternEdit
+            // 
+            this.patternEdit.Current = null;
+            this.patternEdit.InGameOverlayIsAvailable = false;
+            this.patternEdit.Location = new System.Drawing.Point(0, 223);
+            this.patternEdit.Name = "patternEdit";
+            this.patternEdit.Size = new System.Drawing.Size(640, 213);
+            this.patternEdit.TabIndex = 1;
             // 
             // ParserSettings
             // 

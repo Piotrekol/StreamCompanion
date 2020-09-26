@@ -43,6 +43,7 @@
             this.numericUpDown_XPosition = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_YPosition = new System.Windows.Forms.NumericUpDown();
             this.panel_showInOsu = new System.Windows.Forms.Panel();
+            this.comboBox_font = new System.Windows.Forms.ComboBox();
             this.comboBox_align = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.numericUpDown_colorAlpha = new System.Windows.Forms.NumericUpDown();
@@ -52,7 +53,6 @@
             this.numericUpDown_fontSize = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.label_TestText = new System.Windows.Forms.Label();
-            this.comboBox_font = new System.Windows.Forms.ComboBox();
             this.panel_ColorPreview = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -105,7 +105,7 @@
             // 
             this.textBox_formating.Location = new System.Drawing.Point(116, 32);
             this.textBox_formating.Name = "textBox_formating";
-            this.textBox_formating.Size = new System.Drawing.Size(466, 20);
+            this.textBox_formating.Size = new System.Drawing.Size(521, 20);
             this.textBox_formating.TabIndex = 7;
             this.textBox_formating.TextChanged += new System.EventHandler(this.textBox_formating_TextChanged);
             // 
@@ -123,7 +123,7 @@
             this.textBox_preview.Location = new System.Drawing.Point(116, 58);
             this.textBox_preview.Name = "textBox_preview";
             this.textBox_preview.ReadOnly = true;
-            this.textBox_preview.Size = new System.Drawing.Size(466, 20);
+            this.textBox_preview.Size = new System.Drawing.Size(521, 20);
             this.textBox_preview.TabIndex = 9;
             // 
             // button_addNew
@@ -154,7 +154,7 @@
             this.comboBox_saveEvent.FormattingEnabled = true;
             this.comboBox_saveEvent.Location = new System.Drawing.Point(461, 6);
             this.comboBox_saveEvent.Name = "comboBox_saveEvent";
-            this.comboBox_saveEvent.Size = new System.Drawing.Size(121, 21);
+            this.comboBox_saveEvent.Size = new System.Drawing.Size(176, 21);
             this.comboBox_saveEvent.TabIndex = 14;
             // 
             // label_warning
@@ -222,9 +222,19 @@
             this.panel_showInOsu.Controls.Add(this.label8);
             this.panel_showInOsu.Location = new System.Drawing.Point(93, 81);
             this.panel_showInOsu.Name = "panel_showInOsu";
-            this.panel_showInOsu.Size = new System.Drawing.Size(490, 54);
+            this.panel_showInOsu.Size = new System.Drawing.Size(545, 54);
             this.panel_showInOsu.TabIndex = 23;
             this.panel_showInOsu.Visible = false;
+            // 
+            // comboBox_font
+            // 
+            this.comboBox_font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_font.FormattingEnabled = true;
+            this.comboBox_font.Location = new System.Drawing.Point(178, 28);
+            this.comboBox_font.Name = "comboBox_font";
+            this.comboBox_font.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_font.TabIndex = 24;
+            this.comboBox_font.SelectedIndexChanged += new System.EventHandler(this.comboBox_font_SelectedIndexChanged);
             // 
             // comboBox_align
             // 
@@ -319,21 +329,11 @@
             // 
             this.label_TestText.AutoSize = true;
             this.label_TestText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label_TestText.Location = new System.Drawing.Point(418, 17);
+            this.label_TestText.Location = new System.Drawing.Point(448, 17);
             this.label_TestText.Name = "label_TestText";
             this.label_TestText.Size = new System.Drawing.Size(57, 17);
             this.label_TestText.TabIndex = 25;
             this.label_TestText.Text = "test text";
-            // 
-            // comboBox_font
-            // 
-            this.comboBox_font.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_font.FormattingEnabled = true;
-            this.comboBox_font.Location = new System.Drawing.Point(178, 28);
-            this.comboBox_font.Name = "comboBox_font";
-            this.comboBox_font.Size = new System.Drawing.Size(223, 21);
-            this.comboBox_font.TabIndex = 24;
-            this.comboBox_font.SelectedIndexChanged += new System.EventHandler(this.comboBox_font_SelectedIndexChanged);
             // 
             // panel_ColorPreview
             // 
@@ -394,7 +394,7 @@
             this.Controls.Add(this.textBox_FileName);
             this.Controls.Add(this.panel_showInOsu);
             this.Name = "PatternEdit";
-            this.Size = new System.Drawing.Size(585, 198);
+            this.Size = new System.Drawing.Size(641, 198);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_XPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_YPosition)).EndInit();
             this.panel_showInOsu.ResumeLayout(false);
