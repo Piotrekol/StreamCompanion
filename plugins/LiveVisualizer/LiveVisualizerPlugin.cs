@@ -302,7 +302,10 @@ namespace LiveVisualizer
         public override void Dispose()
         {
             cts?.Cancel();
-            _visualizerWindow?.Close();
+            _visualizerWindow?.Dispatcher.Invoke(() =>
+            {
+                _visualizerWindow?.Close();
+            });
             base.Dispose();
         }
 
