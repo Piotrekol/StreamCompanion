@@ -235,7 +235,7 @@ namespace osuOverlay
         {
             try
             {
-                _pauseProcessTracking = map.Action == OsuStatus.Playing;
+                _pauseProcessTracking = (map.Action & (OsuStatus.Playing | OsuStatus.Watching)) != 0;
             }
             catch
             {
