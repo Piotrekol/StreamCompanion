@@ -87,37 +87,6 @@ namespace OsuMemoryEventSource
             }
         }
 
-
-        #region copied from BeatmapPpReplacements\BeatmapHelpers.cs
-        
-
-        public static string BeatmapDirectory(this Beatmap beatmap, string songsDirectory)
-        {
-            return Path.Combine(songsDirectory, beatmap.Dir);
-        }
-        public static string FullOsuFileLocation(this Beatmap beatmap, string songsDirectory)
-        {
-            var beatmapDirectory = beatmap.BeatmapDirectory(songsDirectory);
-            if (string.IsNullOrEmpty(beatmapDirectory) || string.IsNullOrEmpty(beatmap.OsuFileName))
-                return "";
-            return Path.Combine(beatmapDirectory, beatmap.OsuFileName);
-        }
-
-        
-        private static readonly SettingNames _names = SettingNames.Instance;
-
-        public static string GetFullSongsLocation(ISettings settings)
-        {
-            var dir = settings.Get<string>(_names.SongsFolderLocation);
-            if (dir == _names.SongsFolderLocation.Default<string>())
-            {
-                dir = settings.Get<string>(_names.MainOsuDirectory);
-                dir = Path.Combine(dir, "Songs\\");
-            }
-            return dir;
-        }
-        #endregion
-
         public static bool IsMD5(string input)
         {
             if (string.IsNullOrEmpty(input))

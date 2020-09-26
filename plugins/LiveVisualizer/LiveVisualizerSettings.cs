@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 using StreamCompanionTypes.Interfaces.Services;
 using DColor = System.Drawing.Color;
 using MColor = System.Windows.Media.Color;

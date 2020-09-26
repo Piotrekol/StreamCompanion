@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -307,16 +308,12 @@ namespace ClickCounter
         {
             for (int i = 0; i < _keyList.Count; i++)
             {
-                _tokenSetter($"key-{RemoveWhitespace(_filenames[_keyList[i]].ToLowerInvariant())}", _keyCount[_keyList[i]]);
+                _tokenSetter($"key-{_filenames[_keyList[i]].ToLowerInvariant().RemoveWhitespace()}", _keyCount[_keyList[i]]);
             }
 
             _tokenSetter("m1", _rightMouseCount);
             _tokenSetter("m2", _leftMouseCount);
         }
 
-        public static string RemoveWhitespace(string str)
-        {
-            return string.Join("", str.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries));
-        }
     }
 }

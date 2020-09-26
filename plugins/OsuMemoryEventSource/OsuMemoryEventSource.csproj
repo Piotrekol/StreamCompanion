@@ -97,6 +97,11 @@
       <Project>{3d97e9c4-a884-4664-a40c-f19c4533aa00}</Project>
       <Name>PpCalculator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj">
+      <Project>{3d5b2dbb-615f-43e4-8f2b-c54f4d92dc41}</Project>
+      <Name>StreamCompanion.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FirstRunMemoryCalibration.resx">
