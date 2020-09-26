@@ -45,6 +45,8 @@ namespace OsuMemoryEventSource
             SimulatedPp,
             UnstableRate,
         }
+        private ManualResetEvent _notUpdatingTokens = new ManualResetEvent(true);
+        private ManualResetEvent _notUpdatingMemoryValues = new ManualResetEvent(true);
 
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -67,53 +69,29 @@ namespace OsuMemoryEventSource
 
             InitLiveTokens();
 
-            Task.Run(InterpolatedValueThreadWork, cancellationTokenSource.Token);
             Task.Run(TokenThreadWork, cancellationTokenSource.Token);
         }
 
-        public Task TokenThreadWork()
+        public async Task TokenThreadWork()
         {
-            try
+            while (true)
             {
-                while (true)
+                if (cancellationTokenSource.IsCancellationRequested)
+                    return;
+
+                if (_notUpdatingMemoryValues.WaitOne(0))
                 {
-                    if (_tokenTick == null || _tokenCallbackTick == null)
-                        return Task.CompletedTask;
-
-                    if (_tokenTick.WaitOne(1))
-                    {
-                        _tokenCallbackTick.Reset();
-                        UpdateLiveTokens(_lastStatus);
-
-                        _tokenTick.Reset();
-                    }
-
-                    _tokenCallbackTick.Set();
+                    _notUpdatingTokens.Reset();
+                    UpdateLiveTokens(_lastStatus);
+                    _notUpdatingTokens.Set();
                 }
-            }
-            catch (TaskCanceledException)
-            {
 
-            }
-
-            return Task.CompletedTask;
-        }
-        public async Task InterpolatedValueThreadWork()
-        {
-            try
-            {
-                while (true)
+                foreach (var interpolatedValue in InterpolatedValues)
                 {
-                    foreach (var interpolatedValue in InterpolatedValues)
-                    {
-                        interpolatedValue.Value.Tick();
-                    }
-
-                    await Task.Delay(11);
+                    interpolatedValue.Value.Tick();
                 }
-            }
-            catch (TaskCanceledException)
-            {
+
+                await Task.Delay(1);
             }
         }
 
@@ -141,13 +119,12 @@ namespace OsuMemoryEventSource
         }
 
         private IOsuMemoryReader _reader;
-        private AutoResetEvent _tokenTick = new AutoResetEvent(false);
-        private AutoResetEvent _tokenCallbackTick = new AutoResetEvent(true);
         public void Tick(OsuStatus status, IOsuMemoryReader reader)
         {
+            _notUpdatingTokens.WaitOne();
+            _notUpdatingMemoryValues.Reset();
             lock (_lockingObject)
             {
-                _tokenCallbackTick.WaitOne();
                 if (!ReferenceEquals(_reader, reader))
                     _reader = reader;
                 if ((OsuStatus)_liveTokens["status"].Token.Value != status)
@@ -158,6 +135,7 @@ namespace OsuMemoryEventSource
                     _rawData.PlayTime = reader.ReadPlayTime();
                     UpdateLiveTokens(status);
                     _lastStatus = status;
+                    _notUpdatingMemoryValues.Set();
                     return;
                 }
 
@@ -175,9 +153,9 @@ namespace OsuMemoryEventSource
                 _rawData.PlayTime = reader.ReadPlayTime();
                 _liveTokens["time"].Update();
 
-                _tokenTick?.Set();
                 _lastStatus = status;
             }
+            _notUpdatingMemoryValues.Set();
         }
 
         private void ResetTokens()
