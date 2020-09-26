@@ -47,6 +47,7 @@ namespace OsuMemoryEventSource
         }
         private ManualResetEvent _notUpdatingTokens = new ManualResetEvent(true);
         private ManualResetEvent _notUpdatingMemoryValues = new ManualResetEvent(true);
+        private ManualResetEvent _newPlayStarted = new ManualResetEvent(true);
 
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -86,6 +87,15 @@ namespace OsuMemoryEventSource
                     _notUpdatingTokens.Set();
                 }
 
+                if (_newPlayStarted.WaitOne(0))
+                {
+                    foreach (var interpolatedValue in InterpolatedValues)
+                    {
+                        interpolatedValue.Value.Reset();
+                    }
+                    _newPlayStarted.Reset();
+                }
+
                 foreach (var interpolatedValue in InterpolatedValues)
                 {
                     interpolatedValue.Value.Tick();
@@ -119,6 +129,7 @@ namespace OsuMemoryEventSource
         }
 
         private IOsuMemoryReader _reader;
+        private int _lastRetries = -1;
         public void Tick(OsuStatus status, IOsuMemoryReader reader)
         {
             _notUpdatingTokens.WaitOne();
@@ -139,9 +150,18 @@ namespace OsuMemoryEventSource
                     return;
                 }
 
-                if (_lastStatus != OsuStatus.Playing && status != OsuStatus.Watching)
+                if (_lastStatus != OsuStatus.Playing && _lastStatus != OsuStatus.Watching)
                 {
+                    _newPlayStarted.Set();
                     Thread.Sleep(500);//Initial play delay
+                }
+
+                var retries = reader.GetRetrys();
+                if (retries != _lastRetries)
+                {
+                    _lastRetries = retries;
+                    if (retries != 0)
+                        _newPlayStarted.Set();
                 }
 
                 reader.GetPlayData(_rawData.Play);

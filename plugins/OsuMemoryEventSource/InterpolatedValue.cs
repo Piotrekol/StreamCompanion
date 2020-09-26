@@ -37,11 +37,10 @@ namespace OsuMemoryEventSource
             _currentPosition += _transitionSpeed;
             if (_currentPosition > 1)
                 _currentPosition = 1;
-            if(InterpolationType==InterpolationType.EaseIn)
+            if (InterpolationType == InterpolationType.EaseIn)
                 Current = Lerp(_orginalValue, _finalValue, EaseInPosition(_currentPosition));
             else
                 Current = Lerp(_orginalValue, _finalValue, _currentPosition);
-
         }
 
         public void Set(double value)
@@ -59,6 +58,11 @@ namespace OsuMemoryEventSource
             _currentPosition = 0;
             _orginalValue = Current;
             _finalValue = value;
+        }
+
+        public void Reset()
+        {
+            _currentPosition = _orginalValue = Current = _finalValue = 0;
         }
 
         public void ChangeSpeed(double speed)
