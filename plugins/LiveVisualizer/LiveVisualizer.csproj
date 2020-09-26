@@ -83,7 +83,6 @@
       <DependentUpon>ColorPickerWithPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="ConfigEntrys.cs" />
-    <Compile Include="MathExtensions.cs" />
     <Compile Include="Models\Interfaces\IVisualizerConfiguration.cs" />
     <Compile Include="Models\Interfaces\IVisualizerDisplayData.cs" />
     <Compile Include="Models\Interfaces\IWpfVisualizerData.cs" />
@@ -148,6 +147,13 @@
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj">
+      <Project>{3d5b2dbb-615f-43e4-8f2b-c54f4d92dc41}</Project>
+      <Name>StreamCompanion.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
