@@ -79,7 +79,7 @@ namespace OsuMemoryEventSource
         private int ReadMods(OsuStatus osuStatus, int retryCount = 0)
         {
             int mods;
-            if (osuStatus == OsuStatus.Playing)
+            if (osuStatus == OsuStatus.Playing || osuStatus == OsuStatus.Watching)
             {
                 Thread.Sleep(250);
                 mods = _memoryReader.GetPlayingMods();
