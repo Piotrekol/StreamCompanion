@@ -102,15 +102,20 @@ namespace WebSocketDataSender
                     if (newPort > ushort.MaxValue)
                         newPort = 20000;
 
-                    _settings.Add(HttpServerPort.Name, newPort);
 
                     var userResult = MessageBox.Show(
                         $"Web overlay couldn't start because there is something already running on port {currentPort} on your system.{Environment.NewLine}" +
-                        $"Port used has been automatically changed to {newPort} but Stream Companion restart is necessary to apply the changes.{Environment.NewLine}" +
-                        $"Restart now?", "Stream Companion Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                        $"Do you want Stream Companion to automatically change used port to {newPort}?{Environment.NewLine}" +
+                        $"You might need to update your overlay URLs in obs/slobs afterwards.", "Stream Companion Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                     if (userResult == DialogResult.Yes)
                     {
-                        _restarter("Updated web overlay port number");
+                        _settings.Add(HttpServerPort.Name, newPort);
+
+                        userResult = MessageBox.Show(
+                            $"Stream Companion restart is necessary to apply web port changes.{Environment.NewLine}" +
+                            $"Restart now?");
+                        if (userResult == DialogResult.Yes)
+                            _restarter("Updated web overlay port number");
                     }
 
                     return;
