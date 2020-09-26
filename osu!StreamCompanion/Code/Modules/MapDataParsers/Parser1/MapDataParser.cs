@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using osu_StreamCompanion.Code.Misc;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -29,7 +30,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         [Import]
         public Lazy<IEnumerable<IPlugin>> LoadedPlugins { get; set; }
-        
+
         public MapDataParser(ILogger logger, ISettings settings)
         {
             _logger = logger;
@@ -105,7 +106,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 Pattern = "map completion: {min((time*1000/totalTime)*100,100) :0.0}%",
                 SaveEvent = OsuStatus.All
             });
-            
+
         }
         private void PatternsOnListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
         {
@@ -186,9 +187,12 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 {
                     string rawPatterns = _settings.Get<string>(_names.ActualPatterns);
                     var deserializedPatterns = JsonConvert.DeserializeObject<List<OutputPattern>>(rawPatterns);
+
+
                     if (deserializedPatterns != null)
                         foreach (var p in deserializedPatterns)
                         {
+                            p.Name = p.Name.RemoveWhitespace();
                             _patterns.Add(p);
                         }
                 }

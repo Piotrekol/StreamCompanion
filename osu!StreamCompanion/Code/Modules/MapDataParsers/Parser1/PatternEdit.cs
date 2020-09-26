@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 
@@ -138,6 +139,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             {
                 textBox_FileName.Text = textBox_FileName.Text.Replace(c.ToString(), "");
             }
+
+            textBox_FileName.Text = textBox_FileName.Text.RemoveWhitespace();
         }
 
         private bool longFormat = false;
