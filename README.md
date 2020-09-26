@@ -18,7 +18,7 @@ StreamCompanion has a wiki explaining most of its functionality. [Give it a read
 Any contributions / constructive criticism is appreciated 
 
 ### Built in web overlays support
-After starting StreamCompanion navigate to http://localhost:28390/ to see default web overlays. All overlays live in `Files/Web/overlays/` folder and you're free to create/edit these as you see fit.  
+After starting StreamCompanion navigate to http://localhost:20727/ to see default web overlays. All overlays live in `Files/Web/overlays/` folder and you're free to create/edit these as you see fit.  
 Default `Live Overlay` can be configured to some extent in settings `Visualizer` tab without having to tinker with js/css.  
 ![WebOverlayPreview](images/webOverlay.jpg)
 
