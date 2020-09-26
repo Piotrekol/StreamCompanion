@@ -77,3 +77,6 @@ function _IsInStatus(rws, tokens, osuStatuses) {
 function _IsPlaying(rws, tokens) {
     return _IsInStatus(rws, tokens, [window.overlay.osuStatus.Playing, window.overlay.osuStatus.ResultsScreen]);
 }
+function _IsWatching(rws, tokens) {
+    return _IsInStatus(rws, tokens, window.overlay.osuStatus.Watching);
+}

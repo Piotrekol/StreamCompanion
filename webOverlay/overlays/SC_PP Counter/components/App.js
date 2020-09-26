@@ -11,9 +11,10 @@ const app = {
       rws: {},
     });
 
-    const getToken = (tokenName, decimalPlaces) =>
-      _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
-    let isPlaying = Vue.computed(() => _IsPlaying(data.rws, data.tokens));
+    const getToken = (tokenName, decimalPlaces) => _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
+    let isPlayingOrWatching = Vue.computed(() =>
+      _IsInStatus(data.rws, data.tokens, [window.overlay.osuStatus.Playing, window.overlay.osuStatus.ResultsScreen, window.overlay.osuStatus.Watching])
+    );
     //either request all tokens upfront by filling their names in array
     //or request them later using helper getToken method above
     data.rws = watchTokens([], (values) => {
@@ -22,7 +23,7 @@ const app = {
 
     return {
       getToken,
-      isPlaying,
+      isPlayingOrWatching,
     };
   },
 };

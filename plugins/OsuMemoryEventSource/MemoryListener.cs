@@ -56,11 +56,15 @@ namespace OsuMemoryEventSource
                 _currentMapId = reader.GetMapId();
                 _currentMapString = reader.GetSongString();
                 OsuStatus status = _currentStatus.Convert();
+                status = status == OsuStatus.Playing && reader.IsReplay()
+                    ? OsuStatus.Watching
+                    : status;
+
                 var gameMode = reader.ReadSongSelectGameMode();
                 var mapHash = reader.GetMapMd5Safe();
                 var mapSelectionMods = reader.GetMods();
                 var mapHashDiffers = mapHash != null && _lastMapHash != null && _lastMapHash != mapHash;
-
+                
                 if (sendEvents &&
                     (_lastMapId != _currentMapId ||
                     _lastStatus != _currentStatus ||
@@ -77,10 +81,6 @@ namespace OsuMemoryEventSource
                     _lastMapSelectionMods = mapSelectionMods;
                     _lastMapHash = mapHash;
 
-                    status = status == OsuStatus.Playing && reader.IsReplay()
-                           ? OsuStatus.Watching
-                           : status;
-
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
                     {
                         MapId = _currentMapId,
@@ -91,6 +91,7 @@ namespace OsuMemoryEventSource
                     });
 
                 }
+                
 
                 _memoryDataProcessor.Tick(status, reader);
             }

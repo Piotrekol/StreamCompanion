@@ -1,6 +1,3 @@
-//this line is automatically updated on SC startup
-let autoConfig = {"Scheme":"http","Host":"localhost","Port":28390};
-
 let config = {
     scheme: window.location.protocol.slice(0, -1),
     host: window.location.hostname,
