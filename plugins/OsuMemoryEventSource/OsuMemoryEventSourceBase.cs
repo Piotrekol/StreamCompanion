@@ -45,9 +45,8 @@ namespace OsuMemoryEventSource
         protected MemoryListener _memoryListener;
 
         protected static readonly object _lockingObject = new object();
-        AutoResetEvent timerDisposed = new AutoResetEvent(false);
-        private long _shouldTimerRun = 1;
-        private Timer _timer;
+        private Task MemoryWorkerTask;
+        private CancellationTokenSource cts = new CancellationTokenSource();
         private int _poolingMsDelay = 33;
 
         protected bool MemoryPoolingIsEnabled = false;
@@ -80,10 +79,6 @@ namespace OsuMemoryEventSource
                 return;
             }
 
-            lock (_lockingObject)
-                _timer = new Timer(TimerCallback, null, 250, Int32.MaxValue);
-
-
             _memoryListener = new MemoryListener(settings, saver, logger);
             _memoryListener.NewOsuEvent += async (s, args) =>
             {
@@ -96,6 +91,8 @@ namespace OsuMemoryEventSource
             };
             _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataConsumers);
 
+            MemoryWorkerTask = Task.Run(MemoryWorker, cts.Token);
+
             Started = true;
         }
 
@@ -106,22 +103,24 @@ namespace OsuMemoryEventSource
 
         public void SetNewMap(MapSearchResult map)
         {
-            lock (_lockingObject)
-                _memoryListener?.SetNewMap(map);
+            _memoryListener?.SetNewMap(map);
         }
 
         protected virtual void OnSettingsSettingUpdated(object sender, SettingUpdated e) { }
-
-        protected void TimerTick()
+        private async Task MemoryWorker()
         {
-            if (timerDisposed.WaitOne(1))
-            {
-                return;
-            }
-
             try
             {
-                _memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
+                while (true)
+                {
+                    if (cts.IsCancellationRequested)
+                        return;
+
+                    _memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
+
+                    //Note that anything below ~20ms will result in wildly inaccurate delays
+                    await Task.Delay(_poolingMsDelay);
+                }
             }
             catch (Win32Exception ex)
             {
@@ -129,7 +128,6 @@ namespace OsuMemoryEventSource
                 if (ex.NativeErrorCode == 5)
                 {
                     var nl = Environment.NewLine;
-                    DisableTimer();
                     MessageBox.Show("StreamCompanion doesn't have enough permissions to access osu! data." + nl +
                                     "Majority of live tokens, pp counts, modded star rating will not work." + nl +
                                     "Reading of live osu! data has been disabled for this StreamCompanion run, restart to try again.",
@@ -143,56 +141,13 @@ namespace OsuMemoryEventSource
                 }
             }
         }
-        private void TimerCallback(object state)
-        {
-            lock (_lockingObject)
-            {
-                try
-                {
-                    TimerTick();
-                }
-                finally
-                {
-                    RestartTimer(_poolingMsDelay);
-                }
-            }
-        }
-
-        private void RestartTimer(int msDelay)
-        {
-            lock (_lockingObject)
-            {
-                if (timerDisposed.WaitOne(1))
-                {
-                    return;
-                }
-                if (Interlocked.Read(ref _shouldTimerRun) == 1)
-                    _timer?.Change(msDelay, Int32.MaxValue);
-            }
-        }
-        protected void DisableTimer()
-        {
-            if (Interlocked.Read(ref _shouldTimerRun) == 1)
-                Interlocked.Decrement(ref _shouldTimerRun);
-        }
-
-        protected void EnableTimer()
-        {
-            if (Interlocked.Read(ref _shouldTimerRun) == 0)
-            {
-                Interlocked.Increment(ref _shouldTimerRun);
-                RestartTimer(500);
-            }
-        }
 
         public void Dispose()
         {
             _settings.SettingUpdated -= OnSettingsSettingUpdated;
             lock (_lockingObject)
             {
-                timerDisposed.Set();
-                DisableTimer();
-                _timer?.Dispose();
+                cts?.Cancel();
                 _memoryListener?.Dispose();
             }
         }
