@@ -167,6 +167,9 @@ namespace OsuMemoryEventSource
                 }
 
                 reader.GetPlayData(_rawData.Play);
+                //TODO: change this on OsuMemoryReader side (read v2 in getPlayData & return 0 as default instead of -1)
+                _rawData.Play.Score = Math.Max(0, _reader.ReadScoreV2());
+
                 _rawData.HitErrors = reader.HitErrors() ?? new List<int>();
 
                 _rawData.PlayTime = reader.ReadPlayTime();
