@@ -17,8 +17,10 @@ const app = {
     //map global _GetToken helper method
     const getToken = (tokenName, decimalPlaces) => _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
 
-    //use helper _IsPlaying method to update isPlaying value as necessary
-    let isPlaying = Vue.computed(() => _IsPlaying(data.rws, data.tokens));
+    //use helper _IsInStatus method to update isPlayingOrWatching value as necessary
+    let isPlayingOrWatching = Vue.computed(() =>
+      _IsInStatus(data.rws, data.tokens, [window.overlay.osuStatus.Playing, window.overlay.osuStatus.ResultsScreen, window.overlay.osuStatus.Watching])
+    );
 
     //map pass percentage
     let mapProgress = Vue.computed(() => ((getToken('time') / (getToken('totaltime') / 1000)) * 100).clamp(0, 100));
@@ -60,9 +62,10 @@ const app = {
     return {
       data: data.tokens,
       getToken,
-      isPlaying,
+      isPlayingOrWatching,
       mapProgress,
       progressColor: Vue.computed(() => data.settings.progressColor),
+      
     };
   },
 };

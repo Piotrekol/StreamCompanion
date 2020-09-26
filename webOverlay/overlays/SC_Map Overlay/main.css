@@ -29,6 +29,7 @@
     overflow: hidden;
     width: 1000px;
 }
+body { margin: 0 }
 * {
     transition: all 1s;
     transition-timing-function: ease;
@@ -60,7 +61,7 @@
 }
 .move {
     position: absolute;
-    top: 8px;
+    top: 0px;
     width: 1000px;
     border-radius: 2rem; overflow: hidden;
     height: 300px;
