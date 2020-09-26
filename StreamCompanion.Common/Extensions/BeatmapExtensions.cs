@@ -1,14 +1,26 @@
 ﻿using System.IO;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Services;
+using Beatmap = CollectionManager.DataTypes.Beatmap;
 
-namespace BackgroundImageProvider
+namespace StreamCompanion.Common
 {
     public static class BeatmapExtensions
     {
-        
+        public static string BeatmapDirectory(this Beatmap beatmap, string songsDirectory)
+        {
+            return Path.Combine(songsDirectory, beatmap.Dir);
+        }
+
+        public static string FullOsuFileLocation(this Beatmap beatmap, string songsDirectory)
+        {
+            var beatmapDirectory = beatmap.BeatmapDirectory(songsDirectory);
+            if (string.IsNullOrEmpty(beatmapDirectory) || string.IsNullOrEmpty(beatmap.OsuFileName))
+                return "";
+            return Path.Combine(beatmapDirectory, beatmap.OsuFileName);
+        }
+
         public static string GetImageLocation(this IBeatmap beatmap, ISettings settings)
         {
             var songsDirectory = BeatmapHelpers.GetFullSongsLocation(settings);

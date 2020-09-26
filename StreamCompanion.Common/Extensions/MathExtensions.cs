@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiveVisualizer
+namespace StreamCompanion.Common
 {
     public static class MathExtensions
     {
