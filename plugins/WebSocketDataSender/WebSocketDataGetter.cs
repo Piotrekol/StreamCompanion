@@ -113,7 +113,7 @@ namespace WebSocketDataSender
 
                         userResult = MessageBox.Show(
                             $"Stream Companion restart is necessary to apply web port changes.{Environment.NewLine}" +
-                            $"Restart now?");
+                            $"Restart now?", "Stream Companion Error", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (userResult == DialogResult.Yes)
                             _restarter("Updated web overlay port number");
                     }
