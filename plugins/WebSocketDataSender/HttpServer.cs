@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,6 +35,7 @@ namespace WebSocketDataSender
                     .WithUrlPrefix(url)
                     .WithMode(HttpListenerMode.EmbedIO))
                 .WithLocalSessionManager()
+                .WithCors()
                 .WithModule(new ActionModule("/ping", HttpVerbs.Get, ctx => ctx.SendDataAsync("pong")));
 
 
