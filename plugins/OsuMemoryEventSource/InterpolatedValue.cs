@@ -4,12 +4,12 @@ namespace OsuMemoryEventSource
 {
     public enum InterpolationType
     {
-        Linear, EaseIn
+        Linear, EaseIn, EaseOutQuint
     }
     public class InterpolatedValue
     {
 
-        public InterpolationType InterpolationType { get; set; } = InterpolationType.EaseIn;
+        public InterpolationType InterpolationType { get; set; } = InterpolationType.EaseOutQuint;
         public double Current { get; private set; } = 0;
         private double _orginalValue = 0;
         private double _finalValue = 0;
@@ -21,15 +21,22 @@ namespace OsuMemoryEventSource
             ChangeSpeed(speed);
         }
 
-        private double Lerp(double @from, double @to, double by)
+        private static double Lerp(double @from, double @to, double by)
         {
             return @from * (1 - by) + @to * by;
         }
 
-        private double EaseInPosition(double normalizedTime)
+        //https://easings.net/#easeInCirc
+        private static double EaseInPosition(double normalizedTime)
         {
             normalizedTime = Math.Max(0.0, Math.Min(1.0, normalizedTime));
             return 1.0 - Math.Sqrt(1.0 - normalizedTime * normalizedTime);
+        }
+
+        //https://easings.net/#easeOutQuint
+        private static double EaseOutQuint(double value)
+        {
+            return 1 - Math.Pow(1d - value, 3);
         }
 
         public void Tick()
@@ -37,10 +44,18 @@ namespace OsuMemoryEventSource
             _currentPosition += _transitionSpeed;
             if (_currentPosition > 1)
                 _currentPosition = 1;
-            if (InterpolationType == InterpolationType.EaseIn)
-                Current = Lerp(_orginalValue, _finalValue, EaseInPosition(_currentPosition));
-            else
-                Current = Lerp(_orginalValue, _finalValue, _currentPosition);
+            switch (InterpolationType)
+            {
+                case InterpolationType.EaseIn:
+                    Current = Lerp(_orginalValue, _finalValue, EaseInPosition(_currentPosition));
+                    break;
+                case InterpolationType.Linear:
+                    Current = Lerp(_orginalValue, _finalValue, _currentPosition);
+                    break;
+                case InterpolationType.EaseOutQuint:
+                    Current = Lerp(_orginalValue, _finalValue, EaseOutQuint(_currentPosition));
+                    break;
+            }
         }
 
         public void Set(double value)

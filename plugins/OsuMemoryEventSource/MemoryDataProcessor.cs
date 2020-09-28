@@ -58,7 +58,7 @@ namespace OsuMemoryEventSource
             _logger = logger;
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
             {
-                InterpolatedValues.Add(v, new InterpolatedValue(0.15));
+                    InterpolatedValues.Add(v, new InterpolatedValue(0.15));
             }
 
             ToggleSmoothing(enablePpSmoothing);
@@ -416,7 +416,7 @@ namespace OsuMemoryEventSource
 
         public void ToggleSmoothing(bool enable)
         {
-            var speed = enable ? 0.15d : 1d;
+            var speed = enable ? 0.07d : 1d;
 
             foreach (var v in InterpolatedValues)
             {
