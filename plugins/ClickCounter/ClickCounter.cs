@@ -95,6 +95,8 @@ namespace ClickCounter
             if (!disableSavingToDisk)
                 _saver.Save(name + ".txt", value);
 
+            _tokenSetter($"{getTokenName(name)}.txt", value, TokenType.Live);
+
             _highFrequencyDataConsumers.ForEach(h =>
                 h.Handle(name, value)
             );
@@ -119,7 +121,7 @@ namespace ClickCounter
         private void _mouseListener_OnLeftMouseDown(object sender, EventArgs e)
         {
             _leftMouseCount++;
-            UpdateValue("m2", _rightMouseCount.ToString());
+            UpdateValue("m2", _leftMouseCount.ToString());
         }
 
         private void UnHookAll()
@@ -303,16 +305,15 @@ namespace ClickCounter
             UnHookAll();
             SaveKeysToSettings();
         }
-
+        private string getTokenName(string keyName) => $"key-{keyName}".ToLowerInvariant().RemoveWhitespace();
         public void CreateTokens(MapSearchResult map)
         {
             for (int i = 0; i < _keyList.Count; i++)
             {
-                _tokenSetter($"key-{_filenames[_keyList[i]].ToLowerInvariant().RemoveWhitespace()}", _keyCount[_keyList[i]]);
+                _tokenSetter(getTokenName(_filenames[_keyList[i]]), _keyCount[_keyList[i]], TokenType.Live);
             }
-
-            _tokenSetter("m1", _rightMouseCount);
-            _tokenSetter("m2", _leftMouseCount);
+            _tokenSetter(getTokenName("m1.txt"), _rightMouseCount, TokenType.Live);
+            _tokenSetter(getTokenName("m2.txt"), _leftMouseCount, TokenType.Live);
         }
 
     }
