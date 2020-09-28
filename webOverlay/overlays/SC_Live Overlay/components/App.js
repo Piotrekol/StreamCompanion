@@ -15,8 +15,7 @@ const app = {
       settings: {},
     });
 
-    const getToken = (tokenName, decimalPlaces) =>
-      _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
+    const getToken = (tokenName, decimalPlaces) => _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
     //either request all tokens upfront by filling their names in array
     //or request them later using helper getToken method above
     data.rws = watchTokens(['mapStrains'], (values) => {
@@ -31,27 +30,24 @@ const app = {
     getWebOverlaySettings().then((config) => {
       Object.assign(data.settings, config);
     });
-
-    let isPlaying = Vue.computed(() => _IsPlaying(data.rws, data.tokens));
-    let mapStrains = Vue.computed(() =>
-      Object.entries(data.tokens.mapStrains || {})
+    let mapStrains = Vue.computed(() => Object.entries(data.tokens.mapStrains || {}));
+    let isPlayingOrWatching = Vue.computed(() =>
+      _IsInStatus(data.rws, data.tokens, [window.overlay.osuStatus.Playing, window.overlay.osuStatus.ResultsScreen, window.overlay.osuStatus.Watching])
     );
+
     let ppValue = Vue.computed(() => {
-      if (isPlaying.value) return getToken('ppIfMapEndsNow', 1);
-      if (data.settings.SimulatePPWhenListening)
-        return getToken('simulatedPp', 1);
+      if (isPlayingOrWatching.value) return getToken('ppIfMapEndsNow', 1);
+      if (data.settings.SimulatePPWhenListening) return getToken('simulatedPp', 1);
       return 0;
     });
-    let mapProgress = Vue.computed(
-      () => getToken('time') / (getToken('totaltime') / 1000)
-    );
+    let mapProgress = Vue.computed(() => getToken('time') / (getToken('totaltime') / 1000));
 
     return {
       getToken,
 
       data,
 
-      isPlaying,
+      isPlayingOrWatching,
       mapStrains,
       ppValue,
       mapProgress,
@@ -98,12 +94,7 @@ const app = {
     hitsStyle() {
       if (!this.overlaySettings.ppBackgroundColor) return ``;
 
-      let {
-        ppBackgroundColor: pp,
-        hit100BackgroundColor: h100,
-        hit50BackgroundColor: h50,
-        hitMissBackgroundColor: hMiss,
-      } = this.overlaySettings;
+      let { ppBackgroundColor: pp, hit100BackgroundColor: h100, hit50BackgroundColor: h50, hitMissBackgroundColor: hMiss } = this.overlaySettings;
       return `background: linear-gradient(to right, ${pp},${pp},${h100},${h100},${h50},${h50},${hMiss},${hMiss});`;
     },
   },
