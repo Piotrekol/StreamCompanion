@@ -213,13 +213,14 @@ namespace OsuMemoryEventSource
         {
             _liveTokens["status"] = new LiveToken(_tokenSetter("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null), null);
             var playingOrWatching = OsuStatus.Playing | OsuStatus.Watching;
-            _liveTokens["acc"] = new LiveToken(_liveTokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () => _rawData.Play.Acc);
-            _liveTokens["katsu"] = new LiveToken(_liveTokenSetter("katsu", _rawData.Play.CKatsu, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.CKatsu);
-            _liveTokens["geki"] = new LiveToken(_liveTokenSetter("geki", _rawData.Play.CGeki, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.CGeki);
-            _liveTokens["c300"] = new LiveToken(_liveTokenSetter("c300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.C300);
-            _liveTokens["c100"] = new LiveToken(_liveTokenSetter("c100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.C100);
-            _liveTokens["c50"] = new LiveToken(_liveTokenSetter("c50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.C50);
-            _liveTokens["miss"] = new LiveToken(_liveTokenSetter("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.CMiss);
+            var playingWatchingResults = playingOrWatching | OsuStatus.ResultsScreen;
+            _liveTokens["acc"] = new LiveToken(_liveTokenSetter("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () => _rawData.Play.Acc);
+            _liveTokens["katsu"] = new LiveToken(_liveTokenSetter("katsu", _rawData.Play.CKatsu, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.CKatsu);
+            _liveTokens["geki"] = new LiveToken(_liveTokenSetter("geki", _rawData.Play.CGeki, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.CGeki);
+            _liveTokens["c300"] = new LiveToken(_liveTokenSetter("c300", _rawData.Play.C300, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.C300);
+            _liveTokens["c100"] = new LiveToken(_liveTokenSetter("c100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.C100);
+            _liveTokens["c50"] = new LiveToken(_liveTokenSetter("c50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.C50);
+            _liveTokens["miss"] = new LiveToken(_liveTokenSetter("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.CMiss);
             _liveTokens["mapPosition"] = new LiveToken(_liveTokenSetter("mapPosition", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero), () =>
             {
                 if (_rawData.PlayTime != 0)
@@ -245,42 +246,42 @@ namespace OsuMemoryEventSource
 
                 return TimeSpan.Zero;
             });
-            _liveTokens["combo"] = new LiveToken(_liveTokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.Combo);
-            _liveTokens["score"] = new LiveToken(_liveTokenSetter("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingOrWatching), () => _rawData.Play.Score);
-            _liveTokens["currentMaxCombo"] = new LiveToken(_liveTokenSetter("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, playingOrWatching), () => _rawData.Play.MaxCombo);
-            _liveTokens["playerHp"] = new LiveToken(_liveTokenSetter("playerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () => _rawData.Play.Hp);
+            _liveTokens["combo"] = new LiveToken(_liveTokenSetter("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.Combo);
+            _liveTokens["score"] = new LiveToken(_liveTokenSetter("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingWatchingResults), () => _rawData.Play.Score);
+            _liveTokens["currentMaxCombo"] = new LiveToken(_liveTokenSetter("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults), () => _rawData.Play.MaxCombo);
+            _liveTokens["playerHp"] = new LiveToken(_liveTokenSetter("playerHp", _rawData.Play.Hp, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () => _rawData.Play.Hp);
 
-            _liveTokens["ppIfMapEndsNow"] = new LiveToken(_liveTokenSetter("ppIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () =>
+            _liveTokens["ppIfMapEndsNow"] = new LiveToken(_liveTokenSetter("ppIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Set(_rawData.PPIfBeatmapWouldEndNow());
                 return InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current;
             });
-            _liveTokens["aimPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("aimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () =>
+            _liveTokens["aimPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("aimPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Set(_rawData.AimPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.AimPpIfMapEndsNow].Current;
             });
-            _liveTokens["speedPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("speedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () =>
+            _liveTokens["speedPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("speedPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Set(_rawData.SpeedPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.SpeedPpIfMapEndsNow].Current;
             });
-            _liveTokens["accPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("accPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () =>
+            _liveTokens["accPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("accPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Set(_rawData.AccPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.AccPpIfMapEndsNow].Current;
             });
-            _liveTokens["strainPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("strainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () =>
+            _liveTokens["strainPpIfMapEndsNow"] = new LiveToken(_liveTokenSetter("strainPpIfMapEndsNow", InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Set(_rawData.StrainPPIfBeatmapWouldEndNow);
                 return InterpolatedValues[InterpolatedValueName.StrainPpIfMapEndsNow].Current;
             });
-            _liveTokens["ppIfRestFced"] = new LiveToken(_liveTokenSetter("ppIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () =>
+            _liveTokens["ppIfRestFced"] = new LiveToken(_liveTokenSetter("ppIfRestFced", InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.PpIfRestFced].Set(_rawData.PPIfRestFCed());
                 return InterpolatedValues[InterpolatedValueName.PpIfRestFced].Current;
             });
-            _liveTokens["noChokePp"] = new LiveToken(_liveTokenSetter("noChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, playingOrWatching), () =>
+            _liveTokens["noChokePp"] = new LiveToken(_liveTokenSetter("noChokePp", InterpolatedValues[InterpolatedValueName.NoChokePp].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.NoChokePp].Set(_rawData.NoChokePp());
                 return InterpolatedValues[InterpolatedValueName.NoChokePp].Current;
@@ -290,12 +291,12 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.SimulatedPp].Set(_rawData.SimulatedPp());
                 return InterpolatedValues[InterpolatedValueName.SimulatedPp].Current;
             });
-            _liveTokens["unstableRate"] = new LiveToken(_liveTokenSetter("unstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingOrWatching), () =>
+            _liveTokens["unstableRate"] = new LiveToken(_liveTokenSetter("unstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults), () =>
             {
                 InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
-            _liveTokens["convertedUnstableRate"] = new LiveToken(_liveTokenSetter("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingOrWatching), () =>
+            _liveTokens["convertedUnstableRate"] = new LiveToken(_liveTokenSetter("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults), () =>
             {
                 var ur = (double)_liveTokens["unstableRate"].Token.Value;
                 if ((Mods & Mods.Dt) != 0)
@@ -304,10 +305,10 @@ namespace OsuMemoryEventSource
                     return ur / 0.75d;
                 return ur;
             });
-            _liveTokens["hitErrors"] = new LiveToken(_liveTokenSetter("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingOrWatching), () => _rawData.HitErrors);
+            _liveTokens["hitErrors"] = new LiveToken(_liveTokenSetter("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults), () => _rawData.HitErrors);
             _liveTokens["localTimeISO"] = new LiveToken(_liveTokenSetter("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All), () => DateTime.UtcNow.ToString("o"));
             _liveTokens["localTime"] = new LiveToken(_liveTokenSetter("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All), () => DateTime.Now.TimeOfDay);
-            _liveTokens["sliderBreaks"] = new LiveToken(_liveTokenSetter("sliderBreaks", 0, TokenType.Live, "{0}", 0, playingOrWatching), () =>
+            _liveTokens["sliderBreaks"] = new LiveToken(_liveTokenSetter("sliderBreaks", 0, TokenType.Live, "{0}", 0, playingWatchingResults), () =>
             {
                 var currentMisses = (ushort)_liveTokens["miss"].Token.Value;
                 var currentCombo = (ushort)_liveTokens["combo"].Token.Value;
