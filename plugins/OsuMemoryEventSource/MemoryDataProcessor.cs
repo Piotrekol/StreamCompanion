@@ -33,6 +33,8 @@ namespace OsuMemoryEventSource
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
         private ushort _sliderBreaks = 0;
+        private double _lastTime = 0;
+
         private enum InterpolatedValueName
         {
             PpIfMapEndsNow,
@@ -312,11 +314,18 @@ namespace OsuMemoryEventSource
             {
                 var currentMisses = (ushort)_liveTokens["miss"].Token.Value;
                 var currentCombo = (ushort)_liveTokens["combo"].Token.Value;
+                var currentTime = (double)_liveTokens["time"].Token.Value;
+                if (_lastTime > currentTime)
+                {
+                    _sliderBreaks = 0;
+                }
+
                 if (_lastMisses == currentMisses && _lastCombo > currentCombo)
                     _sliderBreaks++;
 
                 _lastMisses = currentMisses;
                 _lastCombo = currentCombo;
+                _lastTime = currentTime;
 
                 return _sliderBreaks;
             });
