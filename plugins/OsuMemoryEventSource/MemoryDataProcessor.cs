@@ -93,6 +93,8 @@ namespace OsuMemoryEventSource
                     {
                         interpolatedValue.Value.Reset();
                     }
+
+                    _sliderBreaks = 0;
                     _newPlayStarted.Reset();
                 }
 
