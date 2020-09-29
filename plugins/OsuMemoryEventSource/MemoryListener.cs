@@ -19,6 +19,7 @@ namespace OsuMemoryEventSource
         private int _lastMapId = -1;
         private int _currentMapId = -2;
         private int _lastGameMode = -1;
+        private int _lastRetries = -1;
         private OsuMemoryStatus _lastStatus = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _lastStatusLog = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _currentStatus = OsuMemoryStatus.Unknown;
@@ -63,25 +64,33 @@ namespace OsuMemoryEventSource
                 var gameMode = reader.ReadSongSelectGameMode();
                 var mapHash = reader.GetMapMd5Safe();
                 var mapSelectionMods = reader.GetMods();
+                var retries = reader.GetRetrys();
                 var mapHashDiffers = mapHash != null && _lastMapHash != null && _lastMapHash != mapHash;
-                
-                if (sendEvents &&
-                    (_lastMapId != _currentMapId ||
-                    _lastStatus != _currentStatus ||
-                    _currentMapString != _lastMapString ||
-                     gameMode != _lastGameMode ||
-                    mapSelectionMods != _lastMapSelectionMods ||
-                     mapHashDiffers)
+                var mapIdDiffers = _lastMapId != _currentMapId;
+                var memoryStatusDiffers = _lastStatus != _currentStatus;
+                var gameModeDiffers = gameMode != _lastGameMode;
+                if (sendEvents && (
+                        mapIdDiffers || memoryStatusDiffers || mapHashDiffers || gameModeDiffers
+                        || _currentMapString != _lastMapString
+                        || mapSelectionMods != _lastMapSelectionMods
+                        || retries != _lastRetries
+                        )
                     )
                 {
+                    OsuEventType osuEventType =
+                        mapIdDiffers || mapHashDiffers || gameModeDiffers ? OsuEventType.MapChange //different mapId/hash/mode = different map
+                        : memoryStatusDiffers ? OsuEventType.SceneChange //memory scene(status) change = Scene change
+                        : OsuEventType.PlayChange; // everything else is beatmap retry
+
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
                     _lastMapString = _currentMapString;
+                    _lastRetries = retries;
                     _lastGameMode = gameMode;
                     _lastMapSelectionMods = mapSelectionMods;
                     _lastMapHash = mapHash;
 
-                    NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory")
+                    NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory", osuEventType)
                     {
                         MapId = _currentMapId,
                         Status = status,
@@ -91,11 +100,12 @@ namespace OsuMemoryEventSource
                     });
 
                 }
-                
+
 
                 _memoryDataProcessor.Tick(status, reader);
             }
         }
+
         public void SetNewMap(MapSearchResult map)
         {
             _memoryDataProcessor.SetNewMap(map);

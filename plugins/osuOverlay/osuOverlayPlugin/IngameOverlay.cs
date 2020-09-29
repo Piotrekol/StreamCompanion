@@ -39,7 +39,7 @@ namespace osuOverlay
 
             try
             {
-                SetNewMap(new MapSearchResult(new MapSearchArgs("dummy")));
+                SetNewMap(new MapSearchResult(new MapSearchArgs("dummy", OsuEventType.MapChange)));
             }
             catch (Exception)
             {
