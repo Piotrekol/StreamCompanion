@@ -80,7 +80,8 @@ namespace OsuMemoryEventSource
                     OsuEventType osuEventType =
                         mapIdDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer ? OsuEventType.MapChange //different mapId/hash/mode/mods(changed stats) = different map
                         : memoryStatusDiffers ? OsuEventType.SceneChange //memory scene(status) change = Scene change
-                        : OsuEventType.PlayChange; // everything else is beatmap retry
+                        : _currentStatus == OsuMemoryStatus.Playing ? OsuEventType.PlayChange // map retry
+                        : OsuEventType.MapChange; //bail
 
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
