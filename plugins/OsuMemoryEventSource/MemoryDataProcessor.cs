@@ -447,11 +447,14 @@ namespace OsuMemoryEventSource
 
         public void CreateTokens(MapSearchResult mapSearchResult)
         {
+            SetSkinTokens();
+
+            if (mapSearchResult.SearchArgs.EventType != OsuEventType.MapChange)
+                return;
+
             Mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
             if (mapSearchResult.FoundBeatmaps && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
-
-            SetSkinTokens();
         }
 
         private void SetSkinTokens()
