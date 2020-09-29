@@ -23,8 +23,6 @@ namespace OsuMemoryEventSource
         private OsuMemoryStatus _lastStatus = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _lastStatusLog = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _currentStatus = OsuMemoryStatus.Unknown;
-        private string _lastMapString = "-";
-        private string _currentMapString = "";
         private string _lastMapHash = "";
         private int _lastMapSelectionMods = -2;
         private MemoryDataProcessor _memoryDataProcessor;
@@ -55,7 +53,6 @@ namespace OsuMemoryEventSource
             if (_currentStatus != OsuMemoryStatus.NotRunning)
             {
                 _currentMapId = reader.GetMapId();
-                _currentMapString = reader.GetSongString();
                 OsuStatus status = _currentStatus.Convert();
                 status = status == OsuStatus.Playing && reader.IsReplay()
                     ? OsuStatus.Watching
@@ -72,7 +69,6 @@ namespace OsuMemoryEventSource
                 var mapSelectionModsDiffer = mapSelectionMods != _lastMapSelectionMods;
                 if (sendEvents && (
                         mapIdDiffers || memoryStatusDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer
-                        || _currentMapString != _lastMapString
                         || retries != _lastRetries
                         )
                     )
@@ -85,7 +81,6 @@ namespace OsuMemoryEventSource
 
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
-                    _lastMapString = _currentMapString;
                     _lastRetries = retries;
                     _lastGameMode = gameMode;
                     _lastMapSelectionMods = mapSelectionMods;
@@ -95,7 +90,7 @@ namespace OsuMemoryEventSource
                     {
                         MapId = _currentMapId,
                         Status = status,
-                        Raw = _currentMapString,
+                        Raw = reader.GetSongString(),
                         MapHash = mapHash,
                         PlayMode = (PlayMode)gameMode,
                     });
