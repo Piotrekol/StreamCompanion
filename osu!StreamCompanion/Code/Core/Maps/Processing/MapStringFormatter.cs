@@ -42,11 +42,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 return;
             var eventData = new
             {
+                eventType = mapSearchArgs.EventType,
                 mapId = mapSearchArgs.MapId.ToString(),
                 raw = mapSearchArgs.Raw,
                 hash = mapSearchArgs.MapHash,
                 playMode = mapSearchArgs.PlayMode?.ToString() ?? "null",
-                eventType = mapSearchArgs.EventType,
                 sourceName = mapSearchArgs.SourceName
             }.ToString();
             _logger.Log($"Received event: {eventData}", LogLevel.Debug);
@@ -76,7 +76,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 int counter = 0;
                 MapSearchArgs memorySearchArgs;
                 MapSearchArgs msnSearchArgs;
-                MapSearchResult searchResult;
+                MapSearchResult searchResult, lastSearchResult = null;
                 var memorySearchFailed = false;
                 while (true)
                 {
@@ -97,9 +97,15 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                             }
                             else
                             {
-                                _logger.SetContextData("OsuMemory_searchingForBeatmaps", "1");
-                                searchResult = _mainMapDataGetter.FindMapData(memorySearchArgs);
-                                _logger.SetContextData("OsuMemory_searchingForBeatmaps", "0");
+                                if (memorySearchArgs.EventType == OsuEventType.MapChange || lastSearchResult == null || !lastSearchResult.FoundBeatmaps)
+                                {
+                                    _logger.SetContextData("OsuMemory_searchingForBeatmaps", "1");
+                                    lastSearchResult = searchResult = _mainMapDataGetter.FindMapData(memorySearchArgs);
+                                    _logger.SetContextData("OsuMemory_searchingForBeatmaps", "0");
+                                }
+                                else
+                                    searchResult = lastSearchResult;
+
 
                                 if (searchResult.FoundBeatmaps)
                                 {
