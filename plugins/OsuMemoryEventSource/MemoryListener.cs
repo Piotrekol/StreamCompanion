@@ -69,16 +69,16 @@ namespace OsuMemoryEventSource
                 var mapIdDiffers = _lastMapId != _currentMapId;
                 var memoryStatusDiffers = _lastStatus != _currentStatus;
                 var gameModeDiffers = gameMode != _lastGameMode;
+                var mapSelectionModsDiffer = mapSelectionMods != _lastMapSelectionMods;
                 if (sendEvents && (
-                        mapIdDiffers || memoryStatusDiffers || mapHashDiffers || gameModeDiffers
+                        mapIdDiffers || memoryStatusDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer
                         || _currentMapString != _lastMapString
-                        || mapSelectionMods != _lastMapSelectionMods
                         || retries != _lastRetries
                         )
                     )
                 {
                     OsuEventType osuEventType =
-                        mapIdDiffers || mapHashDiffers || gameModeDiffers ? OsuEventType.MapChange //different mapId/hash/mode = different map
+                        mapIdDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer ? OsuEventType.MapChange //different mapId/hash/mode/mods(changed stats) = different map
                         : memoryStatusDiffers ? OsuEventType.SceneChange //memory scene(status) change = Scene change
                         : OsuEventType.PlayChange; // everything else is beatmap retry
 
