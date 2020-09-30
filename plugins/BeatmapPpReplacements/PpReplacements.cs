@@ -5,6 +5,7 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 
@@ -90,6 +91,8 @@ namespace BeatmapPpReplacements
 
         public void CreateTokens(MapSearchResult map)
         {
+            if (map.SearchArgs.EventType != OsuEventType.MapChange)
+                return;
 
             if (!map.FoundBeatmaps ||
                 !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))

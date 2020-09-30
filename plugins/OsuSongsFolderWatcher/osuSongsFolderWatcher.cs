@@ -129,7 +129,7 @@ namespace OsuSongsFolderWatcher
                             ) || lastMapSearchArgs.MapId == beatmap.MapId
                         ))
                         {
-                            NewOsuEvent?.Invoke(this, new MapSearchArgs($"OsuMemory-FolderWatcherReplay")
+                            NewOsuEvent?.Invoke(this, new MapSearchArgs($"OsuMemory-FolderWatcherReplay", OsuEventType.MapChange)
                             {
                                 Artist = beatmap.Artist,
                                 MapHash = beatmap.Md5,

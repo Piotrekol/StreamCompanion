@@ -90,7 +90,7 @@ namespace osuPost
         private void logOut()
         {
             if (_isLoginDataSet)
-                SendRequestToServer(FormatRequest(new MapSearchResult(new MapSearchArgs("FakeSource")), false));
+                SendRequestToServer(FormatRequest(new MapSearchResult(new MapSearchArgs("FakeSource", OsuEventType.MapChange)), false));
         }
         public void NewMap(MapSearchResult map, bool isOnline = true)
         {
@@ -145,7 +145,7 @@ namespace osuPost
             if (mapName.Length >= 2000)
             {
                 var ex = new OsuPostApiMapNameTooLongException(mapName);
-                _logger.Log(ex,LogLevel.Error);
+                _logger.Log(ex, LogLevel.Error);
                 mapName = mapName.Substring(0, 2000);
             }
             output += "&mapName=" + Uri.EscapeDataString(mapName);

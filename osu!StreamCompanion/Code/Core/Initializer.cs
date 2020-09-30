@@ -86,7 +86,7 @@ namespace osu_StreamCompanion.Code.Core
             {
                 try
                 {
-                    mapDataConsumer.SetNewMap(new MapSearchResult(new MapSearchArgs("dummy")));
+                    mapDataConsumer.SetNewMap(new MapSearchResult(new MapSearchArgs("dummy", OsuEventType.MapChange)));
                 }
                 catch (Exception)
                 {
