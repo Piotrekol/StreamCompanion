@@ -104,7 +104,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                     _logger.SetContextData("OsuMemory_searchingForBeatmaps", "0");
                                 }
                                 else
+                                {
                                     searchResult = lastSearchResult;
+                                    searchResult.SearchArgs.EventType = memorySearchArgs.EventType;
+                                }
 
 
                                 if (searchResult.FoundBeatmaps)
