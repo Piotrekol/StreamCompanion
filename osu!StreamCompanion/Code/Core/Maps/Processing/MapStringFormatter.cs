@@ -105,8 +105,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                 }
                                 else
                                 {
-                                    searchResult = lastSearchResult;
-                                    searchResult.SearchArgs.EventType = memorySearchArgs.EventType;
+                                    searchResult = new MapSearchResult(memorySearchArgs)
+                                    {
+                                        Mods = lastSearchResult.Mods
+                                    };
+                                    //TODO: move this to object init above after fixing this in types project.
+                                    searchResult.BeatmapsFound.AddRange(lastSearchResult.BeatmapsFound);
                                 }
 
 
