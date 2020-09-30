@@ -9,7 +9,6 @@ namespace PlaysReplacements
     {
         private int Plays, Retrys;
         private Tokens.TokenSetter _tokenSetter;
-        private string lastMapSearchString = "";
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(PlaysReplacements);
@@ -20,22 +19,33 @@ namespace PlaysReplacements
         public PlaysReplacements()
         {
             _tokenSetter = Tokens.CreateTokenSetter(Name);
+            UpdateTokens();
         }
 
         public void CreateTokens(MapSearchResult map)
         {
-            if (map.Action == OsuStatus.Playing)
+            //ignore replays/spect
+            if (map.Action != OsuStatus.Playing)
+                return;
+
+            switch (map.SearchArgs.EventType)
             {
-                if (lastMapSearchString == map.MapSearchString)
-                    Retrys++;
-                else
+                case OsuEventType.SceneChange:
+                case OsuEventType.MapChange:
                     Plays++;
-                lastMapSearchString = map.MapSearchString;
+                    break;
+                case OsuEventType.PlayChange:
+                    Retrys++;
+                    break;
             }
 
+            UpdateTokens();
+        }
+
+        private void UpdateTokens()
+        {
             _tokenSetter("plays", Plays);
             _tokenSetter("retrys", Retrys);
         }
-
     }
 }
