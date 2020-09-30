@@ -33,7 +33,6 @@ namespace OsuMemoryEventSource
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
         private ushort _sliderBreaks = 0;
-        private double _lastTime = 0;
 
         private enum InterpolatedValueName
         {
@@ -60,7 +59,7 @@ namespace OsuMemoryEventSource
             _logger = logger;
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
             {
-                    InterpolatedValues.Add(v, new InterpolatedValue(0.15));
+                InterpolatedValues.Add(v, new InterpolatedValue(0.15));
             }
 
             ToggleSmoothing(enablePpSmoothing);
@@ -124,16 +123,18 @@ namespace OsuMemoryEventSource
                     _lastCombo = 0;
                     var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
                     var mods = map.Mods?.WorkingMods ?? "";
+                    if (map.SearchArgs.EventType == OsuEventType.MapChange)
+                    {
+                        _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
+                            (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
+                    }
 
-                    _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
-                        (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
-
+                    _newPlayStarted.Set();
                 }
             }
         }
 
         private IOsuMemoryReader _reader;
-        private int _lastRetries = -1;
         public void Tick(OsuStatus status, IOsuMemoryReader reader)
         {
             _notUpdatingTokens.WaitOne();
@@ -158,14 +159,6 @@ namespace OsuMemoryEventSource
                 {
                     _newPlayStarted.Set();
                     Thread.Sleep(500);//Initial play delay
-                }
-
-                var retries = reader.GetRetrys();
-                if (retries != _lastRetries)
-                {
-                    _lastRetries = retries;
-                    if (retries != 0)
-                        _newPlayStarted.Set();
                 }
 
                 reader.GetPlayData(_rawData.Play);
@@ -314,18 +307,12 @@ namespace OsuMemoryEventSource
             {
                 var currentMisses = (ushort)_liveTokens["miss"].Token.Value;
                 var currentCombo = (ushort)_liveTokens["combo"].Token.Value;
-                var currentTime = (double)_liveTokens["time"].Token.Value;
-                if (_lastTime > currentTime)
-                {
-                    _sliderBreaks = 0;
-                }
 
                 if (_lastMisses == currentMisses && _lastCombo > currentCombo)
                     _sliderBreaks++;
 
                 _lastMisses = currentMisses;
                 _lastCombo = currentCombo;
-                _lastTime = currentTime;
 
                 return _sliderBreaks;
             });

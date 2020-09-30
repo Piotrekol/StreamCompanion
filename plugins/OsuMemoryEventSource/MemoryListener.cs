@@ -1,10 +1,8 @@
 using CollectionManager.Enums;
 using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
-using CollectionManager.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -20,6 +18,8 @@ namespace OsuMemoryEventSource
         private int _currentMapId = -2;
         private int _lastGameMode = -1;
         private int _lastRetries = -1;
+        private int _lastTime = -1;
+        private DateTime _nextReplayRetryAllowedAt = DateTime.MinValue;
         private OsuMemoryStatus _lastStatus = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _lastStatusLog = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _currentStatus = OsuMemoryStatus.Unknown;
@@ -53,8 +53,9 @@ namespace OsuMemoryEventSource
             if (_currentStatus != OsuMemoryStatus.NotRunning)
             {
                 _currentMapId = reader.GetMapId();
+                var isReplay = reader.IsReplay();
                 OsuStatus status = _currentStatus.Convert();
-                status = status == OsuStatus.Playing && reader.IsReplay()
+                status = status == OsuStatus.Playing && isReplay
                     ? OsuStatus.Watching
                     : status;
 
@@ -62,22 +63,41 @@ namespace OsuMemoryEventSource
                 var mapHash = reader.GetMapMd5Safe();
                 var mapSelectionMods = reader.GetMods();
                 var retries = reader.GetRetrys();
+                var currentTime = reader.ReadPlayTime();
+
                 var mapHashDiffers = mapHash != null && _lastMapHash != null && _lastMapHash != mapHash;
                 var mapIdDiffers = _lastMapId != _currentMapId;
                 var memoryStatusDiffers = _lastStatus != _currentStatus;
                 var gameModeDiffers = gameMode != _lastGameMode;
                 var mapSelectionModsDiffer = mapSelectionMods != _lastMapSelectionMods;
+
+                OsuEventType? osuEventType = null;
+                //"good enough" replay retry detection.
+                if (isReplay && _currentStatus == OsuMemoryStatus.Playing && _lastTime > currentTime && DateTime.UtcNow > _nextReplayRetryAllowedAt)
+                {
+                    osuEventType = OsuEventType.PlayChange;
+                    _nextReplayRetryAllowedAt = DateTime.UtcNow.AddMilliseconds(500);
+                }
+
+                _lastTime = currentTime;
+
                 if (sendEvents && (
-                        mapIdDiffers || memoryStatusDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer
+                        osuEventType.HasValue
+                        || mapIdDiffers || memoryStatusDiffers
+                        || mapHashDiffers || gameModeDiffers
+                        || mapSelectionModsDiffer
                         || retries != _lastRetries
                         )
                     )
                 {
-                    OsuEventType osuEventType =
-                        mapIdDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer ? OsuEventType.MapChange //different mapId/hash/mode/mods(changed stats) = different map
-                        : memoryStatusDiffers ? OsuEventType.SceneChange //memory scene(status) change = Scene change
-                        : _currentStatus == OsuMemoryStatus.Playing ? OsuEventType.PlayChange // map retry
-                        : OsuEventType.MapChange; //bail
+                    if (!osuEventType.HasValue)
+                    {
+                        osuEventType =
+                            mapIdDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer ? OsuEventType.MapChange //different mapId/hash/mode/mods(changed stats) = different map
+                            : memoryStatusDiffers ? OsuEventType.SceneChange //memory scene(status) change = Scene change
+                            : _currentStatus == OsuMemoryStatus.Playing ? OsuEventType.PlayChange // map retry
+                            : OsuEventType.MapChange; //bail
+                    }
 
                     _lastMapId = _currentMapId;
                     _lastStatus = _currentStatus;
@@ -86,7 +106,7 @@ namespace OsuMemoryEventSource
                     _lastMapSelectionMods = mapSelectionMods;
                     _lastMapHash = mapHash;
 
-                    NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory", osuEventType)
+                    NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory", osuEventType.Value)
                     {
                         MapId = _currentMapId,
                         Status = status,
