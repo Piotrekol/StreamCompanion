@@ -22,7 +22,7 @@ namespace OsuMemoryEventSource
         {
             new Map("Thunderclowns - Find The Memes In You", 314211,
                 new List<int> {712858, 712859, 712847, 712945, 701254}),
-            new Map("Bachelor Party - Kappa Kappa (Forsen Edition)", 312113, new List<int> {958367, 696895}),
+            new Map("Bachelor Party - Kappa Kappa (Alex TheSeal Edit)", 312113, new List<int> {958367, 696895}),
             new Map("NOMA - Brain Power Long Version", 432822, new List<int> {933228}),
             new Map("Memme - Chinese Restaurant", 399404, new List<int> {869286, 875324}),
             new Map("Yuyoyuppe - Bad Apple!!", 299000, new List<int> {670892, 670894, 670893}),
