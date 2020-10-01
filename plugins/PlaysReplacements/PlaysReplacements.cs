@@ -7,7 +7,7 @@ namespace PlaysReplacements
 {
     public class PlaysReplacements : IPlugin, ITokensSource
     {
-        private int Plays, Retrys;
+        private int Plays, Retries;
         private Tokens.TokenSetter _tokenSetter;
 
         public string Description { get; } = "";
@@ -35,7 +35,7 @@ namespace PlaysReplacements
                     Plays++;
                     break;
                 case OsuEventType.PlayChange:
-                    Retrys++;
+                    Retries++;
                     break;
             }
 
@@ -45,7 +45,7 @@ namespace PlaysReplacements
         private void UpdateTokens()
         {
             _tokenSetter("plays", Plays);
-            _tokenSetter("retrys", Retrys);
+            _tokenSetter("retries", Retries);
         }
     }
 }
