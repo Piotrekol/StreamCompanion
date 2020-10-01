@@ -121,10 +121,10 @@ namespace OsuMemoryEventSource
                     _sliderBreaks = 0;
                     _lastMisses = 0;
                     _lastCombo = 0;
-                    var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-                    var mods = map.Mods?.WorkingMods ?? "";
                     if (map.SearchArgs.EventType == OsuEventType.MapChange)
                     {
+                        var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
+                        var mods = map.Mods?.WorkingMods ?? "";
                         _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
                             (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
                     }
