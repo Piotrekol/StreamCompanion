@@ -4,7 +4,7 @@ const background = {
   //"html" to render instead of original tag (<Background></Background> in this case).
   //Normally this would be in separate template tag(vue SFC) but because we use no build tools we have to use inline string.
   template: `
-    <div :style="boxStyle" class="background">
+    <div ref="backgroundDiv" :style="boxStyle" class="background">
         <slot />
     </div>
   `,
@@ -16,6 +16,7 @@ const background = {
       backgroundId: Number.MIN_SAFE_INTEGER,
       rws: {},
     });
+    const backgroundDiv = Vue.ref(null);
 
     //function with will automatically monitor all dependant variables for changes and update its value whenever they change
     //note that these variables have to be reactive(Vue.reactive)/refs(Vue.ref)
@@ -28,8 +29,16 @@ const background = {
       //method to execute when value defined above changes
       () => {
         var currId = (data.backgroundId += 1);
+        
+        let width = 1920,
+          height = 1080;
+        if (backgroundDiv.value) {
+          if (backgroundDiv.value.scrollWidth > 10) width = backgroundDiv.value.scrollWidth;
+          if (backgroundDiv.value.scrollHeight > 10) height = backgroundDiv.value.scrollHeight;
+        }
+
         preloadImage(
-          `${window.overlay.config.getUrl()}/backgroundImage?width=1000&height=300&mapset=${data.tokens.mapsetid}&dummyData=${encodeURIComponent(data.tokens.md5)}&crop=true`,
+          `${window.overlay.config.getUrl()}/backgroundImage?width=${width}&height=${height}&mapset=${data.tokens.mapsetid}&dummyData=${encodeURIComponent(data.tokens.md5)}&crop=true`,
           currId,
           (url, id) => {
             if (data.backgroundId !== id) return;
@@ -44,6 +53,7 @@ const background = {
 
     //return all data & computed vars & methods that we want to use elsewhere in this file or in html template
     return {
+      backgroundDiv,
       boxStyle,
     };
   },
