@@ -31,6 +31,7 @@ const app = {
       Object.assign(data.settings, config);
     });
     let mapStrains = Vue.computed(() => Object.entries(data.tokens.mapStrains || {}));
+    let isMania = Vue.computed(() => getToken('gameMode') === 'OsuMania');
     let isPlayingOrWatching = Vue.computed(() =>
       _IsInStatus(data.rws, data.tokens, [window.overlay.osuStatus.Playing, window.overlay.osuStatus.ResultsScreen, window.overlay.osuStatus.Watching])
     );
@@ -48,6 +49,7 @@ const app = {
       data,
 
       isPlayingOrWatching,
+      isMania,
       mapStrains,
       ppValue,
       mapProgress,

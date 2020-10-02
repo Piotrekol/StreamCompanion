@@ -4,16 +4,33 @@
     font-family: comfortaa;
 }
 
+.hit-p300-mania {
+    background-color: rgba(50, 205, 50, 0.667);
+}
+.hit-300-mania {
+    background-color: rgba(50, 205, 50, 0.667);
+}
+.hit-200-mania {
+    background-color: rgba(138, 43, 226, 0.667);
+}
+.hit-100-mania {
+    background-color: rgba(138, 43, 226, 0.667);
+}
+.hit-50-mania {
+    background-color: rgba(255, 69, 0, 0.667);
+}
+.hit-miss-mania {
+    background-color: rgba(255, 69, 0, 0.667);
+}
+
 .hit-100 {
-    background-color: #0de479;
+    background-color: rgba(50, 205, 50, 0.667);
 }
-
 .hit-50 {
-    background-color: #ffbb00;
+    background-color: rgba(138, 43, 226, 0.667);
 }
-
 .hit-miss {
-    background-color: #ff0040;
+    background-color: rgba(255, 69, 0, 0.667);
 }
 
 .hit-text {
@@ -23,12 +40,11 @@
 }
 
 .hit {
+    padding: 7px 5px;
     align-self: center;
-    padding: 10px 15px;
+    text-align: center;
+    min-width: 45px;
     font-size: 18px;
-    margin-right: 10px;
-    border-radius: 200px;
-    min-width: 12px;
 }
 
 .box {
@@ -44,6 +60,13 @@
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+}
+
+.hit:first-child {
+    border-radius: 50px 0px 0px 50px;
+}
+.hit:last-child {
+    border-radius: 0px 50px 50px 0px;
 }
 
 .inner {

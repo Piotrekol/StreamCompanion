@@ -12,6 +12,7 @@ const app = {
     });
 
     const getToken = (tokenName, decimalPlaces) => _GetToken(data.rws, data.tokens, tokenName, decimalPlaces);
+    let isMania = Vue.computed(() => getToken('gameMode') === 'OsuMania');
     let isPlayingOrWatching = Vue.computed(() =>
       _IsInStatus(data.rws, data.tokens, [window.overlay.osuStatus.Playing, window.overlay.osuStatus.ResultsScreen, window.overlay.osuStatus.Watching])
     );
@@ -24,6 +25,7 @@ const app = {
     return {
       getToken,
       isPlayingOrWatching,
+      isMania,
     };
   },
 };
