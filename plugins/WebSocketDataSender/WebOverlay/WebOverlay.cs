@@ -13,23 +13,36 @@ namespace WebSocketDataSender.WebOverlay
     {
         private readonly ISettings _settings;
         private readonly ISaver _saver;
+        private readonly Delegates.Restart _restarter;
         public static readonly ConfigEntry WebOverlayConfig = new ConfigEntry($"WebOverlay_Config", "{}");
         protected IOverlayConfiguration OverlayConfiguration;
         private WebOverlaySettings _webOverlaySettings;
         private static ColorConverter colorConverter = new ColorConverter();
-        public WebOverlay(ISettings settings, ISaver saver)
+        public WebOverlay(ISettings settings, ISaver saver, Delegates.Restart restarter)
         {
             _settings = settings;
             _saver = saver;
+            _restarter = restarter;
             OverlayConfiguration = new OverlayConfiguration();
             LoadConfiguration();
             SaveConfiguration();
             OverlayConfiguration.PropertyChanged += OverlayConfigurationPropertyChanged;
         }
 
+
+        private void ToggleRemoteAccess()
+        {
+            var remoteAccessEnabled = WebSocketDataGetter.RemoteAccessEnabled(_settings);
+            var newValue = remoteAccessEnabled
+                ? WebSocketDataGetter.HttpServerAddress.Default<string>()
+                : "http://*";
+            _settings.Add(WebSocketDataGetter.HttpServerAddress.Name, newValue);
+            _restarter($"Applying web overlay remote access settings ({newValue})");
+        }
+
         private void SaveConfiguration()
         {
-            var serializedConfig = JsonConvert.SerializeObject(OverlayConfiguration,Formatting.None, colorConverter);
+            var serializedConfig = JsonConvert.SerializeObject(OverlayConfiguration, Formatting.None, colorConverter);
             _settings.Add(WebOverlayConfig.Name, serializedConfig, false);
         }
 
@@ -77,7 +90,8 @@ namespace WebSocketDataSender.WebOverlay
                 _webOverlaySettings.OpenFilesFolder += (_, __) => Process.Start("explorer.exe", filesLocation);
                 _webOverlaySettings.FilesLocation = filesLocation;
                 _webOverlaySettings.WebUrl = webUrl;
-
+                _webOverlaySettings.RemoteAccessEnabled = WebSocketDataGetter.RemoteAccessEnabled(_settings);
+                _webOverlaySettings.ToggleRemoteAccess += (_, __) => ToggleRemoteAccess();
             }
 
             return _webOverlaySettings;
@@ -91,13 +105,13 @@ namespace WebSocketDataSender.WebOverlay
         {
             public override void WriteJson(JsonWriter writer, Color value, JsonSerializer serializer)
             {
-                writer.WriteValue(ColorTranslator.ToHtml(value)+value.A.ToString("X2"));
+                writer.WriteValue(ColorTranslator.ToHtml(value) + value.A.ToString("X2"));
             }
 
             public override Color ReadJson(JsonReader reader, Type objectType, Color existingValue, bool hasExistingValue,
                 JsonSerializer serializer)
             {
-                var rgbaColor = (string) reader.Value;
+                var rgbaColor = (string)reader.Value;
                 var alpha = Convert.ToInt32(rgbaColor.Substring(7), 16);
                 var color = ColorTranslator.FromHtml(rgbaColor.Substring(0, 7));
                 return Color.FromArgb(alpha, color);

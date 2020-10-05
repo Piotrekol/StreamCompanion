@@ -48,6 +48,7 @@ namespace WebSocketDataSender
 
         public static string BaseAddress(ISettings settings) => BindAddress(settings).Replace("*", "localhost");
         public static string BindAddress(ISettings settings) => $"{settings.Get<string>(HttpServerAddress)}:{settings.Get<int>(HttpServerPort)}";
+        public static bool RemoteAccessEnabled(ISettings settings) => BindAddress(settings).Contains("://*");
 
         public static string HttpContentRoot(ISaver saver)
         {
@@ -69,7 +70,7 @@ namespace WebSocketDataSender
             _saver = saver;
             _restarter = restarter;
             _logger = logger;
-            _webOverlay = new WebOverlay.WebOverlay(settings, saver);
+            _webOverlay = new WebOverlay.WebOverlay(settings, saver, restarter);
 
             var modules = new List<(string Description, IWebModule Module)>
             {

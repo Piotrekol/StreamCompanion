@@ -38,17 +38,19 @@
             this.label6 = new System.Windows.Forms.Label();
             this.numericUpDown_chartHeight = new System.Windows.Forms.NumericUpDown();
             this.groupBox_chartColors = new System.Windows.Forms.GroupBox();
-            this.color_ppBackground = new ColorPickerWithPreview();
-            this.color_hit100Background = new ColorPickerWithPreview();
-            this.color_hit50Background = new ColorPickerWithPreview();
-            this.color_hitMissBackground = new ColorPickerWithPreview();
-            this.color_chartPrimary = new ColorPickerWithPreview();
-            this.color_chartProgress = new ColorPickerWithPreview();
-            this.color_imageDimming = new ColorPickerWithPreview();
+            this.color_ppBackground = new WebSocketDataSender.WebOverlay.ColorPickerWithPreview();
+            this.color_hit100Background = new WebSocketDataSender.WebOverlay.ColorPickerWithPreview();
+            this.color_hit50Background = new WebSocketDataSender.WebOverlay.ColorPickerWithPreview();
+            this.color_hitMissBackground = new WebSocketDataSender.WebOverlay.ColorPickerWithPreview();
+            this.color_chartPrimary = new WebSocketDataSender.WebOverlay.ColorPickerWithPreview();
+            this.color_chartProgress = new WebSocketDataSender.WebOverlay.ColorPickerWithPreview();
+            this.color_imageDimming = new WebSocketDataSender.WebOverlay.ColorPickerWithPreview();
             this.button_openInBrowser = new System.Windows.Forms.Button();
             this.button_openFilesLocation = new System.Windows.Forms.Button();
             this.label_webUrl = new System.Windows.Forms.Label();
             this.label_localFiles = new System.Windows.Forms.Label();
+            this.button_remoteOverlay = new System.Windows.Forms.Button();
+            this.textBox_remoteAccessUrl = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).BeginInit();
             this.groupBox_chartColors.SuspendLayout();
@@ -56,6 +58,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.textBox_remoteAccessUrl);
+            this.panel1.Controls.Add(this.button_remoteOverlay);
             this.panel1.Controls.Add(this.checkBox_hideChartLegend);
             this.panel1.Controls.Add(this.checkBox_hideMapStats);
             this.panel1.Controls.Add(this.checkBox_hideDiffText);
@@ -67,13 +71,13 @@
             this.panel1.Controls.Add(this.groupBox_chartColors);
             this.panel1.Location = new System.Drawing.Point(0, 61);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(650, 268);
+            this.panel1.Size = new System.Drawing.Size(650, 311);
             this.panel1.TabIndex = 1;
             // 
             // checkBox_hideChartLegend
             // 
             this.checkBox_hideChartLegend.AutoSize = true;
-            this.checkBox_hideChartLegend.Location = new System.Drawing.Point(10, 202);
+            this.checkBox_hideChartLegend.Location = new System.Drawing.Point(10, 232);
             this.checkBox_hideChartLegend.Name = "checkBox_hideChartLegend";
             this.checkBox_hideChartLegend.Size = new System.Drawing.Size(110, 17);
             this.checkBox_hideChartLegend.TabIndex = 57;
@@ -83,7 +87,7 @@
             // checkBox_hideMapStats
             // 
             this.checkBox_hideMapStats.AutoSize = true;
-            this.checkBox_hideMapStats.Location = new System.Drawing.Point(10, 179);
+            this.checkBox_hideMapStats.Location = new System.Drawing.Point(10, 209);
             this.checkBox_hideMapStats.Name = "checkBox_hideMapStats";
             this.checkBox_hideMapStats.Size = new System.Drawing.Size(96, 17);
             this.checkBox_hideMapStats.TabIndex = 56;
@@ -93,7 +97,7 @@
             // checkBox_hideDiffText
             // 
             this.checkBox_hideDiffText.AutoSize = true;
-            this.checkBox_hideDiffText.Location = new System.Drawing.Point(10, 156);
+            this.checkBox_hideDiffText.Location = new System.Drawing.Point(10, 186);
             this.checkBox_hideDiffText.Name = "checkBox_hideDiffText";
             this.checkBox_hideDiffText.Size = new System.Drawing.Size(197, 17);
             this.checkBox_hideDiffText.TabIndex = 55;
@@ -103,7 +107,7 @@
             // button_miniCounter
             // 
             this.button_miniCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_miniCounter.Location = new System.Drawing.Point(456, 239);
+            this.button_miniCounter.Location = new System.Drawing.Point(456, 282);
             this.button_miniCounter.Name = "button_miniCounter";
             this.button_miniCounter.Size = new System.Drawing.Size(81, 23);
             this.button_miniCounter.TabIndex = 50;
@@ -114,7 +118,7 @@
             // button_reset
             // 
             this.button_reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_reset.Location = new System.Drawing.Point(543, 239);
+            this.button_reset.Location = new System.Drawing.Point(543, 282);
             this.button_reset.Name = "button_reset";
             this.button_reset.Size = new System.Drawing.Size(97, 23);
             this.button_reset.TabIndex = 49;
@@ -125,7 +129,7 @@
             // checkBox_simulatePP
             // 
             this.checkBox_simulatePP.AutoSize = true;
-            this.checkBox_simulatePP.Location = new System.Drawing.Point(10, 133);
+            this.checkBox_simulatePP.Location = new System.Drawing.Point(10, 163);
             this.checkBox_simulatePP.Name = "checkBox_simulatePP";
             this.checkBox_simulatePP.Size = new System.Drawing.Size(151, 17);
             this.checkBox_simulatePP.TabIndex = 45;
@@ -135,7 +139,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 230);
+            this.label6.Location = new System.Drawing.Point(7, 260);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(67, 13);
             this.label6.TabIndex = 44;
@@ -143,7 +147,7 @@
             // 
             // numericUpDown_chartHeight
             // 
-            this.numericUpDown_chartHeight.Location = new System.Drawing.Point(80, 226);
+            this.numericUpDown_chartHeight.Location = new System.Drawing.Point(80, 256);
             this.numericUpDown_chartHeight.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -331,6 +335,25 @@
             this.label_localFiles.TabIndex = 5;
             this.label_localFiles.Text = "<filesLocation>";
             // 
+            // button_remoteOverlay
+            // 
+            this.button_remoteOverlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button_remoteOverlay.Location = new System.Drawing.Point(10, 133);
+            this.button_remoteOverlay.Name = "button_remoteOverlay";
+            this.button_remoteOverlay.Size = new System.Drawing.Size(197, 23);
+            this.button_remoteOverlay.TabIndex = 58;
+            this.button_remoteOverlay.Text = "Enable remote access";
+            this.button_remoteOverlay.UseVisualStyleBackColor = true;
+            this.button_remoteOverlay.Click += new System.EventHandler(this.button_remoteOverlay_Click);
+            // 
+            // textBox_remoteAccessUrl
+            // 
+            this.textBox_remoteAccessUrl.Location = new System.Drawing.Point(214, 134);
+            this.textBox_remoteAccessUrl.Name = "textBox_remoteAccessUrl";
+            this.textBox_remoteAccessUrl.ReadOnly = true;
+            this.textBox_remoteAccessUrl.Size = new System.Drawing.Size(202, 20);
+            this.textBox_remoteAccessUrl.TabIndex = 59;
+            // 
             // WebOverlaySettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -341,7 +364,7 @@
             this.Controls.Add(this.button_openInBrowser);
             this.Controls.Add(this.panel1);
             this.Name = "WebOverlaySettings";
-            this.Size = new System.Drawing.Size(650, 329);
+            this.Size = new System.Drawing.Size(650, 372);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_chartHeight)).EndInit();
@@ -373,5 +396,7 @@
         private System.Windows.Forms.Label label_webUrl;
         private System.Windows.Forms.Label label_localFiles;
         private System.Windows.Forms.CheckBox checkBox_hideChartLegend;
+        private System.Windows.Forms.Button button_remoteOverlay;
+        private System.Windows.Forms.TextBox textBox_remoteAccessUrl;
     }
 }

@@ -13,10 +13,30 @@ namespace WebSocketDataSender.WebOverlay
         public EventHandler ResetSettings;
         public EventHandler OpenFilesFolder;
         public EventHandler OpenWebUrl;
+        public EventHandler ToggleRemoteAccess;
 
         public string WebUrl { set => label_webUrl.Text = value; }
         public string FilesLocation { set => label_localFiles.Text = value; }
 
+        public bool RemoteAccessEnabled
+        {
+            set
+            {
+                button_remoteOverlay.Text = $"{(value ? "Disable" : "Enable")} remote access";
+                if (value)
+                {
+                    var ip = NetExtensions.GetLanAddress();
+                    ip = string.IsNullOrEmpty(ip)
+                        ? "Could not determine local address"
+                        : $"http://{ip}:{_settings.Get<int>(WebSocketDataGetter.HttpServerPort)}/";
+                    textBox_remoteAccessUrl.Text = ip;
+                }
+                else
+                {
+                    textBox_remoteAccessUrl.Text = "Disabled";
+                }
+            }
+        }
         public WebOverlaySettings(ISettings settings, IOverlayConfiguration configuration)
         {
             _settings = settings;
@@ -110,6 +130,11 @@ namespace WebSocketDataSender.WebOverlay
         private void button_openFilesLocation_Click(object sender, EventArgs e)
         {
             OpenFilesFolder?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void button_remoteOverlay_Click(object sender, EventArgs e)
+        {
+            ToggleRemoteAccess?.Invoke(this, EventArgs.Empty);
         }
     }
 }
