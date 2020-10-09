@@ -22,8 +22,8 @@ namespace ClickCounter
         private KeyboardListener _keyboardListener;
         private MouseListener _mouseListener;
         private ISaver _saver;
-        private long _rightMouseCount;
-        private long _leftMouseCount;
+        private int _rightMouseCount;
+        private int _leftMouseCount;
         private bool disableSavingToDisk = false;
         private readonly Dictionary<int, bool> _keyPressed = new Dictionary<int, bool>();
         private readonly List<int> _keyList = new List<int>();
@@ -90,15 +90,15 @@ namespace ClickCounter
             }
         }
 
-        private void UpdateValue(string name, string value)
+        private void UpdateValue(string name, int value)
         {
             if (!disableSavingToDisk)
-                _saver.Save(name + ".txt", value);
+                _saver.Save(name + ".txt", value.ToString());
 
             _tokenSetter($"{getTokenName(name)}.txt", value, TokenType.Live);
 
             _highFrequencyDataConsumers.ForEach(h =>
-                h.Handle(name, value)
+                h.Handle(name, value.ToString())
             );
         }
         private void HookMouse()
@@ -115,13 +115,13 @@ namespace ClickCounter
         private void MouseListener_OnRightMouseDown(object sender, EventArgs e)
         {
             _rightMouseCount++;
-            UpdateValue("m1", _rightMouseCount.ToString());
+            UpdateValue("m1", _rightMouseCount);
         }
 
         private void _mouseListener_OnLeftMouseDown(object sender, EventArgs e)
         {
             _leftMouseCount++;
-            UpdateValue("m2", _leftMouseCount.ToString());
+            UpdateValue("m2", _leftMouseCount);
         }
 
         private void UnHookAll()
@@ -157,7 +157,7 @@ namespace ClickCounter
                     _keyCount[args.VKCode]++;
 
                     var name = _filenames[args.VKCode].Replace(".txt", "");
-                    UpdateValue(name, _keyCount[args.VKCode].ToString());
+                    UpdateValue(name, _keyCount[args.VKCode]);
 
                     _keyPressed[args.VKCode] = false;
                     _keysPerX?.AddToKeys();
@@ -190,8 +190,8 @@ namespace ClickCounter
             var keyCounts = _settings.Geti(_names.KeyCounts.Name);
 #pragma warning restore 618
 
-            _rightMouseCount = _settings.Get<long>(_names.RightMouseCount);
-            _leftMouseCount = _settings.Get<long>(_names.LeftMouseCount);
+            _rightMouseCount = Convert.ToInt32(_settings.Get<long>(_names.RightMouseCount));
+            _leftMouseCount = Convert.ToInt32(_settings.Get<long>(_names.LeftMouseCount));
             if (keys.Count > 0)
             {
                 for (int i = 0; i < keys.Count; i++)

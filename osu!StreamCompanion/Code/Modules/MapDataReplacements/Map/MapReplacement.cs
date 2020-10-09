@@ -31,7 +31,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
         public void CreateTokens(MapSearchResult map)
         {
             Dictionary<string, object> dict;
-            var OsuFileLocationToken = _tokenSetter("osuFileLocation", null);
+            var OsuFileLocationToken = _tokenSetter("osuFileLocation", string.Empty);
             if (map.FoundBeatmaps)
             {
                 dict = map.BeatmapsFound[0].GetTokens();
@@ -39,7 +39,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
                 var osuLocation = _settings.Get<string>(_names.MainOsuDirectory);
                 var customSongsLocation = _settings.Get<string>(_names.SongsFolderLocation);
                 if (string.IsNullOrWhiteSpace(osuLocation))
-                    OsuFileLocationToken.Value = null;
+                    OsuFileLocationToken.Value = string.Empty;
                 else
                 {
                     string baseDirectory = customSongsLocation == _names.SongsFolderLocation.Default<string>()
@@ -52,7 +52,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             else
             {
                 dict = ((Beatmap)null).GetTokens(true);
-                OsuFileLocationToken.Value = null;
+                OsuFileLocationToken.Value = string.Empty;
             }
 
             foreach (var token in dict)

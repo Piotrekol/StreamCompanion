@@ -85,7 +85,7 @@ namespace BeatmapPpReplacements
         {
             foreach (var tokenDefinition in ppTokenDefinitions[tokenMode])
             {
-                _tokenSetter(tokenDefinition.Key, null, format: PpFormat);
+                _tokenSetter(tokenDefinition.Key, null, format: PpFormat, defaultValue: 0);
             }
         }
 
