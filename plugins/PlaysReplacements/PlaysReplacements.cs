@@ -1,4 +1,6 @@
-﻿using StreamCompanionTypes.DataTypes;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -22,11 +24,11 @@ namespace PlaysReplacements
             UpdateTokens();
         }
 
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             //ignore replays/spect
             if (map.Action != OsuStatus.Playing)
-                return;
+                return Task.CompletedTask;
 
             switch (map.SearchArgs.EventType)
             {
@@ -40,6 +42,7 @@ namespace PlaysReplacements
             }
 
             UpdateTokens();
+            return Task.CompletedTask;
         }
 
         private void UpdateTokens()

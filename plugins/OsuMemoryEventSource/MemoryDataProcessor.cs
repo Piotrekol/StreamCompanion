@@ -108,14 +108,14 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
             lock (_lockingObject)
             {
                 if ((map.Action & OsuStatus.ResultsScreen) != 0)
                     return;
 
-                if (map.FoundBeatmaps &&
+                if (map.BeatmapsFound.Any() &&
                     map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
                     _sliderBreaks = 0;
@@ -213,6 +213,7 @@ namespace OsuMemoryEventSource
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
             _liveTokens[name] = new LiveToken(_liveTokenSetter(name, value, tokenType, format, defaultValue, statusWhitelist), updater) { IsLazy = false };
+            //_liveTokens[name] = new LiveToken(_liveTokenSetter(name, new Lazy<object>(() => value), tokenType, format, defaultValue, statusWhitelist), updater) { IsLazy = false };
         }
 
         private void InitLiveTokens()
@@ -526,16 +527,18 @@ namespace OsuMemoryEventSource
             public string MapLocation;
         }
 
-        public void CreateTokens(MapSearchResult mapSearchResult)
+        public Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
             SetSkinTokens();
 
             if (mapSearchResult.SearchArgs.EventType != OsuEventType.MapChange)
-                return;
+                return Task.CompletedTask;
 
             Mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
-            if (mapSearchResult.FoundBeatmaps && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+            if (mapSearchResult.BeatmapsFound.Any() && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
+
+            return Task.CompletedTask;
         }
 
         private void SetSkinTokens()

@@ -145,15 +145,15 @@ namespace LiveVisualizer
             }
         }
 
-        protected override void ProcessNewMap(MapSearchResult mapSearchResult)
+        protected override void ProcessNewMap(IMapSearchResult mapSearchResult)
         {
             if (VisualizerData == null ||
-                !mapSearchResult.FoundBeatmaps ||
+                !mapSearchResult.BeatmapsFound.Any() ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
                 (mapLocation == _lastMapLocation && mapSearchResult.Mods == _lastMods && _lastMapHash == mapSearchResult.BeatmapsFound[0].Md5)
             )
             {
-                if (!mapSearchResult.FoundBeatmaps && VisualizerData != null)
+                if (!mapSearchResult.BeatmapsFound.Any() && VisualizerData != null)
                 {
                     VisualizerData.Display.ImageLocation = null;
                     VisualizerData.Display.Artist = null;

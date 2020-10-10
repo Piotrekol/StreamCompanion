@@ -1,6 +1,9 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -41,11 +44,11 @@ namespace BackgroundImageProvider
             _imageLocationToken = _tokenSetter("backgroundImageLocation", string.Empty);
         }
 
-        protected void InternalCreateTokens(MapSearchResult map, int retryCount)
+        protected Task InternalCreateTokens(IMapSearchResult map, CancellationToken cancellationToken, int retryCount)
         {
             try
             {
-                if (map.FoundBeatmaps)
+                if (map.BeatmapsFound.Any())
                 {
                     var imageLocation = map.BeatmapsFound[0].GetImageLocation(_settings);
                     if (!string.IsNullOrEmpty(imageLocation))
@@ -62,7 +65,7 @@ namespace BackgroundImageProvider
                             _imageLocationToken.Value = _lastCopiedFileLocation = imageLocation;
                         }
 
-                        return;
+                        return Task.CompletedTask;
                     }
                 }
 
@@ -76,12 +79,14 @@ namespace BackgroundImageProvider
             catch (IOException)
             {
                 if (retryCount < 5)
-                    InternalCreateTokens(map, ++retryCount);
+                    return InternalCreateTokens(map, cancellationToken, ++retryCount);
             }
+
+            return Task.CompletedTask;
         }
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            InternalCreateTokens(map, 0);
+            return InternalCreateTokens(map, cancellationToken, 0);
         }
 
         private string ImageToBase64(string imageLocation)

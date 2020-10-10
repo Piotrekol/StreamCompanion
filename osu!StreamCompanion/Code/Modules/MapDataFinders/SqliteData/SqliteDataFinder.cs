@@ -38,7 +38,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         }
 
 
-        public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
+        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs)
         {
             var result = new MapSearchResult(searchArgs);
             IBeatmap beatmap = null;

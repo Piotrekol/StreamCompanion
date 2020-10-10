@@ -68,12 +68,12 @@ namespace TcpSocketDataSender
             }
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
             if (tcpSocketIsEnabled)
             {
                 Dictionary<string, string> output = new Dictionary<string, string>();
-                foreach (var s in map.FormatedStrings)
+                foreach (var s in map.OutputPatterns)
                 {
                     if (!s.IsMemoryFormat) //memory pattern is handled elsewhere
                         output[s.Name] = s.GetFormatedPattern();

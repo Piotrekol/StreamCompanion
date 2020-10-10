@@ -3,6 +3,8 @@ using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -12,7 +14,7 @@ namespace OsuMemoryEventSource
 {
     public class MemoryListener : IOsuEventSource, IDisposable
     {
-        public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
+        public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
 
         private int _lastMapId = -1;
         private int _currentMapId = -2;
@@ -122,10 +124,10 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
             _memoryDataProcessor.SetNewMap(map);
-            _patternsDispatcher.SetOutputPatterns(map.FormatedStrings);
+            _patternsDispatcher.SetOutputPatterns(map.OutputPatterns);
         }
 
         public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataConsumer> consumers)
@@ -148,9 +150,6 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void CreateTokens(MapSearchResult map)
-        {
-            _memoryDataProcessor.CreateTokens(map);
-        }
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken) => _memoryDataProcessor.CreateTokensAsync(map, cancellationToken);
     }
 }

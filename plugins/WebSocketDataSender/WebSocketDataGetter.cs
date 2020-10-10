@@ -215,10 +215,10 @@ namespace WebSocketDataSender
             // ignored
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
             Dictionary<string, string> output = new Dictionary<string, string>();
-            foreach (var s in map.FormatedStrings)
+            foreach (var s in map.OutputPatterns)
             {
                 if (!s.IsMemoryFormat)
                     output[s.Name] = s.GetFormatedPattern();

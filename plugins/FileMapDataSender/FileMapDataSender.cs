@@ -22,10 +22,10 @@ namespace FileMapDataSender
             _fileMapManager.Write(fileName, content);
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
             var ingamePatterns = new List<string>();
-            foreach (var s in map.FormatedStrings)
+            foreach (var s in map.OutputPatterns)
             {
                 //TODO: export ingameOverlay(showInOsu) stuff out of there
                 var name = s.Name;

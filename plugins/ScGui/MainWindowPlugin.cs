@@ -153,14 +153,14 @@ namespace ScGui
             _settingsForm = null;
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
-            if (map.FoundBeatmaps)
+            if (map.BeatmapsFound.Any())
             {
 
                 var foundMap = map.BeatmapsFound[0];
                 var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
-                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.EventSource != "Msn")
+                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.MapSource != "Msn")
                 {
                     nowPlaying += $" [{foundMap.DiffName}] {map.Mods?.ShownMods ?? ""}";
                     nowPlaying += $"{Environment.NewLine}NoMod:{foundMap.StarsNomod:##.###}";

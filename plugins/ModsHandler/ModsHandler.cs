@@ -4,6 +4,8 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
@@ -51,10 +53,9 @@ namespace ModsHandler
             return retMap;
         }
 
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
-
-            if (map.FoundBeatmaps)
+            if (map.BeatmapsFound.Any())
             {
                 var foundMap = map.BeatmapsFound[0];
                 var mods = map.Mods?.Mods ?? Mods.Omod;
@@ -85,6 +86,8 @@ namespace ModsHandler
                     tokenkv.Value.Reset();
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         public void Free()

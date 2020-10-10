@@ -92,7 +92,7 @@ namespace osuPost
             if (_isLoginDataSet)
                 SendRequestToServer(FormatRequest(new MapSearchResult(new MapSearchArgs("FakeSource", OsuEventType.MapChange)), false));
         }
-        public void NewMap(MapSearchResult map, bool isOnline = true)
+        public void NewMap(IMapSearchResult map, bool isOnline = true)
         {
             if (!_isLoginDataSet) return;
 
@@ -137,7 +137,7 @@ namespace osuPost
         {
             public OsuPostApiMapNameTooLongException(string mapName) : base(mapName) { }
         }
-        private string FormatRequest(MapSearchResult map, bool isOnline)
+        private string FormatRequest(IMapSearchResult map, bool isOnline)
         {
             var output = "key=" + _userKey;
             output += "&isOnline=" + (isOnline ? "true" : "false");
@@ -156,7 +156,7 @@ namespace osuPost
         }
 
 
-        private string GetMapAction(MapSearchResult map)
+        private string GetMapAction(IMapSearchResult map)
         {
             var act = map.Action;
 
@@ -173,7 +173,7 @@ namespace osuPost
 
             return "NoAction";
         }
-        private int GetMapSetId(MapSearchResult map)
+        private int GetMapSetId(IMapSearchResult map)
         {
             try
             {
@@ -183,7 +183,7 @@ namespace osuPost
             catch { return -1; }
             return -1;
         }
-        private int GetMapId(MapSearchResult map)
+        private int GetMapId(IMapSearchResult map)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace osuPost
             catch { return -1; }
             return -1;
         }
-        private string GetMapName(MapSearchResult map)
+        private string GetMapName(IMapSearchResult map)
         {
             if (!string.IsNullOrWhiteSpace(map.MapSearchString))
                 return map.MapSearchString;

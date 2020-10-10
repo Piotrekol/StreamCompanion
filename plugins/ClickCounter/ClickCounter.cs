@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using StreamCompanion.Common;
 using StreamCompanionTypes.Interfaces.Consumers;
@@ -306,7 +307,7 @@ namespace ClickCounter
             SaveKeysToSettings();
         }
         private string getTokenName(string keyName) => $"key-{keyName}".ToLowerInvariant().RemoveWhitespace();
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             for (int i = 0; i < _keyList.Count; i++)
             {
@@ -314,6 +315,8 @@ namespace ClickCounter
             }
             _tokenSetter(getTokenName("m1.txt"), _rightMouseCount, TokenType.Live);
             _tokenSetter(getTokenName("m2.txt"), _leftMouseCount, TokenType.Live);
+
+            return Task.CompletedTask;
         }
 
     }

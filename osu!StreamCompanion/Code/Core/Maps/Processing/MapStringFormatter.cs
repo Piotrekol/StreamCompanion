@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -19,8 +20,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private ISettings _settings;
 
         private Thread ConsumerThread;
-        private ConcurrentStack<MapSearchArgs> TasksMsn = new ConcurrentStack<MapSearchArgs>();
-        private ConcurrentStack<MapSearchArgs> TasksMemory = new ConcurrentStack<MapSearchArgs>();
+        private ConcurrentStack<IMapSearchArgs> TasksMsn = new ConcurrentStack<IMapSearchArgs>();
+        private ConcurrentStack<IMapSearchArgs> TasksMemory = new ConcurrentStack<IMapSearchArgs>();
 
         public MapStringFormatter(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettings settings, IContextAwareLogger logger)
         {
@@ -36,10 +37,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             ConsumerThread.Start();
         }
 
-        private void NewOsuEvent(object sender, MapSearchArgs mapSearchArgs)
+        private void NewOsuEvent(object sender, IMapSearchArgs mapSearchArgs)
         {
             if (mapSearchArgs == null)
                 return;
+            IsPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
             var eventData = new
             {
                 eventType = mapSearchArgs.EventType,
@@ -49,10 +51,16 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 playMode = mapSearchArgs.PlayMode?.ToString() ?? "null",
                 sourceName = mapSearchArgs.SourceName
             }.ToString();
+
+            if (mapSearchArgs.SourceName == "Msn")
+                _logger.Log($"Ignoring event received from MSN", LogLevel.Debug);
+
+
             _logger.Log($"Received event: {eventData}", LogLevel.Debug);
             //TODO: priority system for IOsuEventSource 
             if (mapSearchArgs.SourceName.Contains("OsuMemory"))
             {
+                _cancellationTokenSource.Cancel();
                 TasksMemory.Clear();
                 _logger.SetContextData("OsuMemory_event", eventData);
 
@@ -63,41 +71,32 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 TasksMsn.Clear();
                 TasksMsn.Push(mapSearchArgs);
             }
-
         }
 
-
-
-        public void ConsumerTask()
+        private bool IsPoolingEnabled = true;
+        CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        public async void ConsumerTask()
         {
             try
             {
-                bool isPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
-                int counter = 0;
-                MapSearchArgs memorySearchArgs;
-                MapSearchArgs msnSearchArgs;
-                MapSearchResult searchResult, lastSearchResult = null;
+                IMapSearchArgs memorySearchArgs, msnSearchArgs;
+                IMapSearchResult searchResult, lastSearchResult = null;
                 var memorySearchFailed = false;
                 while (true)
                 {
-                    if (counter % 400 == 0)
-                    {//more or less every 2 seconds given 5ms delay at end.
-                        counter = 0;
-                        isPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
-                    }
-                    counter++;
-                    if (isPoolingEnabled)
+                    if (IsPoolingEnabled)
                     {
-                        //Here we prioritize Memory events over MSN/other.
+                        //Prioritize Memory events over MSN/other.
                         if (TasksMemory.TryPop(out memorySearchArgs))
                         {
+                            _cancellationTokenSource = new CancellationTokenSource();
                             if (memorySearchArgs.MapId == 0 && string.IsNullOrEmpty(memorySearchArgs.MapHash))
                             {
                                 memorySearchFailed = true;
                             }
                             else
                             {
-                                if (memorySearchArgs.EventType == OsuEventType.MapChange || lastSearchResult == null || !lastSearchResult.FoundBeatmaps)
+                                if (memorySearchArgs.EventType == OsuEventType.MapChange || lastSearchResult == null || !lastSearchResult.BeatmapsFound.Any())
                                 {
                                     _logger.SetContextData("OsuMemory_searchingForBeatmaps", "1");
                                     lastSearchResult = searchResult = _mainMapDataGetter.FindMapData(memorySearchArgs);
@@ -109,15 +108,14 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                     {
                                         Mods = lastSearchResult.Mods
                                     };
-                                    //TODO: move this to object init above after fixing this in types project.
                                     searchResult.BeatmapsFound.AddRange(lastSearchResult.BeatmapsFound);
                                 }
 
 
-                                if (searchResult.FoundBeatmaps)
+                                if (searchResult.BeatmapsFound.Any())
                                 {
                                     memorySearchFailed = false;
-                                    searchResult.EventSource = memorySearchArgs.SourceName;
+                                    searchResult.MapSource = memorySearchArgs.SourceName;
                                     _logger.SetContextData("OsuMemory_searchResult", new
                                     {
                                         mods = searchResult.Mods?.Mods.ToString() ?? "null",
@@ -126,7 +124,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                         action = searchResult.Action.ToString()
                                     }.ToString());
 
-                                    _mainMapDataGetter.ProcessMapResult(searchResult);
+                                    await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
                                 }
                                 else
                                     memorySearchFailed = true;
@@ -143,8 +141,13 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                     : msnSearchArgs.Status;
 
                                 searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
-                                searchResult.EventSource = msnSearchArgs.SourceName;
-                                _mainMapDataGetter.ProcessMapResult(searchResult);
+                                searchResult.MapSource = msnSearchArgs.SourceName;
+                                try
+                                {
+                                    await _mainMapDataGetter.ProcessMapResult(searchResult,
+                                        _cancellationTokenSource.Token);
+                                }
+                                catch (TaskCanceledException) { }
                             }
                         }
                     }
@@ -154,8 +157,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         if (TasksMsn.TryPop(out msnSearchArgs))
                         {
                             searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
-                            searchResult.EventSource = msnSearchArgs.SourceName;
-                            _mainMapDataGetter.ProcessMapResult(searchResult);
+                            searchResult.MapSource = msnSearchArgs.SourceName;
+                            await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
                         }
                     }
                     Thread.Sleep(5);
