@@ -41,7 +41,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             if (mapSearchArgs == null)
                 return;
-            IsPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
+            _isPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
             var eventData = new
             {
                 eventType = mapSearchArgs.EventType,
@@ -51,11 +51,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 playMode = mapSearchArgs.PlayMode?.ToString() ?? "null",
                 sourceName = mapSearchArgs.SourceName
             }.ToString();
-
-            if (mapSearchArgs.SourceName == "Msn")
-                _logger.Log($"Ignoring event received from MSN", LogLevel.Debug);
-
-
+            
             _logger.Log($"Received event: {eventData}", LogLevel.Debug);
             //TODO: priority system for IOsuEventSource 
             if (mapSearchArgs.SourceName.Contains("OsuMemory"))
@@ -73,7 +69,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }
         }
 
-        private bool IsPoolingEnabled = true;
+        private bool _isPoolingEnabled = true;
         CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         public async void ConsumerTask()
         {
@@ -84,7 +80,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 var memorySearchFailed = false;
                 while (true)
                 {
-                    if (IsPoolingEnabled)
+                    if (_isPoolingEnabled)
                     {
                         //Prioritize Memory events over MSN/other.
                         if (TasksMemory.TryPop(out memorySearchArgs))
