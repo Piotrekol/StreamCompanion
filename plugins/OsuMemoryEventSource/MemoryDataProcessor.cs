@@ -25,7 +25,10 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
-        public Mods Mods { get; set; }
+
+        private Mods _mods;
+        private PlayMode _playMode = PlayMode.Osu;
+
         private IToken _strainsToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
@@ -229,7 +232,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("c50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.C50);
             CreateLiveToken("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.CMiss);
             CreateLiveToken("grade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults,
-                () => CalculateGrade((string) Tokens.AllTokens["gameMode"].Value, Mods, _rawData.Play));
+                () => CalculateGrade(_playMode, _mods, _rawData.Play));
             CreateLiveToken("mapPosition", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero, OsuStatus.All, () =>
             {
                 if (_rawData.PlayTime != 0)
@@ -308,9 +311,9 @@ namespace OsuMemoryEventSource
             CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults, () =>
             {
                 var ur = (double)_liveTokens["unstableRate"].Token.Value;
-                if ((Mods & Mods.Dt) != 0)
+                if ((_mods & Mods.Dt) != 0)
                     return ur / 1.5d;
-                if ((Mods & Mods.Ht) != 0)
+                if ((_mods & Mods.Ht) != 0)
                     return ur / 0.75d;
                 return ur;
             });
@@ -423,16 +426,16 @@ namespace OsuMemoryEventSource
             };
         }
 
-        private static OsuGrade CalculateGrade(string mode, Mods mods, PlayContainer playContainer)
+        private static OsuGrade CalculateGrade(PlayMode mode, Mods mods, PlayContainer playContainer)
         {
             switch (mode)
             {
-                case nameof(PlayMode.Osu):
-                case nameof(PlayMode.Taiko):
+                case PlayMode.Osu:
+                case PlayMode.Taiko:
                     return CalculateGradeOsuOrTaiko(mods, playContainer.C50, playContainer.C100, playContainer.C300, playContainer.CMiss);
-                case nameof(PlayMode.CatchTheBeat):
+                case PlayMode.CatchTheBeat:
                     return CalculateGradeCatch(mods, playContainer.Acc);
-                case nameof(PlayMode.OsuMania):
+                case PlayMode.OsuMania:
                     return CalculateGradeMania(mods, playContainer.Acc);
                 default: return OsuGrade.Null;
             }
@@ -534,7 +537,9 @@ namespace OsuMemoryEventSource
             if (mapSearchResult.SearchArgs.EventType != OsuEventType.MapChange)
                 return Task.CompletedTask;
 
-            Mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
+            _mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
+            _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
+
             if (mapSearchResult.BeatmapsFound.Any() && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
 
