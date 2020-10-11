@@ -22,7 +22,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
             _logger = logger;
         }
 
-        public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
+        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs)
         {
             MapSearchResult mapSearchResult = new MapSearchResult(searchArgs);
 

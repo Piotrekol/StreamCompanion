@@ -1,7 +1,10 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ModImageGenerator.API;
 using StreamCompanionTypes;
@@ -44,11 +47,11 @@ namespace ModImageGenerator
             _imageGenerator.SetSaveHandle(_saver);
         }
 
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (_settings.Get<bool>(_names.EnableModImages))
             {
-                if (map.FoundBeatmaps)
+                if (map.BeatmapsFound.Any())
                 {
                     var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
                     string mods = map.Mods?.ShownMods ?? "";
@@ -65,6 +68,8 @@ namespace ModImageGenerator
                     }
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         public string SettingGroup { get; } = "Mod Image";

@@ -22,7 +22,7 @@ namespace OsuMemoryEventSource
         public static ConfigEntry SaveLiveTokensOnDisk = new ConfigEntry(nameof(SaveLiveTokensOnDisk), false);
 
         protected SettingNames _names = SettingNames.Instance;
-        public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
+        public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
         internal static Tokens.TokenSetter LiveTokenSetter;
         internal static Tokens.TokenSetter TokenSetter;
 
@@ -96,12 +96,12 @@ namespace OsuMemoryEventSource
             Started = true;
         }
 
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            _memoryListener?.CreateTokens(map);
+            return _memoryListener?.CreateTokensAsync(map, cancellationToken);
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
             _memoryListener?.SetNewMap(map);
         }

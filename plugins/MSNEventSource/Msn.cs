@@ -25,7 +25,7 @@ namespace MSNEventSource
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
-        public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
+        public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
 
         private static WndProc WndProcc;
 

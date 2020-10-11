@@ -155,10 +155,10 @@ namespace OsuSongsFolderWatcher
             _watcher?.Dispose();
             _consumerThread?.Abort();
         }
-        private MapSearchArgs lastMapSearchArgs;
+        private IMapSearchArgs lastMapSearchArgs;
 
-        public EventHandler<MapSearchArgs> NewOsuEvent { get; set; }
-        public MapSearchResult FindBeatmap(MapSearchArgs searchArgs)
+        public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
+        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs)
         {
             lastMapSearchArgs = searchArgs;
             return null;

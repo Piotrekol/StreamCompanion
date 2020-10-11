@@ -21,9 +21,9 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v200908.19";
+        public static string ScVersion ="v201009.20";
         private static Initializer _initializer;
-        private const bool AllowMultiInstance = false;
+        private const bool AllowMultiInstance = true;
 
         /// <summary>
         /// The main entry point for the application.
@@ -35,7 +35,7 @@ namespace osu_StreamCompanion
             string mutexId = string.Format("Global\\{{{0}}}", appGuid);
 
             string settingsProfileName = GetSettingsProfileNameFromArgs(args)?.Trim();
-            if(!string.IsNullOrEmpty(settingsProfileName) && settingsProfileName.IndexOfAny(Path.GetInvalidFileNameChars()) >=0)
+            if (!string.IsNullOrEmpty(settingsProfileName) && settingsProfileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
                 // settingsProfileName contains chars not valid for a filename
                 MessageBox.Show(settingsProfileName + " is an invalid settings profile name", "Error");
@@ -153,8 +153,8 @@ namespace osu_StreamCompanion
             else
             {
 #if DEBUG
-                WaitForDebugger((Exception) e.ExceptionObject);
-                throw (Exception)e.ExceptionObject;
+                WaitForDebugger((Exception)e.ExceptionObject);
+                //throw (Exception)e.ExceptionObject;
 #endif
 #pragma warning disable 162
                 Exception ex = null;
@@ -176,7 +176,7 @@ namespace osu_StreamCompanion
                                          $"press Yes to attach local debugger{Environment.NewLine}" +
                                          $"press No to wait for debugger (Application will freeze){Environment.NewLine}" +
                                          $"press cancel to ignore and continue error handling as usual{Environment.NewLine}" +
-                                         $"{ex}", "Error - attach debugger?",MessageBoxButtons.YesNoCancel);
+                                         $"{ex}", "Error - attach debugger?", MessageBoxButtons.YesNoCancel);
             switch (result)
             {
                 case DialogResult.Cancel:
@@ -248,7 +248,7 @@ namespace osu_StreamCompanion
 
                 MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                
+
 
                 var form = new Error(errorResult.Text, null);
                 form.ShowDialog();

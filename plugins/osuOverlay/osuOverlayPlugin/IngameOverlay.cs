@@ -231,7 +231,7 @@ namespace osuOverlay
             return _overlaySettings;
         }
 
-        public void SetNewMap(MapSearchResult map)
+        public void SetNewMap(IMapSearchResult map)
         {
             try
             {

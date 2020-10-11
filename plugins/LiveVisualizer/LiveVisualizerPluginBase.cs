@@ -40,7 +40,7 @@ namespace LiveVisualizer
             _liveVisualizerSettings?.Dispose();
         }
 
-        public async void SetNewMap(MapSearchResult mapSearchResult)
+        public async void SetNewMap(IMapSearchResult mapSearchResult)
         {
             if (disposed)
                 return;
@@ -77,6 +77,6 @@ namespace LiveVisualizer
 
         protected abstract void ResetSettings();
 
-        protected abstract void ProcessNewMap(MapSearchResult mapSearchResult);
+        protected abstract void ProcessNewMap(IMapSearchResult mapSearchResult);
     }
 }

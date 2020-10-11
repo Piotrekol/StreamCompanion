@@ -5,6 +5,9 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -89,19 +92,19 @@ namespace BeatmapPpReplacements
             }
         }
 
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (map.SearchArgs.EventType != OsuEventType.MapChange)
-                return;
+                return Task.CompletedTask;
 
-            if (!map.FoundBeatmaps ||
+            if (!map.BeatmapsFound.Any() ||
                 !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
             {
                 ResetTokens(TokenMode.Osu);
                 ResetTokens(TokenMode.Mania);
                 _tokenSetter("gameMode", null);
                 _tokenSetter("maxCombo", -1);
-                return;
+                return Task.CompletedTask;
             }
 
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
@@ -114,7 +117,7 @@ namespace BeatmapPpReplacements
                 ResetTokens(TokenMode.Osu);
                 ResetTokens(TokenMode.Mania);
                 _tokenSetter("maxCombo", -1);
-                return;
+                return Task.CompletedTask;
             }
 
             _ppCalculator.Score = playMode == PlayMode.OsuMania
@@ -128,12 +131,15 @@ namespace BeatmapPpReplacements
 
             foreach (var tokenDefinition in ppTokenDefinitions[tokenMode])
             {
+                if (cancellationToken.IsCancellationRequested)
+                    return Task.CompletedTask;
                 _tokenSetter(tokenDefinition.Key, tokenDefinition.Value(mods), format: PpFormat);
             }
 
             _tokenSetter("maxCombo", _ppCalculator.GetMaxCombo());
 
             ResetTokens(tokenMode == TokenMode.Osu ? TokenMode.Mania : TokenMode.Osu);
+            return Task.CompletedTask;
         }
 
         private double GetPp(PpCalculator.PpCalculator ppCalculator, double acc, string mods = "", int score = 0)

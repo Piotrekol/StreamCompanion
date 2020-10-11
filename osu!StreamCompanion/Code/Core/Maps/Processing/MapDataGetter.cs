@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using osu_StreamCompanion.Code.Core.Savers;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -37,9 +39,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _settings = settings;
         }
 
-        public MapSearchResult FindMapData(MapSearchArgs searchArgs)
+        public IMapSearchResult FindMapData(IMapSearchArgs searchArgs)
         {
-            MapSearchResult mapSearchResult = null;
+            IMapSearchResult mapSearchResult = null;
             IModsEx foundMods = null;
             for (int i = 0; i < _mapDataFinders.Count; i++)
             {
@@ -56,7 +58,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     mapSearchResult = null;
                 }
 
-                if (mapSearchResult?.FoundBeatmaps == true)
+                if (mapSearchResult != null && mapSearchResult.BeatmapsFound.Any())
                 {
                     if (mapSearchResult.Mods == null && foundMods != null)
                         mapSearchResult.Mods = foundMods;
@@ -66,35 +68,44 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 if (mapSearchResult?.Mods != null)
                     foundMods = mapSearchResult.Mods;
             }
-            if (mapSearchResult == null)
-                mapSearchResult = new MapSearchResult(searchArgs);
 
-            return mapSearchResult;
+            return mapSearchResult ?? new MapSearchResult(searchArgs);
         }
 
-        public void ProcessMapResult(MapSearchResult mapSearchResult)
+        public Task ProcessMapResult(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
-            CreateMapReplacements(mapSearchResult);
-
-            var tokens = new Tokens();
-            foreach (var token in Tokens.AllTokens)
+            return Task.Run(async () =>
             {
-                tokens.Add(token.Key, token.Value);
-            }
+                await CreateTokens(mapSearchResult, cancellationToken);
+                if (cancellationToken.IsCancellationRequested)
+                    return;
 
-            mapSearchResult.FormatedStrings = GetMapPatterns(tokens, mapSearchResult.Action);
+                var tokens = new Tokens();
+                foreach (var token in Tokens.AllTokens)
+                {
+                    tokens.Add(token.Key, token.Value);
+                }
 
-            if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
-                SaveMapStrings(mapSearchResult.FormatedStrings, mapSearchResult.Action);
-            SetNewMap(mapSearchResult);
+                mapSearchResult.OutputPatterns.AddRange(GetOutputPatterns(tokens, mapSearchResult.Action));
+
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
+                if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
+                    SaveMapStrings(mapSearchResult.OutputPatterns, mapSearchResult.Action);
+                SetNewMap(mapSearchResult);
+            }, cancellationToken);
         }
 
-        private void CreateMapReplacements(MapSearchResult mapSearchResult)
+        private Task CreateTokens(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
+            List<Task> tasks = new List<Task>();
             foreach (var mapDataReplacementsGetter in _tokenSources)
             {
-                mapDataReplacementsGetter.CreateTokens(mapSearchResult);
+                tasks.Add(mapDataReplacementsGetter.CreateTokensAsync(mapSearchResult, cancellationToken));
             }
+
+            return Task.WhenAll(tasks);
         }
 
         private void SaveMapStrings(List<IOutputPattern> patterns, OsuStatus status)
@@ -114,7 +125,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         }
 
 
-        private List<IOutputPattern> GetMapPatterns(Tokens tokens, OsuStatus status)
+        private List<IOutputPattern> GetOutputPatterns(Tokens tokens, OsuStatus status)
         {
             var ret = new List<IOutputPattern>();
             foreach (var dataGetter in _outputPatternGenerators)
@@ -128,7 +139,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             return ret;
         }
 
-        private void SetNewMap(MapSearchResult map)
+        private void SetNewMap(IMapSearchResult map)
         {
             foreach (var dataGetter in _mapDataConsumers)
             {

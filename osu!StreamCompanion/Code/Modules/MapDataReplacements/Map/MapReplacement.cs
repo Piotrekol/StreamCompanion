@@ -3,6 +3,9 @@ using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -28,11 +31,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
             Started = true;
         }
 
-        public void CreateTokens(MapSearchResult map)
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             Dictionary<string, object> dict;
             var OsuFileLocationToken = _tokenSetter("osuFileLocation", string.Empty);
-            if (map.FoundBeatmaps)
+            if (map.BeatmapsFound.Any())
             {
                 dict = map.BeatmapsFound[0].GetTokens();
 
@@ -60,6 +63,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
                 _tokenSetter(token.Key, token.Value);
             }
 
+            return Task.CompletedTask;
         }
     }
 }
