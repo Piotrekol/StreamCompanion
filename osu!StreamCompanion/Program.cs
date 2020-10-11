@@ -23,7 +23,7 @@ namespace osu_StreamCompanion
     {
         public static string ScVersion ="v201009.20";
         private static Initializer _initializer;
-        private const bool AllowMultiInstance = true;
+        private const bool AllowMultiInstance = false;
 
         /// <summary>
         /// The main entry point for the application.
