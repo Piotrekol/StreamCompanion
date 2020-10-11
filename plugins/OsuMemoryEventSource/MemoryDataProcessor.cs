@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CollectionManager.DataTypes;
 using StreamCompanionTypes.Interfaces.Services;
+using static StreamCompanion.Common.Helpers.OsuScore;
 
 namespace OsuMemoryEventSource
 {
@@ -232,7 +233,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("c50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.C50);
             CreateLiveToken("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.CMiss);
             CreateLiveToken("grade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults,
-                () => CalculateGrade(_playMode, _mods, _rawData.Play));
+                () => CalculateGrade(_playMode, _mods, _rawData.Play.Acc, _rawData.Play.C50, _rawData.Play.C100, _rawData.Play.C300, _rawData.Play.CMiss));
             CreateLiveToken("mapPosition", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero, OsuStatus.All, () =>
             {
                 if (_rawData.PlayTime != 0)
@@ -308,15 +309,8 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
-            CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults, () =>
-            {
-                var ur = (double)_liveTokens["unstableRate"].Token.Value;
-                if ((_mods & Mods.Dt) != 0)
-                    return ur / 1.5d;
-                if ((_mods & Mods.Ht) != 0)
-                    return ur / 0.75d;
-                return ur;
-            });
+            CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults, 
+                () => ConvertedUnstableRate((double)_liveTokens["unstableRate"].Token.Value, _mods));
             CreateLiveToken("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults, () => _rawData.HitErrors);
             CreateLiveToken("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All, () => DateTime.UtcNow.ToString("o"));
             CreateLiveToken("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All, () => DateTime.Now.TimeOfDay);
@@ -355,24 +349,7 @@ namespace OsuMemoryEventSource
             _tokensUpdated();
         }
 
-        private double UnstableRate(List<int> hitErrors)
-        {
-            if (hitErrors == null || hitErrors.Count == 0 || hitErrors.Any(x => x > 10000))
-                return 0;
-
-            double sum = hitErrors.Sum();
-
-            double average = sum / hitErrors.Count;
-            double variance = 0;
-
-            foreach (var hit in hitErrors)
-            {
-                variance += Math.Pow(hit - average, 2);
-            }
-
-            return Math.Sqrt(variance / hitErrors.Count) * 10;
-        }
-
+        //TODO: this should end up in StreamCompanion.Common project along with pp calc (remove all references to PpCalculator/osu.Game from all plugins except common one)
         private static StrainsResult GetStrains(string mapLocation, PlayMode? desiredPlayMode)
         {
             var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
@@ -424,86 +401,6 @@ namespace OsuMemoryEventSource
                 PlayMode = playMode,
                 MapLocation = mapLocation
             };
-        }
-
-        private static OsuGrade CalculateGrade(PlayMode mode, Mods mods, PlayContainer playContainer)
-        {
-            switch (mode)
-            {
-                case PlayMode.Osu:
-                case PlayMode.Taiko:
-                    return CalculateGradeOsuOrTaiko(mods, playContainer.C50, playContainer.C100, playContainer.C300, playContainer.CMiss);
-                case PlayMode.CatchTheBeat:
-                    return CalculateGradeCatch(mods, playContainer.Acc);
-                case PlayMode.OsuMania:
-                    return CalculateGradeMania(mods, playContainer.Acc);
-                default: return OsuGrade.Null;
-            }
-        }
-
-        private static OsuGrade CalculateGradeOsuOrTaiko(Mods mods, ushort c50, ushort c100, ushort c300, ushort cMiss)
-        {
-            var totalHits = c50 + c100 + c300 + cMiss;
-            // if 100% acc or if nothing has happened yet (osu assumes 100% acc then as well)
-            if (c300 == totalHits || totalHits == 0)
-            {
-                // 100% acc, with Hidden or FlashLight its a Silver SS, otherwise SS
-                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SSH : OsuGrade.SS;
-            }
-
-            var ratio300 = (float)c300 / totalHits;
-            var ratio50 = (float)c50 / totalHits;
-
-            if (ratio300 > 0.9 && ratio50 <= 0.01 && cMiss == 0)
-            {
-                // with Hidden or FlashLight its a Silver S, otherwise S
-                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SH : OsuGrade.S;
-            }
-
-            if ((ratio300 > 0.8 && cMiss == 0) || ratio300 > 0.9) return OsuGrade.A;
-            if ((ratio300 > 0.7 && cMiss == 0) || ratio300 > 0.8) return OsuGrade.B;
-            if (ratio300 > 0.6 && cMiss == 0) return OsuGrade.C;
-            return OsuGrade.D;
-        }
-
-        private static OsuGrade CalculateGradeCatch(Mods mods, double acc)
-        {
-            if (Math.Abs(acc - 100) < double.Epsilon)
-            {
-                // 100% acc, with Hidden or FlashLight its a Silver SS, otherwise SS
-                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SSH : OsuGrade.SS;
-            }
-
-            if (acc > 98)
-            {
-                // with Hidden or FlashLight its a Silver S, otherwise S
-                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SH : OsuGrade.S;
-            }
-
-            if (acc > 94) return OsuGrade.A;
-            if (acc > 90) return OsuGrade.B;
-            if (acc > 85) return OsuGrade.C;
-            return OsuGrade.D;
-        }
-
-        private static OsuGrade CalculateGradeMania(Mods mods, double acc)
-        {
-            if (Math.Abs(acc - 100) < double.Epsilon)
-            {
-                // 100% acc, with Hidden, FlashLight or FadeIn its a Silver SS, otherwise SS
-                return (mods & (Mods.Hd | Mods.Fl | Mods.Fi)) > 0 ? OsuGrade.SSH : OsuGrade.SS;
-            }
-
-            if (acc > 95)
-            {
-                // with Hidden, FlashLight or FadeIn its a Silver S, otherwise S
-                return (mods & (Mods.Hd | Mods.Fl | Mods.Fi)) > 0 ? OsuGrade.SH : OsuGrade.S;
-            }
-
-            if (acc > 90) return OsuGrade.A;
-            if (acc > 80) return OsuGrade.B;
-            if (acc > 70) return OsuGrade.C;
-            return OsuGrade.D;
         }
 
         public void Dispose()
