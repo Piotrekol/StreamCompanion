@@ -227,6 +227,8 @@ namespace OsuMemoryEventSource
             CreateLiveToken("c100", _rawData.Play.C100, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.C100);
             CreateLiveToken("c50", _rawData.Play.C50, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.C50);
             CreateLiveToken("miss", _rawData.Play.CMiss, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.CMiss);
+            CreateLiveToken("grade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults,
+                () => CalculateGrade((string) Tokens.AllTokens["gameMode"].Value, Mods, _rawData.Play));
             CreateLiveToken("mapPosition", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero, OsuStatus.All, () =>
             {
                 if (_rawData.PlayTime != 0)
@@ -419,6 +421,87 @@ namespace OsuMemoryEventSource
                 MapLocation = mapLocation
             };
         }
+
+        private static OsuGrade CalculateGrade(string mode, Mods mods, PlayContainer playContainer)
+        {
+            switch (mode)
+            {
+                case nameof(PlayMode.Osu):
+                case nameof(PlayMode.Taiko):
+                    return CalculateGradeOsuOrTaiko(mods, playContainer.C50, playContainer.C100, playContainer.C300, playContainer.CMiss);
+                case nameof(PlayMode.CatchTheBeat):
+                    return CalculateGradeCatch(mods, playContainer.Acc);
+                case nameof(PlayMode.OsuMania):
+                    return CalculateGradeMania(mods, playContainer.Acc);
+                default: return OsuGrade.Null;
+            }
+        }
+
+        private static OsuGrade CalculateGradeOsuOrTaiko(Mods mods, ushort c50, ushort c100, ushort c300, ushort cMiss)
+        {
+            var totalHits = c50 + c100 + c300 + cMiss;
+            // if 100% acc or if nothing has happened yet (osu assumes 100% acc then as well)
+            if (c300 == totalHits || totalHits == 0)
+            {
+                // 100% acc, with Hidden or FlashLight its a Silver SS, otherwise SS
+                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SSH : OsuGrade.SS;
+            }
+
+            var ratio300 = (float)c300 / totalHits;
+            var ratio50 = (float)c50 / totalHits;
+
+            if (ratio300 > 0.9 && ratio50 <= 0.01 && cMiss == 0)
+            {
+                // with Hidden or FlashLight its a Silver S, otherwise S
+                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SH : OsuGrade.S;
+            }
+
+            if ((ratio300 > 0.8 && cMiss == 0) || ratio300 > 0.9) return OsuGrade.A;
+            if ((ratio300 > 0.7 && cMiss == 0) || ratio300 > 0.8) return OsuGrade.B;
+            if (ratio300 > 0.6 && cMiss == 0) return OsuGrade.C;
+            return OsuGrade.D;
+        }
+
+        private static OsuGrade CalculateGradeCatch(Mods mods, double acc)
+        {
+            if (Math.Abs(acc - 100) < double.Epsilon)
+            {
+                // 100% acc, with Hidden or FlashLight its a Silver SS, otherwise SS
+                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SSH : OsuGrade.SS;
+            }
+
+            if (acc > 98)
+            {
+                // with Hidden or FlashLight its a Silver S, otherwise S
+                return (mods & (Mods.Hd | Mods.Fl)) > 0 ? OsuGrade.SH : OsuGrade.S;
+            }
+
+            if (acc > 94) return OsuGrade.A;
+            if (acc > 90) return OsuGrade.B;
+            if (acc > 85) return OsuGrade.C;
+            return OsuGrade.D;
+        }
+
+        private static OsuGrade CalculateGradeMania(Mods mods, double acc)
+        {
+            if (Math.Abs(acc - 100) < double.Epsilon)
+            {
+                // 100% acc, with Hidden, FlashLight or FadeIn its a Silver SS, otherwise SS
+                return (mods & (Mods.Hd | Mods.Fl | Mods.Fi)) > 0 ? OsuGrade.SSH : OsuGrade.SS;
+            }
+
+            if (acc > 95)
+            {
+                // with Hidden, FlashLight or FadeIn its a Silver S, otherwise S
+                return (mods & (Mods.Hd | Mods.Fl | Mods.Fi)) > 0 ? OsuGrade.SH : OsuGrade.S;
+            }
+
+            if (acc > 90) return OsuGrade.A;
+            if (acc > 80) return OsuGrade.B;
+            if (acc > 70) return OsuGrade.C;
+            return OsuGrade.D;
+        }
+
         public void Dispose()
         {
             cancellationTokenSource.Cancel();
