@@ -42,7 +42,7 @@ namespace OsuMemoryEventSource
         protected ISettings _settings;
         internal static IContextAwareLogger Logger;
         protected IOsuMemoryReader _memoryReader;
-        protected MemoryListener _memoryListener;
+        private readonly MemoryListener memoryListener;
 
         protected static readonly object _lockingObject = new object();
         private Task MemoryWorkerTask;
@@ -79,8 +79,8 @@ namespace OsuMemoryEventSource
                 return;
             }
 
-            _memoryListener = new MemoryListener(settings, saver, logger);
-            _memoryListener.NewOsuEvent += async (s, args) =>
+            memoryListener = new MemoryListener(settings, saver, logger);
+            memoryListener.NewOsuEvent += async (s, args) =>
             {
                 while (NewOsuEvent == null)
                 {
@@ -89,7 +89,7 @@ namespace OsuMemoryEventSource
 
                 NewOsuEvent.Invoke(this, args);
             };
-            _memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataConsumers);
+            memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataConsumers);
 
             MemoryWorkerTask = Task.Run(MemoryWorker, cts.Token);
 
@@ -98,12 +98,12 @@ namespace OsuMemoryEventSource
 
         public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            return _memoryListener?.CreateTokensAsync(map, cancellationToken);
+            return memoryListener.CreateTokensAsync(map, cancellationToken) ?? Task.CompletedTask;
         }
 
         public void SetNewMap(IMapSearchResult map)
         {
-            _memoryListener?.SetNewMap(map);
+            memoryListener.SetNewMap(map);
         }
 
         protected virtual void OnSettingsSettingUpdated(object sender, SettingUpdated e) { }
@@ -116,7 +116,7 @@ namespace OsuMemoryEventSource
                     if (cts.IsCancellationRequested)
                         return;
 
-                    _memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
+                    memoryListener.Tick(_memoryReader, MemoryPoolingIsEnabled);
 
                     //Note that anything below ~20ms will result in wildly inaccurate delays
                     await Task.Delay(_poolingMsDelay);
@@ -148,7 +148,7 @@ namespace OsuMemoryEventSource
             lock (_lockingObject)
             {
                 cts?.Cancel();
-                _memoryListener?.Dispose();
+                memoryListener?.Dispose();
             }
         }
     }
