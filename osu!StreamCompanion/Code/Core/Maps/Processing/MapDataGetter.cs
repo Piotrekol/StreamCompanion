@@ -102,7 +102,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             List<Task> tasks = new List<Task>();
             foreach (var mapDataReplacementsGetter in _tokenSources)
             {
-                tasks.Add(mapDataReplacementsGetter.CreateTokensAsync(mapSearchResult, cancellationToken));
+                var task = mapDataReplacementsGetter.CreateTokensAsync(mapSearchResult, cancellationToken);
+                if(task == null)
+                    throw new NullReferenceException($"received null instead of task in ${mapDataReplacementsGetter.GetType().FullName}");
+                
+                tasks.Add(task);
             }
 
             return Task.WhenAll(tasks);
