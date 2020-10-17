@@ -98,12 +98,12 @@ namespace OsuMemoryEventSource
 
         public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            return memoryListener.CreateTokensAsync(map, cancellationToken) ?? Task.CompletedTask;
+            return memoryListener?.CreateTokensAsync(map, cancellationToken) ?? Task.CompletedTask;
         }
 
         public void SetNewMap(IMapSearchResult map)
         {
-            memoryListener.SetNewMap(map);
+            memoryListener?.SetNewMap(map);
         }
 
         protected virtual void OnSettingsSettingUpdated(object sender, SettingUpdated e) { }
@@ -116,7 +116,7 @@ namespace OsuMemoryEventSource
                     if (cts.IsCancellationRequested)
                         return;
 
-                    memoryListener.Tick(_memoryReader, MemoryPoolingIsEnabled);
+                    memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
 
                     //Note that anything below ~20ms will result in wildly inaccurate delays
                     await Task.Delay(_poolingMsDelay);
