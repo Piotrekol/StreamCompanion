@@ -164,9 +164,9 @@ namespace LiveVisualizer
                 }
                 return;
             }
-
-            var strains = (Dictionary<int, double>)_mapStrainsToken.Value;
-            VisualizerData.Display.DisableChartAnimations = strains.Count >= 400; //10min+ maps
+            
+            var strains = (Dictionary<int, double>)_mapStrainsToken?.Value;
+            VisualizerData.Display.DisableChartAnimations = strains?.Count >= 400; //10min+ maps
 
             _lastMapLocation = mapLocation;
             _lastMods = mapSearchResult.Mods;
@@ -181,9 +181,9 @@ namespace LiveVisualizer
                 VisualizerData.Display.Strains = new ChartValues<double>();
 
             VisualizerData.Display.Strains.Clear();
-            var strainValues = strains.Select(kv => kv.Value).ToList();
+            var strainValues = strains?.Select(kv => kv.Value).ToList();
             SetAxisValues(strainValues);
-            VisualizerData.Display.Strains.AddRange(strainValues);
+            VisualizerData.Display.Strains.AddRange(strainValues ?? Enumerable.Empty<double>());
 
             var imageLocation = (string) _backgroundImageLocationToken.Value;
 
