@@ -119,8 +119,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                         mapId = searchResult.BeatmapsFound[0].MapId.ToString(),
                                         action = searchResult.Action.ToString()
                                     }.ToString());
-
-                                    await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
+                                    try
+                                    {
+                                        await _mainMapDataGetter.ProcessMapResult(searchResult,
+                                            _cancellationTokenSource.Token);
+                                    }
+                                    catch(TaskCanceledException) { }
                                 }
                                 else
                                     memorySearchFailed = true;
