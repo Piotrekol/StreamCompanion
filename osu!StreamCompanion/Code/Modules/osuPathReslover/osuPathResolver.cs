@@ -65,7 +65,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 
         private void Log(string text, params string[] vals)
         {
-            _logger.Log(text, LogLevel.Advanced, vals);
+            _logger.Log(text, LogLevel.Debug, vals);
         }
         public void Free()
         {

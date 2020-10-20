@@ -20,9 +20,9 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             RavenClient.Release = Program.ScVersion;
         }
-        public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
+        public void Log(object logMessage, LogLevel logLevel, params string[] vals)
         {
-            if (loglvevel == LogLevel.Error)
+            if (logLevel == LogLevel.Error || logLevel == LogLevel.Critical)
             {
                 SentryEvent sentryEvent;
                 if (logMessage is Exception)

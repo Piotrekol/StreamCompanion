@@ -64,12 +64,12 @@ namespace OsuMemoryEventSource
             var mods = ReadMods(searchArgs.Status);
             result.Mods = GetModsEx(mods);
             
-            Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Advanced);
+            Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Debug);
 
             Mods eMods = result.Mods?.Mods ?? Mods.Omod;
             if (Helpers.IsInvalidCombination(eMods))
             {
-                Logger?.Log("Sanity check tiggered - invalidating last result", LogLevel.Advanced);
+                Logger?.Log("Sanity check tiggered - invalidating last result", LogLevel.Debug);
                 result.Mods = null;
             }
 

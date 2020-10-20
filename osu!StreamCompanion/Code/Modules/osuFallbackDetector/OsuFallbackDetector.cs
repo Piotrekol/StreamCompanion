@@ -31,23 +31,23 @@ namespace osu_StreamCompanion.Code.Modules.osuFallbackDetector
             
             if (!isValidWindowsPath(FilePath))
             {
-                logger.Log("WARNING: Path to osu! config location isn't valid. Tried: \"{0}\"", LogLevel.Basic, FilePath);
+                logger.Log("WARNING: Path to osu! config location isn't valid. Tried: \"{0}\"", LogLevel.Information, FilePath);
                 return;
             }
             if (!File.Exists(FilePath))
             {
-                logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"", LogLevel.Basic, FilePath);
+                logger.Log("WARNING: Could not get correct osu! config location. Tried: \"{0}\"", LogLevel.Information, FilePath);
                 return;
             }
             ReadSettings(FilePath);
 
             _settings.Add(_names.OsuFallback.Name, _isFallback);
             if (_isFallback)
-                logger.Log("Detected osu fallback version!", LogLevel.Basic);
+                logger.Log("Detected osu fallback version!", LogLevel.Information);
 
             _settings.Add(_names.SongsFolderLocation.Name, _customBeatmapDirectoryLocation);
             if (_customBeatmapDirectoryLocation != _names.SongsFolderLocation.Default<string>())
-                logger.Log("Detected custom songs folder location \"{0}\"", LogLevel.Basic, _customBeatmapDirectoryLocation);
+                logger.Log("Detected custom songs folder location \"{0}\"", LogLevel.Information, _customBeatmapDirectoryLocation);
         }
         
         private void ReadSettings(string configPath)

@@ -46,7 +46,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             try
             {
-                if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
+                if (_settings.Get<int>(_names.LogLevel) <= loglvevel.GetHashCode())
                 {
                     lock (_lockingObject)
                     {

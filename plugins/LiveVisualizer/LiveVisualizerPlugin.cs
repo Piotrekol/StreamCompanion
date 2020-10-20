@@ -155,6 +155,8 @@ namespace LiveVisualizer
             {
                 if (!mapSearchResult.BeatmapsFound.Any() && VisualizerData != null)
                 {
+                    Logger.Log("Reseting view", LogLevel.Trace);
+
                     VisualizerData.Display.ImageLocation = null;
                     VisualizerData.Display.Artist = null;
                     VisualizerData.Display.Title = null;
@@ -162,10 +164,16 @@ namespace LiveVisualizer
                     _lastMapLocation = null;
                     _lastMapHash = null;
                 }
+                else
+                {
+                    Logger.Log("Not updating anything", LogLevel.Trace);
+                }
                 return;
             }
             
+            Logger.Log("Updating live visualizer window", LogLevel.Trace);
             var strains = (Dictionary<int, double>)_mapStrainsToken?.Value;
+
             VisualizerData.Display.DisableChartAnimations = strains?.Count >= 400; //10min+ maps
 
             _lastMapLocation = mapLocation;
@@ -188,8 +196,8 @@ namespace LiveVisualizer
             var imageLocation = (string) _backgroundImageLocationToken.Value;
 
              VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
-
-            _visualizerWindow?.ForceChartUpdate();
+             _visualizerWindow?.ForceChartUpdate();
+             Logger.Log("Finished updating live visualizer window", LogLevel.Trace);
         }
         private void SetAxisValues(IReadOnlyList<double> strainValues)
         {

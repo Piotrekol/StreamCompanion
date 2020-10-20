@@ -20,7 +20,7 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
             _logger = logger;
             _settings = settings;
             _firstRunControlProviders = firstRunControlProviders.ToList();
-            _logger.Log(">loaded {0} plugins for firstRun setup", LogLevel.Advanced, _firstRunControlProviders.Count.ToString());
+            _logger.Log(">loaded {0} plugins for firstRun setup", LogLevel.Debug, _firstRunControlProviders.Count.ToString());
             Start(_logger);
         }
 
@@ -76,7 +76,7 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
             {
                 if (_firstRunControlProviders.Count == 0)
                 {
-                    _logger.Log(">Did not find any first run controls!", LogLevel.Advanced);
+                    _logger.Log(">Did not find any first run controls!", LogLevel.Debug);
                 }
 
                 CompletedSuccesfully = true;

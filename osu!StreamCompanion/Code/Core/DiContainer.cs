@@ -58,7 +58,7 @@ namespace osu_StreamCompanion.Code.Core
                       return reason =>
                       {
                           logger.SetContextData("exiting", "Yes - from module");
-                          logger.Log("StreamCompanion is shutting down", LogLevel.Basic);
+                          logger.Log("StreamCompanion is shutting down", LogLevel.Information);
                           Program.SafeQuit();
                       };
                   }
@@ -74,7 +74,7 @@ namespace osu_StreamCompanion.Code.Core
                       {
                       }
 
-                      logger.Log("Plugin {0} has requested StreamCompanion shutdown! due to: {1}", LogLevel.Basic,
+                      logger.Log("Plugin {0} has requested StreamCompanion shutdown! due to: {1}", LogLevel.Information,
                           context.TargetInfo.InjectionType.FullName, reason);
                       logger.SetContextData("exiting", $"Yes - plugin:{context.TargetInfo.InjectionType.FullName}, with reason:{reason}");
                       Program.SafeQuit();
@@ -89,7 +89,7 @@ namespace osu_StreamCompanion.Code.Core
                     return reason =>
                     {
                         logger.SetContextData("restarting", "from module");
-                        logger.Log("StreamCompanion is restarting", LogLevel.Basic);
+                        logger.Log("StreamCompanion is restarting", LogLevel.Information);
                         Process.Start(Updater.UpdaterExeName, Process.GetCurrentProcess().Id.ToString());
                         Program.SafeQuit();
                     };
@@ -106,7 +106,7 @@ namespace osu_StreamCompanion.Code.Core
                     {
                     }
 
-                    logger.Log("Plugin {0} has requested StreamCompanion restart! due to: {1}", LogLevel.Basic,
+                    logger.Log("Plugin {0} has requested StreamCompanion restart! due to: {1}", LogLevel.Information,
                         context.TargetInfo.InjectionType.FullName, reason);
                     logger.SetContextData("restarting", $"plugin:{context.TargetInfo.InjectionType.FullName}, with reason:{reason}");
 
