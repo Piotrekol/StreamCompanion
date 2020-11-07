@@ -102,11 +102,11 @@ namespace osuOverlay
 
                     if (_currentOsuProcess == null || SafeHasExited(_currentOsuProcess))
                     {
-                        _logger.Log("Checking osu! overlay injection status.", LogLevel.Advanced);
+                        _logger.Log("Checking osu! overlay injection status.", LogLevel.Debug);
                         var resultCode = DllInjectionResult.Success;
                         if (IsAlreadyInjected())
                         {
-                            _logger.Log("Already injected & running.", LogLevel.Advanced);
+                            _logger.Log("Already injected & running.", LogLevel.Debug);
                         }
                         else
                         {
@@ -119,7 +119,7 @@ namespace osuOverlay
                                         "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 });
                             }
-                            _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Basic);
+                            _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Information);
 
                             var result = await Inject();
                             resultCode = result.ResultCode;
@@ -175,11 +175,11 @@ namespace osuOverlay
                 case DllInjectionResult.Timeout:
                     return;
                 case DllInjectionResult.Success:
-                    _logger.Log("Injection success.", LogLevel.Basic);
+                    _logger.Log("Injection success.", LogLevel.Information);
                     return;
             }
-            _logger.Log($"Injection failed: {message}", LogLevel.Basic);
-            _logger.Log($"{helperProcessResult}", LogLevel.Advanced);
+            _logger.Log($"Injection failed: {message}", LogLevel.Information);
+            _logger.Log($"{helperProcessResult}", LogLevel.Debug);
 
             if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound && !cancellationToken.IsCancellationRequested)
             {

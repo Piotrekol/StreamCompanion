@@ -97,7 +97,7 @@
       <Version>3.4.3</Version>
     </PackageReference>
     <PackageReference Include="StreamCompanionTypes">
-      <Version>5.1.0</Version>
+      <Version>5.2.0</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>

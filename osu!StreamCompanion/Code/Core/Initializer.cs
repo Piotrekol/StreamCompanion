@@ -63,13 +63,13 @@ namespace osu_StreamCompanion.Code.Core
 #if !DEBUG
             mainLogger.AddLogger(new SentryLogger());
 #endif
-            _logger.Log("Created DI container", LogLevel.Basic);
+            _logger.Log("Created DI container", LogLevel.Information);
         }
 
         public void Start()
         {
-            _logger.Log("Booting up...", LogLevel.Basic);
-            _logger.Log($"Stream Companion Version: {Program.ScVersion}", LogLevel.Basic);
+            _logger.Log("Booting up...", LogLevel.Information);
+            _logger.Log($"Stream Companion Version: {Program.ScVersion}", LogLevel.Information);
 
             DiContainer.Container.Locate<Updater>();
             DiContainer.Container.Locate<FirstRun>();
@@ -97,11 +97,11 @@ namespace osu_StreamCompanion.Code.Core
                 }
             }
 
-            _logger.Log(">Initialized {0} plugins", LogLevel.Basic, plugins.Count.ToString());
+            _logger.Log(">Initialized {0} plugins", LogLevel.Information, plugins.Count.ToString());
 
             foreach (var plugin in plugins)
             {
-                _logger.Log(">>plugin \"{0}\" by {1} ({2}) v:{3}", LogLevel.Advanced, plugin.Name, plugin.Author,
+                _logger.Log(">>plugin \"{0}\" by {1} ({2}) v:{3}", LogLevel.Debug, plugin.Name, plugin.Author,
                     plugin.GetType().FullName, plugin.GetType().Assembly.GetName().Version.ToString());
             }
 
@@ -110,7 +110,7 @@ namespace osu_StreamCompanion.Code.Core
 
             DiContainer.Container.Locate<MapStringFormatter>();
 
-            _logger.Log("Started!", LogLevel.Basic);
+            _logger.Log("Started!", LogLevel.Information);
         }
 
         public void Exit()
@@ -120,3 +120,4 @@ namespace osu_StreamCompanion.Code.Core
         }
     }
 }
+

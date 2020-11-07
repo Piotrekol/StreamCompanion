@@ -37,7 +37,7 @@ namespace osu_StreamCompanion.Code.Core.Savers
             }
             catch (System.IO.IOException e)
             {
-                _logger.Log("EXCEPTION: {0}" + Environment.NewLine + "{1}", LogLevel.Basic, e.Message, e.StackTrace);
+                _logger.Log("EXCEPTION: {0}" + Environment.NewLine + "{1}", LogLevel.Information, e.Message, e.StackTrace);
             }
         }
     }

@@ -41,7 +41,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
 
         public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
         {
-            if (_settings.Get<int>(_names.LogLevel) >= loglvevel.GetHashCode())
+            if (_settings.Get<int>(_names.LogLevel) <= loglvevel.GetHashCode())
                 Console.WriteLine(logMessage.ToString());
         }
     }

@@ -117,7 +117,7 @@ namespace osu_StreamCompanion.Code.Core
                         catch (InvalidCastException)
                         {
                             _logger.Log("Warning: Had to use default value on {0} (InvalidCastException){1}::{2}",
-                                LogLevel.Basic, key, _settingsEntries[key].GetType().FullName, typeof(T).FullName);
+                                LogLevel.Information, key, _settingsEntries[key].GetType().FullName, typeof(T).FullName);
                             return default(T);
                         }
                     }

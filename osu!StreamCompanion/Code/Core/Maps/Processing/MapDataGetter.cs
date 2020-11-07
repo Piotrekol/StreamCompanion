@@ -62,7 +62,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 {
                     if (mapSearchResult.Mods == null && foundMods != null)
                         mapSearchResult.Mods = foundMods;
-                    _logger.Log(string.Format(">Found data using \"{0}\" ID: {1}", _mapDataFinders[i].SearcherName, mapSearchResult.BeatmapsFound[0]?.MapId), LogLevel.Advanced);
+                    _logger.Log(string.Format(">Found data using \"{0}\" ID: {1}", _mapDataFinders[i].SearcherName, mapSearchResult.BeatmapsFound[0]?.MapId), LogLevel.Debug);
                     break;
                 }
                 if (mapSearchResult?.Mods != null)

@@ -36,7 +36,7 @@ namespace OsuSongsFolderWatcher
                 return;
 
             var fsEvent = (FileSystemEventArgs)args.CacheItem.Value;
-            _logger.Log($"Queued for processing: {fsEvent.FullPath}", LogLevel.Advanced);
+            _logger.Log($"Queued for processing: {fsEvent.FullPath}", LogLevel.Debug);
             filesChanged.Enqueue((FileSystemEventArgs)args.CacheItem.Value);
         }
 
@@ -114,7 +114,7 @@ namespace OsuSongsFolderWatcher
 
                         _databaseController.StoreTempBeatmap(beatmap);
 
-                        _logger.Log(">Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Basic, beatmap.ArtistRoman,
+                        _logger.Log(">Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Information, beatmap.ArtistRoman,
                             beatmap.TitleRoman, beatmap.DiffName);
                         if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
                         {

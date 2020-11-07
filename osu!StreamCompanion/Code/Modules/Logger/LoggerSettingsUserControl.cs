@@ -19,11 +19,12 @@ namespace osu_StreamCompanion.Code.Modules.Logger
         private readonly SettingNames _names = SettingNames.Instance;
         public Dictionary<string, LogLevel> LogLevels = new Dictionary<string, LogLevel>
         {
-            { "Disabled", LogLevel.Disabled },
-            { "Basic", LogLevel.Basic },
-            { "Advanced", LogLevel.Advanced },
+            { "Trace", LogLevel.Trace },
             { "Debug", LogLevel.Debug },
-            { "Error", LogLevel.Error }
+            { "Information", LogLevel.Information },
+            { "Warning", LogLevel.Warning },
+            { "Error", LogLevel.Error },
+            { "Critical", LogLevel.Critical }
         };
 
         public LoggerSettingsUserControl(ISettings settings)
