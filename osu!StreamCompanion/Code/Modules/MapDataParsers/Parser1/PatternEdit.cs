@@ -108,6 +108,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (Current != null)
             {
+                if (string.IsNullOrEmpty(textBox_FileName.Text))
+                {
+                    MessageBox.Show("Pattern name can't be empty. Pattern was not saved.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 Current.Name = textBox_FileName.Text;
                 Current.Pattern = textBox_formating.Text;
                 Current.SaveEvent = SaveEvents.First(s => s.Key == (string)comboBox_saveEvent.SelectedItem).Value;
