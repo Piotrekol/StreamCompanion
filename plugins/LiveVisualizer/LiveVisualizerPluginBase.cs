@@ -14,12 +14,10 @@ namespace LiveVisualizer
     public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternGenerator,
         ISettingsSource, IDisposable
     {
-        protected CancellationTokenSource Cts = new CancellationTokenSource();
         private LiveVisualizerSettings _liveVisualizerSettings;
         protected ISettings Settings;
         protected readonly IContextAwareLogger Logger;
         protected IWpfVisualizerData VisualizerData;
-        private Task processNewMapTask;
         private bool disposed = false;
 
         public string Description { get; } = "";
@@ -40,21 +38,12 @@ namespace LiveVisualizer
             _liveVisualizerSettings?.Dispose();
         }
 
-        public async void SetNewMap(IMapSearchResult mapSearchResult)
+        public void SetNewMap(IMapSearchResult mapSearchResult)
         {
             if (disposed)
                 return;
 
-            Cts.Cancel();
-            if (processNewMapTask != null)
-                await processNewMapTask.ConfigureAwait(false);
-
-            if (processNewMapTask == null || processNewMapTask.IsCanceled || processNewMapTask.IsFaulted ||
-                processNewMapTask.IsCompleted)
-            {
-                Cts = new CancellationTokenSource();
-                processNewMapTask = Task.Run(() => ProcessNewMap(mapSearchResult), Cts.Token);
-            }
+            ProcessNewMap(mapSearchResult);
         }
 
         public abstract List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status);
