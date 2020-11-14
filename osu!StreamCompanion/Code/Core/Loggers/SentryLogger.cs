@@ -11,7 +11,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
     public class SentryLogger : IContextAwareLogger
     {
         public static string RavenDsn =
-            "https://2a3c77450ec84295b6a6d426b2fdd9b5@sentry.io/107853";
+            "https://3187b2a91f23411ab7ec5f85ad7d80b8@sentry.pioo.space/2";
         public static RavenClient RavenClient { get; } = new RavenClient(RavenDsn);
 
         public static Dictionary<string, string> ContextData { get; } = new Dictionary<string, string>();
