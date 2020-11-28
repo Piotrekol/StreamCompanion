@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,7 +124,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                         await _mainMapDataGetter.ProcessMapResult(searchResult,
                                             _cancellationTokenSource.Token);
                                     }
-                                    catch(TaskCanceledException) { }
+                                    catch (TaskCanceledException) { }
                                 }
                                 else
                                     memorySearchFailed = true;
@@ -158,7 +158,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         {
                             searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
                             searchResult.MapSource = msnSearchArgs.SourceName;
-                            await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
+                            try
+                            {
+                                await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
+                            }
+                            catch (TaskCanceledException) { }
                         }
                     }
                     Thread.Sleep(5);
@@ -171,7 +175,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
             }
         }
-
 
         public void Dispose()
         {
