@@ -3,41 +3,41 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!StreamCompanion", "osu!StreamCompanion\osu!StreamCompanion.csproj", "{86251162-A899-4498-BF7F-6F18D6C624EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu!StreamCompanion", "osu!StreamCompanion\osu!StreamCompanion.csproj", "{86251162-A899-4498-BF7F-6F18D6C624EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionControler", "VersionControler\VersionControler.csproj", "{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VersionControler", "VersionControler\VersionControler.csproj", "{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{B0951F6C-E0DC-4242-A32E-0B48711AF12D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{09464784-372D-495F-9FF3-351DA55B4FD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{09464784-372D-495F-9FF3-351DA55B4FD9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{7357CB17-E9D7-493F-BC1B-354F717D7AA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClickCounter", "plugins\ClickCounter\ClickCounter.csproj", "{DBB78CD2-7515-4920-BA93-28860EFD54B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickCounter", "plugins\ClickCounter\ClickCounter.csproj", "{DBB78CD2-7515-4920-BA93-28860EFD54B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osuOverlayPlugin", "plugins\osuOverlay\osuOverlayPlugin\osuOverlayPlugin.csproj", "{E79D7BC8-AAD4-4BC1-9578-3FABB851B997}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osuOverlayPlugin", "plugins\osuOverlay\osuOverlayPlugin\osuOverlayPlugin.csproj", "{E79D7BC8-AAD4-4BC1-9578-3FABB851B997}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osuPost", "plugins\osuPost\osuPost.csproj", "{909409E5-7DED-43FC-95D7-913C7576E91C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osuPost", "plugins\osuPost\osuPost.csproj", "{909409E5-7DED-43FC-95D7-913C7576E91C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScGui", "plugins\ScGui\ScGui.csproj", "{4FAB5F27-FF28-4A41-BDD7-1BFF4D0DC71E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScGui", "plugins\ScGui\ScGui.csproj", "{4FAB5F27-FF28-4A41-BDD7-1BFF4D0DC71E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModsHandler", "plugins\ModsHandler\ModsHandler.csproj", "{53702F40-8EDA-4A2B-ABBF-F85548FF7442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModsHandler", "plugins\ModsHandler\ModsHandler.csproj", "{53702F40-8EDA-4A2B-ABBF-F85548FF7442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModImageGenerator", "plugins\ModImageGenerator\ModImageGenerator.csproj", "{16BB58FA-897B-4A75-BEDC-D42428EB8312}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModImageGenerator", "plugins\ModImageGenerator\ModImageGenerator.csproj", "{16BB58FA-897B-4A75-BEDC-D42428EB8312}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatmapPpReplacements", "plugins\BeatmapPpReplacements\BeatmapPpReplacements.csproj", "{0C50FF12-C298-424F-8B56-E65BCDDAB159}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeatmapPpReplacements", "plugins\BeatmapPpReplacements\BeatmapPpReplacements.csproj", "{0C50FF12-C298-424F-8B56-E65BCDDAB159}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMapDataSender", "plugins\FileMapDataSender\FileMapDataSender.csproj", "{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileMapDataSender", "plugins\FileMapDataSender\FileMapDataSender.csproj", "{32A61CD7-FA30-40CB-8A23-788BBD65D4A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpSocketDataSender", "plugins\TcpSocketDataSender\TcpSocketDataSender.csproj", "{50E3D207-3812-433A-8F9A-757FF55C991A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpSocketDataSender", "plugins\TcpSocketDataSender\TcpSocketDataSender.csproj", "{50E3D207-3812-433A-8F9A-757FF55C991A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaysReplacements", "plugins\PlaysReplacements\PlaysReplacements.csproj", "{3D20C5F7-1CFC-4313-8B21-D3FA298F82A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaysReplacements", "plugins\PlaysReplacements\PlaysReplacements.csproj", "{3D20C5F7-1CFC-4313-8B21-D3FA298F82A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuSongsFolderWatcher", "plugins\OsuSongsFolderWatcher\OsuSongsFolderWatcher.csproj", "{111A3460-AC37-402C-98B6-D6A1A6B5C214}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsuSongsFolderWatcher", "plugins\OsuSongsFolderWatcher\OsuSongsFolderWatcher.csproj", "{111A3460-AC37-402C-98B6-D6A1A6B5C214}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSNEventSource", "plugins\MSNEventSource\MSNEventSource.csproj", "{0BE726DB-D370-4D9D-988A-2B79AF562283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSNEventSource", "plugins\MSNEventSource\MSNEventSource.csproj", "{0BE726DB-D370-4D9D-988A-2B79AF562283}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuMemoryEventSource", "plugins\OsuMemoryEventSource\OsuMemoryEventSource.csproj", "{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsuMemoryEventSource", "plugins\OsuMemoryEventSource\OsuMemoryEventSource.csproj", "{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PpCalculator", "PpCalculator\PpCalculator.csproj", "{3D97E9C4-A884-4664-A40C-F19C4533AA00}"
 EndProject
@@ -53,19 +53,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Taiko", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Osu", "submodules\osu\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj", "{330603A4-F36B-4073-82D3-41A95A6D35B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveVisualizer", "plugins\LiveVisualizer\LiveVisualizer.csproj", "{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiveVisualizer", "plugins\LiveVisualizer\LiveVisualizer.csproj", "{6FB20D7D-F84A-41DE-B086-DA920C7B5E86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketDataSender", "plugins\WebSocketDataSender\WebSocketDataSender.csproj", "{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketDataSender", "plugins\WebSocketDataSender\WebSocketDataSender.csproj", "{6074BC0F-2C6A-485C-A5C4-5AEF3A3B8263}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "osuOverlay", "osuOverlay", "{5DDAA708-B9C7-4E2B-80EB-840FB612B124}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osuOverlayLoader", "plugins\osuOverlay\osuOverlayLoader\osuOverlayLoader.csproj", "{7F30AE10-182D-48C2-B6DB-2A96E8180335}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osuOverlayLoader", "plugins\osuOverlay\osuOverlayLoader\osuOverlayLoader.csproj", "{7F30AE10-182D-48C2-B6DB-2A96E8180335}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundImageProvider", "plugins\BackgroundImageProvider\BackgroundImageProvider.csproj", "{DF0879B6-D76D-4FCD-B825-8956FFF19143}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundImageProvider", "plugins\BackgroundImageProvider\BackgroundImageProvider.csproj", "{DF0879B6-D76D-4FCD-B825-8956FFF19143}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModsHandlerTests", "plugins\ModsHandlerTests\ModsHandlerTests.csproj", "{1FCFBD79-804A-45BC-9433-C3F4B554A0AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModsHandlerTests", "plugins\ModsHandlerTests\ModsHandlerTests.csproj", "{1FCFBD79-804A-45BC-9433-C3F4B554A0AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamCompanion.Common", "StreamCompanion.Common\StreamCompanion.Common.csproj", "{3D5B2DBB-615F-43E4-8F2B-C54F4D92DC41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamCompanion.Common", "StreamCompanion.Common\StreamCompanion.Common.csproj", "{3D5B2DBB-615F-43E4-8F2B-C54F4D92DC41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,8 +84,8 @@ Global
 		{86251162-A899-4498-BF7F-6F18D6C624EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86251162-A899-4498-BF7F-6F18D6C624EA}.Debug|x64.ActiveCfg = Debug|x64
 		{86251162-A899-4498-BF7F-6F18D6C624EA}.Debug|x64.Build.0 = Debug|x64
-		{86251162-A899-4498-BF7F-6F18D6C624EA}.Debug|x86.ActiveCfg = Debug|x86
-		{86251162-A899-4498-BF7F-6F18D6C624EA}.Debug|x86.Build.0 = Debug|x86
+		{86251162-A899-4498-BF7F-6F18D6C624EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{86251162-A899-4498-BF7F-6F18D6C624EA}.Debug|x86.Build.0 = Debug|Any CPU
 		{86251162-A899-4498-BF7F-6F18D6C624EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86251162-A899-4498-BF7F-6F18D6C624EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{86251162-A899-4498-BF7F-6F18D6C624EA}.Release|x64.ActiveCfg = Release|x64
@@ -102,8 +102,8 @@ Global
 		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Debug|x64.ActiveCfg = Debug|x64
 		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Debug|x64.Build.0 = Debug|x64
-		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Debug|x86.ActiveCfg = Debug|x86
-		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Debug|x86.Build.0 = Debug|x86
+		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Debug|x86.Build.0 = Debug|Any CPU
 		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}.Release|x64.ActiveCfg = Release|x64
@@ -353,8 +353,8 @@ Global
 		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x64.ActiveCfg = Debug|x64
 		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x64.Build.0 = Debug|x64
-		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x86.ActiveCfg = Debug|x86
-		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x86.Build.0 = Debug|x86
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Debug|x86.Build.0 = Debug|Any CPU
 		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Release|Any CPU.ActiveCfg = Release|x86
 		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Release|x64.ActiveCfg = Release|x64
 		{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}.Release|x64.Build.0 = Release|x64

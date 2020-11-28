@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.Versioning;
 using System.Security.Principal;
 using Microsoft.Win32;
 
@@ -17,6 +18,7 @@ namespace ScGui
             Dark
         }
 
+        [SupportedOSPlatform("windows")]
         public static WindowsTheme GetWindowsTheme()
         {
             var currentUser = WindowsIdentity.GetCurrent();

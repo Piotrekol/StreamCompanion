@@ -1,118 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{1A6D2DC6-163E-4BF3-8CE3-51ACC38A4A67}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsuMemoryEventSource</RootNamespace>
-    <AssemblyName>OsuMemoryEventSource</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>bin\Debug_temp\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>bin\Release_temp\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug_temp\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\Release_temp\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="FirstRunMemoryCalibration.cs">
+    <Compile Update="FirstRunMemoryCalibration.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FirstRunMemoryCalibration.Designer.cs">
-      <DependentUpon>FirstRunMemoryCalibration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers.cs" />
-    <Compile Include="InterpolatedValue.cs" />
-    <Compile Include="LiveToken.cs" />
-    <Compile Include="MemoryDataFinderSettings.cs">
+    <Compile Update="MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MemoryDataFinderSettings.Designer.cs">
-      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MemoryDataProcessor.cs" />
-    <Compile Include="LivePerformanceCalculator.cs" />
-    <Compile Include="MemoryListener.cs" />
-    <Compile Include="OsuMemoryEventSource.cs" />
-    <Compile Include="OsuMemoryEventSourceBase.cs" />
-    <Compile Include="PatternsDispatcher.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
-      <Project>{3d97e9c4-a884-4664-a40c-f19c4533aa00}</Project>
-      <Name>PpCalculator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj">
-      <Project>{3d5b2dbb-615f-43e4-8f2b-c54f4d92dc41}</Project>
-      <Name>StreamCompanion.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj" />
+    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FirstRunMemoryCalibration.resx">
-      <DependentUpon>FirstRunMemoryCalibration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MemoryDataFinderSettings.resx">
-      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="OsuMemoryDataProvider">
@@ -123,7 +47,9 @@
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>mkdir "$(TargetDir)\..\$(ConfigurationName)"
 mkdir "$(TargetDir)\..\$(ConfigurationName)\Dlls"
