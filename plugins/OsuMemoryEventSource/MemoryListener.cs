@@ -124,7 +124,7 @@ namespace OsuMemoryEventSource
 
                 }
 
-                _memoryDataProcessor.Tick(status, reader);
+                _memoryDataProcessor.Tick(status, _currentStatus, reader);
             }
         }
 

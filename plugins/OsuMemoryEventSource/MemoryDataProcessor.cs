@@ -139,7 +139,7 @@ namespace OsuMemoryEventSource
         }
 
         private IOsuMemoryReader _reader;
-        public void Tick(OsuStatus status, IOsuMemoryReader reader)
+        public void Tick(OsuStatus status, OsuMemoryStatus rawStatus, IOsuMemoryReader reader)
         {
             _notUpdatingTokens.WaitOne();
             _notUpdatingMemoryValues.Reset();
@@ -149,6 +149,8 @@ namespace OsuMemoryEventSource
                     _reader = reader;
                 if ((OsuStatus)_liveTokens["status"].Token.Value != status)
                     _liveTokens["status"].Token.Value = status;
+                
+                _liveTokens["rawStatus"].Token.Value = rawStatus;
 
                 if (status != OsuStatus.Playing && status != OsuStatus.Watching)
                 {
@@ -223,6 +225,7 @@ namespace OsuMemoryEventSource
         private void InitLiveTokens()
         {
             CreateToken("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null, OsuStatus.All, null);
+            CreateToken("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning, OsuStatus.All, null);
             var playingOrWatching = OsuStatus.Playing | OsuStatus.Watching;
             var playingWatchingResults = playingOrWatching | OsuStatus.ResultsScreen;
             CreateLiveToken("acc", _rawData.Play.Acc, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play.Acc);
