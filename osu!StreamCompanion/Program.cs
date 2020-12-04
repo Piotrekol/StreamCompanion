@@ -235,20 +235,11 @@ namespace osu_StreamCompanion
                 {
                     ex.Data[d.Key] = d.Value;
                 }
-#if WITHSENTRY
-                if (errorConsensus.SendReport)
-                {
-                    var ravenClient = SentryLogger.RavenClient;
-                    ravenClient.Release = ScVersion;
-                    var sentryEvent = new SentryEvent(ex);
-                    sentryEvent.Extra = SentryLogger.ContextData;
-                    ravenClient.Capture(sentryEvent);
-                }
-#endif
+                
+                //also reports to sentry if enabled
+                MainLogger.Instance.Log(ex, LogLevel.Critical);
 
                 MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-
 
                 var form = new Error(errorResult.Text, null);
                 form.ShowDialog();
