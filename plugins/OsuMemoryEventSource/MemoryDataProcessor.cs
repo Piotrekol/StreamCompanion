@@ -57,7 +57,9 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
-        public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, bool enablePpSmoothing = true)
+        public bool IsMainProcessor { get; private set; }
+        public string TokensPath { get; private set; }
+        public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, bool isMainProcessor, string tokensPath)
         {
             _settings = settings;
             _logger = logger;
@@ -66,7 +68,9 @@ namespace OsuMemoryEventSource
                 InterpolatedValues.Add(v, new InterpolatedValue(0.15));
             }
 
-            ToggleSmoothing(enablePpSmoothing);
+            ToggleSmoothing(true);
+            IsMainProcessor = isMainProcessor;
+            TokensPath = tokensPath;
 
             _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
 
@@ -149,7 +153,7 @@ namespace OsuMemoryEventSource
                     _reader = reader;
                 if ((OsuStatus)_liveTokens["status"].Token.Value != status)
                     _liveTokens["status"].Token.Value = status;
-                
+
                 _liveTokens["rawStatus"].Token.Value = rawStatus;
 
                 if (status != OsuStatus.Playing && status != OsuStatus.Watching)
@@ -213,12 +217,12 @@ namespace OsuMemoryEventSource
         private void CreateToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            _liveTokens[name] = new LiveToken(_tokenSetter(name, value, tokenType, format, defaultValue, statusWhitelist), updater);
+            _liveTokens[name] = new LiveToken(_tokenSetter($"{TokensPath}{name}", value, tokenType, format, defaultValue, statusWhitelist), updater);
         }
         private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            _liveTokens[name] = new LiveToken(_liveTokenSetter(name, value, tokenType, format, defaultValue, statusWhitelist), updater) { IsLazy = false };
+            _liveTokens[name] = new LiveToken(_liveTokenSetter($"{TokensPath}{name}", value, tokenType, format, defaultValue, statusWhitelist), updater) { IsLazy = false };
             //_liveTokens[name] = new LiveToken(_liveTokenSetter(name, new Lazy<object>(() => value), tokenType, format, defaultValue, statusWhitelist), updater) { IsLazy = false };
         }
 
@@ -312,7 +316,7 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.HitErrors));
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
-            CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults, 
+            CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults,
                 () => ConvertedUnstableRate((double)_liveTokens["unstableRate"].Token.Value, _mods));
             CreateLiveToken("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults, () => _rawData.HitErrors);
             CreateLiveToken("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All, () => DateTime.UtcNow.ToString("o"));
@@ -432,7 +436,8 @@ namespace OsuMemoryEventSource
 
         public Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
-            SetSkinTokens();
+            if (IsMainProcessor)
+                SetSkinTokens();
 
             if (mapSearchResult.SearchArgs.EventType != OsuEventType.MapChange)
                 return Task.CompletedTask;
@@ -440,7 +445,7 @@ namespace OsuMemoryEventSource
             _mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
 
-            if (mapSearchResult.BeatmapsFound.Any() && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+            if (IsMainProcessor && mapSearchResult.BeatmapsFound.Any() && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
 
             return Task.CompletedTask;

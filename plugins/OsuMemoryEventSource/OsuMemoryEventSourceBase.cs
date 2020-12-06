@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,6 +22,7 @@ namespace OsuMemoryEventSource
          IOsuEventSource, ITokensSource
     {
         public static ConfigEntry SaveLiveTokensOnDisk = new ConfigEntry(nameof(SaveLiveTokensOnDisk), false);
+        public static ConfigEntry TourneyMode = new ConfigEntry(nameof(TourneyMode), false);
 
         protected SettingNames _names = SettingNames.Instance;
         public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
@@ -41,7 +44,8 @@ namespace OsuMemoryEventSource
         protected IModParser _modParser;
         protected ISettings _settings;
         internal static IContextAwareLogger Logger;
-        protected IOsuMemoryReader _memoryReader;
+        protected List<IOsuMemoryReader> _clientMemoryReaders = new List<IOsuMemoryReader>();
+        protected IOsuMemoryReader _memoryReader => _clientMemoryReaders[0];
         private readonly MemoryListener memoryListener;
 
         protected static readonly object _lockingObject = new object();
@@ -62,7 +66,26 @@ namespace OsuMemoryEventSource
             Logger = logger;
             LiveTokenSetter = Tokens.CreateTokenSetter(Name);
             TokenSetter = Tokens.CreateTokenSetter($"{Name}-Regular");
-            _memoryReader = OsuMemoryReader.Instance;
+            var clientCount = 1;
+            if (_settings.Get<bool>(TourneyMode))
+            {
+                var _tournamentManagerMemoryReader = OsuMemoryReader.Instance.GetInstanceForWindowTitleHint("Tournament Manager");
+                var osuClients = Process.GetProcessesByName("osu!")
+                    .Where(p => p.MainWindowTitle.Trim().StartsWith("Tournament Client"))
+                    .OrderBy(p => p.MainWindowTitle).ToList();
+                clientCount = osuClients.Count;
+                foreach (var osuClient in osuClients)
+                {
+                    Logger.Log($"Initalizing client \"{osuClient.MainWindowTitle}\"", LogLevel.Information);
+                    _clientMemoryReaders.Add(OsuMemoryReader.Instance.GetInstanceForWindowTitleHint(osuClient.MainWindowTitle));
+                }
+
+                Logger.Log($"{_clientMemoryReaders.Count} client + tournament manager initalized", LogLevel.Information);
+            }
+            else
+            {
+                _clientMemoryReaders.Add(OsuMemoryReader.Instance);
+            }
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
 
@@ -79,7 +102,7 @@ namespace OsuMemoryEventSource
                 return;
             }
 
-            memoryListener = new MemoryListener(settings, saver, logger);
+            memoryListener = new MemoryListener(settings, saver, logger, clientCount);
             memoryListener.NewOsuEvent += async (s, args) =>
             {
                 while (NewOsuEvent == null)
@@ -116,7 +139,7 @@ namespace OsuMemoryEventSource
                     if (cts.IsCancellationRequested)
                         return;
 
-                    memoryListener?.Tick(_memoryReader, MemoryPoolingIsEnabled);
+                    memoryListener?.Tick(_clientMemoryReaders, MemoryPoolingIsEnabled);
 
                     //Note that anything below ~20ms will result in wildly inaccurate delays
                     await Task.Delay(_poolingMsDelay);

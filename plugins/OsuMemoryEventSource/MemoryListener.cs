@@ -3,6 +3,7 @@ using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
@@ -28,24 +29,30 @@ namespace OsuMemoryEventSource
         private string _lastMapHash = "";
         private int _lastMapSelectionMods = -2;
         private int _lastPlayingMods = -2;
-        private MemoryDataProcessor _memoryDataProcessor;
+        private List<MemoryDataProcessor> _memoryDataProcessors = new List<MemoryDataProcessor>();
         private PatternsDispatcher _patternsDispatcher;
-        public Tokens Tokens => _memoryDataProcessor.Tokens;
+        //public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettings _settings;
 
-        public MemoryListener(ISettings settings, ISaver saver, IContextAwareLogger logger)
+        public MemoryListener(ISettings settings, ISaver saver, IContextAwareLogger logger, int clientCount = 1)
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
 
-            _memoryDataProcessor = new MemoryDataProcessor(settings, logger);
+            _memoryDataProcessors = Enumerable.Range(0, clientCount)
+                .Select(x => new MemoryDataProcessor(settings, logger, x == 0, x > 0 ? $"client_{x}" : string.Empty)).ToList();
             _patternsDispatcher = new PatternsDispatcher(settings, saver);
-            _memoryDataProcessor.TokensUpdated += (_, status) => _patternsDispatcher.TokensUpdated(status);
-            _memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
+            foreach (var memoryDataProcessor in _memoryDataProcessors)
+            {
+                memoryDataProcessor.TokensUpdated += (_, status) => _patternsDispatcher.TokensUpdated(status);
+                memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
+            }
         }
 
-        public void Tick(IOsuMemoryReader reader, bool sendEvents)
+        public void Tick(List<IOsuMemoryReader> clientReaders, bool sendEvents)
         {
+            var reader = clientReaders[0];
+
             _currentStatus = reader.GetCurrentStatus(out _);
             if (_lastStatusLog != _currentStatus)
             {
@@ -65,8 +72,8 @@ namespace OsuMemoryEventSource
                 var gameMode = reader.ReadSongSelectGameMode();
                 var mapHash = reader.GetMapMd5Safe();
                 var mapSelectionMods = reader.GetMods();
-                var playingMods = status == OsuStatus.Playing || status == OsuStatus.Watching 
-                    ? reader.GetPlayingMods() 
+                var playingMods = status == OsuStatus.Playing || status == OsuStatus.Watching
+                    ? reader.GetPlayingMods()
                     : -1;
                 var retries = reader.GetRetrys();
                 var currentTime = reader.ReadPlayTime();
@@ -121,16 +128,22 @@ namespace OsuMemoryEventSource
                         MapHash = mapHash,
                         PlayMode = (PlayMode)gameMode,
                     });
-
                 }
 
-                _memoryDataProcessor.Tick(status, _currentStatus, reader);
+                for (int i = 0; i < clientReaders.Count; i++)
+                {
+                    _memoryDataProcessors[i].Tick(status, _currentStatus, clientReaders[i]);
+                }
             }
         }
 
         public void SetNewMap(IMapSearchResult map)
         {
-            _memoryDataProcessor.SetNewMap(map);
+            foreach (var memoryDataProcessor in _memoryDataProcessors)
+            {
+                memoryDataProcessor.SetNewMap(map);
+            }
+
             _patternsDispatcher.SetOutputPatterns(map.OutputPatterns);
         }
 
@@ -141,7 +154,10 @@ namespace OsuMemoryEventSource
 
         public void Dispose()
         {
-            _memoryDataProcessor?.Dispose();
+            foreach (var memoryDataProcessor in _memoryDataProcessors)
+            {
+                memoryDataProcessor?.Dispose();
+            }
             _settings.SettingUpdated -= SettingUpdated;
         }
 
@@ -150,10 +166,22 @@ namespace OsuMemoryEventSource
             if (settingUpdated.Name == Helpers.EnablePpSmoothing.Name)
             {
                 var enableSmoothing = _settings.Get<bool>(Helpers.EnablePpSmoothing);
-                _memoryDataProcessor.ToggleSmoothing(enableSmoothing);
+                foreach (var memoryDataProcessor in _memoryDataProcessors)
+                {
+                    memoryDataProcessor.ToggleSmoothing(enableSmoothing);
+                }
             }
         }
 
-        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken) => _memoryDataProcessor.CreateTokensAsync(map, cancellationToken);
+        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
+        {
+            var tasks = new List<Task>();
+            foreach (var memoryDataProcessor in _memoryDataProcessors)
+            {
+                tasks.Add(memoryDataProcessor.CreateTokensAsync(map, cancellationToken));
+            }
+
+            return Task.WhenAll(tasks);
+        }
     }
 }
