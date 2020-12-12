@@ -68,7 +68,10 @@ namespace OsuMemoryEventSource
             Logger = logger;
             LiveTokenSetter = Tokens.CreateTokenSetter(Name);
             TokenSetter = Tokens.CreateTokenSetter($"{Name}-Regular");
-            var clientCount = _settings.Get<int>(ClientCount);
+            var clientCount = _settings.Get<bool>(TourneyMode)
+                ? _settings.Get<int>(ClientCount)
+                : 1;
+
             if (_settings.Get<bool>(TourneyMode))
             {
                 string exitReason = null;
