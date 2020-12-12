@@ -44,7 +44,11 @@ namespace OsuMemoryEventSource
             _patternsDispatcher = new PatternsDispatcher(settings, saver);
             foreach (var memoryDataProcessor in _memoryDataProcessors)
             {
-                memoryDataProcessor.TokensUpdated += (_, status) => _patternsDispatcher.TokensUpdated(status);
+                memoryDataProcessor.TokensUpdated += (sender, status) =>
+                {
+                    if (sender is MemoryDataProcessor mdp && mdp.IsMainProcessor)
+                        _patternsDispatcher.TokensUpdated(status);
+                };
                 memoryDataProcessor.ToggleSmoothing(_settings.Get<bool>(Helpers.EnablePpSmoothing));
             }
         }

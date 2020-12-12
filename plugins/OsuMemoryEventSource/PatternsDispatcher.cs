@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using Newtonsoft.Json;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 
@@ -15,8 +15,11 @@ namespace OsuMemoryEventSource
         private readonly ISettings _settings;
         private readonly ISaver _saver;
         public List<IHighFrequencyDataConsumer> HighFrequencyDataConsumers { get; set; }
-        public BlockingCollection<IOutputPattern> OutputPatterns = new BlockingCollection<IOutputPattern>();
+        private BlockingCollection<IOutputPattern> OutputPatterns = new BlockingCollection<IOutputPattern>();
         public bool SaveLiveTokensOnDisk { get; private set; }
+        private ManualResetEvent _updatingOutputPatterns = new ManualResetEvent(false);
+        private ManualResetEvent _usingOutputPatterns = new ManualResetEvent(false);
+
 
         public PatternsDispatcher(ISettings settings, ISaver saver)
         {
@@ -28,42 +31,45 @@ namespace OsuMemoryEventSource
 
         public void SetOutputPatterns(IList<IOutputPattern> patterns)
         {
-            lock (OutputPatterns)
-            {
-                while (OutputPatterns.TryTake(out _) || OutputPatterns.Count != 0) { }
+            while (_usingOutputPatterns.WaitOne(1)) { }
 
-                foreach (var f in patterns)
-                {
-                    OutputPatterns.Add(f);
-                }
+            _updatingOutputPatterns.Set();
+            while (OutputPatterns.TryTake(out _) || OutputPatterns.Count != 0) { }
+            foreach (var f in patterns)
+            {
+                OutputPatterns.Add(f);
             }
+
+            _updatingOutputPatterns.Reset();
         }
 
         public void TokensUpdated(OsuStatus status)
         {
             Dictionary<string, string> output = new Dictionary<string, string>();
+            while (_updatingOutputPatterns.WaitOne(1)) { }
 
-            lock (OutputPatterns)
+            _usingOutputPatterns.Set();
+
+            if (OutputPatterns.Count > 0)
             {
-                if (OutputPatterns.Count > 0)
+                foreach (var pattern in OutputPatterns)
                 {
-                    foreach (var pattern in OutputPatterns)
-                    {
-                        if (!pattern.IsMemoryFormat)
-                            continue;
+                    if (!pattern.IsMemoryFormat)
+                        continue;
 
-                        var formattedPattern = pattern.GetFormatedPattern(((status & pattern.SaveEvent) != 0) ? OsuStatus.All : status);
-                        if (string.IsNullOrEmpty(formattedPattern))
-                            formattedPattern = " "; //workaround: OBS plugin doesn't seem to react to empty strings
+                    var formattedPattern = pattern.GetFormatedPattern(((status & pattern.SaveEvent) != 0) ? OsuStatus.All : status);
+                    if (string.IsNullOrEmpty(formattedPattern))
+                        formattedPattern = " "; //workaround: OBS plugin doesn't seem to react to empty strings
 
-                        output[pattern.Name] = formattedPattern;
-                        SetOutput(pattern, formattedPattern);
-                    }
-
-                    var json = JsonConvert.SerializeObject(output);
-                    HighFrequencyDataConsumers.ForEach(h => h.Handle(json));
+                    output[pattern.Name] = formattedPattern;
+                    SetOutput(pattern, formattedPattern);
                 }
+
+                var json = JsonConvert.SerializeObject(output);
+                HighFrequencyDataConsumers.ForEach(h => h.Handle(json));
             }
+
+            _usingOutputPatterns.Reset();
         }
 
         public void Dispose()
