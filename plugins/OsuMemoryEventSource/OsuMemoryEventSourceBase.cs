@@ -22,7 +22,8 @@ namespace OsuMemoryEventSource
          IOsuEventSource, ITokensSource
     {
         public static ConfigEntry SaveLiveTokensOnDisk = new ConfigEntry(nameof(SaveLiveTokensOnDisk), false);
-        public static ConfigEntry TourneyMode = new ConfigEntry(nameof(TourneyMode), false);
+        public static ConfigEntry TourneyMode = new ConfigEntry("TournamentMode", false);
+        public static ConfigEntry ClientCount = new ConfigEntry("TournamentClientCount", 4);
 
         protected SettingNames _names = SettingNames.Instance;
         public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
@@ -57,7 +58,7 @@ namespace OsuMemoryEventSource
 
         public OsuMemoryEventSourceBase(IContextAwareLogger logger, ISettings settings,
             IDatabaseController databaseControler, IModParser modParser,
-            List<IHighFrequencyDataConsumer> highFrequencyDataConsumers, ISaver saver)
+            List<IHighFrequencyDataConsumer> highFrequencyDataConsumers, ISaver saver, Delegates.Exit exiter)
         {
             _settings = settings;
             _databaseController = databaseControler;
@@ -66,21 +67,24 @@ namespace OsuMemoryEventSource
             Logger = logger;
             LiveTokenSetter = Tokens.CreateTokenSetter(Name);
             TokenSetter = Tokens.CreateTokenSetter($"{Name}-Regular");
-            var clientCount = 1;
+            var clientCount = _settings.Get<int>(ClientCount);
             if (_settings.Get<bool>(TourneyMode))
             {
-                var _tournamentManagerMemoryReader = OsuMemoryReader.Instance.GetInstanceForWindowTitleHint("Tournament Manager");
-                var osuClients = Process.GetProcessesByName("osu!")
-                    .Where(p => p.MainWindowTitle.Trim().StartsWith("Tournament Client"))
-                    .OrderBy(p => p.MainWindowTitle).ToList();
-                clientCount = osuClients.Count;
-                foreach (var osuClient in osuClients)
+                if (clientCount <= 1)
                 {
-                    Logger.Log($"Initalizing client \"{osuClient.MainWindowTitle}\"", LogLevel.Information);
-                    _clientMemoryReaders.Add(OsuMemoryReader.Instance.GetInstanceForWindowTitleHint(osuClient.MainWindowTitle));
+                    var exitReason = $"{ClientCount.Name} setting value is invalid. Set value equal or bigger than 1";
+                    Logger.Log(exitReason, LogLevel.Warning);
+                    MessageBox.Show(exitReason, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    exiter(exitReason);
+                    return;
                 }
+                _clientMemoryReaders.AddRange(Enumerable.Range(0, clientCount)
+                    .Select(i => OsuMemoryReader.Instance.GetInstanceForWindowTitleHint($" Tournament Client {i}")));
 
-                Logger.Log($"{_clientMemoryReaders.Count} client + tournament manager initalized", LogLevel.Information);
+                //TODO: provide tournament-manager specific data via tokens
+                var _tournamentManagerMemoryReader = OsuMemoryReader.Instance.GetInstanceForWindowTitleHint("Tournament Manager");
+
+                Logger.Log($"{_clientMemoryReaders.Count} client readers prepared", LogLevel.Information);
             }
             else
             {
