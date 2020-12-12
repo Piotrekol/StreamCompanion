@@ -29,7 +29,7 @@ namespace OsuMemoryEventSource
         private string _lastMapHash = "";
         private int _lastMapSelectionMods = -2;
         private int _lastPlayingMods = -2;
-        private List<MemoryDataProcessor> _memoryDataProcessors = new List<MemoryDataProcessor>();
+        private List<MemoryDataProcessor> _memoryDataProcessors;
         private PatternsDispatcher _patternsDispatcher;
         private ISettings _settings;
 
@@ -37,9 +37,9 @@ namespace OsuMemoryEventSource
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
-
+            var tournamentMode = clientCount > 1;
             _memoryDataProcessors = Enumerable.Range(0, clientCount)
-                .Select(x => new MemoryDataProcessor(settings, logger, x == 0, x > 0 ? $"client_{x}" : string.Empty)).ToList();
+                .Select(x => new MemoryDataProcessor(settings, logger, x == 0, tournamentMode ? $"client_{x}_" : string.Empty)).ToList();
             _patternsDispatcher = new PatternsDispatcher(settings, saver);
             var mainProcessor = _memoryDataProcessors.First(p => p.IsMainProcessor);
             mainProcessor.TokensUpdated += (sender, status) => _patternsDispatcher.TokensUpdated(status);

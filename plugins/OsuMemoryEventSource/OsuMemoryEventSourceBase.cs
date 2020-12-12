@@ -70,9 +70,9 @@ namespace OsuMemoryEventSource
             var clientCount = _settings.Get<int>(ClientCount);
             if (_settings.Get<bool>(TourneyMode))
             {
-                if (clientCount <= 1)
+                if (clientCount < 2)
                 {
-                    var exitReason = $"{ClientCount.Name} setting value is invalid. Set value equal or bigger than 1";
+                    var exitReason = $"{ClientCount.Name} setting value is invalid. Set value equal or bigger than 2";
                     Logger.Log(exitReason, LogLevel.Warning);
                     MessageBox.Show(exitReason, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     exiter(exitReason);
