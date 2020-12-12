@@ -31,7 +31,6 @@ namespace OsuMemoryEventSource
         private int _lastPlayingMods = -2;
         private List<MemoryDataProcessor> _memoryDataProcessors = new List<MemoryDataProcessor>();
         private PatternsDispatcher _patternsDispatcher;
-        //public Tokens Tokens => _memoryDataProcessor.Tokens;
         private ISettings _settings;
 
         public MemoryListener(ISettings settings, ISaver saver, IContextAwareLogger logger, int clientCount = 1)
@@ -56,7 +55,6 @@ namespace OsuMemoryEventSource
         public void Tick(List<IOsuMemoryReader> clientReaders, bool sendEvents)
         {
             var reader = clientReaders[0];
-
             _currentStatus = reader.GetCurrentStatus(out _);
             if (_lastStatusLog != _currentStatus)
             {
