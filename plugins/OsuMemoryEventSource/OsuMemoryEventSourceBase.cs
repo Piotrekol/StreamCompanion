@@ -24,6 +24,7 @@ namespace OsuMemoryEventSource
         public static ConfigEntry SaveLiveTokensOnDisk = new ConfigEntry(nameof(SaveLiveTokensOnDisk), false);
         public static ConfigEntry TourneyMode = new ConfigEntry("TournamentMode", false);
         public static ConfigEntry ClientCount = new ConfigEntry("TournamentClientCount", 4);
+        public static ConfigEntry DataClientId = new ConfigEntry("TournamentDataClientId", 0);
 
         protected SettingNames _names = SettingNames.Instance;
         public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
@@ -70,14 +71,21 @@ namespace OsuMemoryEventSource
             var clientCount = _settings.Get<int>(ClientCount);
             if (_settings.Get<bool>(TourneyMode))
             {
+                string exitReason = null;
                 if (clientCount < 2)
+                    exitReason = $"{ClientCount.Name} setting value is invalid. Set value equal or bigger than 2";
+
+                if (_settings.Get<int>(DataClientId) > clientCount - 1)
+                    exitReason = $"{DataClientId.Name} can't be bigger than {ClientCount.Name}. Client ids are 0-indexed";
+
+                if (!string.IsNullOrWhiteSpace(exitReason))
                 {
-                    var exitReason = $"{ClientCount.Name} setting value is invalid. Set value equal or bigger than 2";
                     Logger.Log(exitReason, LogLevel.Warning);
                     MessageBox.Show(exitReason, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     exiter(exitReason);
                     return;
                 }
+
                 _clientMemoryReaders.AddRange(Enumerable.Range(0, clientCount)
                     .Select(i => OsuMemoryReader.Instance.GetInstanceForWindowTitleHint($" Tournament Client {i}")));
 
