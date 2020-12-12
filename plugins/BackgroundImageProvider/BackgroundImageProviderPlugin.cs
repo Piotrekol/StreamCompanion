@@ -81,6 +81,10 @@ namespace BackgroundImageProvider
                 if (retryCount < 5)
                     return InternalCreateTokens(map, cancellationToken, ++retryCount);
             }
+            catch (UnauthorizedAccessException)
+            {
+                _logger.Log($"Could not save background image at \"{_saveLocation}\" (UnauthorizedAccessException)",LogLevel.Warning);
+            }
 
             return Task.CompletedTask;
         }
