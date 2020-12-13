@@ -180,7 +180,9 @@ namespace ClickCounter
             _frmSettings.checkBox_ResetOnRestart.CheckedChanged -= CheckBox_ResetOnRestart_CheckedChanged;
             _frmSettings.checkBox_EnableKPX.CheckedChanged -= CheckBox_EnableKPX_CheckedChanged;
             _frmSettings.checkBox_enableMouseHook.CheckedChanged -= CheckBox_enableMouseHook_CheckedChanged;
+            _frmSettings.checkBox_resetOnPlay.CheckedChanged -= CheckBox_resetOnPlayOnCheckedChanged;
             _frmSettings.KeysChanged -= _frmSettings_KeysChanged;
+
             _frmSettings.Dispose();
         }
 
