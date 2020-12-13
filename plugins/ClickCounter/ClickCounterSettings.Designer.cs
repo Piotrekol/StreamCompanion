@@ -43,6 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox_disableDiskSaving = new System.Windows.Forms.CheckBox();
+            this.checkBox_resetOnPlay = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox_Mouse.SuspendLayout();
             this.SuspendLayout();
@@ -118,7 +119,7 @@
             // 
             this.checkBox_EnableKPX.AutoSize = true;
             this.checkBox_EnableKPX.Enabled = false;
-            this.checkBox_EnableKPX.Location = new System.Drawing.Point(4, 280);
+            this.checkBox_EnableKPX.Location = new System.Drawing.Point(4, 298);
             this.checkBox_EnableKPX.Name = "checkBox_EnableKPX";
             this.checkBox_EnableKPX.Size = new System.Drawing.Size(166, 17);
             this.checkBox_EnableKPX.TabIndex = 4;
@@ -187,7 +188,7 @@
             // checkBox_disableDiskSaving
             // 
             this.checkBox_disableDiskSaving.AutoSize = true;
-            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(4, 299);
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(4, 317);
             this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
             this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(236, 17);
             this.checkBox_disableDiskSaving.TabIndex = 7;
@@ -195,10 +196,21 @@
             this.checkBox_disableDiskSaving.UseVisualStyleBackColor = true;
             this.checkBox_disableDiskSaving.CheckedChanged += new System.EventHandler(this.checkBox_disableDiskSaving_CheckedChanged);
             // 
+            // checkBox_resetOnPlay
+            // 
+            this.checkBox_resetOnPlay.AutoSize = true;
+            this.checkBox_resetOnPlay.Location = new System.Drawing.Point(4, 279);
+            this.checkBox_resetOnPlay.Name = "checkBox_resetOnPlay";
+            this.checkBox_resetOnPlay.Size = new System.Drawing.Size(173, 17);
+            this.checkBox_resetOnPlay.TabIndex = 8;
+            this.checkBox_resetOnPlay.Text = "Reset key counts on each play";
+            this.checkBox_resetOnPlay.UseVisualStyleBackColor = true;
+            // 
             // ClickCounterSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBox_resetOnPlay);
             this.Controls.Add(this.checkBox_disableDiskSaving);
             this.Controls.Add(this.groupBox_Mouse);
             this.Controls.Add(this.checkBox_enableMouseHook);
@@ -208,7 +220,7 @@
             this.Controls.Add(this.button_AddKey);
             this.Controls.Add(this.dataGridView1);
             this.Name = "ClickCounterSettings";
-            this.Size = new System.Drawing.Size(493, 324);
+            this.Size = new System.Drawing.Size(493, 355);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox_Mouse.ResumeLayout(false);
             this.groupBox_Mouse.PerformLayout();
@@ -234,5 +246,6 @@
         private System.Windows.Forms.Label label_MouseLeft;
         private System.Windows.Forms.Label label_MouseRight;
         private System.Windows.Forms.CheckBox checkBox_disableDiskSaving;
+        public System.Windows.Forms.CheckBox checkBox_resetOnPlay;
     }
 }

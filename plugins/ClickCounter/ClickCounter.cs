@@ -18,6 +18,7 @@ namespace ClickCounter
     public class ClickCounter : ApplicationContext, IPlugin, ISettingsSource, IDisposable, ITokensSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
+        public static ConfigEntry ResetKeyCountsOnEachPlay = new ConfigEntry("ResetKeyCountsOnEachPlay", false);
         private ISettings _settings;
         private ClickCounterSettings _frmSettings;
         private KeyboardListener _keyboardListener;
@@ -229,14 +230,21 @@ namespace ClickCounter
                 _frmSettings.checkBox_ResetOnRestart.CheckedChanged += CheckBox_ResetOnRestart_CheckedChanged;
                 _frmSettings.checkBox_EnableKPX.CheckedChanged += CheckBox_EnableKPX_CheckedChanged;
                 _frmSettings.checkBox_enableMouseHook.CheckedChanged += CheckBox_enableMouseHook_CheckedChanged;
+                _frmSettings.checkBox_resetOnPlay.CheckedChanged += CheckBox_resetOnPlayOnCheckedChanged;
             }
             _frmSettings.checkBox_ResetOnRestart.Checked = _settings.Get<bool>(_names.ResetKeysOnRestart);
             _frmSettings.checkBox_enableMouseHook.Checked = _settings.Get<bool>(_names.EnableMouseHook);
+            _frmSettings.checkBox_resetOnPlay.Checked = _settings.Get<bool>(ResetKeyCountsOnEachPlay);
             _frmSettings.SetLeftMouseCount(_leftMouseCount);
             _frmSettings.SetRightMouseCount(_rightMouseCount);
             _frmSettings.RefreshDataGrid();
             _frmSettings.KeysChanged += _frmSettings_KeysChanged;
             return _frmSettings;
+        }
+
+        private void CheckBox_resetOnPlayOnCheckedChanged(object sender, EventArgs e)
+        {
+            _settings.Add(ResetKeyCountsOnEachPlay.Name, _frmSettings.checkBox_resetOnPlay.Checked);
         }
 
         private void CheckBox_enableMouseHook_CheckedChanged(object sender, EventArgs e)
@@ -309,13 +317,21 @@ namespace ClickCounter
         private string getTokenName(string keyName) => $"key-{keyName}".ToLowerInvariant().RemoveWhitespace();
         public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
+            if ((map.SearchArgs.EventType == OsuEventType.MapChange ||
+                 map.SearchArgs.EventType == OsuEventType.PlayChange) &&
+                _settings.Get<bool>(ResetKeyCountsOnEachPlay))
+            {
+                ResetKeys();
+            }
+
             for (int i = 0; i < _keyList.Count; i++)
             {
                 _tokenSetter(getTokenName(_filenames[_keyList[i]]), _keyCount[_keyList[i]], TokenType.Live);
             }
+
             _tokenSetter(getTokenName("m1.txt"), _rightMouseCount, TokenType.Live);
             _tokenSetter(getTokenName("m2.txt"), _leftMouseCount, TokenType.Live);
-
+            
             return Task.CompletedTask;
         }
 
