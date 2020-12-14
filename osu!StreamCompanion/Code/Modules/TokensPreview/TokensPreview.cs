@@ -26,7 +26,16 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
         }
         public void Start(ILogger logger)
         {
-            tokenFormats = JsonConvert.DeserializeObject<Dictionary<string, string>>(_settings.Get<string>(SettingNames.Instance.TokenFormats));
+            try
+            {
+                tokenFormats = JsonConvert.DeserializeObject<Dictionary<string, string>>(_settings.Get<string>(SettingNames.Instance.TokenFormats));
+            }
+            catch (Exception ex)
+            {
+                logger.Log("Error while parsing token formats, value was reset to default", LogLevel.Warning);
+                logger.Log(ex, LogLevel.Error);
+                tokenFormats = JsonConvert.DeserializeObject<Dictionary<string, string>>(SettingNames.Instance.TokenFormats.Default<string>());
+            }
 
             Tokens.AllTokensChanged += (sender, args) =>
             {
