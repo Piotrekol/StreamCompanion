@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -53,18 +54,24 @@ namespace ModImageGenerator
             {
                 if (map.BeatmapsFound.Any())
                 {
-                    var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
-                    string mods = map.Mods?.ShownMods ?? "";
-                    using (Bitmap img = _imageGenerator.GenerateImage(mods.Split(',')))
+                    try
                     {
-                        try
+                        var fullPathOfCreatedImage = Path.Combine(_saver.SaveDirectory, "ModImage.png");
+                        string mods = map.Mods?.ShownMods ?? "";
+                        using (Bitmap img = _imageGenerator.GenerateImage(mods.Split(',')))
                         {
                             img.Save(fullPathOfCreatedImage, ImageFormat.Png);
+
                         }
-                        catch (ExternalException e)
-                        {
-                            _logger.Log("Image file save fail: {0} {1}", LogLevel.Error, e.ErrorCode.ToString(), e.Message ?? "null");
-                        }
+                    }
+                    catch (ExternalException e)
+                    {
+                        _logger.Log("Image file save fail: {0} {1} {2}", LogLevel.Error, e.ErrorCode.ToString(),
+                            e.Message ?? "null", e.StackTrace);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        _logger.Log(e, LogLevel.Error);
                     }
                 }
             }
