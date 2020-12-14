@@ -38,11 +38,6 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         }
 
 
-        private bool SaveDirectoryExists()
-        {
-            return Directory.Exists(Path.Combine(_saver.SaveDirectory, _logsSaveFolderName));
-        }
-
         public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
             => InternalLog(logMessage, loglvevel, 0, vals);
 
@@ -64,16 +59,11 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             }
             catch (Exception exception)
             {
-                if (SaveDirectoryExists() || attemptCount >= 3)
+                if (attemptCount >= 3)
                 {
-                    if (attemptCount >= 3)
-                    {
-                        exception.Data["Logger"] = nameof(FileLogger);
-                        _parentLogger?.Log(exception, LogLevel.Error);
-                        return;
-                    }
-
-                    InternalLog(logMessage, loglvevel, ++attemptCount, vals);
+                    exception.Data["Logger"] = nameof(FileLogger);
+                    _parentLogger?.Log(exception, LogLevel.Error);
+                    return;
                 }
 
                 lock (_lockingObject)
