@@ -22,7 +22,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         }
         public void Log(object logMessage, LogLevel logLevel, params string[] vals)
         {
-            if (logLevel == LogLevel.Error || logLevel == LogLevel.Critical)
+            if (logLevel == LogLevel.Critical)
             {
                 SentryEvent sentryEvent;
                 if (logMessage is Exception)
