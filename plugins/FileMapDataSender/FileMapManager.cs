@@ -20,12 +20,16 @@ namespace FileMapDataSender
                 {
                     byte[] bytes;
                     if (ASCIIonly)
-                        bytes = Encoding.ASCII.GetBytes(data.Replace("\\n","\n"));
+                        bytes = Encoding.ASCII.GetBytes(data.Replace("\\n", "\n"));
                     else
                         bytes = Encoding.Unicode.GetBytes(data);
                     using (var a = File.CreateViewStream())
                     {
-                        a.Write(bytes, 0, bytes.Length);
+                        var contentSize = bytes.LongLength > a.Capacity
+                            ? (int)a.Capacity
+                            : bytes.Length;
+
+                        a.Write(bytes, 0, contentSize);
                         a.WriteByte(0);
                     }
                 }
