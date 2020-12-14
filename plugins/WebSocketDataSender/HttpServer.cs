@@ -25,7 +25,7 @@ namespace WebSocketDataSender
         }
 
         public Task RunAsync() => _server.RunAsync();
-        
+
         private static WebServer CreateWebServer(string url, string rootPath, ILogger logger,
             IEnumerable<(string Description, IWebModule Module)> modules)
         {
@@ -53,10 +53,9 @@ namespace WebSocketDataSender
                 return ctx.SendStringAsync($"Usable endpoints:{Environment.NewLine}{endpoints}", "text", Encoding.Default);
             }))
                 .WithStaticFolder("/", rootPath, true, m => m.WithoutContentCaching().WithDirectoryLister(DirectoryLister.Html));
-
+            
             return server;
         }
-
 
         public void Dispose()
         {
@@ -72,7 +71,17 @@ namespace WebSocketDataSender
             }
             public void Log(LogMessageReceivedEventArgs logEvent)
             {
-                _logger.Log(logEvent.Message, StreamCompanionTypes.Enums.LogLevel.Debug);
+                var loglevel = logEvent.MessageType switch
+                {
+                    LogLevel.Error => StreamCompanionTypes.Enums.LogLevel.Error,
+                    LogLevel.Fatal => StreamCompanionTypes.Enums.LogLevel.Critical,
+                    _ => StreamCompanionTypes.Enums.LogLevel.Debug
+                };
+
+                if (logEvent.Exception != null)
+                    _logger.Log(logEvent.Exception, loglevel);
+                else
+                    _logger.Log(logEvent.Message, loglevel);
             }
 
             public LogLevel LogLevel { get; } = LogLevel.Info;

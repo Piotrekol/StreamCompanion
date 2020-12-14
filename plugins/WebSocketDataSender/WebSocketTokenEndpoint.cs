@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 using EmbedIO.WebSockets;
 using StreamCompanionTypes.DataTypes;
 using Swan;
+using Swan.Logging;
 
 namespace WebSocketDataSender
 {
@@ -53,20 +55,21 @@ namespace WebSocketDataSender
             Dictionary<string, object> watchedTokens;
             lock (_lockingObject)
                 watchedTokens = watchedTokensPerContext[context.Id];
-
-            while (true)
+            try
             {
-                await Task.Delay(33);
-                lock (watchedTokens)
+                while (true)
                 {
-                    if (context.WebSocket.State != WebSocketState.Open)
-                        return;
-
-                    for (var i = 0; i < watchedTokens.Count; i++)
+                    await Task.Delay(33);
+                    lock (watchedTokens)
                     {
-                        var watchedToken = watchedTokens.ElementAt(i);
-                        if (!_tokens.ContainsKey(watchedToken.Key))
-                            continue;
+                        if (context.WebSocket.State != WebSocketState.Open)
+                            return;
+
+                        for (var i = 0; i < watchedTokens.Count; i++)
+                        {
+                            var watchedToken = watchedTokens.ElementAt(i);
+                            if (!_tokens.ContainsKey(watchedToken.Key))
+                                continue;
                         var tokenValue = _tokens[watchedToken.Key].Value;
 
                         var valueIsDifferent = (tokenValue is double tv)
@@ -74,18 +77,28 @@ namespace WebSocketDataSender
                             : tokenValue != watchedToken.Value;
                         if (valueIsDifferent)
                         {
-                            watchedTokens[watchedToken.Key] = tokenValue;
-                            tokenKVs[watchedToken.Key] = tokenValue;
+                                watchedTokens[watchedToken.Key] = tokenValue;
+                                tokenKVs[watchedToken.Key] = tokenValue;
+                            }
                         }
                     }
-                }
 
-                if (tokenKVs.Any())
-                {
-                    var payload = Newtonsoft.Json.JsonConvert.SerializeObject(tokenKVs);
-                    await SendAsync(context, payload);
-                    tokenKVs.Clear();
+                    if (tokenKVs.Any())
+                    {
+                        var payload = Newtonsoft.Json.JsonConvert.SerializeObject(tokenKVs);
+                        await SendAsync(context, payload);
+                        tokenKVs.Clear();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex, context.Id);
+                try
+                {
+                    await context.WebSocket.CloseAsync();
+                }
+                catch{}
             }
         }
 
