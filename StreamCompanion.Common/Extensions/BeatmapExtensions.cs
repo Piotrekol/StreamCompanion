@@ -33,8 +33,11 @@ namespace StreamCompanion.Common
                 {
                     if (line.ToLower().Contains(".jpg") || line.ToLower().Contains(".png") || line.ToLower().Contains(".jpeg"))
                     {
-                        var splited = line.Split(',');
-                        ImageLocation = Path.Combine(beatmap.BeatmapDirectory(songsDirectory), splited[2].Trim('"'));
+                        var split = line.Split(',');
+                        if (split.Length < 3)
+                            continue;
+
+                        ImageLocation = Path.Combine(beatmap.BeatmapDirectory(songsDirectory), split[2].Trim('"'));
                         if (!File.Exists(ImageLocation))
                         {
                             return string.Empty;
