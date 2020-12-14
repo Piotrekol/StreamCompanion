@@ -59,7 +59,7 @@ namespace osu_StreamCompanion.Code.Core
                 mainLogger.AddLogger(new EmptyLogger());
             }
 
-            mainLogger.AddLogger(new FileLogger(saver, Settings));
+            mainLogger.AddLogger(new FileLogger(saver, Settings, mainLogger));
 #if !DEBUG
             mainLogger.AddLogger(new SentryLogger());
 #endif

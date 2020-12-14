@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.IO;
-using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
@@ -12,16 +11,18 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         private readonly SettingNames _names = SettingNames.Instance;
         private ISaver _saver;
         private readonly Settings _settings;
+        private readonly ILogger _parentLogger;
         DateTime startTime = DateTime.Today;
         private string CurrentLogSaveLocation = "";
         private object _lockingObject = new object();
 
         private readonly string _logsSaveFolderName = @"Logs\";
 
-        public FileLogger(ISaver saver, Settings settings)
+        internal FileLogger(ISaver saver, Settings settings, ILogger parentLogger = null)
         {
             _saver = saver;
             _settings = settings;
+            _parentLogger = parentLogger;
 
             CreateLogsDirectory();
         }
@@ -43,9 +44,16 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         }
 
         public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
+            => InternalLog(logMessage, loglvevel, 0, vals);
+
+        private void InternalLog(object logMessage, LogLevel loglvevel, int attemptCount, params string[] vals)
         {
             try
             {
+                if (logMessage is Exception ex && ex.Data.Contains("Logger") &&
+                    ex.Data["Logger"].ToString() == nameof(FileLogger))
+                    return;
+
                 if (_settings.Get<int>(_names.LogLevel) <= loglvevel.GetHashCode())
                 {
                     lock (_lockingObject)
@@ -54,15 +62,24 @@ namespace osu_StreamCompanion.Code.Core.Loggers
                     }
                 }
             }
-            catch
+            catch (Exception exception)
             {
-                if (SaveDirectoryExists())
-                    throw;
+                if (SaveDirectoryExists() || attemptCount >= 3)
+                {
+                    if (attemptCount >= 3)
+                    {
+                        exception.Data["Logger"] = nameof(FileLogger);
+                        _parentLogger?.Log(exception, LogLevel.Error);
+                        return;
+                    }
+
+                    InternalLog(logMessage, loglvevel, ++attemptCount, vals);
+                }
 
                 lock (_lockingObject)
                     CreateLogsDirectory();
 
-                Log(logMessage, loglvevel, vals);
+                InternalLog(logMessage, loglvevel, ++attemptCount, vals);
             }
         }
 
