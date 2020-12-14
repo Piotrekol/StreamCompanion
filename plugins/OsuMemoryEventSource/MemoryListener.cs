@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -123,11 +124,14 @@ namespace OsuMemoryEventSource
                     _lastMapHash = mapHash;
                     _lastPlayingMods = playingMods;
 
+                    var rawString = Retry.RetryMe(() => reader.GetSongString(),
+                        s => (System.Text.Encoding.UTF8.GetByteCount(s) == s.Length), 5) ?? string.Empty;
+
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory", osuEventType.Value)
                     {
                         MapId = _currentMapId,
                         Status = status,
-                        Raw = reader.GetSongString(),
+                        Raw = rawString,
                         MapHash = mapHash,
                         PlayMode = (PlayMode)gameMode,
                     });
