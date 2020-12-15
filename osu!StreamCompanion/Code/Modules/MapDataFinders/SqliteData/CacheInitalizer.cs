@@ -59,7 +59,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
                     }
                     catch (Exception e)
                     {
-                        if (e.Message == "Connection was closed, statement was terminated")
+                        if (e.Message == "Connection was closed, statement was terminated" || e is ObjectDisposedException)
                         {
                             _mainWindowHandle.BeatmapsLoaded = "loading of osu!.db aborted";
                             return;
