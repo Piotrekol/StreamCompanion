@@ -446,8 +446,8 @@ namespace osu_StreamCompanion.Code.Core
             }
             catch (SQLiteException e)
             {
-                var exception = new Exception($"GetBeatmapUsingReplacementsException: ''{lastQuery}'', ''{lastQueryParameters}''", e);
-                _logger.Log(exception, LogLevel.Error);
+                e.Data["query"] = lastQuery;
+                _logger.Log(e, LogLevel.Error);
             }
             return foundData ? retBeatmap : null;
 
