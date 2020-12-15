@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 
@@ -9,11 +11,13 @@ namespace osu_StreamCompanion.Code.Core.Loggers
     public class FileLogger : ILogger
     {
         private readonly SettingNames _names = SettingNames.Instance;
+        public static ConfigEntry LogsRetentionDays = new ConfigEntry("LogsRetentionDays", 14);
         private ISaver _saver;
         private readonly Settings _settings;
         private readonly ILogger _parentLogger;
         DateTime startTime = DateTime.Today;
-        private string CurrentLogSaveLocation = "";
+        private string _logsSaveLocation = String.Empty;
+        private string _saveDirectory = String.Empty;
         private object _lockingObject = new object();
 
         private readonly string _logsSaveFolderName = @"Logs\";
@@ -25,18 +29,38 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             _parentLogger = parentLogger;
 
             CreateLogsDirectory();
+            CleanupLogs();
+        }
+
+        private void CleanupLogs()
+        {
+            try
+            {
+                var deleteDateThreshold = DateTime.UtcNow.AddDays(-_settings.Get<int>(LogsRetentionDays));
+                var logFilePaths = Directory.GetFiles(_saveDirectory, "*.txt", SearchOption.TopDirectoryOnly);
+                var logFiles = logFilePaths.Select(l => new FileInfo(l))
+                    .Where(f => f.LastWriteTimeUtc < deleteDateThreshold);
+
+                foreach (var logFile in logFiles)
+                {
+                    logFile.Delete();
+                }
+            }
+            catch (Exception ex)
+            {
+                _parentLogger?.Log(ex, LogLevel.Error);
+            }
         }
 
         private void CreateLogsDirectory()
         {
-            string dir = Path.Combine(_saver.SaveDirectory, _logsSaveFolderName);
+            _saveDirectory = Path.Combine(_saver.SaveDirectory, _logsSaveFolderName);
 
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+            if (!Directory.Exists(_saveDirectory))
+                Directory.CreateDirectory(_saveDirectory);
 
-            CurrentLogSaveLocation = Path.Combine(dir, $"{startTime:yyyy-MM-dd}.txt");
+            _logsSaveLocation = Path.Combine(_saveDirectory, $"{startTime:yyyy-MM-dd}.txt");
         }
-
 
         public void Log(object logMessage, LogLevel loglvevel, params string[] vals)
             => InternalLog(logMessage, loglvevel, 0, vals);
@@ -53,7 +77,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
                 {
                     lock (_lockingObject)
                     {
-                        File.AppendAllText(CurrentLogSaveLocation, logMessage + Environment.NewLine);
+                        File.AppendAllText(_logsSaveLocation, logMessage + Environment.NewLine);
                     }
                 }
             }
