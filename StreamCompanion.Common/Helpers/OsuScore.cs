@@ -93,7 +93,7 @@ namespace StreamCompanion.Common.Helpers
 
             if ((ratio300 > 0.8 && cMiss == 0) || ratio300 > 0.9) return OsuGrade.A;
             if ((ratio300 > 0.7 && cMiss == 0) || ratio300 > 0.8) return OsuGrade.B;
-            if (ratio300 > 0.6 && cMiss == 0) return OsuGrade.C;
+            if (ratio300 > 0.6) return OsuGrade.C;
             return OsuGrade.D;
         }
 
