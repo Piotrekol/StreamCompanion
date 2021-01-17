@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace FileMapDataSender
@@ -35,7 +36,7 @@ namespace FileMapDataSender
                 }
             }
         }
-
+        [SupportedOSPlatform("windows")]
         private MapContainer GetFile(string pipeName)
         {
             lock (_lockingObject)
@@ -51,6 +52,7 @@ namespace FileMapDataSender
             }
         }
 
+        [SupportedOSPlatform("windows")]
         public void Write(string name, string value)
         {
             var file = GetFile(name);

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 
 namespace osu_StreamCompanion.Code.Modules.Donation
 {
@@ -13,8 +15,7 @@ namespace osu_StreamCompanion.Code.Modules.Donation
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CX2ZC3JKVAK74");
-
+            ProcessExt.OpenUrl(@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CX2ZC3JKVAK74");
         }
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using Newtonsoft.Json;
+using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces.Services;
 using WebSocketDataSender.WebOverlay.Models;
@@ -86,7 +87,7 @@ namespace WebSocketDataSender.WebOverlay
                 var webUrl = WebSocketDataGetter.BaseAddress(_settings);
                 _webOverlaySettings = new WebOverlaySettings(_settings, OverlayConfiguration);
                 _webOverlaySettings.ResetSettings += (_, __) => ResetSettings();
-                _webOverlaySettings.OpenWebUrl += (_, __) => Process.Start(webUrl);
+                _webOverlaySettings.OpenWebUrl += (_, __) => ProcessExt.OpenUrl(webUrl);
                 _webOverlaySettings.OpenFilesFolder += (_, __) => Process.Start("explorer.exe", filesLocation);
                 _webOverlaySettings.FilesLocation = filesLocation;
                 _webOverlaySettings.WebUrl = webUrl;

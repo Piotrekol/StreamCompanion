@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
@@ -42,16 +43,10 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <PropertyGroup>
-    <PostBuildEvent>mkdir "$(TargetDir)\..\$(ConfigurationName)"
-mkdir "$(TargetDir)\..\$(ConfigurationName)\Dlls"
-
-copy "$(TargetDir)\WebSocketDataSender.dll" "$(TargetDir)\..\$(ConfigurationName)\WebSocketDataSender.dll"
-copy "$(TargetDir)\Swan.Lite.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\Swan.Lite.dll"
-copy "$(TargetDir)\EmbedIO.dll" "$(TargetDir)\..\$(ConfigurationName)\Dlls\EmbedIO.dll"
-
-mkdir "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls"
-copy "$(TargetDir)\..\$(ConfigurationName)\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\"
-copy "$(TargetDir)\..\$(ConfigurationName)\Dlls\*" "$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\"</PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xA;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;&#xA;&#xA;copy &quot;$(TargetDir)\WebSocketDataSender.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\WebSocketDataSender.dll&quot;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\Swan.Lite.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\Swan.Lite.dll&quot;&#xD;&#xA;&#xA;copy &quot;$(TargetDir)\EmbedIO.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\EmbedIO.dll&quot;&#xD;&#xA;&#xA;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xA;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;&#xA;copy &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />
+  </Target>
 </Project>

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace ClickCounter
 {
@@ -84,15 +85,12 @@ namespace ClickCounter
         [MethodImpl(MethodImplOptions.NoInlining)]
         private IntPtr LowLevelKeyboardProc(int nCode, UIntPtr wParam, IntPtr lParam)
         {
-            //Console.WriteLine("got event");
-
             if (nCode >= 0)
                 if (wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_KEYDOWN ||
                     wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_KEYUP ||
                     wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_SYSKEYDOWN ||
                     wParam.ToUInt32() == (int)InterceptKeys.KeyEvent.WM_SYSKEYUP)
-                    hookedKeyboardCallbackAsync.BeginInvoke((InterceptKeys.KeyEvent)wParam.ToUInt32(), Marshal.ReadInt32(lParam), null, null);
-            //return (IntPtr) 1;
+                    Task.Run(() => hookedKeyboardCallbackAsync((InterceptKeys.KeyEvent)wParam.ToUInt32(), Marshal.ReadInt32(lParam)));
             return InterceptKeys.CallNextHookEx(hookId, nCode, wParam, lParam);
         }
 
