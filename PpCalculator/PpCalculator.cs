@@ -43,7 +43,7 @@ namespace PpCalculator
 
         protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
 
-        public int? RulesetId => Ruleset.LegacyID;
+        public int? RulesetId => Ruleset.RulesetInfo.ID;
 
 
         public void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
@@ -84,6 +84,7 @@ namespace PpCalculator
             return result;
         }
 
+        private DifficultyAttributes DummyAtributtes { get; } = new DifficultyAttributes();
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
         {
             if (WorkingBeatmap == null)
@@ -131,7 +132,7 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                PerformanceCalculator = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo);
+                PerformanceCalculator = ruleset.CreatePerformanceCalculator(DummyAtributtes, ScoreInfo, WorkingBeatmap);
                 ResetPerformanceCalculator = false;
             }
 

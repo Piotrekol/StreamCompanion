@@ -14,7 +14,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using osu.Framework.Graphics.Video;
 using osu.Game.IO;
 using osu.Game.Rulesets.Objects.Types;
 
@@ -35,7 +34,7 @@ namespace PpCalculator
                     return 0;
 
                 var hitObject = beatmap.HitObjects.Last();
-                return (hitObject as IHasEndTime)?.EndTime ?? hitObject.StartTime;
+                return (hitObject as IHasDuration)?.EndTime ?? hitObject.StartTime;
             }
         }
 
@@ -84,9 +83,7 @@ namespace PpCalculator
 
         protected override IBeatmap GetBeatmap() => beatmap;
         protected override Texture GetBackground() => null;
-        protected override VideoSprite GetVideo() => null;
-
-        protected override Track GetTrack() => null;
+        protected override Track GetBeatmapTrack() => null;
 
         public static Ruleset GetRulesetFromLegacyID(int id)
         {
