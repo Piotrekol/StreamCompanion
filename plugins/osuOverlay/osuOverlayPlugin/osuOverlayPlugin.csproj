@@ -37,9 +37,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\osuOverlayLoader\osuOverlayLoader.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="StreamCompanionTypes">
       <Version>5.2.1</Version>
       <ExcludeAssets>runtime</ExcludeAssets>

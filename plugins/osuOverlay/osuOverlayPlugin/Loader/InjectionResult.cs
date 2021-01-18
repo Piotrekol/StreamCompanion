@@ -1,4 +1,4 @@
-﻿namespace osuOverlayLoader
+﻿namespace osuOverlay.Loader
 {
     public class InjectionResult
     {
