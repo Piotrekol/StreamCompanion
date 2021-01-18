@@ -144,6 +144,6 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="CALL &quot;$(SolutionDir)build\msbuild.bat&quot; &quot;$(SolutionDir)VersionControler\VersionControler.csproj&quot; /p:Configuration=Debug&#xA;&quot; &#xD;&#xA;$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe&quot; &quot;$(SolutionDir)osu!StreamCompanion\Program.cs&quot; -1 &quot;&quot; &quot;public static string ScVersion =&quot;" />
+    <Exec Command="CALL &quot;$(SolutionDir)build\msbuild.bat&quot; &quot;$(SolutionDir)VersionControler\VersionControler.csproj&quot; /p:Configuration=Debug&#xD;&#xA;&#xA;&quot;$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe&quot; &quot;$(SolutionDir)osu!StreamCompanion\Program.cs&quot; -1 &quot;&quot; &quot;public static string ScVersion =&quot;" />
   </Target>
 </Project>
