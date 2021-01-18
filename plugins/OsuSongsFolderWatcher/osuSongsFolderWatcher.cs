@@ -67,7 +67,6 @@ namespace OsuSongsFolderWatcher
 
             if (Directory.Exists(dir))
             {
-                memoryCache = MemoryCache.Default;
                 memoryCache = new MemoryCache("DelayedCache", new NameValueCollection
                 {
                     {"PollingInterval","00:00:01"},

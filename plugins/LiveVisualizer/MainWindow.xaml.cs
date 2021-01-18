@@ -24,12 +24,12 @@ namespace LiveVisualizer
             this.frameholderTimer.Visibility = Visibility.Hidden;
             this.DataContext = data;
 
-            var backgroundFill = Convert(data.Configuration.FillColor);
+            var backgroundFill = ColorHelpers.Convert(data.Configuration.FillColor);
             BackgroundPlottable = data.Display.BackgroundDataPlot.plt.PlotSignal(new double[] { 1, 10, 5, 15, 10, 5, 0 }, lineWidth: 3, markerSize: 0, color: backgroundFill);
-            BackgroundPlottable.fillColor1 = Convert(data.Configuration.FillColor);
+            BackgroundPlottable.fillColor1 = backgroundFill;
             BackgroundPlottable.fillType = FillType.FillBelow;
 
-            var foregroundFill = Convert(data.Configuration.ChartProgressColor);
+            var foregroundFill = ColorHelpers.Convert(data.Configuration.ChartProgressColor);
             ForegroundPlottable = data.Display.MainDataPlot.plt.PlotSignal(new double[] { 1, 10, 5, 15, 10, 5, 0 }, lineWidth: 3, markerSize: 0, color: foregroundFill);
             ForegroundPlottable.fillColor1 = foregroundFill;
             ForegroundPlottable.fillType = FillType.FillBelow;
@@ -37,10 +37,6 @@ namespace LiveVisualizer
             this.frameholder.Content = new Chart(new DataPlotBinding { WpfPlot = data.Display.BackgroundDataPlot, Data = data });
             this.frameholderTimer.Content = new Chart(new DataPlotBinding { WpfPlot = data.Display.MainDataPlot, Data = data });
         }
-
-        private Color Convert(System.Windows.Media.Color color)
-            => Color.FromArgb(color.A, color.R, color.G, color.B);
-
 
         public void UpdateChart()
         {
@@ -61,8 +57,8 @@ namespace LiveVisualizer
             this.frameholder.Visibility = Visibility.Visible;
             this.frameholderTimer.Visibility = Visibility.Visible;
 
-            var backgroundFill = Convert(data.Configuration.ChartColor);
-            var foregroundFill = Convert(data.Configuration.ChartProgressColor);
+            var backgroundFill = ColorHelpers.Convert(data.Configuration.ChartColor);
+            var foregroundFill = ColorHelpers.Convert(data.Configuration.ChartProgressColor);
 
             BackgroundPlottable.ys = ForegroundPlottable.ys = strains;
             BackgroundPlottable.maxRenderIndex = ForegroundPlottable.maxRenderIndex = BackgroundPlottable.ys.Length - 1;
