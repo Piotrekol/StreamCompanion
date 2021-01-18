@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.button_end = new System.Windows.Forms.Button();
             this.label_Description2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -45,15 +45,27 @@
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(399, 242);
+            this.panel1.Size = new System.Drawing.Size(465, 279);
             this.panel1.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(158, 80);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(299, 28);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "All setup steps completed";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button_end
             // 
-            this.button_end.Location = new System.Drawing.Point(72, 211);
+            this.button_end.Location = new System.Drawing.Point(84, 243);
+            this.button_end.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button_end.Name = "button_end";
-            this.button_end.Size = new System.Drawing.Size(254, 28);
+            this.button_end.Size = new System.Drawing.Size(296, 32);
             this.button_end.TabIndex = 8;
             this.button_end.Text = "End setup";
             this.button_end.UseVisualStyleBackColor = true;
@@ -61,37 +73,31 @@
             // 
             // label_Description2
             // 
-            this.label_Description2.Location = new System.Drawing.Point(3, 134);
+            this.label_Description2.Location = new System.Drawing.Point(4, 155);
+            this.label_Description2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_Description2.Name = "label_Description2";
-            this.label_Description2.Size = new System.Drawing.Size(388, 24);
+            this.label_Description2.Size = new System.Drawing.Size(453, 28);
             this.label_Description2.TabIndex = 4;
             this.label_Description2.Text = "You can now close this setup.";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox1.Location = new System.Drawing.Point(4, 3);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
+            this.pictureBox1.Size = new System.Drawing.Size(149, 148);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(135, 69);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(256, 24);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "All setup steps completed";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // FirstRunFinish
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FirstRunFinish";
-            this.Size = new System.Drawing.Size(399, 242);
+            this.Size = new System.Drawing.Size(465, 279);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
