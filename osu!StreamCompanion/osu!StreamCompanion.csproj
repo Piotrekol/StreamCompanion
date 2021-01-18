@@ -139,13 +139,11 @@
     <OutputPath>..\build\Debug\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>CALL "$(SolutionDir)build\msbuild.bat" "$(SolutionDir)VersionControler\VersionControler.csproj" /p:Configuration=Debug
-"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" -1 "" "public static string ScVersion ="
-</PreBuildEvent>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\build\Release\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="CALL &quot;$(SolutionDir)build\msbuild.bat&quot; &quot;$(SolutionDir)VersionControler\VersionControler.csproj&quot; /p:Configuration=Debug&#xA;&quot; &#xD;&#xA;$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe&quot; &quot;$(SolutionDir)osu!StreamCompanion\Program.cs&quot; -1 &quot;&quot; &quot;public static string ScVersion =&quot;" />
+  </Target>
 </Project>
