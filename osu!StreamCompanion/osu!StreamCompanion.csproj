@@ -114,7 +114,7 @@
     <ProjectReference Include="..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CollectionManager" Version="1.0.7" />
+    <PackageReference Include="CollectionManager" version="1.0.8" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Grace" Version="7.2.0" />
     <PackageReference Include="Jace" Version="1.0.0" />
