@@ -1,12 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>8</LangVersion>
@@ -47,6 +48,6 @@
     <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xA;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;&#xA;&#xA;copy &quot;$(TargetDir)\WebSocketDataSender.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\WebSocketDataSender.dll&quot;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\Swan.Lite.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\Swan.Lite.dll&quot;&#xD;&#xA;&#xA;copy &quot;$(TargetDir)\EmbedIO.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\EmbedIO.dll&quot;&#xD;&#xA;&#xA;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xA;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;&#xA;copy &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />
+    <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xA;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;&#xA;&#xA;copy &quot;$(TargetDir)\WebSocketDataSender.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\WebSocketDataSender.dll&quot;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\Swan.Lite.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\Swan.Lite.dll&quot;&#xD;&#xA;&#xA;copy &quot;$(TargetDir)\EmbedIO.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\EmbedIO.dll&quot;&#xD;&#xA;&#xA;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xA;&#xD;&#xA;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />
   </Target>
 </Project>
