@@ -51,7 +51,6 @@ namespace LiveVisualizer
 
             BindColorPicker(color_chartPrimary, () => _configuration.ChartColor, color => _configuration.ChartColor = color);
             BindColorPicker(color_chartProgress, () => _configuration.ChartProgressColor, color => _configuration.ChartProgressColor = color);
-            BindColorPicker(color_horizontalLegend, () => _configuration.AxisYSeparatorColor, color => _configuration.AxisYSeparatorColor = color);
             BindColorPicker(color_background, () => _configuration.BackgroundColor, color => _configuration.BackgroundColor = color);
             BindColorPicker(color_imageDimming, () => _configuration.ImageDimColor, color => _configuration.ImageDimColor = color);
 
@@ -67,7 +66,6 @@ namespace LiveVisualizer
 
             textBox_chartCutoffs.Text = string.Join(";", _configuration.ChartCutoffsSet);
 
-            checkBox_showAxisYSeparator.Checked = _configuration.ShowAxisYSeparator;
 
             numericUpDown_windowHeight.Value = ((decimal)_configuration.WindowHeight).Clamp(numericUpDown_windowHeight.Minimum, numericUpDown_windowHeight.Maximum);
             numericUpDown_windowWidth.Value = ((decimal)_configuration.WindowWidth).Clamp(numericUpDown_windowWidth.Minimum, numericUpDown_windowWidth.Maximum);
@@ -85,7 +83,6 @@ namespace LiveVisualizer
             checkBox_autosizeChart.CheckedChanged += checkBox_autosizeChart_CheckedChanged;
             comboBox_font.SelectedValueChanged += ComboBoxFontOnSelectedValueChanged;
             textBox_chartCutoffs.TextChanged += textBox_chartCutoffs_TextChanged;
-            checkBox_showAxisYSeparator.CheckedChanged += checkBox_showAxisYSeparator_CheckedChanged;
 
             numericUpDown_windowHeight.ValueChanged += NumericUpDownWindowHeightOnValueChanged;
             numericUpDown_windowWidth.ValueChanged += NumericUpDownWindowWidthOnValueChanged;
@@ -171,11 +168,6 @@ namespace LiveVisualizer
         private void textBox_chartCutoffs_TextChanged(object sender, EventArgs e)
         {
             _configuration.ChartCutoffsSet = new SortedSet<int>(textBox_chartCutoffs.Text.Split(';').Select(v => int.TryParse(v, out int num) ? num : 0));
-        }
-
-        private void checkBox_showAxisYSeparator_CheckedChanged(object sender, EventArgs e)
-        {
-            _configuration.ShowAxisYSeparator = checkBox_showAxisYSeparator.Checked;
         }
 
         private void linkLabel_UICredit1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
