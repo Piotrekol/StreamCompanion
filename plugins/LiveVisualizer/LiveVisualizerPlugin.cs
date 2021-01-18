@@ -98,7 +98,7 @@ namespace LiveVisualizer
 
             }
 
-            _visualizerWindow.UpdateChart();
+            _visualizerWindow?.UpdateChart();
             SaveConfiguration();
         }
 
@@ -213,7 +213,7 @@ namespace LiveVisualizer
             var imageLocation = (string)_backgroundImageLocationToken.Value;
 
             VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
-            _visualizerWindow.UpdateChart();
+            _visualizerWindow?.UpdateChart();
 
             Logger.Log("Finished updating live visualizer window", LogLevel.Trace);
         }
