@@ -17,7 +17,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly ILogger _logger;
         private SQLiteConnection _mDbConnection;
         private string DbFilename = "StreamCompanionCacheV2.db";
-        private int _schemaVersion = 9;
+        private int _schemaVersion = 10;
         /*
          * v1 - caching improvments, cfg table struct change
          * v2 - forcing db reload due to possibility of malformed data saved from v1(duplicated maps across tables)
@@ -28,6 +28,7 @@ namespace osu_StreamCompanion.Code.Core
          * v7 - Added MainBpm column
          * v8 - make SliderVelocity nullable
          * v9 - make MainBpm nullable
+         * v10 - Removed beatmapChecksum column
              */
         private SQLiteCommand _insertSql;
         private SQLiteTransaction _transation;
@@ -67,9 +68,9 @@ namespace osu_StreamCompanion.Code.Core
         {
             _logger = logger;
 
-            _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "StarsOsu", "BeatmapChecksum", "MainBpm" });
-            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "BLOB", "VARCHAR", "DOUBLE" });
-            _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "" });
+            _tableStruct.Fieldnames = new List<string>(new[] { "Raw", "TitleRoman", "ArtistRoman", "TitleUnicode", "ArtistUnicode", "Creator", "DiffName", "Mp3Name", "Md5", "OsuFileName", "MaxBpm", "MinBpm", "Tags", "State", "Circles", "Sliders", "Spinners", "EditDate", "ApproachRate", "CircleSize", "HpDrainRate", "OverallDifficulty", "SliderVelocity", "DrainingTime", "TotalTime", "PreviewTime", "MapId", "MapSetId", "ThreadId", "MapRating", "Offset", "StackLeniency", "Mode", "Source", "AudioOffset", "LetterBox", "Played", "LastPlayed", "IsOsz2", "Dir", "LastSync", "DisableHitsounds", "DisableSkin", "DisableSb", "BgDim", "Somestuff", "StarsOsu", "MainBpm" });
+            _tableStruct.Type = new List<string>(new[] { "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR", "DOUBLE", "DOUBLE", "VARCHAR", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DATETIME", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "INTEGER", "DOUBLE", "INTEGER", "VARCHAR", "INTEGER", "VARCHAR", "BOOL", "DATETIME", "BOOL", "VARCHAR", "DATETIME", "BOOL", "BOOL", "BOOL", "INTEGER", "INTEGER", "BLOB", "DOUBLE" });
+            _tableStruct.TypeModifiers = new List<string>(new[] { "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "NOT NULL ", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL ", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "NOT NULL", "NOT NULL", "NOT NULL", "", "NOT NULL", "", "NOT NULL", "NOT NULL", "", "", "", "NOT NULL", "NOT NULL", "NOT NULL", "" });
 
             try
             {
@@ -149,8 +150,6 @@ namespace osu_StreamCompanion.Code.Core
 
                 NonQuery("CREATE UNIQUE INDEX \"MapLocationIndex1\" ON \"withID\" (\r\n\t\"Dir\",\r\n\t\"OsuFileName\"\r\n)");
                 NonQuery("CREATE UNIQUE INDEX \"MapLocationIndex2\" ON \"withoutID\" (\r\n\t\"Dir\",\r\n\t\"OsuFileName\"\r\n)");
-                NonQuery("CREATE UNIQUE INDEX \"BeatmapChecksumIndex1\" ON \"withID\" (\r\n\t\"BeatmapChecksum\")");
-                NonQuery("CREATE UNIQUE INDEX \"BeatmapChecksumIndex2\" ON \"withoutID\" (\r\n\t\"BeatmapChecksum\")");
                 NonQuery("CREATE INDEX \"MapIdIndex1\" ON \"WithId\"(\r\n\"MapId\"\r\n)");
             }
 
@@ -250,18 +249,18 @@ namespace osu_StreamCompanion.Code.Core
             NonQuery(sql);
         }
 
-        public void RemoveBeatmaps(IList<string> checksums)
+        public void RemoveBeatmaps(IList<string> hashes)
         {
             var strHashes = new StringBuilder();
-            foreach (var hash in checksums)
+            foreach (var hash in hashes)
             {
                 strHashes.AppendFormat("'{0}',", hash);
             }
 
-            var sql = string.Format("DELETE FROM withID WHERE BeatmapChecksum IN ({0})", strHashes.ToString().TrimEnd(','));
+            var sql = string.Format("DELETE FROM withID WHERE Md5 IN ({0})", strHashes.ToString().TrimEnd(','));
             NonQuery(sql);
 
-            sql = string.Format("DELETE FROM withoutID WHERE BeatmapChecksum IN ({0})", strHashes.ToString().TrimEnd(','));
+            sql = string.Format("DELETE FROM withoutID WHERE Md5 IN ({0})", strHashes.ToString().TrimEnd(','));
             NonQuery(sql);
 
         }
@@ -345,7 +344,6 @@ namespace osu_StreamCompanion.Code.Core
             _insertSql.Parameters.Add("@BgDim", DbType.Int16).Value = beatmap.BgDim;
             _insertSql.Parameters.Add("@Somestuff", DbType.Int16).Value = beatmap.Somestuff;
             _insertSql.Parameters.Add("@StarsOsu", DbType.Binary).Value = beatmap.SerializeStars();
-            _insertSql.Parameters.Add("@BeatmapChecksum", DbType.String).Value = beatmap.GetChecksum();
             _insertSql.Parameters.Add("@MainBpm", DbType.Double).Value = beatmap.MainBpm;
         }
         public Beatmap GetBeatmap(int mapId)

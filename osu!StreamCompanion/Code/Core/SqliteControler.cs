@@ -15,17 +15,15 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteControler : IDatabaseController
     {
         private readonly SqliteConnector _sqlConnector;
-        private Dictionary<string, MapIdMd5Pair> _beatmapChecksums;
+        private Dictionary<string, MapIdMFoundPair> _beatmapChecksums;
 
-        private class MapIdMd5Pair
+        private class MapIdMFoundPair
         {
             public int MapId { get; }
-            public string Md5 { get; }
             public bool Found { get; set; }
-            public MapIdMd5Pair(int mapId, string md5)
+            public MapIdMFoundPair(int mapId)
             {
                 MapId = mapId;
-                Md5 = md5;
             }
         }
         public SqliteControler(SqliteConnector sqLiteConnector)
@@ -61,7 +59,7 @@ namespace osu_StreamCompanion.Code.Core
                 return;
             lock (_sqlConnector)
             {
-                string sql = "SELECT Md5, MapId, BeatmapChecksum FROM (SELECT Md5, MapId, BeatmapChecksum FROM `withID` UNION SELECT Md5, MapId, BeatmapChecksum FROM `withoutID`)";
+                string sql = "SELECT Md5, MapId FROM (SELECT Md5, MapId FROM `withID` UNION SELECT Md5, MapId FROM `withoutID`)";
                 SQLiteDataReader reader;
                 try
                 {
@@ -79,41 +77,14 @@ namespace osu_StreamCompanion.Code.Core
                     throw;
                 }
 
-                _beatmapChecksums = new Dictionary<string, MapIdMd5Pair>();
+                _beatmapChecksums = new Dictionary<string, MapIdMFoundPair>();
                 while (reader.Read())
                 {
                     var hash = reader.GetString(0);
                     var mapId = reader.GetInt32(1);
-                    var checksum = reader.GetString(2);
-                    if (_beatmapChecksums.ContainsKey(checksum))
+                    if (!_beatmapChecksums.ContainsKey(hash))
                     {
-                        //REALLY..? I don't think so.
-                        var map1 = _sqlConnector.GetBeatmap(hash);
-                        var map2 = _sqlConnector.GetBeatmap(_beatmapChecksums[checksum].Md5);
-                        var map1Checksum = map1.GetChecksum();
-                        var map2Checksum = map2.GetChecksum();
-                        if (map1Checksum == map2Checksum)
-                        {
-                            //:( fair enough
-                            var ex = new SQLiteException(SQLiteErrorCode.Constraint, "uh, oh... beatmap checksum collision");
-                            ex.Data.Add("mapId1", map1.MapId);
-                            ex.Data.Add("hash1", map1.Md5);
-                            ex.Data.Add("mapId2", map2.MapId);
-                            ex.Data.Add("hash2", map2.Md5);
-                            ex.Data.Add("checksum", map1Checksum);
-                            throw ex;
-                        }
-
-                        _beatmapChecksums.Remove(map1Checksum);
-                        _beatmapChecksums.Remove(map2Checksum);
-
-                        _beatmapChecksums.Add(map1Checksum, new MapIdMd5Pair(map1.MapId, map1.Md5));
-                        _beatmapChecksums.Add(map2Checksum, new MapIdMd5Pair(map2.MapId, map2.Md5));
-
-                    }
-                    else
-                    {
-                        _beatmapChecksums.Add(checksum, new MapIdMd5Pair(mapId, hash));
+                        _beatmapChecksums.Add(hash, new MapIdMFoundPair(mapId));
                     }
                 }
                 reader.Dispose();
@@ -153,16 +124,16 @@ namespace osu_StreamCompanion.Code.Core
             {
                 if (_sqlConnector.MassInsertIsActive)
                 {
-                    var checksum = beatmap.GetChecksum();
-                    if (_beatmapChecksums.ContainsKey(checksum))
+                    var md5 = beatmap.Md5;
+                    if (_beatmapChecksums.ContainsKey(md5))
                     {
-                        _beatmapChecksums[checksum].Found = true;
+                        _beatmapChecksums[md5].Found = true;
                         return;
                     }
                     else
                     {
-                        var existingEntry = _beatmapChecksums.FirstOrDefault(x => x.Value.Md5 == beatmap.Md5);
-                        if (!existingEntry.Equals(default(KeyValuePair<string, MapIdMd5Pair>)))
+                        var existingEntry = _beatmapChecksums.FirstOrDefault(x => x.Key == beatmap.Md5);
+                        if (!existingEntry.Equals(default(KeyValuePair<string, MapIdMFoundPair>)))
                         {
                             _beatmapChecksums.Remove(existingEntry.Key);
                         }
