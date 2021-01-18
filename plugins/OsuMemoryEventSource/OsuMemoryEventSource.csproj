@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net5.0-windows</TargetFramework>
 		<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -27,6 +27,9 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<OutputPath>bin\Debug_temp</OutputPath>
 		<PlatformTarget>x86</PlatformTarget>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <OutputPath>bin\Release_temp</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Update="FirstRunMemoryCalibration.cs">

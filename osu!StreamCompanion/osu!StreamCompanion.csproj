@@ -34,17 +34,6 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\compiled.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug remote|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>G:\SC\</OutputPath>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug remote|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>F:\</OutputPath>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>..\build\Debug\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -148,10 +137,15 @@
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\build\Debug\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>CALL "$(SolutionDir)build\msbuild.bat" "$(SolutionDir)VersionControler\VersionControler.csproj" /p:Configuration=Debug
 "$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" -1 "" "public static string ScVersion ="
 </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\build\Release\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 </Project>
