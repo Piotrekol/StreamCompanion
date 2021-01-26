@@ -38,7 +38,7 @@
             // 
             this.checkBox_disableDiskSaving.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox_disableDiskSaving.AutoSize = true;
-            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(246, 413);
+            this.checkBox_disableDiskSaving.Location = new System.Drawing.Point(3, 436);
             this.checkBox_disableDiskSaving.Name = "checkBox_disableDiskSaving";
             this.checkBox_disableDiskSaving.Size = new System.Drawing.Size(153, 17);
             this.checkBox_disableDiskSaving.TabIndex = 2;
@@ -48,7 +48,7 @@
             // button_reset
             // 
             this.button_reset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button_reset.Location = new System.Drawing.Point(534, 407);
+            this.button_reset.Location = new System.Drawing.Point(534, 404);
             this.button_reset.Name = "button_reset";
             this.button_reset.Size = new System.Drawing.Size(93, 23);
             this.button_reset.TabIndex = 3;
@@ -58,18 +58,22 @@
             // 
             // patternList
             // 
+            this.patternList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.patternList.Location = new System.Drawing.Point(0, 0);
             this.patternList.Name = "patternList";
-            this.patternList.Size = new System.Drawing.Size(640, 226);
+            this.patternList.Size = new System.Drawing.Size(640, 196);
             this.patternList.TabIndex = 0;
             // 
             // patternEdit
             // 
+            this.patternEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.patternEdit.Current = null;
             this.patternEdit.InGameOverlayIsAvailable = false;
-            this.patternEdit.Location = new System.Drawing.Point(0, 223);
+            this.patternEdit.Location = new System.Drawing.Point(0, 193);
             this.patternEdit.Name = "patternEdit";
-            this.patternEdit.Size = new System.Drawing.Size(640, 213);
+            this.patternEdit.Size = new System.Drawing.Size(640, 237);
             this.patternEdit.TabIndex = 1;
             // 
             // ParserSettings
@@ -81,7 +85,7 @@
             this.Controls.Add(this.checkBox_disableDiskSaving);
             this.Controls.Add(this.patternEdit);
             this.Name = "ParserSettings";
-            this.Size = new System.Drawing.Size(640, 436);
+            this.Size = new System.Drawing.Size(640, 456);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -90,8 +94,8 @@
         #endregion
 
         private PatternList patternList;
-        private PatternEdit patternEdit;
         private System.Windows.Forms.CheckBox checkBox_disableDiskSaving;
         private System.Windows.Forms.Button button_reset;
+        private PatternEdit patternEdit;
     }
 }
