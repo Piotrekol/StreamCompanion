@@ -15,13 +15,13 @@ namespace osu_StreamCompanion.Code.Core
     public class SqliteControler : IDatabaseController
     {
         private readonly SqliteConnector _sqlConnector;
-        private Dictionary<string, MapIdMFoundPair> _beatmapChecksums;
+        private Dictionary<string, MapIdFoundPair> _beatmapChecksums;
 
-        private class MapIdMFoundPair
+        private class MapIdFoundPair
         {
             public int MapId { get; }
             public bool Found { get; set; }
-            public MapIdMFoundPair(int mapId)
+            public MapIdFoundPair(int mapId)
             {
                 MapId = mapId;
             }
@@ -77,14 +77,14 @@ namespace osu_StreamCompanion.Code.Core
                     throw;
                 }
 
-                _beatmapChecksums = new Dictionary<string, MapIdMFoundPair>();
+                _beatmapChecksums = new Dictionary<string, MapIdFoundPair>();
                 while (reader.Read())
                 {
                     var hash = reader.GetString(0);
                     var mapId = reader.GetInt32(1);
                     if (!_beatmapChecksums.ContainsKey(hash))
                     {
-                        _beatmapChecksums.Add(hash, new MapIdMFoundPair(mapId));
+                        _beatmapChecksums.Add(hash, new MapIdFoundPair(mapId));
                     }
                 }
                 reader.Dispose();
@@ -125,18 +125,10 @@ namespace osu_StreamCompanion.Code.Core
                 if (_sqlConnector.MassInsertIsActive)
                 {
                     var md5 = beatmap.Md5;
-                    if (_beatmapChecksums.ContainsKey(md5))
+                    if (_beatmapChecksums.TryGetValue(md5, out var foundPair))
                     {
-                        _beatmapChecksums[md5].Found = true;
+                        foundPair.Found = true;
                         return;
-                    }
-                    else
-                    {
-                        var existingEntry = _beatmapChecksums.FirstOrDefault(x => x.Key == beatmap.Md5);
-                        if (!existingEntry.Equals(default(KeyValuePair<string, MapIdMFoundPair>)))
-                        {
-                            _beatmapChecksums.Remove(existingEntry.Key);
-                        }
                     }
                 }
                 _sqlConnector.StoreBeatmap(beatmap);
