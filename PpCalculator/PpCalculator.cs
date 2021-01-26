@@ -38,6 +38,7 @@ namespace PpCalculator
         public virtual int? Mehs { get; set; }
 
         public virtual int? Goods { get; set; }
+        public int? Katsus { get; set; }
 
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
 
@@ -86,6 +87,7 @@ namespace PpCalculator
         }
 
         private DifficultyAttributes DummyAtributtes { get; } = new DifficultyAttributes();
+
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
         {
             if (WorkingBeatmap == null)
@@ -120,7 +122,7 @@ namespace PpCalculator
             int beatmapMaxCombo = GetMaxCombo(hitObjects);
 
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
-            var statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods);
+            var statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katsus);
 
             var score = Score;
             var accuracy = GetAccuracy(statistics);
@@ -194,7 +196,7 @@ namespace PpCalculator
 
         protected abstract int GetMaxCombo(IReadOnlyList<HitObject> hitObjects);
 
-        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood);
+        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatsu = null);
 
         protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 

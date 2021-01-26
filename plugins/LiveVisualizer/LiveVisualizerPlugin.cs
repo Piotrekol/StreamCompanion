@@ -163,6 +163,7 @@ namespace LiveVisualizer
 
         protected override void ProcessNewMap(IMapSearchResult mapSearchResult)
         {
+            //FIXME: isValidBeatmap check fails with https://osu.ppy.sh/beatmapsets/1114770#taiko/2483703 (resulting file path too long?)
             if (VisualizerData == null ||
                 !mapSearchResult.BeatmapsFound.Any() ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||

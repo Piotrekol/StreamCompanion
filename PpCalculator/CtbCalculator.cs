@@ -16,9 +16,10 @@ namespace PpCalculator
         public override Ruleset Ruleset { get; } = new CatchRuleset();
 
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>
-            hitObjects.OfType<Hit>().Count();
-        
-        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood)
+            hitObjects.Count(h => h is Fruit)
+            + hitObjects.OfType<JuiceStream>().SelectMany(j => j.NestedHitObjects).Count(h => !(h is TinyDroplet));
+
+        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatsu = null)
         {
             var maxCombo = GetMaxCombo(hitObjects);
             int maxTinyDroplets = hitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<TinyDroplet>().Count());
@@ -36,7 +37,7 @@ namespace PpCalculator
             int countTinyDroplets = countMeh ?? (int)Math.Round(accuracy * (maxCombo + maxTinyDroplets)) - countFruits - countDroplets;
 
             // Whatever droplets are left
-            int countTinyMisses = maxTinyDroplets - countTinyDroplets;
+            int countTinyMisses = countKatsu ?? maxTinyDroplets - countTinyDroplets;
 
             return new Dictionary<HitResult, int>
             {
