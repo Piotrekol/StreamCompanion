@@ -14,7 +14,7 @@ namespace PpCalculator
         /// gamemode id<para/>
         /// 0 = osu<para/>
         /// 1 = Taiko <para/>
-        /// 2 = Ctb(unsupported - returns null)<para/>
+        /// 2 = Ctb<para/>
         /// 3 = Mania
         /// </param>
         /// <returns></returns>
@@ -29,7 +29,7 @@ namespace PpCalculator
                 case 1:
                     return new TaikoCalculator();
                 case 2:
-                    return null;
+                    return new CtbCalculator();
                 case 3:
                     return new ManiaCalculator();
             }

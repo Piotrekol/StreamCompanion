@@ -48,7 +48,7 @@ namespace PpCalculator
             return new Dictionary<HitResult, int>
             {
                 { HitResult.Great, countGreat },
-                { HitResult.Good, countGood ?? 0 },
+                { HitResult.Ok, countGood ?? 0 },
                 { HitResult.Meh, countMeh ?? 0 },
                 { HitResult.Miss, countMiss }
             };
@@ -56,7 +56,7 @@ namespace PpCalculator
         protected override double GetAccuracy(Dictionary<HitResult, int> statistics)
         {
             var countGreat = statistics[HitResult.Great];
-            var countGood = statistics[HitResult.Good];
+            var countGood = statistics[HitResult.Ok];
             var countMeh = statistics[HitResult.Meh];
             var countMiss = statistics[HitResult.Miss];
             var total = countGreat + countGood + countMeh + countMiss;

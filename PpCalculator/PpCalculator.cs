@@ -42,6 +42,7 @@ namespace PpCalculator
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
 
         protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
+        protected List<TimedDifficultyAttributes> TimedDifficultyAttributeses { get; set; }
 
         public int? RulesetId => Ruleset.RulesetInfo.ID;
 
@@ -132,14 +133,17 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                PerformanceCalculator = ruleset.CreatePerformanceCalculator(DummyAtributtes, ScoreInfo, WorkingBeatmap);
+                (PerformanceCalculator, TimedDifficultyAttributeses) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo);
                 ResetPerformanceCalculator = false;
             }
 
             try
             {
-                return endTime.HasValue 
-                    ? PerformanceCalculator.Calculate(endTime.Value, categoryAttribs) 
+
+                return endTime.HasValue
+                    ? PerformanceCalculator.Calculate(endTime.Value,
+                        TimedDifficultyAttributeses.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ?? TimedDifficultyAttributeses.First().Attributes,
+                        categoryAttribs)
                     : PerformanceCalculator.Calculate(categoryAttribs);
             }
             catch (InvalidOperationException)
