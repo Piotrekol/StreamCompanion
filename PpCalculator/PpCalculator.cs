@@ -42,7 +42,7 @@ namespace PpCalculator
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
 
         protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
-        protected List<TimedDifficultyAttributes> TimedDifficultyAttributeses { get; set; }
+        protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
 
         public int? RulesetId => Ruleset.RulesetInfo.ID;
 
@@ -133,7 +133,7 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                (PerformanceCalculator, TimedDifficultyAttributeses) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo);
+                (PerformanceCalculator, TimedDifficultyAttributes) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo);
                 ResetPerformanceCalculator = false;
             }
 
@@ -142,7 +142,7 @@ namespace PpCalculator
 
                 return endTime.HasValue
                     ? PerformanceCalculator.Calculate(endTime.Value,
-                        TimedDifficultyAttributeses.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ?? TimedDifficultyAttributeses.First().Attributes,
+                        TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ?? TimedDifficultyAttributes.First().Attributes,
                         categoryAttribs)
                     : PerformanceCalculator.Calculate(categoryAttribs);
             }
