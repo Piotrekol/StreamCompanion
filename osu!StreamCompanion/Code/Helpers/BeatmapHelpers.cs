@@ -70,7 +70,6 @@ namespace osu_StreamCompanion.Code.Helpers
             beatmap.BgDim = reader.GetInt16(i); i++;
             beatmap.Somestuff = reader.GetInt16(i); i++;
             beatmap.DeSerializeStars((byte[])reader.GetValue(i)); i++;
-            i++; // beatmapChecksum
             beatmap.MainBpm = reader.SafeGetDouble(i); i++;
         }
 
