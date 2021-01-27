@@ -47,8 +47,7 @@ namespace LiveVisualizer
             }
             var data = (IWpfVisualizerData)DataContext;
 
-            var strains = data.Display.Strains.ToArray();
-            if (strains.Length == 0)
+            if (data.Display.Strains == null || data.Display.Strains.Count == 0)
             {
                 this.frameholder.Visibility = Visibility.Hidden;
                 this.frameholderTimer.Visibility = Visibility.Hidden;
@@ -60,7 +59,7 @@ namespace LiveVisualizer
             var backgroundFill = ColorHelpers.Convert(data.Configuration.ChartColor);
             var foregroundFill = ColorHelpers.Convert(data.Configuration.ChartProgressColor);
 
-            BackgroundPlottable.ys = ForegroundPlottable.ys = strains;
+            BackgroundPlottable.ys = ForegroundPlottable.ys = data.Display.Strains.ToArray();
             BackgroundPlottable.maxRenderIndex = ForegroundPlottable.maxRenderIndex = BackgroundPlottable.ys.Length - 1;
             BackgroundPlottable.samplePeriod = ForegroundPlottable.samplePeriod = 1.0 / BackgroundPlottable.sampleRate;
             BackgroundPlottable.fillColor1 = BackgroundPlottable.color = backgroundFill;
