@@ -10,11 +10,11 @@
 	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\build\Debug\Plugins\</OutputPath>
+    <OutputPath>bin\Debug_temp\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\build\Release\Plugins\</OutputPath>
+    <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>..\..\build\Debug\Plugins\</OutputPath>
@@ -52,4 +52,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\LiveVisualizer.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\LiveVisualizer.dll&quot;&#xD;&#xA;copy &quot;$(TargetDir)\ScottPlot.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\ScottPlot.dll&quot;&#xD;&#xA;copy &quot;$(TargetDir)\ScottPlot.WPF.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\ScottPlot.WPF.dll&quot;&#xD;&#xA;&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />
+  </Target>
 </Project>
