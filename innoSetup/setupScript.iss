@@ -4,11 +4,11 @@
 #define MyAppName "StreamCompanion"
 #define MyAppPublisher "Piotrekol"
 #define MyAppURL "https://osustats.ppy.sh/"
-#define MyAppExeName "osu!StreamCompanion.exe"
+#define MyAppExeName "StreamCompanion.exe"
 
 #define FilesRoot "..\build\Output\"
 #define OverlayFilesRoot "..\webOverlay\"
-#define ApplicationVersion GetFileVersion(FilesRoot +'osu!StreamCompanion.exe')
+#define ApplicationVersion GetFileVersion(FilesRoot +'StreamCompanion.exe')
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -65,6 +65,7 @@ Type: files; Name: "{app}\OsuMemoryDataProvider.dll"
 Type: files; Name: "{app}\Plugins\CollectionManager.dll"
 Type: files; Name: "{app}\Plugins\StreamCompanionTypes.dll"
 Type: files; Name: "{app}\Plugins\WindowDataGetter.dll"
+Type: files; Name: "{app}\osu!StreamCompanion.exe"
 
 [UninstallDelete]
 Type: files; Name: "{app}\StreamCompanionCache.db"
