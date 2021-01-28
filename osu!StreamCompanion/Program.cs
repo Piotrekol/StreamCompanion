@@ -13,7 +13,9 @@ using osu_StreamCompanion.Code.Core.Loggers;
 using System.IO;
 using System.Net.Sockets;
 using StreamCompanionTypes.Enums;
-
+#if DEBUG
+using System.Diagnostics;
+#endif
 namespace osu_StreamCompanion
 {
     static class Program
