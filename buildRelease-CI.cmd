@@ -16,8 +16,7 @@ cp -r ./Release/* ./Output/
 REM move sqlite dlls
 cp ./Output/runtimes/win-x86/native/* ./Output/
 REM remove sqlite folders
-rm -rf ./Output/x86
-rm -rf ./Output/x64
+rm -rf ./runtimes
 
 REM remove debug symbols
 rm ./Output/*.pdb
