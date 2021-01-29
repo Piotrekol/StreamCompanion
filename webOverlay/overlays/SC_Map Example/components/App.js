@@ -22,9 +22,9 @@ const app = {
     const totalTime = Vue.computed(() => {
       let time = getToken('totaltime');
       return (
-        Math.round(time / 1000 / 60).pad() +
+        Math.floor(time / 1000 / 60).pad() +
         ':' +
-        Math.round((time / 1000) % 60).pad()
+        Math.floor((time / 1000) % 60).pad()
       );
     });
 
