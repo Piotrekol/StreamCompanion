@@ -107,7 +107,7 @@
         <Frame Name="frameholder" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom"
                HorizontalAlignment="Left" Width="{Binding Configuration.WindowWidth}" />
         <Frame Name="frameholderTimer" Height="{Binding Configuration.ChartHeight}" VerticalAlignment="Bottom"
-               HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}" />
+               HorizontalAlignment="Left" Width="{Binding Display.PixelMapProgress}"/>
 
         <Border Grid.Row="1"  Margin="10" Background="Transparent"
         BorderBrush="Transparent" BorderThickness="2" Opacity="1.0">

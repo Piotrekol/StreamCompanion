@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 
 namespace osu_StreamCompanion.Code.Windows
 {
@@ -31,8 +32,8 @@ namespace osu_StreamCompanion.Code.Windows
 
         private void button_message_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.Clipboard.SetText(string.Format(errorTemplate, textBox1.Text));
-            Process.Start(@"https://osu.ppy.sh/forum/ucp.php?i=pm&mode=compose&u=304520");
+            Clipboard.SetText(string.Format(errorTemplate, textBox1.Text));
+            ProcessExt.OpenUrl(@"https://osu.ppy.sh/forum/ucp.php?i=pm&mode=compose&u=304520");
         }
     }
 }

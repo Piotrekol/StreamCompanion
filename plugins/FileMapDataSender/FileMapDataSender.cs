@@ -2,10 +2,12 @@
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using StreamCompanionTypes.Interfaces.Consumers;
 
 namespace FileMapDataSender
 {
+    [SupportedOSPlatform("windows")]
     public class FileMapDataSender : IPlugin, IMapDataConsumer, IDisposable, IHighFrequencyDataConsumer
     {
         public bool Started { get; set; }
@@ -17,6 +19,7 @@ namespace FileMapDataSender
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
         
+
         public void Save(string fileName, string content)
         {
             _fileMapManager.Write(fileName, content);

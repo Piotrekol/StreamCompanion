@@ -19,7 +19,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly MainMapDataGetter _mainMapDataGetter;
         private ISettings _settings;
 
-        private Thread ConsumerThread;
+        private Task WorkerTask;
+        private CancellationTokenSource workerCancellationTokenSource = new CancellationTokenSource();
         private ConcurrentStack<IMapSearchArgs> TasksMsn = new ConcurrentStack<IMapSearchArgs>();
         private ConcurrentStack<IMapSearchArgs> TasksMemory = new ConcurrentStack<IMapSearchArgs>();
 
@@ -31,10 +32,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
                 source.NewOsuEvent += NewOsuEvent;
             }
-            ConsumerThread = new Thread(ConsumerTask);
 
             _logger = logger;
-            ConsumerThread.Start();
+            WorkerTask = Task.Run(ConsumerTask);
         }
 
         private void NewOsuEvent(object sender, IMapSearchArgs mapSearchArgs)
@@ -80,6 +80,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 var memorySearchFailed = false;
                 while (true)
                 {
+                    if (workerCancellationTokenSource.IsCancellationRequested)
+                    {
+                        _cancellationTokenSource?.Cancel();
+                        return;
+                    }
+
                     if (_isPoolingEnabled)
                     {
                         //Prioritize Memory events over MSN/other.
@@ -178,7 +184,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         public void Dispose()
         {
-            ConsumerThread?.Abort();
+            workerCancellationTokenSource.Cancel();
         }
     }
 }

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using osuOverlayLoader;
+using osuOverlay.Loader;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
@@ -76,7 +75,7 @@ namespace osuOverlay
             return loader.IsAlreadyInjected(GetFullDllLocation());
         }
 
-        Loader loader = new Loader();
+        Loader.Loader loader = new Loader.Loader();
         private Progress<string> progressReporter;
         private async Task<InjectionResult> Inject()
         {

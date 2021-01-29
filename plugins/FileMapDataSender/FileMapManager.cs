@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
+using System.Runtime.Versioning;
 using System.Text;
 
 namespace FileMapDataSender
@@ -35,13 +36,14 @@ namespace FileMapDataSender
                 }
             }
         }
-
+        [SupportedOSPlatform("windows")]
         private MapContainer GetFile(string pipeName)
         {
             lock (_lockingObject)
             {
                 if (_files.ContainsKey(pipeName))
                     return _files[pipeName];
+
                 MapContainer f = new MapContainer() { File = MemoryMappedFile.CreateOrOpen(pipeName, 15 * 1024 * 1024) };
                 if (pipeName == "Sc-ingamePatterns" || pipeName.StartsWith("conf-") || pipeName.StartsWith("value-"))
                     f.ASCIIonly = true;
@@ -50,16 +52,12 @@ namespace FileMapDataSender
             }
         }
 
+        [SupportedOSPlatform("windows")]
         public void Write(string name, string value)
         {
             var file = GetFile(name);
             file.Write(value);
 
         }
-
-
-
-
-
     }
 }

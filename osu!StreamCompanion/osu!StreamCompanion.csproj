@@ -1,375 +1,102 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{86251162-A899-4498-BF7F-6F18D6C624EA}</ProjectGuid>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>osu_StreamCompanion</RootNamespace>
-    <AssemblyName>osu!StreamCompanion</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<ApplicationIcon>Resources\compiled.ico</ApplicationIcon>
+	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	  <PublishUrl>publish\</PublishUrl>
+	  <Install>true</Install>
+	  <InstallFrom>Disk</InstallFrom>
+	  <UpdateEnabled>false</UpdateEnabled>
+	  <UpdateMode>Foreground</UpdateMode>
+	  <UpdateInterval>7</UpdateInterval>
+	  <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+	  <UpdatePeriodically>false</UpdatePeriodically>
+	  <UpdateRequired>false</UpdateRequired>
+	  <MapFileExtensions>true</MapFileExtensions>
+	  <ApplicationRevision>0</ApplicationRevision>
+	  <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+	  <IsWebBootstrapper>false</IsWebBootstrapper>
+	  <UseApplicationTrust>false</UseApplicationTrust>
+	  <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\build\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\build\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Resources\compiled.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug remote|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>G:\SC\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug remote|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>F:\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>
-    </DocumentationFile>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\build\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\build\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug remote|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug remote\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CollectionManager, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CollectionManager.1.0.7\lib\net471\CollectionManager.dll</HintPath>
-    </Reference>
-    <Reference Include="Grace, Version=7.1.0.0, Culture=neutral, PublicKeyToken=b7d24c6367970497, processorArchitecture=MSIL">
-      <HintPath>..\packages\Grace.7.1.0-Beta768\lib\net45\Grace.dll</HintPath>
-    </Reference>
-    <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Jace.1.0.0\lib\netstandard1.6\Jace.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpRaven.2.4.0\lib\net471\SharpRaven.dll</HintPath>
-    </Reference>
-    <Reference Include="StreamCompanionTypes, Version=5.2.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\StreamCompanionTypes.5.2.1\lib\net471\StreamCompanionTypes.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System">
+    <Reference Update="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.111.0\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Drawing.Common.4.7.0\lib\net461\System.Drawing.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\Core\DiContainer.cs" />
-    <Compile Include="Code\Core\Initializer.cs" />
-    <Compile Include="Code\Core\Loggers\FileLogger.cs" />
-    <Compile Include="Code\Core\Loggers\PluginLogger.cs" />
-    <Compile Include="Code\Core\Loggers\SentryLogger.cs" />
-    <Compile Include="Code\Core\Maps\Processing\MapDataGetter.cs" />
-    <Compile Include="Code\Core\Savers\TextSaver.cs" />
-    <Compile Include="Code\Core\Savers\MainSaver.cs" />
-    <Compile Include="Code\Helpers\Exceptions.cs" />
-    <Compile Include="Code\Helpers\GetDotNetVersion.cs" />
-    <Compile Include="Code\Helpers\StringExtensions.cs" />
-    <Compile Include="Code\Misc\IModule.cs" />
-    <Compile Include="Code\Misc\ImpatientWebClient.cs">
+    <Compile Update="Code\Misc\ImpatientWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Code\Core\SqliteConnector.cs" />
-    <Compile Include="Code\Helpers\BeatmapHelpers.cs" />
-    <Compile Include="Code\Helpers\Helpers.cs" />
-    <Compile Include="Code\Helpers\StringCipher.cs" />
-    <Compile Include="Code\Core\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Code\Helpers\AsyncBindingHelper.cs" />
-    <Compile Include="Code\Helpers\ListExtensions.cs" />
-    <Compile Include="Code\Core\Loggers\EmptyLogger.cs" />
-    <Compile Include="Code\Core\Loggers\MainLogger.cs" />
-    <Compile Include="Code\Modules\Logger\LoggerSettings.cs" />
-    <Compile Include="Code\Modules\Logger\LoggerSettingsUserControl.cs">
+    <Compile Update="Code\Modules\Logger\LoggerSettingsUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\Logger\LoggerSettingsUserControl.Designer.cs">
-      <DependentUpon>LoggerSettingsUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\TokensPreview\DrawingControl.cs" />
-    <Compile Include="Code\Modules\TokensPreview\TokensPreview.cs" />
-    <Compile Include="Code\Modules\TokensPreview\TokensPreviewSettings.cs">
+    <Compile Update="Code\Modules\TokensPreview\TokensPreviewSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\TokensPreview\TokensPreviewSettings.Designer.cs">
-      <DependentUpon>TokensPreviewSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\Donation\Donation.cs" />
-    <Compile Include="Code\Modules\Donation\DonationSettings.cs">
+    <Compile Update="Code\Modules\Donation\DonationSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\Donation\DonationSettings.Designer.cs">
-      <DependentUpon>DonationSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Misc\FileChecker.cs" />
-    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\FirstRunFrm.Designer.cs">
-      <DependentUpon>FirstRunFrm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunFinish.cs">
+    <Compile Update="Code\Modules\FirstRun\Phases\FirstRunFinish.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\FirstRun\Phases\FirstRunFinish.Designer.cs">
-      <DependentUpon>FirstRunFinish.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataFinders\SqliteData\CacheInitalizer.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\LegacyParserConfigConverter.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\MapDataParser.cs" />
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
+    <Compile Update="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.Designer.cs">
-      <DependentUpon>ParserSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternEdit.cs">
+    <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternEdit.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternEdit.Designer.cs">
-      <DependentUpon>PatternEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternList.cs">
+    <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\MapDataParsers\Parser1\PatternList.Designer.cs">
-      <DependentUpon>PatternList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\osuFallbackDetector\OsuFallbackDetector.cs" />
-    <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocation.cs" />
-    <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
+    <Compile Update="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.Designer.cs">
-      <DependentUpon>FileSaveLocationSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\FirstRun\FirstRun.cs" />
-    <Compile Include="Code\Modules\MapDataReplacements\Map\MapReplacement.cs" />
-    <Compile Include="Code\Core\Maps\Processing\MapStringFormatter.cs" />
-    <Compile Include="Code\Modules\MapDataFinders\SqliteData\SqliteDataFinder.cs" />
-    <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
+    <Compile Update="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.Designer.cs">
-      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\MapDataFinders\NoData\NoDataFinder.cs" />
-    <Compile Include="Code\Modules\osuPathReslover\osuPathResolver.cs" />
-    <Compile Include="Code\Modules\osuPathReslover\osuPathResolverSettings.cs">
+    <Compile Update="Code\Modules\osuPathReslover\osuPathResolverSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Code\Modules\osuPathReslover\osuPathResolverSettings.Designer.cs">
-      <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Core\Settings.cs" />
-    <Compile Include="Code\Core\SqliteControler.cs" />
-    <Compile Include="Code\Modules\Updater\UpdateContainer.cs" />
-    <Compile Include="Code\Modules\Updater\UpdateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Modules\Updater\UpdateForm.Designer.cs">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Code\Modules\Updater\Updater.cs" />
-    <Compile Include="Code\Windows\MainWindowEntities.cs" />
-    <Compile Include="Code\Windows\ErrorFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Code\Windows\ErrorFrm.designer.cs">
-      <DependentUpon>ErrorFrm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Code\Modules\Logger\LoggerSettingsUserControl.resx">
-      <DependentUpon>LoggerSettingsUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\TokensPreview\TokensPreviewSettings.resx">
-      <DependentUpon>TokensPreviewSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\Donation\DonationSettings.resx">
-      <DependentUpon>DonationSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\FileSaveLocation\FileSaveLocationSettings.resx">
-      <DependentUpon>FileSaveLocationSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\FirstRun\FirstRunFrm.resx">
-      <DependentUpon>FirstRunFrm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\FirstRun\Phases\FirstRunFinish.resx">
-      <DependentUpon>FirstRunFinish.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.resx">
-      <DependentUpon>MemoryDataFinderSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\ParserSettings.resx">
-      <DependentUpon>ParserSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternEdit.resx">
-      <DependentUpon>PatternEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\MapDataParsers\Parser1\PatternList.resx">
-      <DependentUpon>PatternList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\osuPathReslover\osuPathResolverSettings.resx">
-      <DependentUpon>osuPathResolverSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Modules\Updater\UpdateForm.resx">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Code\Windows\ErrorFrm.resx">
-      <DependentUpon>ErrorFrm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\btn_donate_92x26.png" />
@@ -393,33 +120,45 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StreamCompanion.Common\StreamCompanion.Common.csproj">
-      <Project>{3d5b2dbb-615f-43e4-8f2b-c54f4d92dc41}</Project>
-      <Name>StreamCompanion.Common</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+  <ItemGroup>
+    <PackageReference Include="CollectionManager" version="1.0.8" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Grace" Version="7.2.0" />
+    <PackageReference Include="Jace" Version="1.0.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Sentry" Version="3.0.0" />
+    <PackageReference Include="SharpCompress" Version="0.26.0" />
+    <PackageReference Include="StreamCompanionTypes" Version="5.2.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.113.7" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
+    <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.113" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="5.0.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="5.0.0" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\build\Debug\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>CALL "$(SolutionDir)build\msbuild.bat" "$(SolutionDir)VersionControler\VersionControler.csproj" /p:Configuration=Debug
-"$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe" "$(SolutionDir)osu!StreamCompanion\Program.cs" -1 "" "public static string ScVersion ="
-</PreBuildEvent>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\build\Release\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.111.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.111.0\build\net46\System.Data.SQLite.Core.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.111.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.111.0\build\net46\System.Data.SQLite.Core.targets'))" />
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="CALL &quot;$(SolutionDir)build\msbuild.bat&quot; &quot;$(SolutionDir)VersionControler\VersionControler.csproj&quot; /p:Configuration=Debug /p:Platform=AnyCPU&#xD;&#xA;&#xA;&quot;$(SolutionDir)VersionControler\bin\Debug\VersionControler.exe&quot; &quot;$(SolutionDir)osu!StreamCompanion\Program.cs&quot; -1 &quot;&quot; &quot;public static string ScVersion =&quot;" />
   </Target>
 </Project>

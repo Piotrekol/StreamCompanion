@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
 using System.Windows.Forms;
 using Grace.DependencyInjection;
 using osu_StreamCompanion.Code.Core.Loggers;
@@ -24,8 +25,14 @@ namespace osu_StreamCompanion.Code.Core
 {
     internal static class DiContainer
     {
-        private static string PluginsLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+        static DiContainer()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
 
+        private static string PluginsLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+        private static string AdditionalDllsLocation = Path.Combine(PluginsLocation, "Dlls");
+        private static string[] customProbingPaths = {PluginsLocation, AdditionalDllsLocation};
         public static DependencyInjectionContainer Container => LazyContainer.Value;
         private static Lazy<DependencyInjectionContainer> LazyContainer = new Lazy<DependencyInjectionContainer>(() =>
         {
@@ -137,7 +144,8 @@ namespace osu_StreamCompanion.Code.Core
             {
                 try
                 {
-                    assemblies.Add(Assembly.LoadFile(file));
+                    var assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(file));
+                    assemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName));
                 }
                 catch (BadImageFormatException e)
                 {
@@ -172,6 +180,22 @@ namespace osu_StreamCompanion.Code.Core
             }
 
             return assemblies;
+        }
+
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var name = args.Name.Split(",", StringSplitOptions.TrimEntries)[0];
+
+            foreach (var probingPath in customProbingPaths)
+            {
+                var filePath = Path.Combine(probingPath, $"{name}.dll");
+                if (File.Exists(filePath))
+                {
+                    return Assembly.LoadFrom(filePath);
+                }
+            }
+
+            return null;
         }
 
         private static List<Type> GetTypes<T>(Assembly asm)

@@ -1,14 +1,18 @@
-﻿using System.ComponentModel;
-using LiveCharts;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.Versioning;
 
 namespace LiveVisualizer
 {
+    [SupportedOSPlatform("windows7.0")]
     public class VisualizerDisplayData : IVisualizerDisplayData
     {
 #pragma warning disable 0067
         public event PropertyChangedEventHandler PropertyChanged;
 #pragma warning restore 0067
-        public ChartValues<double> Strains { get; set; }
+        public List<double> Strains { get; set; }
+        public ScottPlot.WpfPlot MainDataPlot { get; } = new ScottPlot.WpfPlot();
+        public ScottPlot.WpfPlot BackgroundDataPlot { get; } = new ScottPlot.WpfPlot();
 
         public string Title { get; set; }
         public string Artist { get; set; }

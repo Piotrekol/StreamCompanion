@@ -51,6 +51,16 @@ namespace OsuMemoryEventSource
                     return PpCalculator.Calculate(); //fc pp
                 }
 
+                if (_currentPlayMode == PlayMode.CatchTheBeat)
+                {
+                    PpCalculator.Goods = Play.C100;
+                    PpCalculator.Mehs = null;
+                    PpCalculator.Misses = Play.CMiss;
+                    PpCalculator.Katsus = Play.CKatsu;
+                    PpCalculator.Combo = Play.MaxCombo;
+                    PpCalculator.Score = Play.Score;
+                }
+
                 var comboLeft = PpCalculator.GetMaxCombo((int)PlayTime);
 
                 var newMaxCombo = Math.Max(Play.MaxCombo, comboLeft + Play.Combo);
@@ -99,6 +109,8 @@ namespace OsuMemoryEventSource
                                 AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
                                 AimPPIfBeatmapWouldEndNow = double.NaN;
                                 SpeedPPIfBeatmapWouldEndNow = double.NaN;
+                                break;
+                            case PlayMode.CatchTheBeat:
                                 break;
                             default:
                                 AimPPIfBeatmapWouldEndNow = attribs["Aim"];

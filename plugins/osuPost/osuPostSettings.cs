@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Services;
@@ -25,12 +26,12 @@ namespace osuPost
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"http://osupost.givenameplz.de/");
+            ProcessExt.OpenUrl(@"http://osupost.givenameplz.de/");
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"https://osu.ppy.sh/forum/t/164486");
+            ProcessExt.OpenUrl(@"https://osu.ppy.sh/forum/t/164486");
         }
         private void textBox_login_TextChanged(object sender, EventArgs e)
         {

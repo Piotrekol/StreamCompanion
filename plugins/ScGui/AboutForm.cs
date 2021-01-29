@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using StreamCompanion.Common;
 
 namespace ScGui
 {
@@ -26,12 +27,12 @@ FreeType license is avaliable at http://git.savannah.gnu.org/cgit/freetype/freet
 
         private void richTextBox1_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(e.LinkText);
+            ProcessExt.OpenUrl(e.LinkText);
         }
 
         private void pictureBox2_Click(object sender, System.EventArgs e)
         {
-            System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CX2ZC3JKVAK74");
+            ProcessExt.OpenUrl(@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CX2ZC3JKVAK74");
         }
     }
 }

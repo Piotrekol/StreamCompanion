@@ -35,38 +35,42 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(13, 8);
+            this.label1.Location = new System.Drawing.Point(15, 9);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(518, 46);
+            this.label1.Size = new System.Drawing.Size(604, 53);
             this.label1.TabIndex = 0;
             this.label1.Text = "Whoops! This error was sent to Piotrekol.";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(16, 57);
+            this.textBox1.Location = new System.Drawing.Point(19, 66);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(515, 189);
+            this.textBox1.Size = new System.Drawing.Size(600, 217);
             this.textBox1.TabIndex = 1;
             // 
             // label_exitText
             // 
             this.label_exitText.AutoSize = true;
-            this.label_exitText.Location = new System.Drawing.Point(12, 262);
+            this.label_exitText.Location = new System.Drawing.Point(14, 302);
+            this.label_exitText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_exitText.Name = "label_exitText";
-            this.label_exitText.Size = new System.Drawing.Size(155, 13);
+            this.label_exitText.Size = new System.Drawing.Size(179, 15);
             this.label_exitText.TabIndex = 2;
             this.label_exitText.Text = "StreamCompanion will now exit.";
             // 
             // Error
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(543, 284);
+            this.ClientSize = new System.Drawing.Size(634, 328);
             this.Controls.Add(this.label_exitText);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "Error";
             this.Text = "Error";
             this.ResumeLayout(false);

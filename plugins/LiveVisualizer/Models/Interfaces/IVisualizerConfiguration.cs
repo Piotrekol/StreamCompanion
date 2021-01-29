@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Media;
@@ -20,6 +21,7 @@ namespace LiveVisualizer
 
         double MaxYValue { get; set; }
 
+        [Obsolete]
         bool ShowAxisYSeparator { get; set; }
         double AxisYStep { get; set; }
         bool AutoSizeAxisY { get; set; }

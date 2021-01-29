@@ -36,9 +36,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 6);
+            this.label2.Location = new System.Drawing.Point(5, 7);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(73, 13);
+            this.label2.Size = new System.Drawing.Size(81, 15);
             this.label2.TabIndex = 28;
             this.label2.Text = "Log verbosity:";
             // 
@@ -46,30 +47,33 @@
             // 
             this.comboBox_logVerbosity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_logVerbosity.FormattingEnabled = true;
-            this.comboBox_logVerbosity.Location = new System.Drawing.Point(83, 3);
+            this.comboBox_logVerbosity.Location = new System.Drawing.Point(97, 3);
+            this.comboBox_logVerbosity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.comboBox_logVerbosity.Name = "comboBox_logVerbosity";
-            this.comboBox_logVerbosity.Size = new System.Drawing.Size(139, 21);
+            this.comboBox_logVerbosity.Size = new System.Drawing.Size(162, 23);
             this.comboBox_logVerbosity.TabIndex = 27;
             // 
             // checkBox_consoleLogger
             // 
             this.checkBox_consoleLogger.AutoSize = true;
-            this.checkBox_consoleLogger.Location = new System.Drawing.Point(7, 30);
+            this.checkBox_consoleLogger.Location = new System.Drawing.Point(8, 35);
+            this.checkBox_consoleLogger.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.checkBox_consoleLogger.Name = "checkBox_consoleLogger";
-            this.checkBox_consoleLogger.Size = new System.Drawing.Size(96, 17);
+            this.checkBox_consoleLogger.Size = new System.Drawing.Size(106, 19);
             this.checkBox_consoleLogger.TabIndex = 29;
             this.checkBox_consoleLogger.Text = "Console logger";
             this.checkBox_consoleLogger.UseVisualStyleBackColor = true;
             // 
             // LoggerSettingsUserControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.checkBox_consoleLogger);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBox_logVerbosity);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "LoggerSettingsUserControl";
-            this.Size = new System.Drawing.Size(307, 46);
+            this.Size = new System.Drawing.Size(358, 53);
             this.ResumeLayout(false);
             this.PerformLayout();
 

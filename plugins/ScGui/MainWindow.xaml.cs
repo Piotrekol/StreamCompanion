@@ -36,7 +36,7 @@ namespace ScGui
 
         public void SetTheme(string themeName)
         {
-            if (themeName == "System default")
+            if (themeName == "System default" && OperatingSystem.IsWindows())
                 themeName = WindowsThemeHelper.GetWindowsTheme() == WindowsThemeHelper.WindowsTheme.Light
                     ? "Light"
                     : "Dark";

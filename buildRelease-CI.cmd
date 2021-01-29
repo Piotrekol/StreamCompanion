@@ -13,12 +13,6 @@ mkdir Output
 REM copy files to new folder
 cp -r ./Release/* ./Output/
 
-REM move sqlite dll
-cp ./Output/x86/* ./Output/
-REM remove sqlite folders
-rm -rf ./Output/x86
-rm -rf ./Output/x64
-
 REM remove debug symbols
 rm ./Output/*.pdb
 rm ./Output/Plugins/*.pdb

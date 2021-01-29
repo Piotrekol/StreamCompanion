@@ -31,5 +31,9 @@ namespace LiveVisualizer
             
             settings.Add(entry.Name, string.Join(";", colors.Select(v => v.ToString())), true);
         }
+
+        public static Color Convert(System.Windows.Media.Color color)
+            => Color.FromArgb(color.A, color.R, color.G, color.B);
+
     }
 }

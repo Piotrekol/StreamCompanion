@@ -2,9 +2,7 @@ using osu_StreamCompanion.Code.Core;
 using osu_StreamCompanion.Code.Helpers;
 using osu_StreamCompanion.Code.Windows;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -12,11 +10,12 @@ using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core.Loggers;
-using SharpRaven.Data;
 using System.IO;
 using System.Net.Sockets;
 using StreamCompanionTypes.Enums;
-
+#if DEBUG
+using System.Diagnostics;
+#endif
 namespace osu_StreamCompanion
 {
     static class Program

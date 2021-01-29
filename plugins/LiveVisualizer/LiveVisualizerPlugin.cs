@@ -1,4 +1,3 @@
-using CollectionManager.Enums;
 using Newtonsoft.Json;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -7,14 +6,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
-using LiveCharts;
+using System.Windows.Media;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
+using Color = System.Drawing.Color;
 
 namespace LiveVisualizer
 {
+    [SupportedOSPlatform("windows7.0")]
     public class LiveVisualizerPlugin : LiveVisualizerPluginBase
     {
         private MainWindow _visualizerWindow;
@@ -45,7 +47,7 @@ namespace LiveVisualizer
                 _mapStrainsToken = value.FirstOrDefault(t => t.Key == "mapStrains").Value;
                 _totalTimeToken = value.FirstOrDefault(t => t.Key == "totaltime").Value;
                 _backgroundImageLocationToken = value.FirstOrDefault(t => t.Key == "backgroundImageLocation").Value;
-                
+
                 _liveTokens = value;
             }
         }
@@ -62,12 +64,24 @@ namespace LiveVisualizer
             VisualizerData = new VisualizerDataModel();
 
             LoadConfiguration();
+            PrepareDataPlots();
 
             EnableVisualizer(VisualizerData.Configuration.Enable);
 
             VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
 
             Task.Run(async () => { await UpdateLiveTokens(); });
+        }
+
+        private void PrepareDataPlots()
+        {
+            foreach (var wpfPlot in new[] { VisualizerData.Display.MainDataPlot, VisualizerData.Display.BackgroundDataPlot })
+            {
+                wpfPlot.Foreground = new SolidColorBrush(Colors.Transparent);
+                wpfPlot.Background = new SolidColorBrush(Colors.Transparent);
+                wpfPlot.plt.Style(Color.Transparent, Color.Transparent, Color.Transparent, Color.Green, Color.Aqua, Color.DarkOrange);
+                wpfPlot.Configure(false, false, false, false, false, false, false, false, recalculateLayoutOnMouseUp: false, lowQualityOnScrollWheel: false);
+            }
         }
 
         private void VisualizerConfigurationPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -83,6 +97,8 @@ namespace LiveVisualizer
                     break;
 
             }
+
+            _visualizerWindow?.UpdateChart();
             SaveConfiguration();
         }
 
@@ -147,6 +163,7 @@ namespace LiveVisualizer
 
         protected override void ProcessNewMap(IMapSearchResult mapSearchResult)
         {
+            //FIXME: isValidBeatmap check fails with https://osu.ppy.sh/beatmapsets/1114770#taiko/2483703 (resulting file path too long?)
             if (VisualizerData == null ||
                 !mapSearchResult.BeatmapsFound.Any() ||
                 !mapSearchResult.BeatmapsFound[0].IsValidBeatmap(Settings, out var mapLocation) ||
@@ -170,7 +187,7 @@ namespace LiveVisualizer
                 }
                 return;
             }
-            
+
             Logger.Log("Updating live visualizer window", LogLevel.Trace);
             var strains = (Dictionary<int, double>)_mapStrainsToken?.Value;
 
@@ -186,18 +203,20 @@ namespace LiveVisualizer
             VisualizerData.Display.Artist = Tokens.First(r => r.Key == "artistRoman").Value.Value?.ToString();
 
             if (VisualizerData.Display.Strains == null)
-                VisualizerData.Display.Strains = new ChartValues<double>();
+                VisualizerData.Display.Strains = new List<double>();
 
             VisualizerData.Display.Strains.Clear();
             var strainValues = strains?.Select(kv => kv.Value).ToList();
             SetAxisValues(strainValues);
             VisualizerData.Display.Strains.AddRange(strainValues ?? Enumerable.Empty<double>());
 
-            var imageLocation = (string) _backgroundImageLocationToken.Value;
 
-             VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
-             _visualizerWindow?.ForceChartUpdate();
-             Logger.Log("Finished updating live visualizer window", LogLevel.Trace);
+            var imageLocation = (string)_backgroundImageLocationToken.Value;
+
+            VisualizerData.Display.ImageLocation = File.Exists(imageLocation) ? imageLocation : null;
+            _visualizerWindow?.UpdateChart();
+
+            Logger.Log("Finished updating live visualizer window", LogLevel.Trace);
         }
         private void SetAxisValues(IReadOnlyList<double> strainValues)
         {

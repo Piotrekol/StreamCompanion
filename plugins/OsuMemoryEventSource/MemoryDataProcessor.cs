@@ -381,7 +381,7 @@ namespace OsuMemoryEventSource
                     time += interval;
                 }
             }
-            else if (playMode == PlayMode.Osu || playMode == PlayMode.Taiko || playMode == PlayMode.OsuMania)
+            else
             {
 
                 var a = new Dictionary<string, double>();

@@ -16,7 +16,7 @@ namespace PpCalculator
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>
             hitObjects.OfType<Hit>().Count();
         
-        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood)
+        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatsu = null)
         {
             var totalResultCount = GetMaxCombo(hitObjects);
 
@@ -38,7 +38,7 @@ namespace PpCalculator
             return new Dictionary<HitResult, int>
             {
                 { HitResult.Great, countGreat },
-                { HitResult.Good, (int)countGood },
+                { HitResult.Ok, (int)countGood },
                 { HitResult.Meh, 0 },
                 { HitResult.Miss, countMiss }
             };
@@ -47,7 +47,7 @@ namespace PpCalculator
         protected override double GetAccuracy(Dictionary<HitResult, int> statistics)
         {
             var countGreat = statistics[HitResult.Great];
-            var countGood = statistics[HitResult.Good];
+            var countGood = statistics[HitResult.Ok];
             var countMiss = statistics[HitResult.Miss];
             var total = countGreat + countGood + countMiss;
 

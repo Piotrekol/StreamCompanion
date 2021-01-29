@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
 using OsuMemoryDataProvider;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -147,7 +148,7 @@ namespace OsuMemoryEventSource
         {
             try
             {
-                Process.Start(CurrentMap.DownloadLink);
+                ProcessExt.OpenUrl(CurrentMap.DownloadLink);
             }
             catch (Win32Exception)
             {
