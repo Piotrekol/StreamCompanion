@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.IO;
@@ -128,7 +128,7 @@ namespace OsuSongsFolderWatcher
                         _settings.Add(_names.LoadingRawBeatmaps.Name, false);
                     }
 
-                    if (fsArgs.ChangeType == WatcherChangeTypes.Changed && lastMapSearchArgs != null
+                    if (lastMapSearchArgs != null
                     && (
                         (lastMapSearchArgs.Artist == beatmap.Artist
                          && lastMapSearchArgs.Title == beatmap.Title
