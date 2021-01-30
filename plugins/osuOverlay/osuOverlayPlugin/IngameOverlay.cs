@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using osuOverlay.Loader;
+using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
@@ -16,12 +17,15 @@ namespace osuOverlay
 {
     public class IngameOverlay : IPlugin, ISettingsSource, IMapDataConsumer, IDisposable
     {
+        public static readonly ConfigEntry EnableIngameOverlay = new ConfigEntry("EnableIngameOverlay", true);
+
         private ISettings _settings;
         public string SettingGroup { get; } = "General";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
-
         private Process _currentOsuProcess;
+        Loader.Loader loader = new Loader.Loader();
+        private Progress<string> progressReporter;
         private bool _pauseProcessTracking;
 
         public string Description { get; } = "";
@@ -30,6 +34,7 @@ namespace osuOverlay
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
         CancellationTokenSource cancellationToken = new CancellationTokenSource();
+
 
         public IngameOverlay(ILogger logger, ISettings settings, Delegates.Exit exiter)
         {
@@ -49,7 +54,7 @@ namespace osuOverlay
                 exiter("plugin version is invalid for current StreamCompanion version.");
             }
 
-            if (_settings.Get<bool>(PluginSettings.EnableIngameOverlay))
+            if (_settings.Get<bool>(EnableIngameOverlay))
             {
                 CopyFreeType();
                 progressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug));
@@ -75,8 +80,6 @@ namespace osuOverlay
             return loader.IsAlreadyInjected(GetFullDllLocation());
         }
 
-        Loader.Loader loader = new Loader.Loader();
-        private Progress<string> progressReporter;
         private async Task<InjectionResult> Inject()
         {
             try
@@ -189,7 +192,7 @@ namespace osuOverlay
 
         private void CopyFreeType()
         {
-            var osuFolderDirectory = _settings.Get<string>(PluginSettings.MainOsuDirectory);
+            var osuFolderDirectory = _settings.Get<string>(SettingNames.Instance.MainOsuDirectory);
             if (Directory.Exists(osuFolderDirectory))
             {
                 var newFreeTypeLocation = Path.Combine(osuFolderDirectory, "FreeType.dll");
