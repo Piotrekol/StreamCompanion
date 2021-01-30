@@ -86,7 +86,10 @@ namespace PpCalculator
             return result;
         }
 
-        private DifficultyAttributes DummyAtributtes { get; } = new DifficultyAttributes();
+        public DifficultyAttributes AttributesAt(double time)
+        {
+            return TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
+        }
 
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
         {

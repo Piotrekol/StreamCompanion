@@ -49,6 +49,7 @@ namespace OsuMemoryEventSource
             NoChokePp,
             SimulatedPp,
             UnstableRate,
+            liveStarRating,
         }
         private ManualResetEvent _notUpdatingTokens = new ManualResetEvent(true);
         private ManualResetEvent _notUpdatingMemoryValues = new ManualResetEvent(true);
@@ -333,6 +334,12 @@ namespace OsuMemoryEventSource
                 _lastCombo = currentCombo;
 
                 return _sliderBreaks;
+            });
+            CreateLiveToken("liveStarRating", InterpolatedValues[InterpolatedValueName.liveStarRating].Current, TokenType.Live, "{0:0.00}", 0d, OsuStatus.All, () =>
+            {
+                var attributes = _rawData.PpCalculator?.AttributesAt(_rawData.PlayTime);
+                InterpolatedValues[InterpolatedValueName.liveStarRating].Set(attributes?.StarRating ?? 0);
+                return InterpolatedValues[InterpolatedValueName.liveStarRating].Current;
             });
         }
 
