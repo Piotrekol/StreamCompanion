@@ -12,9 +12,11 @@ namespace MSNEventSource
 {
     public class Msn : IDisposable, IPlugin, IOsuEventSource, IFirstRunControlProvider
     {
+        public static ConfigEntry Enabled = new ConfigEntry("MsnEnabled", false);
         private IntPtr m_hwnd;
         private Dictionary<string, string> _osuStatus = new Dictionary<string, string>();
         private static WNDCLASS lpWndClass;
+        private readonly ISettings _settings;
         private ILogger _logger;
         private const string lpClassName = "MsnMsgrUIManager";
         public bool Suspend { get; set; }
@@ -29,11 +31,16 @@ namespace MSNEventSource
 
         private static WndProc WndProcc;
 
-        public Msn(ILogger logger)
+        public Msn(ISettings settings, ILogger logger)
         {
+            _settings = settings;
             _logger = logger;
-            if (WndProcc != null)
+
+            var enabled = settings.Get<bool>(Enabled);
+            _logger.Log($"MSN plugin is {(enabled ? "enabled" : "disabled")}", LogLevel.Information);
+            if (!enabled || WndProcc != null)
                 return;
+
             WndProcc = CustomWndProc;
             lpWndClass = new WNDCLASS
             {
@@ -60,7 +67,7 @@ namespace MSNEventSource
 
                 var args = CreateArgs(_osuStatus);
 
-                if(args != null)
+                if (args != null)
                     NewOsuEvent?.Invoke(this, args);
 
                 return 1;
@@ -234,9 +241,13 @@ namespace MSNEventSource
         private FirstRunMsn _firstRunUserControl = null;
         public List<IFirstRunControl> GetFirstRunUserControls()
         {
-            _firstRunUserControl = new FirstRunMsn();
-            return new List<IFirstRunControl> { _firstRunUserControl };
+            var firstRunControls = new List<IFirstRunControl>();
+            if (!_settings.Get<bool>(Enabled))
+                return firstRunControls;
+
+            firstRunControls.Add(_firstRunUserControl = new FirstRunMsn());
+            return firstRunControls;
         }
-        
+
     }
 }
