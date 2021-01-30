@@ -25,12 +25,12 @@ namespace LiveVisualizer
             this.DataContext = data;
 
             var backgroundFill = ColorHelpers.Convert(data.Configuration.FillColor);
-            BackgroundPlottable = data.Display.BackgroundDataPlot.plt.PlotSignal(new double[] { 1, 10, 5, 15, 10, 5, 0 }, lineWidth: 3, markerSize: 0, color: backgroundFill);
+            BackgroundPlottable = data.Display.BackgroundDataPlot.plt.PlotSignal(new double[] { 1, 10, 5, 15, 10, 5, 0 }, lineWidth: 2, markerSize: 0, color: backgroundFill);
             BackgroundPlottable.fillColor1 = backgroundFill;
             BackgroundPlottable.fillType = FillType.FillBelow;
 
             var foregroundFill = ColorHelpers.Convert(data.Configuration.ChartProgressColor);
-            ForegroundPlottable = data.Display.MainDataPlot.plt.PlotSignal(new double[] { 1, 10, 5, 15, 10, 5, 0 }, lineWidth: 3, markerSize: 0, color: foregroundFill);
+            ForegroundPlottable = data.Display.MainDataPlot.plt.PlotSignal(new double[] { 1, 10, 5, 15, 10, 5, 0 }, lineWidth: 2, markerSize: 0, color: foregroundFill);
             ForegroundPlottable.fillColor1 = foregroundFill;
             ForegroundPlottable.fillType = FillType.FillBelow;
 
