@@ -292,7 +292,15 @@ namespace osu_StreamCompanion.Code.Core
                     string.Format("INSERT OR REPLACE INTO Temp ({0}) VALUES ({1})", _tableStruct.GetFieldnames(), _tableStruct.GetFieldnames("@"));
             _insertSql = new SQLiteCommand(sql, _mDbConnection);
             FillBeatmapParameters(beatmap);
-            _insertSql.ExecuteNonQuery();
+            try
+            {
+                _insertSql.ExecuteNonQuery();
+            }
+            catch (SQLiteException exception)
+            {
+                exception.Data.Add("maphash", beatmap?.Md5 ?? "null");
+                _logger?.Log(exception, LogLevel.Error);
+            }
         }
 
         private void FillBeatmapParameters(IBeatmap beatmap)
