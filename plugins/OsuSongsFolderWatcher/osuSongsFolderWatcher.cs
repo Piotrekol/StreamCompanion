@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.IO;
@@ -101,7 +101,7 @@ namespace OsuSongsFolderWatcher
             memoryCache.AddOrGetExisting(e.FullPath, e, cacheItemPolicy);
         }
 
-        private void ConsumerTask()
+        private async Task ConsumerTask()
         {
             while (true)
             {
@@ -117,7 +117,7 @@ namespace OsuSongsFolderWatcher
                     Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
                     _logger.Log($">Processing beatmap located at {fsArgs.FullPath}", LogLevel.Debug);
 
-                    var beatmap = BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
+                    var beatmap = await BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
 
                     _databaseController.StoreTempBeatmap(beatmap);
 

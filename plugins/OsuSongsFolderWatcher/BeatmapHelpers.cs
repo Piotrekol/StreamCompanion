@@ -1,12 +1,15 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
+using PpCalculator;
 using StreamCompanionTypes.DataTypes;
 
 namespace OsuSongsFolderWatcher
 {
     public static class BeatmapHelpers
     {
-        public static Beatmap ReadBeatmap(string fullPath)
-            => OsuFileParser.Instance.ReadBeatmapData(fullPath);
+        public static Task<Beatmap> ReadBeatmap(string fullPath)
+            => Task.FromResult(LazerMapLoader.Instance.LoadBeatmap(fullPath));
+
 
         public static string GetDiffFromString(string msnString)
         {
