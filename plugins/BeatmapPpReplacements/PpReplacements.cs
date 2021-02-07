@@ -47,13 +47,13 @@ namespace BeatmapPpReplacements
                 {TokenMode.Osu,new Dictionary<string, PpValue>
                 {
                     {"osu_SSPP",(mods)=>GetPp(_ppCalculator, 100d)},
-                    {"osu_99.9PP",(mods)=>GetPp(_ppCalculator, 99.9d)},
+                    {"osu_99_9PP",(mods)=>GetPp(_ppCalculator, 99.9d)},
                     {"osu_99PP",(mods)=>GetPp(_ppCalculator, 99d)},
                     {"osu_98PP",(mods)=>GetPp(_ppCalculator, 98d)},
                     {"osu_95PP",(mods)=>GetPp(_ppCalculator, 95d)},
                     {"osu_90PP",(mods)=>GetPp(_ppCalculator, 90d)},
                     {"osu_mSSPP",(mods)=>GetPp(_ppCalculator, 100d, mods)},
-                    {"osu_m99.9PP",(mods)=>GetPp(_ppCalculator, 99.9d, mods)},
+                    {"osu_m99_9PP",(mods)=>GetPp(_ppCalculator, 99.9d, mods)},
                     {"osu_m99PP",(mods)=>GetPp(_ppCalculator, 99d, mods)},
                     {"osu_m98PP",(mods)=>GetPp(_ppCalculator, 98d, mods)},
                     {"osu_m95PP",(mods)=>GetPp(_ppCalculator, 95d, mods)},
