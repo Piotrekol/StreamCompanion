@@ -107,8 +107,7 @@ namespace BeatmapPpReplacements
                 return Task.CompletedTask;
             }
 
-            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
-            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID, map.PlayMode.HasValue ? (int?)map.PlayMode : null);
+            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)map.BeatmapsFound[0].PlayMode, map.PlayMode.HasValue ? (int?)map.PlayMode : null);
             _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, _ppCalculator);
             _tokenSetter("gameMode", playMode.ToString());
 
