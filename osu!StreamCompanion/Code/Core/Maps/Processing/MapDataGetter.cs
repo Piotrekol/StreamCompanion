@@ -39,7 +39,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _settings = settings;
         }
 
-        public IMapSearchResult FindMapData(IMapSearchArgs searchArgs)
+        public IMapSearchResult FindMapData(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
             IMapSearchResult mapSearchResult = null;
             IModsEx foundMods = null;
@@ -49,7 +49,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     continue;
                 try
                 {
-                    mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs);
+                    mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs, cancellationToken);
 
                 }
                 catch (Exception e)
@@ -93,7 +93,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
                 if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
                     SaveMapStrings(mapSearchResult.OutputPatterns, mapSearchResult.Action);
-                SetNewMap(mapSearchResult);
+                SetNewMap(mapSearchResult, cancellationToken);
             }, cancellationToken);
         }
 
@@ -103,9 +103,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             foreach (var mapDataReplacementsGetter in _tokenSources)
             {
                 var task = mapDataReplacementsGetter.CreateTokensAsync(mapSearchResult, cancellationToken);
-                if(task == null)
+                if (task == null)
                     throw new NullReferenceException($"received null instead of task in ${mapDataReplacementsGetter.GetType().FullName}");
-                
+
                 tasks.Add(task);
             }
 
@@ -143,11 +143,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             return ret;
         }
 
-        private void SetNewMap(IMapSearchResult map)
+        private void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             foreach (var dataGetter in _mapDataConsumers)
             {
-                dataGetter.SetNewMap(map);
+                dataGetter.SetNewMap(map, cancellationToken);
             }
         }
     }
