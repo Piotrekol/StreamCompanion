@@ -112,7 +112,7 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             lock (_lockingObject)
             {
@@ -129,7 +129,7 @@ namespace OsuMemoryEventSource
                     {
                         var mods = map.Mods?.WorkingMods ?? "";
                         _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
-                            (PlayMode)PpCalculatorHelpers.GetRulesetId((int)map.BeatmapsFound[0].PlayMode, map.PlayMode.HasValue ? (int?)map.PlayMode : null));
+                            (PlayMode)PpCalculatorHelpers.GetRulesetId((int)map.BeatmapsFound[0].PlayMode, map.PlayMode.HasValue ? (int?)map.PlayMode : null), cancellationToken);
                     }
 
                     _newPlayStarted.Set();
@@ -348,6 +348,8 @@ namespace OsuMemoryEventSource
                         liveToken.Value.Update(status);
                     }
                 }
+                catch (TaskCanceledException) { }
+                catch (OperationCanceledException) { }
                 catch (Exception ex)
                 {
                     ex.Data["liveTokenName"] = liveToken.Key;
