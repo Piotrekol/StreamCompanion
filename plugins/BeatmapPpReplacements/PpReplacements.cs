@@ -30,7 +30,7 @@ namespace BeatmapPpReplacements
         public string UpdateUrl { get; } = "";
         private readonly Dictionary<TokenMode, Dictionary<string, PpValue>> ppTokenDefinitions;
 
-        private delegate double PpValue(string mods = "");
+        private delegate double PpValue(CancellationToken cancellationToken, string mods = "");
         enum TokenMode
         {
             Osu,
@@ -46,36 +46,36 @@ namespace BeatmapPpReplacements
             {
                 {TokenMode.Osu,new Dictionary<string, PpValue>
                 {
-                    {"osu_SSPP",(mods)=>GetPp(_ppCalculator, 100d)},
-                    {"osu_99_9PP",(mods)=>GetPp(_ppCalculator, 99.9d)},
-                    {"osu_99PP",(mods)=>GetPp(_ppCalculator, 99d)},
-                    {"osu_98PP",(mods)=>GetPp(_ppCalculator, 98d)},
-                    {"osu_95PP",(mods)=>GetPp(_ppCalculator, 95d)},
-                    {"osu_90PP",(mods)=>GetPp(_ppCalculator, 90d)},
-                    {"osu_mSSPP",(mods)=>GetPp(_ppCalculator, 100d, mods)},
-                    {"osu_m99_9PP",(mods)=>GetPp(_ppCalculator, 99.9d, mods)},
-                    {"osu_m99PP",(mods)=>GetPp(_ppCalculator, 99d, mods)},
-                    {"osu_m98PP",(mods)=>GetPp(_ppCalculator, 98d, mods)},
-                    {"osu_m95PP",(mods)=>GetPp(_ppCalculator, 95d, mods)},
-                    {"osu_m90PP",(mods)=>GetPp(_ppCalculator, 90d, mods)},
+                    {"osu_SSPP",(c,mods)=>GetPp(c,_ppCalculator, 100d)},
+                    {"osu_99_9PP",(c,mods)=>GetPp(c,_ppCalculator, 99.9d)},
+                    {"osu_99PP",(c,mods)=>GetPp(c,_ppCalculator, 99d)},
+                    {"osu_98PP",(c,mods)=>GetPp(c,_ppCalculator, 98d)},
+                    {"osu_95PP",(c,mods)=>GetPp(c,_ppCalculator, 95d)},
+                    {"osu_90PP",(c,mods)=>GetPp(c,_ppCalculator, 90d)},
+                    {"osu_mSSPP",(c,mods)=>GetPp(c,_ppCalculator, 100d, mods)},
+                    {"osu_m99_9PP",(c,mods)=>GetPp(c,_ppCalculator, 99.9d, mods)},
+                    {"osu_m99PP",(c,mods)=>GetPp(c,_ppCalculator, 99d, mods)},
+                    {"osu_m98PP",(c,mods)=>GetPp(c,_ppCalculator, 98d, mods)},
+                    {"osu_m95PP",(c,mods)=>GetPp(c,_ppCalculator, 95d, mods)},
+                    {"osu_m90PP",(c,mods)=>GetPp(c,_ppCalculator, 90d, mods)},
                 }
                 },
                 {TokenMode.Mania,new Dictionary<string,PpValue>
                 {
-                    {"mania_1_000_000PP",(mods)=>GetPp(_ppCalculator, 0, "", 1_000_000)},
-                    {"mania_990_000PP",(mods)=>GetPp(_ppCalculator, 0, "", 990_000)},
-                    {"mania_950_000PP",(mods)=>GetPp(_ppCalculator, 0, "", 950_000)},
-                    {"mania_900_000PP",(mods)=>GetPp(_ppCalculator, 0, "", 900_000)},
-                    {"mania_800_000PP",(mods)=>GetPp(_ppCalculator, 0, "", 800_000)},
-                    {"mania_700_000PP",(mods)=>GetPp(_ppCalculator, 0, "", 700_000)},
-                    {"mania_600_000PP",(mods)=>GetPp(_ppCalculator, 0, "", 600_000)},
-                    {"mania_m1_000_000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 1_000_000)},
-                    {"mania_m990_000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 990_000)},
-                    {"mania_m950_000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 950_000)},
-                    {"mania_m900_000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 900_000)},
-                    {"mania_m800_000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 800_000)},
-                    {"mania_m700_000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 700_000)},
-                    {"mania_m600_000PP",(mods)=>GetPp(_ppCalculator, 0, mods, 600_000)},
+                    {"mania_1_000_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 1_000_000)},
+                    {"mania_990_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 990_000)},
+                    {"mania_950_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 950_000)},
+                    {"mania_900_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 900_000)},
+                    {"mania_800_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 800_000)},
+                    {"mania_700_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 700_000)},
+                    {"mania_600_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 600_000)},
+                    {"mania_m1_000_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 1_000_000)},
+                    {"mania_m990_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 990_000)},
+                    {"mania_m950_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 950_000)},
+                    {"mania_m900_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 900_000)},
+                    {"mania_m800_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 800_000)},
+                    {"mania_m700_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 700_000)},
+                    {"mania_m600_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 600_000)},
                 }
                 }
             };
@@ -130,9 +130,8 @@ namespace BeatmapPpReplacements
 
             foreach (var tokenDefinition in ppTokenDefinitions[tokenMode])
             {
-                if (cancellationToken.IsCancellationRequested)
-                    return Task.CompletedTask;
-                _tokenSetter(tokenDefinition.Key, tokenDefinition.Value(mods), format: PpFormat);
+                cancellationToken.ThrowIfCancellationRequested();
+                _tokenSetter(tokenDefinition.Key, tokenDefinition.Value(cancellationToken, mods), format: PpFormat);
             }
 
             _tokenSetter("maxCombo", _ppCalculator.GetMaxCombo());
@@ -141,14 +140,14 @@ namespace BeatmapPpReplacements
             return Task.CompletedTask;
         }
 
-        private double GetPp(PpCalculator.PpCalculator ppCalculator, double acc, string mods = "", int score = 0)
+        private double GetPp(CancellationToken cancellationToken, PpCalculator.PpCalculator ppCalculator, double acc, string mods = "", int score = 0)
         {
             ppCalculator.Accuracy = acc;
             ppCalculator.Score = score;
 
             _ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            return ppCalculator.Calculate();
+            return ppCalculator.Calculate(cancellationToken);
         }
     }
 }
