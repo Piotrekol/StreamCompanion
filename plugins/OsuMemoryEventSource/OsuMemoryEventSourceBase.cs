@@ -141,7 +141,7 @@ namespace OsuMemoryEventSource
 
         public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            memoryListener?.SetNewMap(map);
+            memoryListener?.SetNewMap(map, cancellationToken);
         }
 
         protected virtual void OnSettingsSettingUpdated(object sender, SettingUpdated e) { }
