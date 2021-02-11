@@ -38,7 +38,7 @@ namespace LiveVisualizer
             _liveVisualizerSettings?.Dispose();
         }
 
-        public void SetNewMap(IMapSearchResult mapSearchResult)
+        public void SetNewMap(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
             if (disposed)
                 return;

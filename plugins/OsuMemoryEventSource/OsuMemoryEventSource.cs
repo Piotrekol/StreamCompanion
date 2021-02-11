@@ -48,7 +48,7 @@ namespace OsuMemoryEventSource
             return userSettings;
         }
 
-        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs)
+        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
             if (!Started)
                 return null;

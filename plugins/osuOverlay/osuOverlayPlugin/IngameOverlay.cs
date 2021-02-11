@@ -43,7 +43,7 @@ namespace osuOverlay
 
             try
             {
-                SetNewMap(new MapSearchResult(new MapSearchArgs("dummy", OsuEventType.MapChange)));
+                SetNewMap(new MapSearchResult(new MapSearchArgs("dummy", OsuEventType.MapChange)), CancellationToken.None);
             }
             catch (Exception)
             {
@@ -233,7 +233,7 @@ namespace osuOverlay
             return _overlaySettings;
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             try
             {

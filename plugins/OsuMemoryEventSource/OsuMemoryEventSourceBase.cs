@@ -139,7 +139,7 @@ namespace OsuMemoryEventSource
             return memoryListener?.CreateTokensAsync(map, cancellationToken) ?? Task.CompletedTask;
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             memoryListener?.SetNewMap(map);
         }

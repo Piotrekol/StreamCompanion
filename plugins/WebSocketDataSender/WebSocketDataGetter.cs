@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EmbedIO;
@@ -215,7 +216,7 @@ namespace WebSocketDataSender
             // ignored
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var s in map.OutputPatterns)

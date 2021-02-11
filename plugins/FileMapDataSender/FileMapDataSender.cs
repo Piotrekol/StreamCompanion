@@ -3,6 +3,7 @@ using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
+using System.Threading;
 using StreamCompanionTypes.Interfaces.Consumers;
 
 namespace FileMapDataSender
@@ -25,7 +26,7 @@ namespace FileMapDataSender
             _fileMapManager.Write(fileName, content);
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             var ingamePatterns = new List<string>();
             foreach (var s in map.OutputPatterns)

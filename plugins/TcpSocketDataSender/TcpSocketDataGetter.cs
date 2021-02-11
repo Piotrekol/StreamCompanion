@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using StreamCompanionTypes;
@@ -68,7 +69,7 @@ namespace TcpSocketDataSender
             }
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (tcpSocketIsEnabled)
             {
