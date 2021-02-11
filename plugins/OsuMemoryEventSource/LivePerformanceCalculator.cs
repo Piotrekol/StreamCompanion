@@ -3,6 +3,7 @@ using OsuMemoryDataProvider;
 using PpCalculator;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using StreamCompanionTypes.DataTypes;
 
 namespace OsuMemoryEventSource
@@ -16,7 +17,7 @@ namespace OsuMemoryEventSource
 
         public PpCalculator.PpCalculator PpCalculator { get; private set; }
 
-        public void SetCurrentMap(IBeatmap beatmap, string mods, string osuFileLocation, PlayMode playMode)
+        public void SetCurrentMap(IBeatmap beatmap, string mods, string osuFileLocation, PlayMode playMode, CancellationToken cancellationToken)
         {
             if (beatmap == null)
             {
@@ -25,12 +26,23 @@ namespace OsuMemoryEventSource
             }
 
             _currentPlayMode = playMode;
-            PpCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, PpCalculator);
-            if (PpCalculator == null)
+            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, PpCalculator);
+            if (ppCalculator == null)
                 return;
 
-            PpCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            PpCalculator.PreProcess(osuFileLocation);
+            ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            ppCalculator.PreProcess(osuFileLocation);
+            try
+            {
+                ppCalculator.Calculate(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                PpCalculator = null;
+                throw;
+            }
+
+            PpCalculator = ppCalculator;
         }
 
         public double PPIfRestFCed()

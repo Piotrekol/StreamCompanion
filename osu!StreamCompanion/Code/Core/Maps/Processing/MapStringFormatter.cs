@@ -51,7 +51,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 playMode = mapSearchArgs.PlayMode?.ToString() ?? "null",
                 sourceName = mapSearchArgs.SourceName
             }.ToString();
-            
+
             _logger.Log($"Received event: {eventData}", LogLevel.Debug);
             //TODO: priority system for IOsuEventSource 
             if (mapSearchArgs.SourceName.Contains("OsuMemory"))
@@ -85,93 +85,83 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         _cancellationTokenSource?.Cancel();
                         return;
                     }
-
-                    if (_isPoolingEnabled)
+                    try
                     {
-                        //Prioritize Memory events over MSN/other.
-                        if (TasksMemory.TryPop(out memorySearchArgs))
+                        if (_isPoolingEnabled)
                         {
-                            _cancellationTokenSource = new CancellationTokenSource();
-                            if (memorySearchArgs.MapId == 0 && string.IsNullOrEmpty(memorySearchArgs.MapHash))
+                            //Prioritize Memory events over MSN/other.
+                            if (TasksMemory.TryPop(out memorySearchArgs))
                             {
-                                memorySearchFailed = true;
-                            }
-                            else
-                            {
-                                if (memorySearchArgs.EventType == OsuEventType.MapChange || lastSearchResult == null || !lastSearchResult.BeatmapsFound.Any())
+                                _cancellationTokenSource = new CancellationTokenSource();
+                                if (memorySearchArgs.MapId == 0 && string.IsNullOrEmpty(memorySearchArgs.MapHash))
                                 {
-                                    _logger.SetContextData("OsuMemory_searchingForBeatmaps", "1");
-                                    lastSearchResult = searchResult = _mainMapDataGetter.FindMapData(memorySearchArgs);
-                                    _logger.SetContextData("OsuMemory_searchingForBeatmaps", "0");
-                                }
-                                else
-                                {
-                                    searchResult = new MapSearchResult(memorySearchArgs)
-                                    {
-                                        Mods = lastSearchResult.Mods
-                                    };
-                                    searchResult.BeatmapsFound.AddRange(lastSearchResult.BeatmapsFound);
-                                }
-
-
-                                if (searchResult.BeatmapsFound.Any())
-                                {
-                                    memorySearchFailed = false;
-                                    searchResult.MapSource = memorySearchArgs.SourceName;
-                                    _logger.SetContextData("OsuMemory_searchResult", new
-                                    {
-                                        mods = searchResult.Mods?.Mods.ToString() ?? "null",
-                                        rawName = $"{searchResult.BeatmapsFound[0].Artist} - {searchResult.BeatmapsFound[0].Title} [{searchResult.BeatmapsFound[0].DiffName}]",
-                                        mapId = searchResult.BeatmapsFound[0].MapId.ToString(),
-                                        action = searchResult.Action.ToString()
-                                    }.ToString());
-                                    try
-                                    {
-                                        await _mainMapDataGetter.ProcessMapResult(searchResult,
-                                            _cancellationTokenSource.Token);
-                                    }
-                                    catch (TaskCanceledException) { }
-                                }
-                                else
                                     memorySearchFailed = true;
+                                }
+                                else
+                                {
+                                    if (memorySearchArgs.EventType == OsuEventType.MapChange || lastSearchResult == null || !lastSearchResult.BeatmapsFound.Any())
+                                    {
+                                        _logger.SetContextData("OsuMemory_searchingForBeatmaps", "1");
+                                        lastSearchResult = searchResult = _mainMapDataGetter.FindMapData(memorySearchArgs, _cancellationTokenSource.Token);
+                                        _logger.SetContextData("OsuMemory_searchingForBeatmaps", "0");
+                                    }
+                                    else
+                                    {
+                                        searchResult = new MapSearchResult(memorySearchArgs)
+                                        {
+                                            Mods = lastSearchResult.Mods
+                                        };
+                                        searchResult.BeatmapsFound.AddRange(lastSearchResult.BeatmapsFound);
+                                    }
+
+
+                                    if (searchResult.BeatmapsFound.Any())
+                                    {
+                                        memorySearchFailed = false;
+                                        searchResult.MapSource = memorySearchArgs.SourceName;
+                                        _logger.SetContextData("OsuMemory_searchResult", new
+                                        {
+                                            mods = searchResult.Mods?.Mods.ToString() ?? "null",
+                                            rawName = $"{searchResult.BeatmapsFound[0].Artist} - {searchResult.BeatmapsFound[0].Title} [{searchResult.BeatmapsFound[0].DiffName}]",
+                                            mapId = searchResult.BeatmapsFound[0].MapId.ToString(),
+                                            action = searchResult.Action.ToString()
+                                        }.ToString());
+                                        await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
+                                    }
+                                    else
+                                        memorySearchFailed = true;
+                                }
+                            }
+                            if (memorySearchFailed)
+                            {
+                                if (TasksMsn.TryPop(out msnSearchArgs))
+                                {
+                                    var status = memorySearchArgs?.Status ?? OsuStatus.Null;
+
+                                    msnSearchArgs.Status = status != OsuStatus.Null
+                                        ? status
+                                        : msnSearchArgs.Status;
+
+                                    searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs, _cancellationTokenSource.Token);
+                                    searchResult.MapSource = msnSearchArgs.SourceName;
+                                    await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
+                                }
                             }
                         }
-                        if (memorySearchFailed)
+                        else
                         {
+                            //Use MSN/other events only
                             if (TasksMsn.TryPop(out msnSearchArgs))
                             {
-                                var status = memorySearchArgs?.Status ?? OsuStatus.Null;
-
-                                msnSearchArgs.Status = status != OsuStatus.Null
-                                    ? status
-                                    : msnSearchArgs.Status;
-
-                                searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
+                                searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs, _cancellationTokenSource.Token);
                                 searchResult.MapSource = msnSearchArgs.SourceName;
-                                try
-                                {
-                                    await _mainMapDataGetter.ProcessMapResult(searchResult,
-                                        _cancellationTokenSource.Token);
-                                }
-                                catch (TaskCanceledException) { }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //Use MSN/other events only
-                        if (TasksMsn.TryPop(out msnSearchArgs))
-                        {
-                            searchResult = _mainMapDataGetter.FindMapData(msnSearchArgs);
-                            searchResult.MapSource = msnSearchArgs.SourceName;
-                            try
-                            {
                                 await _mainMapDataGetter.ProcessMapResult(searchResult, _cancellationTokenSource.Token);
                             }
-                            catch (TaskCanceledException) { }
                         }
+                        Thread.Sleep(5);
                     }
-                    Thread.Sleep(5);
+                    catch (TaskCanceledException) { }
+                    catch (OperationCanceledException) { }
                 }
             }
             catch (ThreadAbortException)

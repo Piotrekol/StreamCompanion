@@ -1,4 +1,5 @@
-﻿using osu_StreamCompanion.Code.Misc;
+﻿using System.Threading;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -22,7 +23,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
             _logger = logger;
         }
 
-        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs)
+        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
             MapSearchResult mapSearchResult = new MapSearchResult(searchArgs);
 

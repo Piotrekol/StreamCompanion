@@ -8,6 +8,7 @@ using osu.Game.Scoring;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace PpCalculator
 {
@@ -92,6 +93,8 @@ namespace PpCalculator
         }
 
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
+            => Calculate(CancellationToken.None, endTime, categoryAttribs);
+        public double Calculate(CancellationToken cancellationToken, double? endTime = null, Dictionary<string, double> categoryAttribs = null)
         {
             if (WorkingBeatmap == null)
                 return -1d;
@@ -138,7 +141,7 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                (PerformanceCalculator, TimedDifficultyAttributes) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo);
+                (PerformanceCalculator, TimedDifficultyAttributes) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo, cancellationToken);
                 ResetPerformanceCalculator = false;
             }
 

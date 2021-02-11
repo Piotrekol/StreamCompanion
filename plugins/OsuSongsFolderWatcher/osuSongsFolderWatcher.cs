@@ -161,7 +161,7 @@ namespace OsuSongsFolderWatcher
         private IMapSearchArgs lastMapSearchArgs;
 
         public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
-        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs)
+        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
             lastMapSearchArgs = searchArgs;
             return null;

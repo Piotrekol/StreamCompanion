@@ -80,23 +80,6 @@ namespace osu_StreamCompanion.Code.Core
 
             var plugins = DiContainer.Container.LocateAll(typeof(IPlugin)).Cast<IPlugin>().ToList();
 
-            //TODO: remove this check after few releases (2020?)
-            var ingameOverlay = plugins.FirstOrDefault(p => p.Name == "IngameOverlay");
-            if (ingameOverlay != null && ingameOverlay is IMapDataConsumer mapDataConsumer)
-            {
-                try
-                {
-                    mapDataConsumer.SetNewMap(new MapSearchResult(new MapSearchArgs("dummy", OsuEventType.MapChange)));
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show(
-                        $"IngameOverlay plugin version is not valid for this version of StreamCompanion. {Environment.NewLine} Either update or remove it from plugins folder",
-                        "osu!StreamCompanion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Program.SafeQuit();
-                }
-            }
-
             _logger.Log(">Initialized {0} plugins", LogLevel.Information, plugins.Count.ToString());
 
             foreach (var plugin in plugins)

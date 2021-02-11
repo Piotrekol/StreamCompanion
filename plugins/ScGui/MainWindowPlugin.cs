@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -153,11 +154,10 @@ namespace ScGui
             _settingsForm = null;
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (map.BeatmapsFound.Any())
             {
-
                 var foundMap = map.BeatmapsFound[0];
                 var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.MapSource != "Msn")
@@ -169,7 +169,7 @@ namespace ScGui
                     var token = Tokens.AllTokens.FirstOrDefault(t => t.Key.ToLower() == "mstars").Value;
                     if (mods != Mods.Omod && token != null)
                     {
-                        nowPlaying += $"Modded: {token.Value:##.###} {map.Action}";
+                        nowPlaying += $" Modded: {token.Value:##.###} {map.Action}";
                     }
                     else
                         nowPlaying += $"{map.Action}";

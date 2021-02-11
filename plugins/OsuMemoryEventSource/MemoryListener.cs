@@ -144,11 +144,11 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void SetNewMap(IMapSearchResult map)
+        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             foreach (var memoryDataProcessor in _memoryDataProcessors)
             {
-                memoryDataProcessor.SetNewMap(map);
+                memoryDataProcessor.SetNewMap(map, cancellationToken);
             }
 
             _patternsDispatcher.SetOutputPatterns(map.OutputPatterns);

@@ -1,3 +1,4 @@
+using System.Threading;
 using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -38,7 +39,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.SqliteData
         }
 
 
-        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs)
+        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
             var result = new MapSearchResult(searchArgs);
             IBeatmap beatmap = null;

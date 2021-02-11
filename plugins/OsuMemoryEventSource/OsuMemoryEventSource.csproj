@@ -52,7 +52,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="StreamCompanionTypes">
-			<Version>5.2.1</Version>
+			<Version>6.0.0</Version>
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
 	</ItemGroup>
