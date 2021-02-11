@@ -131,6 +131,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                                             _cancellationTokenSource.Token);
                                     }
                                     catch (TaskCanceledException) { }
+                                    catch (OperationCanceledException) { }
                                 }
                                 else
                                     memorySearchFailed = true;
