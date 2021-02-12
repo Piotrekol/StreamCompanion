@@ -53,7 +53,7 @@ namespace osu_StreamCompanion.Code.Core
             di.Configure(x => x.ExportDefault(typeof(MainSaver)));
             di.Configure(x => x.ExportFactory((ILogger logger) => new SqliteControler(new SqliteConnector(logger)))
                 .As<IDatabaseController>().Lifestyle.Singleton());
-            di.Configure(x => x.ExportDefault(typeof(MapStringFormatter)));
+            di.Configure(x => x.ExportDefault(typeof(OsuEventHandler)));
             di.Configure(x => x.ExportDefault(typeof(MainMapDataGetter)));
             di.Configure(c => c.ImportMembers<object>(MembersThat.HaveAttribute<ImportAttribute>()));
             di.Configure(x => x.ExportFuncWithContext<Delegates.Exit>((scope, context, arg3) =>

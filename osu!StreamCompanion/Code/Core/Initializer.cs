@@ -91,7 +91,7 @@ namespace osu_StreamCompanion.Code.Core
             Settings.Add(_names.FirstRun.Name, false);
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
 
-            DiContainer.Container.Locate<MapStringFormatter>();
+            DiContainer.Container.Locate<OsuEventHandler>();
 
             _logger.Log("Started!", LogLevel.Information);
         }
