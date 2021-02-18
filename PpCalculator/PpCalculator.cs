@@ -12,11 +12,11 @@ using System.Threading;
 
 namespace PpCalculator
 {
-    public abstract class PpCalculator
+    public abstract class PpCalculator : IPpCalculator
     {
         public ProcessorWorkingBeatmap WorkingBeatmap { get; private set; }
-        public IBeatmap PlayableBeatmap { get; private set; }
-        public abstract Ruleset Ruleset { get; }
+        protected IBeatmap PlayableBeatmap { get; private set; }
+        protected abstract Ruleset Ruleset { get; }
 
         public virtual double Accuracy { get; set; } = 100;
 
@@ -49,7 +49,7 @@ namespace PpCalculator
         public int? RulesetId => Ruleset.RulesetInfo.ID;
 
 
-        public void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
+        internal void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
         {
             WorkingBeatmap = workingBeatmap;
 
