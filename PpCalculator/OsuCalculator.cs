@@ -10,7 +10,7 @@ namespace PpCalculator
 {
     public class OsuCalculator : PpCalculator
     {
-        public override Ruleset Ruleset { get; } = new osu.Game.Rulesets.Osu.OsuRuleset();
+        protected override Ruleset Ruleset { get; } = new osu.Game.Rulesets.Osu.OsuRuleset();
 
 
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>

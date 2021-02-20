@@ -8,7 +8,7 @@ namespace PpCalculator
 {
     public class ManiaCalculator : PpCalculator
     {
-        public override Ruleset Ruleset { get; } = new ManiaRuleset();
+        protected override Ruleset Ruleset { get; } = new ManiaRuleset();
 
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) => 0;
 

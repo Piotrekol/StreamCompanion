@@ -44,7 +44,7 @@
     </PackageReference>
     <PackageReference Include="ScottPlot.WPF" Version="4.0.48" />
     <PackageReference Include="StreamCompanionTypes">
-      <Version>6.0.0</Version>
+      <Version>6.1.0</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />

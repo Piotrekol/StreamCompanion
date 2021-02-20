@@ -9,14 +9,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using PpCalculatorTypes;
+using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
+using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
 
 namespace PpCalculator
 {
-    public abstract class PpCalculator
+    public abstract class PpCalculator : IPpCalculator, ICloneable
     {
-        public ProcessorWorkingBeatmap WorkingBeatmap { get; private set; }
-        public IBeatmap PlayableBeatmap { get; private set; }
-        public abstract Ruleset Ruleset { get; }
+        public ProcessorWorkingBeatmap WorkingBeatmap { get; protected set; }
+        protected IBeatmap PlayableBeatmap { get; set; }
+        protected abstract Ruleset Ruleset { get; }
 
         public virtual double Accuracy { get; set; } = 100;
 
@@ -43,13 +46,23 @@ namespace PpCalculator
 
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
 
-        protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
+        protected PerformanceCalculator PerformanceCalculator { get; set; }
         protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
 
-        public int? RulesetId => Ruleset.RulesetInfo.ID;
+        public int RulesetId => Ruleset.RulesetInfo.ID ?? 0;
+        public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
 
+        public object Clone()
+        {
+            var ppCalculator = CreateInstance();
+            ppCalculator.WorkingBeatmap = WorkingBeatmap;
+            ppCalculator.PlayableBeatmap = PlayableBeatmap;
+            ppCalculator.PerformanceCalculator = PerformanceCalculator;
+            ppCalculator.ResetPerformanceCalculator = ResetPerformanceCalculator;
+            return ppCalculator;
+        }
 
-        public void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
+        internal void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
         {
             WorkingBeatmap = workingBeatmap;
 
@@ -89,7 +102,27 @@ namespace PpCalculator
 
         public DifficultyAttributes AttributesAt(double time)
         {
-            return TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
+            var attributes = TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
+            if (attributes == null)
+                return null;
+
+            DifficultyAttributes difficultyAttributes = null;
+            //Implement other modes when need arises
+            if (attributes is osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuDifficultyAttributes)
+            {
+                return new OsuDifficultyAttributes(osuDifficultyAttributes.StarRating, osuDifficultyAttributes.MaxCombo)
+                {
+                    AimStrain = osuDifficultyAttributes.AimStrain,
+                    SpeedStrain = osuDifficultyAttributes.SpeedStrain,
+                    ApproachRate = osuDifficultyAttributes.ApproachRate,
+                    OverallDifficulty = osuDifficultyAttributes.OverallDifficulty,
+                    HitCircleCount = osuDifficultyAttributes.HitCircleCount,
+                    SliderCount = osuDifficultyAttributes.SliderCount,
+                    SpinnerCount = osuDifficultyAttributes.SpinnerCount
+                };
+            }
+
+            return new DifficultyAttributes(attributes.StarRating, attributes.MaxCombo);
         }
 
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
@@ -206,5 +239,6 @@ namespace PpCalculator
 
         protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 
+        protected PpCalculator CreateInstance() => PpCalculatorHelpers.GetPpCalculator(RulesetId);
     }
 }
