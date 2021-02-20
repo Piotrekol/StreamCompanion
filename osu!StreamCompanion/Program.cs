@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using osu_StreamCompanion.Code.Core.Loggers;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
 #if DEBUG
 using System.Diagnostics;
