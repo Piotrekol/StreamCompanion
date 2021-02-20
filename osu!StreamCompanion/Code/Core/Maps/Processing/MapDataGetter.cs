@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core.Savers;
+using PpCalculator;
+using PpCalculatorTypes;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -76,6 +79,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             return Task.Run(async () =>
             {
+                mapSearchResult.SharedObjects.Add(CreatePpCalculatorTask(mapSearchResult));
                 await CreateTokens(mapSearchResult, cancellationToken);
                 if (cancellationToken.IsCancellationRequested)
                     return;
@@ -96,6 +100,20 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 SetNewMap(mapSearchResult, cancellationToken);
             }, cancellationToken);
         }
+
+        private Lazy<Task<IPpCalculator>> CreatePpCalculatorTask(IMapSearchResult mapSearchResult) =>
+            new Lazy<Task<IPpCalculator>>(() =>
+            {
+                if (!(mapSearchResult.BeatmapsFound.Any() &&
+                      mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)))
+                    return null;
+
+                return Task.Run<IPpCalculator>(() =>
+                {
+                    var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
+                    return PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
+                });
+            });
 
         private Task CreateTokens(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
