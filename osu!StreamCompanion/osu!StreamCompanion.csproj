@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -54,39 +54,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Code\Misc\ImpatientWebClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\Logger\LoggerSettingsUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\TokensPreview\TokensPreviewSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\Donation\DonationSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\FirstRun\Phases\FirstRunFinish.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternEdit.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Code\Modules\osuPathReslover\osuPathResolverSettings.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Update="Code\Misc\ImpatientWebClient.cs" />
+    <Compile Update="Code\Modules\Logger\LoggerSettingsUserControl.cs" />
+    <Compile Update="Code\Modules\TokensPreview\TokensPreviewSettings.cs" />
+    <Compile Update="Code\Modules\Donation\DonationSettings.cs" />
+    <Compile Update="Code\Modules\FirstRun\Phases\FirstRunFinish.cs" />
+    <Compile Update="Code\Modules\MapDataParsers\Parser1\ParserSettings.cs" />
+    <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternEdit.cs" />
+    <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternList.cs" />
+    <Compile Update="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs" />
+    <Compile Update="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs" />
+    <Compile Update="Code\Modules\osuPathReslover\osuPathResolverSettings.cs" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -120,6 +98,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PpCalculatorTypes\PpCalculatorTypes.csproj" ExcludeAssets="all" />
+    <ProjectReference Include="..\PpCalculator\PpCalculator.csproj" ExcludeAssets="all" />
+
+
     <ProjectReference Include="..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -132,7 +114,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Sentry" Version="3.0.0" />
     <PackageReference Include="SharpCompress" Version="0.26.0" />
-    <PackageReference Include="StreamCompanionTypes" version="6.0.0" />
+    <PackageReference Include="StreamCompanionTypes" version="6.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
