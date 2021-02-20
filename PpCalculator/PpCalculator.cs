@@ -59,6 +59,8 @@ namespace PpCalculator
             ppCalculator.PlayableBeatmap = PlayableBeatmap;
             ppCalculator.PerformanceCalculator = PerformanceCalculator;
             ppCalculator.ResetPerformanceCalculator = ResetPerformanceCalculator;
+            ppCalculator.TimedDifficultyAttributes = TimedDifficultyAttributes;
+            ppCalculator.LastMods = LastMods;
             return ppCalculator;
         }
 

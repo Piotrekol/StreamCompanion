@@ -96,7 +96,7 @@ namespace BeatmapPpReplacements
             if (map.SearchArgs.EventType != OsuEventType.MapChange)
                 return;
 
-            _ppCalculator = await map.GetPpCalculator();
+            _ppCalculator = await map.GetPpCalculator(cancellationToken);
 
             if (_ppCalculator is null)
             {

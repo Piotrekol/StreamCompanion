@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CollectionManager.DataTypes;
+using Newtonsoft.Json;
 using PpCalculatorTypes;
 using StreamCompanion.Common;
 using StreamCompanion.Common.Helpers;
@@ -120,7 +121,7 @@ namespace OsuMemoryEventSource
             if ((map.Action & OsuStatus.ResultsScreen) != 0)
                 return;
 
-            var ppCalculator = await map.GetPpCalculator();
+            var ppCalculator = await map.GetPpCalculator(cancellationToken);
             lock (_lockingObject)
             {
 
@@ -390,8 +391,9 @@ namespace OsuMemoryEventSource
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
             if(!IsMainProcessor)
                 return;
+
             
-            _strainsToken.Value = (await mapSearchResult.GetPpCalculator())?.CalculateStrains(cancellationToken);
+            _strainsToken.Value = (await mapSearchResult.GetPpCalculator(cancellationToken))?.CalculateStrains(cancellationToken);
         }
 
         private void SetSkinTokens()

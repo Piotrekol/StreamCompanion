@@ -7,6 +7,7 @@ using CollectionManager.Enums;
 using osu_StreamCompanion.Code.Core.Savers;
 using PpCalculator;
 using PpCalculatorTypes;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -101,18 +102,19 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }, cancellationToken);
         }
 
-        private Lazy<Task<IPpCalculator>> CreatePpCalculatorTask(IMapSearchResult mapSearchResult) =>
-            new Lazy<Task<IPpCalculator>>(() =>
+
+        private CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorTask(IMapSearchResult mapSearchResult) =>
+            new CancelableAsyncLazy<IPpCalculator>(async (cancellationToken) =>
             {
                 if (!(mapSearchResult.BeatmapsFound.Any() &&
                       mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)))
                     return null;
 
-                return Task.Run<IPpCalculator>(() =>
-                {
-                    var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
-                    return PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-                });
+                var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
+                var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
+                ppCalculator.Mods = (mapSearchResult.Mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                ppCalculator?.Calculate(cancellationToken);
+                return ppCalculator;
             });
 
         private Task CreateTokens(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
