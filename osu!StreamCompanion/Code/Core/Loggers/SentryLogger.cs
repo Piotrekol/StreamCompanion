@@ -14,8 +14,16 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         public static SentryClient SentryClient { get; } = new SentryClient(new SentryOptions
         {
             Dsn = SentryDsn,
-            Release = Program.ScVersion
+            Release = Program.ScVersion,
+            SendDefaultPii = true,
+            BeforeSend = BeforeSend
         });
+
+        private static SentryEvent? BeforeSend(SentryEvent arg)
+        {
+            arg.User.IpAddress = null;
+            return arg;
+        }
 
         public static Dictionary<string, string> ContextData { get; } = new Dictionary<string, string>();
         private object _lockingObject = new object();
