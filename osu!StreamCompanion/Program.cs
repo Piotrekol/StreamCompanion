@@ -100,9 +100,15 @@ namespace osu_StreamCompanion
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Application.ThreadException += Application_ThreadException;
+            TaskScheduler.UnobservedTaskException+=TaskSchedulerOnUnobservedTaskException;
             _initializer = new Initializer(settingsProfileName);
             _initializer.Start();
             Application.Run(_initializer);
+        }
+
+        private static void TaskSchedulerOnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+        {
+            HandleException(e.Exception);
         }
 
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
