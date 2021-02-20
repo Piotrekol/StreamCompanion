@@ -1,9 +1,9 @@
 using CollectionManager.Enums;
 using OsuMemoryDataProvider;
-using PpCalculator;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using PpCalculatorTypes;
 using StreamCompanionTypes.DataTypes;
 
 namespace OsuMemoryEventSource
@@ -15,23 +15,13 @@ namespace OsuMemoryEventSource
         public List<int> HitErrors { get; set; }
         private PlayMode _currentPlayMode;
 
-        public PpCalculator.PpCalculator PpCalculator { get; private set; }
+        public IPpCalculator PpCalculator { get; private set; }
 
-        public void SetCurrentMap(IBeatmap beatmap, string mods, string osuFileLocation, PlayMode playMode, CancellationToken cancellationToken)
+        public void SetPpCalculator(IPpCalculator ppCalculator, string mods, CancellationToken cancellationToken)
         {
-            if (beatmap == null)
-            {
-                PpCalculator = null;
-                return;
-            }
-
-            _currentPlayMode = playMode;
-            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, PpCalculator);
-            if (ppCalculator == null)
-                return;
-
             ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            ppCalculator.PreProcess(osuFileLocation);
+            _currentPlayMode = (PlayMode)ppCalculator.RulesetId;
+
             try
             {
                 ppCalculator.Calculate(cancellationToken);
@@ -49,7 +39,7 @@ namespace OsuMemoryEventSource
         {
             double pp = double.NaN;
 
-            if (PpCalculator == null || _currentPlayMode == PlayMode.OsuMania)
+            if (PpCalculator == null || PpCalculator.RulesetId == (int)PlayMode.OsuMania)
                 return pp;
 
             try

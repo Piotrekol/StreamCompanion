@@ -1,6 +1,5 @@
 using CollectionManager.Enums;
 using OsuMemoryDataProvider;
-using PpCalculator;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -11,6 +10,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CollectionManager.DataTypes;
+using PpCalculatorTypes;
+using StreamCompanion.Common;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
 
@@ -60,7 +61,8 @@ namespace OsuMemoryEventSource
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
         public bool IsMainProcessor { get; private set; }
         public string TokensPath { get; private set; }
-        public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, bool isMainProcessor, string tokensPath)
+        public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, bool isMainProcessor,
+            string tokensPath)
         {
             _settings = settings;
             _logger = logger;
@@ -80,7 +82,7 @@ namespace OsuMemoryEventSource
 
             InitLiveTokens();
 
-            Task.Run(TokenThreadWork, cancellationTokenSource.Token);
+             Task.Run(TokenThreadWork, cancellationTokenSource.Token);
         }
 
         public async Task TokenThreadWork()
@@ -112,12 +114,14 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        public async Task SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
+            if ((map.Action & OsuStatus.ResultsScreen) != 0)
+                return;
+
+            var ppCalculator = await map.GetPpCalculator();
             lock (_lockingObject)
             {
-                if ((map.Action & OsuStatus.ResultsScreen) != 0)
-                    return;
 
                 if (map.BeatmapsFound.Any() &&
                     map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
@@ -128,8 +132,7 @@ namespace OsuMemoryEventSource
                     if (map.SearchArgs.EventType == OsuEventType.MapChange)
                     {
                         var mods = map.Mods?.WorkingMods ?? "";
-                        _rawData.SetCurrentMap(map.BeatmapsFound[0], mods, mapLocation,
-                            (PlayMode)PpCalculatorHelpers.GetRulesetId((int)map.BeatmapsFound[0].PlayMode, map.PlayMode.HasValue ? (int?)map.PlayMode : null), cancellationToken);
+                        _rawData.SetPpCalculator(ppCalculator, mods, cancellationToken);
                     }
 
                     _newPlayStarted.Set();
@@ -250,7 +253,7 @@ namespace OsuMemoryEventSource
              });
             CreateLiveToken("timeLeft", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero, OsuStatus.All, () =>
              {
-                 var beatmapLength = _rawData.PpCalculator?.WorkingBeatmap?.Length;
+                 var beatmapLength = _rawData.PpCalculator?.BeatmapLength;
                  if (beatmapLength.HasValue)
                  {
                      var timeLeft = TimeSpan.FromMilliseconds(beatmapLength.Value) - (TimeSpan)_liveTokens["mapPosition"].Token.Value;
@@ -360,57 +363,33 @@ namespace OsuMemoryEventSource
         }
 
         //TODO: this should end up in StreamCompanion.Common project along with pp calc (remove all references to PpCalculator/osu.Game from all plugins except common one)
-        private static StrainsResult GetStrains(string mapLocation, PlayMode? desiredPlayMode)
+        private static Dictionary<int, double> GetStrains(IPpCalculator ppCalculator, CancellationToken cancellationToken)
         {
-            var workingBeatmap = new ProcessorWorkingBeatmap(mapLocation);
+            var strains = new Dictionary<int, double>(300);
+            if (ppCalculator == null)
+                return strains;
 
-            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId(workingBeatmap.RulesetID,
-                desiredPlayMode.HasValue ? (int?)desiredPlayMode : null);
-
-            var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-
-            //Length refers to beatmap time, not song total time
-            var mapLength = workingBeatmap.Length;
+            var mapLength = ppCalculator.BeatmapLength;
             var strainLength = 5000;
             var interval = 1500;
             var time = 0;
-            var strains = new Dictionary<int, double>(300);
 
-            if (ppCalculator == null)
+            var a = new Dictionary<string, double>();
+            while (time + strainLength / 2 < mapLength)
             {
-                while (time + strainLength / 2 < mapLength)
-                {
-                    strains.Add(time, 50);
-                    time += interval;
-                }
-            }
-            else
-            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var strain = ppCalculator.Calculate(time, time + strainLength, a);
+                if (double.IsNaN(strain) || strain < 0)
+                    strain = 0;
+                else if (strain > 2000)
+                    strain = 2000; //lets not freeze everything with aspire/fancy 100* maps
 
-                var a = new Dictionary<string, double>();
-                while (time + strainLength / 2 < mapLength)
-                {
-                    var strain = ppCalculator.Calculate(time, time + strainLength, a);
-
-                    if (double.IsNaN(strain) || strain < 0)
-                        strain = 0;
-                    else if (strain > 2000)
-                        strain = 2000; //lets not freeze everything with aspire/fancy 100* maps
-
-                    strains.Add(time, strain);
-                    time += interval;
-                    a.Clear();
-                }
+                strains.Add(time, strain);
+                time += interval;
+                a.Clear();
             }
 
-            return new StrainsResult
-            {
-                Strains = strains,
-                PpCalculator = ppCalculator,
-                WorkingBeatmap = workingBeatmap,
-                PlayMode = playMode,
-                MapLocation = mapLocation
-            };
+            return strains;
         }
 
         public void Dispose()
@@ -431,27 +410,24 @@ namespace OsuMemoryEventSource
         private class StrainsResult
         {
             public Dictionary<int, double> Strains;
-            public PpCalculator.PpCalculator PpCalculator;
-            public ProcessorWorkingBeatmap WorkingBeatmap;
+            public IPpCalculator PpCalculator;
             public PlayMode PlayMode;
             public string MapLocation;
         }
 
-        public Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
+        public async Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
             if (IsMainProcessor)
                 SetSkinTokens();
 
             if (mapSearchResult.SearchArgs.EventType != OsuEventType.MapChange)
-                return Task.CompletedTask;
+                return;
 
             _mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
 
             if (IsMainProcessor && mapSearchResult.BeatmapsFound.Any() && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
-                _strainsToken.Value = GetStrains(mapLocation, mapSearchResult.PlayMode).Strains;
-
-            return Task.CompletedTask;
+                _strainsToken.Value = GetStrains(await mapSearchResult.GetPpCalculator(), cancellationToken);
         }
 
         private void SetSkinTokens()

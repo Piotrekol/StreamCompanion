@@ -1,13 +1,12 @@
 using CollectionManager.Enums;
-using PpCalculator;
-using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using PpCalculatorTypes;
+using StreamCompanion.Common;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
@@ -19,7 +18,7 @@ namespace BeatmapPpReplacements
         private const string PpFormat = "{0:0.00}";
         private Tokens.TokenSetter _tokenSetter;
 
-        private PpCalculator.PpCalculator _ppCalculator = null;
+        private IPpCalculator _ppCalculator = null;
 
         private ISettings _settings;
 
@@ -92,32 +91,24 @@ namespace BeatmapPpReplacements
             }
         }
 
-        public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
+        public async Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (map.SearchArgs.EventType != OsuEventType.MapChange)
-                return Task.CompletedTask;
+                return;
 
-            if (!map.BeatmapsFound.Any() ||
-                !map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+            _ppCalculator = await map.GetPpCalculator();
+
+            if (_ppCalculator is null)
             {
                 ResetTokens(TokenMode.Osu);
                 ResetTokens(TokenMode.Mania);
                 _tokenSetter("gameMode", null);
                 _tokenSetter("maxCombo", -1);
-                return Task.CompletedTask;
+                return;
             }
 
-            var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)map.BeatmapsFound[0].PlayMode, map.PlayMode.HasValue ? (int?)map.PlayMode : null);
-            _ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, _ppCalculator);
+            var playMode = (PlayMode)_ppCalculator.RulesetId;
             _tokenSetter("gameMode", playMode.ToString());
-
-            if (_ppCalculator == null)
-            {//Ctb not supported :(
-                ResetTokens(TokenMode.Osu);
-                ResetTokens(TokenMode.Mania);
-                _tokenSetter("maxCombo", -1);
-                return Task.CompletedTask;
-            }
 
             _ppCalculator.Score = playMode == PlayMode.OsuMania
                 ? 1_000_000
@@ -135,12 +126,10 @@ namespace BeatmapPpReplacements
             }
 
             _tokenSetter("maxCombo", _ppCalculator.GetMaxCombo());
-
             ResetTokens(tokenMode == TokenMode.Osu ? TokenMode.Mania : TokenMode.Osu);
-            return Task.CompletedTask;
         }
 
-        private double GetPp(CancellationToken cancellationToken, PpCalculator.PpCalculator ppCalculator, double acc, string mods = "", int score = 0)
+        private double GetPp(CancellationToken cancellationToken, IPpCalculator ppCalculator, double acc, string mods = "", int score = 0)
         {
             ppCalculator.Accuracy = acc;
             ppCalculator.Score = score;
