@@ -86,8 +86,16 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 {
                     await HandleMapSearchArgs(GetSearchArgs());
                 }
-                catch (TaskCanceledException) { }
-                catch (OperationCanceledException) { }
+                catch (TaskCanceledException)
+                {
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception e)
+                {
+                    Program.HandleException(e);
+                }
 
                 await Task.Delay(5);
             }
