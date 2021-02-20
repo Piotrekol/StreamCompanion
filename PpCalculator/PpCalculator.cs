@@ -9,6 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using osu.Game.Rulesets.Osu.Difficulty;
+using PpCalculatorTypes;
+using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
+using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
 
 namespace PpCalculator
 {
@@ -46,7 +50,8 @@ namespace PpCalculator
         protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
         protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
 
-        public int? RulesetId => Ruleset.RulesetInfo.ID;
+        public int RulesetId => Ruleset.RulesetInfo.ID ?? 0;
+        public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
 
 
         internal void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
@@ -89,7 +94,27 @@ namespace PpCalculator
 
         public DifficultyAttributes AttributesAt(double time)
         {
-            return TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
+            var attributes = TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
+            if (attributes == null)
+                return null;
+
+            DifficultyAttributes difficultyAttributes = null;
+            //Implement other modes when need arises
+            if (attributes is osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuDifficultyAttributes)
+            {
+                return new OsuDifficultyAttributes(osuDifficultyAttributes.StarRating, osuDifficultyAttributes.MaxCombo)
+                {
+                    AimStrain = osuDifficultyAttributes.AimStrain,
+                    SpeedStrain = osuDifficultyAttributes.SpeedStrain,
+                    ApproachRate = osuDifficultyAttributes.ApproachRate,
+                    OverallDifficulty = osuDifficultyAttributes.OverallDifficulty,
+                    HitCircleCount = osuDifficultyAttributes.HitCircleCount,
+                    SliderCount = osuDifficultyAttributes.SliderCount,
+                    SpinnerCount = osuDifficultyAttributes.SpinnerCount
+                };
+            }
+
+            return new DifficultyAttributes(attributes.StarRating, attributes.MaxCombo);
         }
 
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)

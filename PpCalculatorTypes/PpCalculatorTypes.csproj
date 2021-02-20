@@ -4,8 +4,4 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\submodules\osu\osu.Game\osu.Game.csproj" />
-  </ItemGroup>
-
 </Project>

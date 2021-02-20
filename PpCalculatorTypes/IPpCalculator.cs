@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
-using osu.Game.Rulesets.Difficulty;
 
-namespace PpCalculator
+namespace PpCalculatorTypes
 {
     public interface IPpCalculator
     {
@@ -15,7 +14,8 @@ namespace PpCalculator
         int? Mehs { get; set; }
         int? Goods { get; set; }
         int? Katsus { get; set; }
-        int? RulesetId { get; }
+        int RulesetId { get; }
+        double BeatmapLength { get; }
         void PreProcess(string file);
         double Calculate(double startTime, double endTime = double.NaN, Dictionary<string, double> categoryAttribs = null);
         DifficultyAttributes AttributesAt(double time);
