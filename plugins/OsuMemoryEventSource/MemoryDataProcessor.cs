@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using CollectionManager.DataTypes;
 using PpCalculatorTypes;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
 
@@ -362,36 +363,6 @@ namespace OsuMemoryEventSource
             _tokensUpdated();
         }
 
-        //TODO: this should end up in StreamCompanion.Common project along with pp calc (remove all references to PpCalculator/osu.Game from all plugins except common one)
-        private static Dictionary<int, double> GetStrains(IPpCalculator ppCalculator, CancellationToken cancellationToken)
-        {
-            var strains = new Dictionary<int, double>(300);
-            if (ppCalculator == null)
-                return strains;
-
-            var mapLength = ppCalculator.BeatmapLength;
-            var strainLength = 5000;
-            var interval = 1500;
-            var time = 0;
-
-            var a = new Dictionary<string, double>();
-            while (time + strainLength / 2 < mapLength)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                var strain = ppCalculator.Calculate(time, time + strainLength, a);
-                if (double.IsNaN(strain) || strain < 0)
-                    strain = 0;
-                else if (strain > 2000)
-                    strain = 2000; //lets not freeze everything with aspire/fancy 100* maps
-
-                strains.Add(time, strain);
-                time += interval;
-                a.Clear();
-            }
-
-            return strains;
-        }
-
         public void Dispose()
         {
             cancellationTokenSource.Cancel();
@@ -407,14 +378,6 @@ namespace OsuMemoryEventSource
             }
         }
 
-        private class StrainsResult
-        {
-            public Dictionary<int, double> Strains;
-            public IPpCalculator PpCalculator;
-            public PlayMode PlayMode;
-            public string MapLocation;
-        }
-
         public async Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
             if (IsMainProcessor)
@@ -425,9 +388,10 @@ namespace OsuMemoryEventSource
 
             _mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
-
-            if (IsMainProcessor && mapSearchResult.BeatmapsFound.Any() && mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
-                _strainsToken.Value = GetStrains(await mapSearchResult.GetPpCalculator(), cancellationToken);
+            if(!IsMainProcessor)
+                return;
+            
+            _strainsToken.Value = (await mapSearchResult.GetPpCalculator())?.CalculateStrains(cancellationToken);
         }
 
         private void SetSkinTokens()
