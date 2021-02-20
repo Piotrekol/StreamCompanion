@@ -8,12 +8,19 @@ namespace StreamCompanion.Common
 {
     public static class MapSearchResultsExtensions
     {
-        public static Task<IPpCalculator> GetPpCalculator(this IMapSearchResult mapSearchResult)
+        public static async Task<IPpCalculator> GetPpCalculator(this IMapSearchResult mapSearchResult)
         {
-            if (mapSearchResult.SharedObjects.FirstOrDefault(o => o.GetType() == typeof(Lazy<Task<IPpCalculator>>)) is Lazy<Task<IPpCalculator>> ppCalculator)
-                return ppCalculator.Value;
+            if (!(mapSearchResult.SharedObjects.FirstOrDefault(o => o.GetType() == typeof(Lazy<Task<IPpCalculator>>)) is Lazy<Task<IPpCalculator>> ppCalculatorTask)) 
+                return null;
 
-            return null;
+            var ppCalculator = await ppCalculatorTask.Value;
+
+            if (ppCalculator == null)
+                return null;
+
+            ppCalculator = (IPpCalculator)ppCalculator.Clone();
+            ppCalculator.Mods = (mapSearchResult.Mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            return ppCalculator;
         }
     }
 }

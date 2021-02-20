@@ -22,5 +22,6 @@ namespace PpCalculatorTypes
         double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null);
         double Calculate(CancellationToken cancellationToken, double? endTime = null, Dictionary<string, double> categoryAttribs = null);
         int GetMaxCombo(int? fromTime = null);
+        object Clone();
     }
 }

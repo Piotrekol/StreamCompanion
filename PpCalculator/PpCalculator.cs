@@ -9,17 +9,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using osu.Game.Rulesets.Osu.Difficulty;
 using PpCalculatorTypes;
 using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
 using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
 
 namespace PpCalculator
 {
-    public abstract class PpCalculator : IPpCalculator
+    public abstract class PpCalculator : IPpCalculator, ICloneable
     {
-        public ProcessorWorkingBeatmap WorkingBeatmap { get; private set; }
-        protected IBeatmap PlayableBeatmap { get; private set; }
+        public ProcessorWorkingBeatmap WorkingBeatmap { get; protected set; }
+        protected IBeatmap PlayableBeatmap { get; set; }
         protected abstract Ruleset Ruleset { get; }
 
         public virtual double Accuracy { get; set; } = 100;
@@ -47,12 +46,21 @@ namespace PpCalculator
 
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
 
-        protected virtual PerformanceCalculator PerformanceCalculator { get; set; }
+        protected PerformanceCalculator PerformanceCalculator { get; set; }
         protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
 
         public int RulesetId => Ruleset.RulesetInfo.ID ?? 0;
         public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
 
+        public object Clone()
+        {
+            var ppCalculator = CreateInstance();
+            ppCalculator.WorkingBeatmap = WorkingBeatmap;
+            ppCalculator.PlayableBeatmap = PlayableBeatmap;
+            ppCalculator.PerformanceCalculator = PerformanceCalculator;
+            ppCalculator.ResetPerformanceCalculator = ResetPerformanceCalculator;
+            return ppCalculator;
+        }
 
         internal void PreProcess(ProcessorWorkingBeatmap workingBeatmap)
         {
@@ -231,5 +239,6 @@ namespace PpCalculator
 
         protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 
+        protected PpCalculator CreateInstance() => PpCalculatorHelpers.GetPpCalculator(RulesetId);
     }
 }
