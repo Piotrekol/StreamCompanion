@@ -57,8 +57,8 @@ namespace PpCalculator
             var ppCalculator = CreateInstance();
             ppCalculator.WorkingBeatmap = WorkingBeatmap;
             ppCalculator.PlayableBeatmap = PlayableBeatmap;
+            ppCalculator.Mods = Mods;
             ppCalculator.LastMods = LastMods;
-
             if (PerformanceCalculator != null)
             {
                 ppCalculator.PerformanceCalculator = Ruleset.CreatePerformanceCalculator(TimedDifficultyAttributes.Last().Attributes, ppCalculator.ScoreInfo);
