@@ -57,10 +57,15 @@ namespace PpCalculator
             var ppCalculator = CreateInstance();
             ppCalculator.WorkingBeatmap = WorkingBeatmap;
             ppCalculator.PlayableBeatmap = PlayableBeatmap;
-            ppCalculator.PerformanceCalculator = PerformanceCalculator;
-            ppCalculator.ResetPerformanceCalculator = ResetPerformanceCalculator;
-            ppCalculator.TimedDifficultyAttributes = TimedDifficultyAttributes;
             ppCalculator.LastMods = LastMods;
+
+            if (PerformanceCalculator != null)
+            {
+                ppCalculator.PerformanceCalculator = Ruleset.CreatePerformanceCalculator(TimedDifficultyAttributes.Last().Attributes, ppCalculator.ScoreInfo);
+                ppCalculator.TimedDifficultyAttributes = TimedDifficultyAttributes;
+                ppCalculator.ResetPerformanceCalculator = false;
+            }
+
             return ppCalculator;
         }
 
