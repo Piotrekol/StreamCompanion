@@ -46,8 +46,8 @@ namespace OsuMemoryEventSource
         protected IModParser _modParser;
         protected ISettings _settings;
         internal static IContextAwareLogger Logger;
-        protected List<IOsuMemoryReader> _clientMemoryReaders = new List<IOsuMemoryReader>();
-        protected IOsuMemoryReader _memoryReader => _clientMemoryReaders[0];
+        protected List<StructuredOsuMemoryReader> _clientMemoryReaders = new List<StructuredOsuMemoryReader>();
+        protected StructuredOsuMemoryReader MemoryReader => _clientMemoryReaders[0];
         private readonly MemoryListener memoryListener;
 
         protected static readonly object _lockingObject = new object();
@@ -90,7 +90,7 @@ namespace OsuMemoryEventSource
                 }
 
                 _clientMemoryReaders.AddRange(Enumerable.Range(0, clientCount)
-                    .Select(i => OsuMemoryReader.Instance.GetInstanceForWindowTitleHint($" Tournament Client {i}")));
+                    .Select(i => StructuredOsuMemoryReader.Instance.GetInstanceForWindowTitleHint($" Tournament Client {i}")));
 
                 //TODO: provide tournament-manager specific data via tokens
                 var _tournamentManagerMemoryReader = OsuMemoryReader.Instance.GetInstanceForWindowTitleHint("Tournament Manager");
@@ -99,7 +99,7 @@ namespace OsuMemoryEventSource
             }
             else
             {
-                _clientMemoryReaders.Add(OsuMemoryReader.Instance);
+                _clientMemoryReaders.Add(StructuredOsuMemoryReader.Instance);
             }
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;

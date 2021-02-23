@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using OsuMemoryDataProvider.Models;
 using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Consumers;
@@ -42,7 +43,6 @@ namespace OsuMemoryEventSource
             var mainClientId = tournamentMode
                 ? _settings.Get<int>(OsuMemoryEventSourceBase.DataClientId)
                 : 0;
-
             _memoryDataProcessors = Enumerable.Range(0, clientCount)
                 .Select(x => new MemoryDataProcessor(settings, logger, x == mainClientId, tournamentMode ? $"client_{x}_" : string.Empty)).ToList();
             _patternsDispatcher = new PatternsDispatcher(settings, saver);
@@ -54,10 +54,12 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public void Tick(List<IOsuMemoryReader> clientReaders, bool sendEvents)
+        public void Tick(List<StructuredOsuMemoryReader> clientReaders, bool sendEvents)
         {
             var reader = clientReaders[0];
-            _currentStatus = reader.GetCurrentStatus(out _);
+            var osuData = reader.OsuMemoryAddresses;
+            reader.Read(osuData.MiscData);
+            _currentStatus = osuData.MiscData.OsuStatus;
             if (_lastStatusLog != _currentStatus)
             {
                 _lastStatusLog = _currentStatus;
@@ -66,21 +68,25 @@ namespace OsuMemoryEventSource
 
             if (_currentStatus != OsuMemoryStatus.NotRunning)
             {
-                _currentMapId = reader.GetMapId();
-                var isReplay = reader.IsReplay();
+                reader.Read(osuData.Beatmap);
+                _currentMapId = osuData.Beatmap.Id;
+                var isReplay = osuData.MiscData.IsReplay;
                 OsuStatus status = _currentStatus.Convert();
                 status = status == OsuStatus.Playing && isReplay
                     ? OsuStatus.Watching
                     : status;
 
-                var gameMode = reader.ReadSongSelectGameMode();
-                var mapHash = reader.GetMapMd5Safe();
-                var mapSelectionMods = reader.GetMods();
-                var playingMods = status == OsuStatus.Playing || status == OsuStatus.Watching
-                    ? reader.GetPlayingMods()
-                    : -1;
-                var retries = reader.GetRetrys();
-                var currentTime = reader.ReadPlayTime();
+                var gameMode = osuData.MiscData.GameMode;
+                var mapHash = osuData.Beatmap.Md5;
+                var mapSelectionMods = osuData.MiscData.Mods;
+                var playingMods = -1;
+                if (status == OsuStatus.Playing || status == OsuStatus.Watching)
+                {
+                    reader.Read(osuData.Player);
+                    playingMods = osuData.Player.Mods.Value;
+                }
+                var retries = osuData.MiscData.Retries;
+                var currentTime = osuData.MiscData.AudioTime;
 
                 var mapHashDiffers = mapHash != null && _lastMapHash != null && _lastMapHash != mapHash;
                 var mapIdDiffers = _lastMapId != _currentMapId;
@@ -124,7 +130,7 @@ namespace OsuMemoryEventSource
                     _lastMapHash = mapHash;
                     _lastPlayingMods = playingMods;
 
-                    var rawString = Retry.RetryMe(() => reader.GetSongString(),
+                    var rawString = Retry.RetryMe(() => (string)reader.ReadProperty(osuData.Beatmap, nameof(CurrentBeatmap.Md5)),
                         s => (System.Text.Encoding.UTF8.GetByteCount(s) == s.Length), 5) ?? string.Empty;
 
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory", osuEventType.Value)

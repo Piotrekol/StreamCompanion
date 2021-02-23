@@ -46,8 +46,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="OsuMemoryDataProvider" Version="0.1.1">
-		</PackageReference>
+		<PackageReference Include="OsuMemoryDataProvider" Version="0.2.0.5" />
 		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 	</ItemGroup>
 	<ItemGroup>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
 using OsuMemoryDataProvider;
+using OsuMemoryDataProvider.Models;
 using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -37,7 +38,7 @@ namespace OsuMemoryEventSource
 
         private readonly int ExpectedMods = 89; //HRNFDTHD 
 
-        private readonly IOsuMemoryReader memoryReader;
+        private readonly StructuredOsuMemoryReader memoryReader;
         private readonly Random rnd = new Random();
         private Map _currentMap;
         private volatile bool Passed;
@@ -59,7 +60,7 @@ namespace OsuMemoryEventSource
             }
         }
 
-        public FirstRunMemoryCalibration(IOsuMemoryReader reader, ISettings settings, ILogger logger)
+        public FirstRunMemoryCalibration(StructuredOsuMemoryReader reader, ISettings settings, ILogger logger)
         {
             memoryReader = reader;
             _settings = settings;
@@ -87,7 +88,7 @@ namespace OsuMemoryEventSource
 
         public void GotMemory(int mapId, OsuStatus status, string mapString)
         {
-            if (!IsHandleCreated) 
+            if (!IsHandleCreated)
                 return;
 
             _logger.Log($"FirstRun: mapId: {mapId}, status: {status}, mapString: {mapString}", LogLevel.Debug);
@@ -116,7 +117,7 @@ namespace OsuMemoryEventSource
                         SetCalibrationText("Initial search delay... waiting 3 seconds");
                         await Task.Delay(3000);
 
-                        return memoryReader.GetPlayingMods();
+                        return ((OsuMemoryDataProvider.Models.Memory.Mods)memoryReader.ReadProperty(memoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
                     }, 20000).Result;
 
                     Passed = mods == ExpectedMods;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using StreamCompanionTypes.Enums;
 using CollectionManager.DataTypes;
+using OsuMemoryDataProvider.Models;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
@@ -63,7 +64,7 @@ namespace OsuMemoryEventSource
 
             var mods = ReadMods(searchArgs.Status);
             result.Mods = GetModsEx(mods);
-            
+
             Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Debug);
 
             Mods eMods = result.Mods?.Mods ?? Mods.Omod;
@@ -75,18 +76,17 @@ namespace OsuMemoryEventSource
 
             return result;
         }
-
         private int ReadMods(OsuStatus osuStatus, int retryCount = 0)
         {
             int mods;
             if (osuStatus == OsuStatus.Playing || osuStatus == OsuStatus.Watching)
             {
                 Thread.Sleep(250);
-                mods = _memoryReader.GetPlayingMods();
+                mods = ((OsuMemoryDataProvider.Models.Memory.Mods)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
             }
             else
             {
-                mods = _memoryReader.GetMods();
+                mods = (int)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.MiscData, nameof(Misc.Mods));
             }
 
             if ((mods < 0 || Helpers.IsInvalidCombination((Mods)mods)))
@@ -112,7 +112,7 @@ namespace OsuMemoryEventSource
         {
             if (_firstRunMemoryCalibration == null || _firstRunMemoryCalibration.IsDisposed)
             {
-                _firstRunMemoryCalibration = new FirstRunMemoryCalibration(_memoryReader, _settings, Logger);
+                _firstRunMemoryCalibration = new FirstRunMemoryCalibration(MemoryReader, _settings, Logger);
             }
 
             NewOsuEvent += (s, args) =>
