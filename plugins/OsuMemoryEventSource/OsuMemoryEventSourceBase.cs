@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OsuMemoryDataProvider;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -129,7 +130,7 @@ namespace OsuMemoryEventSource
             };
             memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataConsumers);
 
-            MemoryWorkerTask = Task.Run(MemoryWorker, cts.Token);
+            MemoryWorkerTask = Task.Run(MemoryWorker, cts.Token).HandleExceptions();
 
             Started = true;
         }
