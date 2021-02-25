@@ -131,7 +131,7 @@ namespace OsuMemoryEventSource
                     _lastPlayingMods = playingMods;
 
                     var rawString = Retry.RetryMe(() => (string)reader.ReadProperty(osuData.Beatmap, nameof(CurrentBeatmap.Md5)),
-                        s => (System.Text.Encoding.UTF8.GetByteCount(s) == s.Length), 5) ?? string.Empty;
+                        s => (System.Text.Encoding.UTF8.GetByteCount(s ?? string.Empty) == s?.Length), 5) ?? string.Empty;
 
                     NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory", osuEventType.Value)
                     {
