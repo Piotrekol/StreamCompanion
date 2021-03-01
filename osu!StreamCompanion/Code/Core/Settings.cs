@@ -12,7 +12,7 @@ using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core
 {
-    
+
     public class Settings : ISettings
     {
         private readonly Dictionary<string, object> _settingsEntries = new Dictionary<string, object>();
@@ -22,7 +22,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly List<string> _backupRawLines = new List<string>();
         public EventHandler<SettingUpdated> SettingUpdated { get; set; }
         private string _saveLocation = AppDomain.CurrentDomain.BaseDirectory;
-        public string ConfigFileName { get; set; }  = "settings.ini";
+        public string ConfigFileName { get; set; } = "settings.ini";
         public string FullConfigFilePath { get { return Path.Combine(_saveLocation, ConfigFileName); } }
         private static readonly object _lockingObject = new object();
         public Settings(ILogger logger)
@@ -61,7 +61,7 @@ namespace osu_StreamCompanion.Code.Core
             }
         }
 
-        public string GetRaw(string key, string defaultValue="")
+        public string GetRaw(string key, string defaultValue = "")
         {
             int idx = _backupRawLines.AnyStartsWith(key);
             if (idx > -1)
@@ -102,6 +102,7 @@ namespace osu_StreamCompanion.Code.Core
         {
             lock (_lockingObject)
             {
+                var nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(T));
                 if (_settingsEntries.ContainsKey(key))
                 {
                     if (_settingsEntries[key] is T)
@@ -112,6 +113,9 @@ namespace osu_StreamCompanion.Code.Core
                     {
                         try
                         {
+                            if (nullableUnderlyingType != null && _settingsEntries[key] == null)
+                                return default;
+
                             return (T)Convert.ChangeType(_settingsEntries[key], typeof(T));
                         }
                         catch (InvalidCastException)
@@ -127,7 +131,10 @@ namespace osu_StreamCompanion.Code.Core
                 if (idx > -1)
                 {
                     string[] splited = _rawLines[idx].Split(new[] { '=' }, 2);
-                    Add(key, Convert.ChangeType(splited[1].Trim(), typeof(T)));
+                    if (nullableUnderlyingType != null && string.IsNullOrWhiteSpace(splited[1].Trim()))
+                        Add(key, default(T));
+                    else
+                        Add(key, Convert.ChangeType(splited[1].Trim(), nullableUnderlyingType ?? typeof(T)));
                     _rawLines.RemoveAt(idx);
                 }
                 else
