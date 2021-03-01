@@ -3,7 +3,7 @@ using OsuMemoryDataProvider;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using OsuMemoryDataProvider.Models;
+using OsuMemoryDataProvider.OsuMemoryModels.Direct;
 using PpCalculatorTypes;
 using StreamCompanionTypes.DataTypes;
 

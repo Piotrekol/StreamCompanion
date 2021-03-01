@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
 using OsuMemoryDataProvider;
-using OsuMemoryDataProvider.Models;
+using OsuMemoryDataProvider.OsuMemoryModels.Direct;
 using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -117,7 +117,7 @@ namespace OsuMemoryEventSource
                         SetCalibrationText("Initial search delay... waiting 3 seconds");
                         await Task.Delay(3000);
 
-                        return ((OsuMemoryDataProvider.Models.Memory.Mods)memoryReader.ReadProperty(memoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
+                        return ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)memoryReader.ReadProperty(memoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
                     }, 20000).Result;
 
                     Passed = mods == ExpectedMods;

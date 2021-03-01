@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using StreamCompanionTypes.Enums;
-using CollectionManager.DataTypes;
-using OsuMemoryDataProvider.Models;
+using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
+using OsuMemoryDataProvider.OsuMemoryModels.Direct;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
+using Mods = CollectionManager.DataTypes.Mods;
 
 namespace OsuMemoryEventSource
 {
@@ -82,11 +83,11 @@ namespace OsuMemoryEventSource
             if (osuStatus == OsuStatus.Playing || osuStatus == OsuStatus.Watching)
             {
                 Thread.Sleep(250);
-                mods = ((OsuMemoryDataProvider.Models.Memory.Mods)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
+                mods = ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
             }
             else
             {
-                mods = (int)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.MiscData, nameof(Misc.Mods));
+                mods = (int)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods));
             }
 
             if ((mods < 0 || Helpers.IsInvalidCombination((Mods)mods)))

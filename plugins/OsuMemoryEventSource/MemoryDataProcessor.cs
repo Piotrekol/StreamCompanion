@@ -9,14 +9,15 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CollectionManager.DataTypes;
 using Newtonsoft.Json;
-using OsuMemoryDataProvider.Models;
+using OsuMemoryDataProvider.OsuMemoryModels;
+using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 using PpCalculatorTypes;
 using StreamCompanion.Common;
 using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
+using Mods = CollectionManager.DataTypes.Mods;
 
 namespace OsuMemoryEventSource
 {
@@ -26,7 +27,7 @@ namespace OsuMemoryEventSource
         private OsuStatus _lastStatus = OsuStatus.Null;
         private LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
         private StructuredOsuMemoryReader _reader;
-        private BaseAddresses OsuMemoryData => _reader.OsuMemoryAddresses;
+        private OsuBaseAddresses OsuMemoryData => _reader.OsuMemoryAddresses;
 
         private ISettings _settings;
         private readonly IContextAwareLogger _logger;
@@ -165,7 +166,7 @@ namespace OsuMemoryEventSource
 
                 if (status != OsuStatus.Playing && status != OsuStatus.Watching)
                 {
-                    _rawData.PlayTime = (int)reader.ReadProperty(OsuMemoryData.MiscData, nameof(Misc.AudioTime));
+                    _rawData.PlayTime = (int)reader.ReadProperty(OsuMemoryData.GeneralData, nameof(GeneralData.AudioTime));
                     UpdateLiveTokens(status);
                     _lastStatus = status;
                     _notUpdatingMemoryValues.Set();
@@ -179,7 +180,7 @@ namespace OsuMemoryEventSource
                 }
 
                 reader.Read(OsuMemoryData.Player);
-                _rawData.PlayTime = OsuMemoryData.MiscData.AudioTime;
+                _rawData.PlayTime = OsuMemoryData.GeneralData.AudioTime;
                 _liveTokens["time"].Update();
 
                 _lastStatus = status;
@@ -394,8 +395,7 @@ namespace OsuMemoryEventSource
             if (!IsMainProcessor)
                 return;
 
-
-            _strainsToken.Value = (await mapSearchResult.GetPpCalculator(cancellationToken))?.CalculateStrains(cancellationToken);
+            _strainsToken.Value = (await mapSearchResult.GetPpCalculator(cancellationToken))?.CalculateStrains(cancellationToken,100);
         }
 
         private void SetSkinTokens()
