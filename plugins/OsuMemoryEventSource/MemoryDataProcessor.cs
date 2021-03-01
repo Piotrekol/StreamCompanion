@@ -34,7 +34,7 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
-
+        public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
         private Mods _mods;
         private PlayMode _playMode = PlayMode.Osu;
 
@@ -395,7 +395,7 @@ namespace OsuMemoryEventSource
             if (!IsMainProcessor)
                 return;
 
-            _strainsToken.Value = (await mapSearchResult.GetPpCalculator(cancellationToken))?.CalculateStrains(cancellationToken);
+            _strainsToken.Value = (await mapSearchResult.GetPpCalculator(cancellationToken))?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
         }
 
         private void SetSkinTokens()
