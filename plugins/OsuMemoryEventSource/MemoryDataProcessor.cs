@@ -395,7 +395,7 @@ namespace OsuMemoryEventSource
             if (!IsMainProcessor)
                 return;
 
-            _strainsToken.Value = (await mapSearchResult.GetPpCalculator(cancellationToken))?.CalculateStrains(cancellationToken,100);
+            _strainsToken.Value = (await mapSearchResult.GetPpCalculator(cancellationToken))?.CalculateStrains(cancellationToken);
         }
 
         private void SetSkinTokens()
