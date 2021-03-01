@@ -14,6 +14,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
+using TaskExtensions = StreamCompanion.Common.TaskExtensions;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -101,7 +102,8 @@ namespace osu_StreamCompanion
             AppDomain.CurrentDomain.UnhandledException +=
                 new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Application.ThreadException += Application_ThreadException;
-            TaskScheduler.UnobservedTaskException+=TaskSchedulerOnUnobservedTaskException;
+            TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+            TaskExtensions.GlobalExceptionHandler = HandleException;
             _initializer = new Initializer(settingsProfileName);
             _initializer.Start();
             Application.Run(_initializer);
@@ -120,7 +122,6 @@ namespace osu_StreamCompanion
         static void HandleNonLoggableException(NonLoggableException ex)
         {
             MessageBox.Show(ex.CustomMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
         }
         public static void SafeQuit()
         {
@@ -241,7 +242,7 @@ namespace osu_StreamCompanion
                 {
                     ex.Data[d.Key] = d.Value;
                 }
-                
+
                 //also reports to sentry if enabled
                 MainLogger.Instance.Log(ex, LogLevel.Critical);
 

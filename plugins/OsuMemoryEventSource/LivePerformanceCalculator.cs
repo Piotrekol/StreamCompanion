@@ -3,6 +3,7 @@ using OsuMemoryDataProvider;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using OsuMemoryDataProvider.OsuMemoryModels.Direct;
 using PpCalculatorTypes;
 using StreamCompanionTypes.DataTypes;
 
@@ -10,7 +11,7 @@ namespace OsuMemoryEventSource
 {
     public class LivePerformanceCalculator
     {
-        public PlayContainer Play { get; set; } = new PlayContainer();
+        public Player Play { get; set; } = new Player();
         public int PlayTime { get; set; }
         public List<int> HitErrors { get; set; }
         private PlayMode _currentPlayMode;
@@ -55,10 +56,10 @@ namespace OsuMemoryEventSource
 
                 if (_currentPlayMode == PlayMode.CatchTheBeat)
                 {
-                    PpCalculator.Goods = Play.C100;
+                    PpCalculator.Goods = Play.Hit100;
                     PpCalculator.Mehs = null;
-                    PpCalculator.Misses = Play.CMiss;
-                    PpCalculator.Katsus = Play.CKatsu;
+                    PpCalculator.Misses = Play.HitMiss;
+                    PpCalculator.Katsus = Play.HitKatu;
                     PpCalculator.Combo = Play.MaxCombo;
                     PpCalculator.Score = Play.Score;
                 }
@@ -95,9 +96,9 @@ namespace OsuMemoryEventSource
             if (PpCalculator != null && PlayTime > 0)
                 try
                 {
-                    PpCalculator.Goods = Play.C100;
-                    PpCalculator.Mehs = Play.C50;
-                    PpCalculator.Misses = Play.CMiss;
+                    PpCalculator.Goods = Play.Hit100;
+                    PpCalculator.Mehs = Play.Hit50;
+                    PpCalculator.Misses = Play.HitMiss;
                     PpCalculator.Combo = Play.MaxCombo;
                     PpCalculator.Score = Play.Score;
                     var pp = PpCalculator.Calculate(PlayTime, attribs);
@@ -145,8 +146,8 @@ namespace OsuMemoryEventSource
 
             try
             {
-                PpCalculator.Goods = Play.C100;
-                PpCalculator.Mehs = Play.C50;
+                PpCalculator.Goods = Play.Hit100;
+                PpCalculator.Mehs = Play.Hit50;
                 PpCalculator.Misses = 0;
                 PpCalculator.Combo = null;
                 PpCalculator.PercentCombo = 100;
