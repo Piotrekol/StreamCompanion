@@ -28,6 +28,7 @@ namespace BrowserOverlay
             numericUpDown_positionY.Value = overlayConfiguration.Position.Y;
             textBox_overlayUrl.Text = overlayConfiguration.Url;
             numericUpDown_scale.Value = overlayConfiguration.Scale;
+            panel_content.Enabled = checkBox_enable.Checked = configuration.Enabled;
 
             _init = false;
         }
@@ -60,7 +61,7 @@ namespace BrowserOverlay
             if (_init)
                 return;
 
-            _configuration.Enabled = checkBox_enable.Checked;
+            panel_content.Enabled = _configuration.Enabled = checkBox_enable.Checked;
             OnSettingUpdated?.Invoke(this, EventArgs.Empty);
         }
     }

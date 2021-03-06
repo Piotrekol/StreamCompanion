@@ -135,7 +135,7 @@ namespace BrowserOverlay
 
     public class Configuration
     {
-        public bool Enabled { get; set; }
+        public bool Enabled { get; set; } = true;
         public OverlayConfiguration OverlayConfiguration { get; set; }
     }
     public class OverlayConfiguration
