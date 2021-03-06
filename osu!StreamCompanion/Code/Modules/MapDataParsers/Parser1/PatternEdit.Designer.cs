@@ -333,7 +333,7 @@
             this.label_TestText.Name = "label_TestText";
             this.label_TestText.Size = new System.Drawing.Size(57, 17);
             this.label_TestText.TabIndex = 25;
-            this.label_TestText.Text = "test text";
+            this.label_TestText.Text = "test 123,4pp";
             // 
             // panel_ColorPreview
             // 
