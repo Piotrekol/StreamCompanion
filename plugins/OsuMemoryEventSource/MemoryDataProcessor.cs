@@ -343,6 +343,7 @@ namespace OsuMemoryEventSource
                 InterpolatedValues[InterpolatedValueName.liveStarRating].Set(attributes?.StarRating ?? 0);
                 return InterpolatedValues[InterpolatedValueName.liveStarRating].Current;
             });
+            CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
         }
 
         private void UpdateLiveTokens(OsuStatus status)

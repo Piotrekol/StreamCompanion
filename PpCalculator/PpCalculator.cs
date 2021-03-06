@@ -107,6 +107,11 @@ namespace PpCalculator
             return result;
         }
 
+        public bool IsBreakTime(double time)
+        {
+            return PlayableBeatmap != null && PlayableBeatmap.Breaks.Any(b => b.StartTime <= time && b.EndTime >= time);
+        }
+
         public DifficultyAttributes AttributesAt(double time)
         {
             var attributes = TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
