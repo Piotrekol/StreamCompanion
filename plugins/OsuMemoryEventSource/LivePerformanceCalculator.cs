@@ -64,9 +64,9 @@ namespace OsuMemoryEventSource
                     PpCalculator.Score = Play.Score;
                 }
 
-                var comboLeft = PpCalculator.GetMaxCombo((int)PlayTime);
+                ComboLeft = PpCalculator.GetMaxCombo((int)PlayTime);
 
-                var newMaxCombo = Math.Max(Play.MaxCombo, comboLeft + Play.Combo);
+                var newMaxCombo = Math.Max(Play.MaxCombo, ComboLeft + Play.Combo);
 
                 PpCalculator.Combo = newMaxCombo;
 
@@ -83,6 +83,8 @@ namespace OsuMemoryEventSource
             return $"{p.C300}/{p.C100}/{p.C50}/{p.CMiss}|" +
                    $"acc:{p.Acc},combo: {p.Combo},maxCombo {p.MaxCombo}|";
         }
+
+        public int ComboLeft { get; private set; } = 0;
         public double StrainPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double AimPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
         public double SpeedPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
