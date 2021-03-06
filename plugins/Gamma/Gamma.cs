@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Windows.Forms;
 
 namespace Gamma
 {
@@ -11,14 +10,14 @@ namespace Gamma
         private IntPtr createdDC;
         private WinApi.RAMP? _orginalRamp;
         public float CurrentGamma { get; private set; }
-        public Gamma(Screen screen)
+        public Gamma(string screenDeviceName)
         {
-            createdDC = WinApi.CreateDC(null, screen.DeviceName, null, IntPtr.Zero);
+            createdDC = WinApi.CreateDC(null, screenDeviceName, null, IntPtr.Zero);
         }
 
         public bool Set(float gamma)
         {
-            if (_orginalRamp == null && TrySetDefaultRamp())
+            if (_orginalRamp == null && !TrySetDefaultRamp())
                 return false;
 
             if (gamma <= 5 && gamma >= 0)
@@ -51,6 +50,13 @@ namespace Gamma
             return WinApi.SetDeviceGammaRamp(createdDC, ref ramp);
         }
 
+        public void Dispose()
+        {
+            Restore();
+            if (createdDC != IntPtr.Zero)
+                WinApi.DeleteDC(createdDC);
+        }
+
         private bool TrySetDefaultRamp()
         {
             var ramp = new WinApi.RAMP();
@@ -60,13 +66,6 @@ namespace Gamma
             _orginalRamp = ramp;
             return true;
 
-        }
-
-        public void Dispose()
-        {
-            Restore();
-            if (createdDC != IntPtr.Zero)
-                WinApi.DeleteDC(createdDC);
         }
 
         private class WinApi

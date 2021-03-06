@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Windows.Forms;
+using Gamma.Models;
 using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -19,15 +19,20 @@ namespace Gamma
     {
         public static ConfigEntry GammaConfiguration = new ConfigEntry("GammaConfiguration", "{}");
 
-        private readonly ILogger _logger;
-        private readonly ISettings _settings;
-        private Gamma _gamma;
         public string Description { get; } = "Adjusts gamma depending on AR";
         public string Name { get; } = nameof(GammaPlugin);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = string.Empty;
         public string UpdateUrl { get; } = string.Empty;
+        public string SettingGroup { get; } = "Gamma";
+
+        private readonly ILogger _logger;
+        private readonly ISettings _settings;
+        private Gamma _gamma;
         private Configuration _configuration;
+        private string _originalScreenDeviceName;
+        private GammaSettings _gammaSettings;
+
         public GammaPlugin(ILogger logger, ISettings settings)
         {
             _logger = logger;
@@ -35,8 +40,8 @@ namespace Gamma
             _configuration = settings.GetConfiguration<Configuration>(GammaConfiguration);
             _configuration.GammaRanges.Sort((r1, r2) => r1.MinAr.CompareTo(r2.MinAr));
             settings.SaveConfiguration(GammaConfiguration, _configuration);
-            //TODO: screen selection
-            _gamma = new Gamma(Screen.PrimaryScreen);
+            _originalScreenDeviceName = _configuration.ScreenDeviceName ?? Screen.PrimaryScreen.DeviceName;
+            _gamma = new Gamma(_originalScreenDeviceName);
         }
 
         public void SetNewMap(IMapSearchResult searchResult, CancellationToken cancellationToken)
@@ -45,6 +50,12 @@ namespace Gamma
             {
                 _gamma.Restore();
                 return;
+            }
+
+            if (_originalScreenDeviceName != _configuration.ScreenDeviceName)
+            {
+                _gamma.Dispose();
+                _gamma = new Gamma(_originalScreenDeviceName = _configuration.ScreenDeviceName);
             }
 
             var ar = (double)Tokens.AllTokens["mAR"].Value;
@@ -58,34 +69,25 @@ namespace Gamma
 
         private float? GetGammaForAr(double ar) => _configuration.GammaRanges.FirstOrDefault(x => x.MaxAr >= ar && x.MinAr <= ar)?.Gamma;
 
-        public class GammaRange
-        {
-            public double MinAr { get; set; }
-            public double MaxAr { get; set; }
-            public float Gamma { get; set; }
-        }
-
-        public class Configuration
-        {
-            public List<GammaRange> GammaRanges { get; set; } = new List<GammaRange>
-            {
-                new GammaRange{MinAr = 10, MaxAr = 12, Gamma = 0.7f}
-            };
-            public bool Enabled { get; set; } = false;
-
-        }
-
         public void Free()
         {
-            throw new System.NotImplementedException();
+            _gammaSettings?.Dispose();
         }
 
         public object GetUiSettings()
         {
-            throw new System.NotImplementedException();
+            if (_gammaSettings == null || _gammaSettings.IsDisposed)
+            {
+                _gammaSettings = new GammaSettings(_configuration);
+                _gammaSettings.OnSettingUpdated += OnSettingUpdated;
+            }
+            return _gammaSettings;
         }
 
-        public string SettingGroup { get; } = "Gamma";
+        private void OnSettingUpdated(object? sender, EventArgs e)
+        {
+            _settings.SaveConfiguration(GammaConfiguration, _configuration);
+        }
 
         public void Dispose()
         {
