@@ -31,3 +31,4 @@ REM create installer (Inno Setup 6)
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\setupScript.iss"
 7z a .\build\ingameOverlay.zip .\build\Release_unsafe\*
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\osuOverlayScript.iss"
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\browserOverlayScript.iss"
