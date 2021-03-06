@@ -14,9 +14,9 @@ namespace BrowserOverlay.Loader
         private readonly string _processName;
         public string DllLocation { get; set; }
         public Progress<string> InjectionProgressReporter;
-
-        private readonly global::BrowserOverlay.Loader.Loader _loader = new global::BrowserOverlay.Loader.Loader();
+        private readonly Loader _loader = new Loader();
         private Process _currentOsuProcess;
+
         public LoaderWatchdog(ILogger logger, string dllLocation, string processName = "osu!")
         {
             _logger = logger;
@@ -54,7 +54,7 @@ namespace BrowserOverlay.Loader
                                 _ = Task.Run(() =>
                                 {
                                     MessageBox.Show(
-                                        "In order to load StreamCompanion osu! overlay you need to restart your osu!",
+                                        "In order to load browser overlay you need to restart your osu!",
                                         "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 });
                             }
@@ -131,7 +131,7 @@ namespace BrowserOverlay.Loader
                         }
                         else
                         {
-                            message = "Could not add browser overlay to osu! most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
+                            message = "Could not add browser overlay to osu!. Most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
                         }
                         break;
                     }
@@ -148,7 +148,7 @@ namespace BrowserOverlay.Loader
 
             if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound )
             {
-                MessageBox.Show(message + Environment.NewLine + Environment.NewLine + $"Ingame Overlay result: {helperProcessResult}", "StreamCompanion - browser Overlay Error", MessageBoxButtons.OK,
+                MessageBox.Show(message + Environment.NewLine + Environment.NewLine + $"browser Overlay result: {helperProcessResult}", "StreamCompanion - browser Overlay Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }

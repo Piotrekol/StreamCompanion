@@ -20,23 +20,28 @@ namespace BrowserOverlay
 {
     public class BrowserOverlay : IPlugin, ISettingsSource
     {
-        private readonly IContextAwareLogger _logger;
-        private readonly ISettings _settings;
-        private readonly ISaver _saver;
-        private readonly List<Lazy<IHighFrequencyDataConsumer>> _dataConsumers;
-        private readonly Delegates.Restart _restarter;
+        public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", "{}");
+
         public string Description { get; } = string.Empty;
         public string Name { get; } = nameof(BrowserOverlay);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = string.Empty;
         public string UpdateUrl { get; } = string.Empty;
-        public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", "{}");
+        public string SettingGroup { get; } = "browser overlay";
+
+        private readonly IContextAwareLogger _logger;
+        private readonly ISettings _settings;
+        private readonly ISaver _saver;
+        private readonly List<Lazy<IHighFrequencyDataConsumer>> _dataConsumers;
+        private readonly Delegates.Restart _restarter;
         private readonly Configuration _browserOverlayConfiguration;
         private LoaderWatchdog _loaderWatchdog;
-
+        private OverlayDownload _overlayDownloadForm;
+        private BrowserOverlaySettings _browserOverlaySettings;
 
         private string GetFilesFolder => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "Dlls");
         private string GetFullDllLocation() => Path.Combine(GetFilesFolder, "osuBrowserOverlay.dll");
+
         public BrowserOverlay(IContextAwareLogger logger, ISettings settings, ISaver saver, List<Lazy<IHighFrequencyDataConsumer>> dataConsumers, Delegates.Restart restarter)
         {
             _logger = logger;
@@ -60,7 +65,6 @@ namespace BrowserOverlay
             _browserOverlaySettings?.Dispose();
         }
 
-        private BrowserOverlaySettings _browserOverlaySettings;
         public object GetUiSettings()
         {
             if (_browserOverlaySettings == null || _browserOverlaySettings.IsDisposed)
@@ -77,8 +81,6 @@ namespace BrowserOverlay
             SendConfiguration();
         }
 
-        public string SettingGroup { get; } = "osu Overlay";
-        private OverlayDownload _overlayDownloadForm = null;
         private async Task Initialize()
         {
             var osuFolderDirectory = _settings.Get<string>(SettingNames.Instance.MainOsuDirectory);
