@@ -53,6 +53,8 @@ namespace BrowserOverlay
             _browserOverlayConfiguration.OverlayConfiguration ??= new OverlayConfiguration();
             if (_browserOverlayConfiguration.Enabled)
                 Initialize().HandleExceptions();
+
+            SendConfiguration();
         }
 
         public void SendConfiguration()
@@ -144,7 +146,6 @@ namespace BrowserOverlay
         public decimal Scale { get; set; } = 1;
         public Canvas Canvas { get; set; } = new Canvas();
         public Position Position { get; set; } = new Position();
-
     }
 
     public class Position
