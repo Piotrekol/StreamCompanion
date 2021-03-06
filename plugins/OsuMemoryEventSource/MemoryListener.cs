@@ -164,7 +164,7 @@ namespace OsuMemoryEventSource
             _patternsDispatcher.SetOutputPatterns(map.OutputPatterns);
         }
 
-        public void SetHighFrequencyDataHandlers(List<IHighFrequencyDataConsumer> consumers)
+        public void SetHighFrequencyDataHandlers(List<Lazy<IHighFrequencyDataConsumer>> consumers)
         {
             _patternsDispatcher.HighFrequencyDataConsumers = consumers;
         }

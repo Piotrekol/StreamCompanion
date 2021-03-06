@@ -31,7 +31,7 @@ namespace ClickCounter
         private readonly List<int> _keyList = new List<int>();
         private readonly IDictionary<int, int> _keyCount = new Dictionary<int, int>();
         private readonly IDictionary<int, string> _filenames = new Dictionary<int, string>();
-        private List<IHighFrequencyDataConsumer> _highFrequencyDataConsumers;
+        private List<Lazy<IHighFrequencyDataConsumer>> _highFrequencyDataConsumers;
         private Tokens.TokenSetter _tokenSetter;
         private Thread _hooksThread = null;
 
@@ -46,12 +46,12 @@ namespace ClickCounter
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        public ClickCounter(ILogger logger, ISaver saver, ISettings settings, IEnumerable<IHighFrequencyDataConsumer> consumers)
+        public ClickCounter(ILogger logger, ISaver saver, ISettings settings, List<Lazy<IHighFrequencyDataConsumer>> consumers)
         {
             _logger = logger;
             _saver = saver;
             _settings = settings;
-            _highFrequencyDataConsumers = consumers.ToList();
+            _highFrequencyDataConsumers = consumers;
 
             disableSavingToDisk = _settings.Get<bool>(_names.DisableClickCounterWrite);
             Load();
@@ -100,7 +100,7 @@ namespace ClickCounter
             _tokenSetter($"{getTokenName(name)}.txt", value, TokenType.Live);
 
             _highFrequencyDataConsumers.ForEach(h =>
-                h.Handle(name, value.ToString())
+                h.Value.Handle(name, value.ToString())
             );
         }
         private void HookMouse()
@@ -333,7 +333,7 @@ namespace ClickCounter
 
             _tokenSetter(getTokenName("m1.txt"), _rightMouseCount, TokenType.Live);
             _tokenSetter(getTokenName("m2.txt"), _leftMouseCount, TokenType.Live);
-            
+
             return Task.CompletedTask;
         }
 

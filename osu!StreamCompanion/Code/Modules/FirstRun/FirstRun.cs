@@ -14,13 +14,12 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
         private ISettings _settings;
         private FirstRunFrm _setupFrm;
         public ILogger _logger { get; set; }
-        private List<IFirstRunControlProvider> _firstRunControlProviders;
-        public FirstRun(ILogger logger, ISettings settings, IEnumerable<IFirstRunControlProvider> firstRunControlProviders)
+        private Lazy<List<IFirstRunControlProvider>> _firstRunControlProviders;
+        public FirstRun(ILogger logger, ISettings settings, Lazy<List<IFirstRunControlProvider>> firstRunControlProviders)
         {
             _logger = logger;
             _settings = settings;
-            _firstRunControlProviders = firstRunControlProviders.ToList();
-            _logger.Log(">loaded {0} plugins for firstRun setup", LogLevel.Debug, _firstRunControlProviders.Count.ToString());
+            _firstRunControlProviders = firstRunControlProviders;
             Start(_logger);
         }
 
@@ -54,11 +53,11 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
                 }
             }
 
-            return _firstRunControlProviders.Count != 0 && (shouldForceFirstRun || _settings.Get<bool>(SettingNames.Instance.FirstRun));
+            return (shouldForceFirstRun || _settings.Get<bool>(SettingNames.Instance.FirstRun)) && _firstRunControlProviders.Value.Count != 0;
         }
         private IEnumerable<IFirstRunControl> GetControls()
         {
-            foreach (var controlProvider in _firstRunControlProviders)
+            foreach (var controlProvider in _firstRunControlProviders.Value)
             {
                 foreach (var control in controlProvider.GetFirstRunUserControls())
                 {
@@ -74,11 +73,6 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
 
             if (!ShouldRun())
             {
-                if (_firstRunControlProviders.Count == 0)
-                {
-                    _logger.Log(">Did not find any first run controls!", LogLevel.Debug);
-                }
-
                 CompletedSuccesfully = true;
                 return;
             }

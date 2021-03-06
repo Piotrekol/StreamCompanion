@@ -42,7 +42,7 @@ namespace OsuMemoryEventSource
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        protected List<IHighFrequencyDataConsumer> _highFrequencyDataConsumers;
+        protected List<Lazy<IHighFrequencyDataConsumer>> _highFrequencyDataConsumers;
         protected IDatabaseController _databaseController;
         protected IModParser _modParser;
         protected ISettings _settings;
@@ -60,7 +60,7 @@ namespace OsuMemoryEventSource
 
         public OsuMemoryEventSourceBase(IContextAwareLogger logger, ISettings settings,
             IDatabaseController databaseControler, IModParser modParser,
-            List<IHighFrequencyDataConsumer> highFrequencyDataConsumers, ISaver saver, Delegates.Exit exiter)
+            List<Lazy<IHighFrequencyDataConsumer>> highFrequencyDataConsumers, ISaver saver, Delegates.Exit exiter)
         {
             _settings = settings;
             _databaseController = databaseControler;

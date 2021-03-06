@@ -14,7 +14,7 @@ namespace OsuMemoryEventSource
     {
         private readonly ISettings _settings;
         private readonly ISaver _saver;
-        public List<IHighFrequencyDataConsumer> HighFrequencyDataConsumers { get; set; }
+        public List<Lazy<IHighFrequencyDataConsumer>> HighFrequencyDataConsumers { get; set; }
         private BlockingCollection<IOutputPattern> OutputPatterns = new BlockingCollection<IOutputPattern>();
         public bool SaveLiveTokensOnDisk { get; private set; }
         private ManualResetEvent _updatingOutputPatterns = new ManualResetEvent(false);
@@ -66,7 +66,7 @@ namespace OsuMemoryEventSource
                 }
 
                 var json = JsonConvert.SerializeObject(output);
-                HighFrequencyDataConsumers.ForEach(h => h.Handle(json));
+                HighFrequencyDataConsumers.ForEach(h => h.Value.Handle(json));
             }
 
             _usingOutputPatterns.Reset();
@@ -81,7 +81,7 @@ namespace OsuMemoryEventSource
         {
             void WriteToHandlers(string name, string content)
             {
-                HighFrequencyDataConsumers.ForEach(h => h.Handle(name, content));
+                HighFrequencyDataConsumers.ForEach(h => h.Value.Handle(name, content));
             }
 
             //Standard output

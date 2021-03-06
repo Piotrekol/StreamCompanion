@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
+using Grace.DependencyInjection;
 using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
@@ -78,14 +81,32 @@ namespace osu_StreamCompanion.Code.Core
             DiContainer.Container.Locate<OsuPathResolver>();
             DiContainer.Container.Locate<OsuFallbackDetector>();
 
-            var plugins = DiContainer.Container.LocateAll(typeof(IPlugin)).Cast<IPlugin>().ToList();
+            var lazyPluginMetas = DiContainer.Container.Locate<List<Meta<Lazy<IPlugin>>>>();
+            _logger.Log("Initializing {0} plugins", LogLevel.Information, lazyPluginMetas.Count.ToString());
 
-            _logger.Log(">Initialized {0} plugins", LogLevel.Information, plugins.Count.ToString());
-
-            foreach (var plugin in plugins)
+            foreach (var lazyPluginMeta in lazyPluginMetas)
             {
-                _logger.Log(">>plugin \"{0}\" by {1} ({2}) v:{3}", LogLevel.Debug, plugin.Name, plugin.Author,
-                    plugin.GetType().FullName, plugin.GetType().Assembly.GetName().Version.ToString());
+                var pluginType = lazyPluginMeta.Metadata.ActivationType;
+                _logger.Log($">loading \"{pluginType.FullName}\" v: {pluginType.Assembly.GetName().Version}", LogLevel.Trace);
+
+                IPlugin plugin = null;
+                try
+                {
+                    plugin = lazyPluginMeta.Value.Value;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Plugin \"{pluginType.FullName}\" could not get initialized. StreamCompanion will most likely continue to work, however some features might be missing." +
+                                    Environment.NewLine + Environment.NewLine + "Errors:" +
+                                    Environment.NewLine +
+                                    ex,
+                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    _logger.Log(ex, LogLevel.Error);
+                }
+
+                if (plugin != null)
+                    _logger.Log(">loaded \"{0}\" by {1} ({2}) v:{3}", LogLevel.Debug, plugin.Name, plugin.Author,
+                        plugin.GetType().FullName, plugin.GetType().Assembly.GetName().Version.ToString());
             }
 
             Settings.Add(_names.FirstRun.Name, false);

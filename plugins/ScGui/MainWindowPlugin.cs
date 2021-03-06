@@ -30,7 +30,7 @@ namespace ScGui
 
         private IMainWindowModel _mainWindowModel;
         private readonly Delegates.Exit _exitAction;
-        private List<ISettingsSource> _settingsList;
+        private List<Lazy<ISettingsSource>> _settingsList;
 
         public string Description { get; } = "";
         public string Name { get; } = "StreamCompanion GUI";
@@ -71,14 +71,14 @@ namespace ScGui
 
             return notifyIcon;
         }
-        public MainWindowPlugin(ISettings settings, IMainWindowModel mainWindowModel, IEnumerable<ISettingsSource> settingsSources, Delegates.Exit exitAction)
+        public MainWindowPlugin(ISettings settings, IMainWindowModel mainWindowModel, List<Lazy<ISettingsSource>> settingsSources, Delegates.Exit exitAction)
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
             _mainWindowModel = mainWindowModel;
             _exitAction = exitAction;
-            _settingsList = settingsSources.ToList();
-            _settingsList.Add(this);
+            _settingsList = settingsSources;
+            _settingsList.Add(new Lazy<ISettingsSource>(this));
 
             if (!_settings.Get<bool>(_names.StartHidden))
                 ShowWindow();
@@ -106,7 +106,7 @@ namespace ScGui
                         _settingsForm.Focus();
                         return;
                     }
-                    _settingsForm = new SettingsForm(_settingsList);
+                    _settingsForm = new SettingsForm(_settingsList.Select(x => x.Value).ToList());
                     _settingsForm.Closed += SettingsFormOnClosed;
                     _settingsForm.Show();
                 };
