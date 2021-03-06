@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using Newtonsoft.Json;
 using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces.Services;
 
 namespace StreamCompanion.Common
@@ -18,6 +20,22 @@ namespace StreamCompanion.Common
                 dir = Path.Combine(dir, "Songs\\");
             }
             return dir;
+        }
+
+        public static T GetConfiguration<T>(this ISettings settings, ConfigEntry configEntry) where T : new()
+        {
+            var rawConfiguration = settings.Get<string>(configEntry);
+            return rawConfiguration == configEntry.Default<string>()
+                ? new T()
+                : JsonConvert.DeserializeObject<T>(rawConfiguration, new JsonSerializerSettings
+                {
+                    ObjectCreationHandling = ObjectCreationHandling.Replace
+                });
+        }
+
+        public static void SaveConfiguration<T>(this ISettings settings, ConfigEntry configEntry, T configuration)
+        {
+            settings.Add(configEntry.Name, JsonConvert.SerializeObject(configuration));
         }
     }
 }
