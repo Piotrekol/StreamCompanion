@@ -5,10 +5,12 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using BrowserOverlay.Loader;
 using Newtonsoft.Json;
 using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -30,7 +32,11 @@ namespace BrowserOverlay
         public string UpdateUrl { get; } = string.Empty;
         public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", "{}");
         private readonly Configuration _browserOverlayConfiguration;
+        private LoaderWatchdog _loaderWatchdog;
 
+
+        private string GetFilesFolder => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "Dlls");
+        private string GetFullDllLocation() => Path.Combine(GetFilesFolder, "osuBrowserOverlay.dll");
         public BrowserOverlay(IContextAwareLogger logger, ISettings settings, ISaver saver, List<Lazy<IHighFrequencyDataConsumer>> dataConsumers, Delegates.Restart restarter)
         {
             _logger = logger;
@@ -38,11 +44,7 @@ namespace BrowserOverlay
             _saver = saver;
             _dataConsumers = dataConsumers;
             _restarter = restarter;
-            var rawSettings = _settings.Get<string>(BrowserOverlayConfigurationConfigEntry);
-            _browserOverlayConfiguration = rawSettings == BrowserOverlayConfigurationConfigEntry.Default<string>()
-                ? new Configuration()
-                : JsonConvert.DeserializeObject<Configuration>(rawSettings);
-
+            _browserOverlayConfiguration = _settings.GetConfiguration<Configuration>(BrowserOverlayConfigurationConfigEntry);
             _browserOverlayConfiguration.OverlayConfiguration ??= new OverlayConfiguration();
             if (_browserOverlayConfiguration.Enabled)
                 Initialize().HandleExceptions();
@@ -63,7 +65,7 @@ namespace BrowserOverlay
         {
             if (_browserOverlaySettings == null || _browserOverlaySettings.IsDisposed)
             {
-                _browserOverlaySettings = new BrowserOverlaySettings(_browserOverlayConfiguration.OverlayConfiguration);
+                _browserOverlaySettings = new BrowserOverlaySettings(_browserOverlayConfiguration);
                 _browserOverlaySettings.OnSettingUpdated += OnSettingUpdated;
             }
             return _browserOverlaySettings;
@@ -84,16 +86,22 @@ namespace BrowserOverlay
                 return;
 
             var zipFileLocation = Path.Combine(_saver.SaveDirectory, "BrowserOverlay.zip");
-            //Check One of the files included in overlay assets
+            //Check one of the files included in overlay assets
             if (File.Exists(Path.Combine(osuFolderDirectory, "chrome_elf.dll")))
+            {
+                //everything seems to be in place - start watching for osu! process
+                _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation())
+                {
+                    InjectionProgressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug))
+                };
+                _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
                 return;
-            
+            }
+
             _overlayDownloadForm = new OverlayDownload();
             _overlayDownloadForm.Show();
             if (!File.Exists(zipFileLocation))
             {
-                //show download prompt
-                //download file
                 await DownloadOverlay(zipFileLocation);
             }
 
@@ -101,8 +109,9 @@ namespace BrowserOverlay
                 return;
 
             _overlayDownloadForm.SetStatus("unpacking files...");
-            ZipFile.ExtractToDirectory(zipFileLocation, osuFolderDirectory,true);
+            ZipFile.ExtractToDirectory(zipFileLocation, osuFolderDirectory, true);
             _overlayDownloadForm.Close();
+            _restarter("browser overlay installation/update finished");
         }
 
         private async Task DownloadOverlay(string destination)
