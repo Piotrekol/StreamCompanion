@@ -13,7 +13,6 @@ namespace OsuMemoryEventSource
     {
         public Player Play { get; set; } = new Player();
         public int PlayTime { get; set; }
-        public List<int> HitErrors { get; set; }
         private PlayMode _currentPlayMode;
 
         public IPpCalculator PpCalculator { get; private set; }
