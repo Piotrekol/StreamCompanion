@@ -89,7 +89,7 @@ namespace OsuMemoryEventSource
 
             InitLiveTokens();
 
-            Task.Run(TokenThreadWork, cancellationTokenSource.Token);
+            Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
         }
 
         public async Task TokenThreadWork()

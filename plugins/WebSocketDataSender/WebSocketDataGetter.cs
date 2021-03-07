@@ -13,6 +13,7 @@ using EmbedIO;
 using EmbedIO.Actions;
 using EmbedIO.Utilities;
 using Newtonsoft.Json;
+using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -86,7 +87,7 @@ namespace WebSocketDataSender
 
             _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
 
-            Task.Run(RunServer);
+            Task.Run(RunServer).HandleExceptions();
         }
 
         private async Task RunServer()

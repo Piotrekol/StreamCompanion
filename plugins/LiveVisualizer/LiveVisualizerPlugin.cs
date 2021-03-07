@@ -10,6 +10,7 @@ using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using StreamCompanion.Common;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using Color = System.Drawing.Color;
@@ -70,7 +71,7 @@ namespace LiveVisualizer
 
             VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
 
-            Task.Run(async () => { await UpdateLiveTokens(); });
+            Task.Run(UpdateLiveTokens).HandleExceptions();
         }
 
         private void PrepareDataPlots()
