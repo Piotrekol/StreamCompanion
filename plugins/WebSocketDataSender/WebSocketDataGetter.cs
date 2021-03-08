@@ -149,55 +149,51 @@ namespace WebSocketDataSender
 
         private async Task SendCurrentBeatmapImage(IHttpContext context)
         {
-            using (var responseStream = context.OpenResponseStream())
+            await using var responseStream = context.OpenResponseStream();
+            if (Tokens.AllTokens.TryGetValue("backgroundImageLocation", out var imageToken) &&
+                !string.IsNullOrEmpty((string)imageToken.Value))
             {
-                if (Tokens.AllTokens.TryGetValue("backgroundImageLocation", out var imageToken) &&
-                    !string.IsNullOrEmpty((string)imageToken.Value))
+                var location = (string)imageToken.Value;
+
+                context.Response.ContentType = "image/jpeg";
+
+                if (!File.Exists(location))
+                    return;
+
+                await using var fs = new FileStream(location, FileMode.Open, FileAccess.Read);
+                if (!(context.Request.QueryString.ContainsKey("width") ||
+                    context.Request.QueryString.ContainsKey("height")))
                 {
-                    var location = (string)imageToken.Value;
+                    await fs.CopyToAsync(responseStream);
+                    return;
+                }
 
-                    context.Response.ContentType = "image/jpeg";
+                int.TryParse(context.Request.QueryString["width"], out var desiredWidth);
+                int.TryParse(context.Request.QueryString["height"], out var desiredHeight);
 
-                    if (File.Exists(location))
-                    {
-                        using (var fs = new FileStream(location, FileMode.Open, FileAccess.Read))
-                        {
+                var crop = context.Request.QueryString.ContainsKey("crop") &&
+                           new[] { "true", "1" }.Contains(context.Request.QueryString["crop"].ToLowerInvariant());
 
-                            if (context.Request.QueryString.ContainsKey("width") || context.Request.QueryString.ContainsKey("height"))
-                            {
-                                int.TryParse(context.Request.QueryString["width"], out var desiredWidth);
-                                int.TryParse(context.Request.QueryString["height"], out var desiredHeight);
+                if (crop && desiredWidth == 0 || desiredHeight == 0)
+                {
+                    context.Response.StatusCode = 422;
+                    await context.SendStringAsync("Missing required parameters: \"width\" & \"height\" ",
+                        "text", Encoding.UTF8);
+                    return;
+                }
 
-                                var crop = context.Request.QueryString.ContainsKey("crop") && new[] { "true", "1" }.Contains(context.Request.QueryString["crop"].ToLowerInvariant());
-
-                                using (var img = Image.FromStream(fs))
-                                {
-                                    if (crop)
-                                    {
-                                        using (var croppedImg = img.ResizeAndCropBitmap(desiredWidth, desiredHeight))
-                                        {
-                                            croppedImg.Save(responseStream, ImageFormat.Jpeg);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        using (var resizedImg = img.ResizeImage(
-                                            desiredWidth == 0 ? (int?)null : desiredWidth,
-                                            desiredHeight == 0 ? (int?)null : desiredHeight)
-                                        )
-                                        {
-                                            resizedImg.Save(responseStream, ImageFormat.Jpeg);
-                                        }
-                                    }
-                                }
-
-                            }
-                            else
-                            {
-                                await fs.CopyToAsync(responseStream);
-                            }
-                        }
-                    }
+                using var img = Image.FromStream(fs);
+                if (crop)
+                {
+                    using var croppedImg = img.ResizeAndCropBitmap(desiredWidth, desiredHeight);
+                    croppedImg.Save(responseStream, ImageFormat.Jpeg);
+                }
+                else
+                {
+                    using var resizedImg = img.ResizeImage(
+                        desiredWidth == 0 ? (int?)null : desiredWidth,
+                        desiredHeight == 0 ? (int?)null : desiredHeight);
+                    resizedImg.Save(responseStream, ImageFormat.Jpeg);
                 }
             }
         }
