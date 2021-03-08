@@ -26,8 +26,7 @@ namespace OsuMemoryEventSource
         private readonly object _lockingObject = new object();
         private OsuStatus _lastStatus = OsuStatus.Null;
         private LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
-        private StructuredOsuMemoryReader _reader;
-        private OsuBaseAddresses OsuMemoryData => _reader.OsuMemoryAddresses;
+        private OsuBaseAddresses OsuMemoryData;
 
         private ISettings _settings;
         private readonly IContextAwareLogger _logger;
@@ -37,7 +36,7 @@ namespace OsuMemoryEventSource
         public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
         private Mods _mods;
         private PlayMode _playMode = PlayMode.Osu;
-
+        
         private IToken _strainsToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
@@ -154,9 +153,9 @@ namespace OsuMemoryEventSource
             _notUpdatingMemoryValues.Reset();
             lock (_lockingObject)
             {
-                if (!ReferenceEquals(_reader, reader))
+                if (!ReferenceEquals(OsuMemoryData, reader.OsuMemoryAddresses))
                 {
-                    _reader = reader;
+                    OsuMemoryData = reader.OsuMemoryAddresses;
                     _rawData.Play = OsuMemoryData.Player;
                 }
                 if ((OsuStatus)_liveTokens["status"].Token.Value != status)
@@ -167,6 +166,7 @@ namespace OsuMemoryEventSource
                 if (status != OsuStatus.Playing && status != OsuStatus.Watching)
                 {
                     _rawData.PlayTime = (int)reader.ReadProperty(OsuMemoryData.GeneralData, nameof(GeneralData.AudioTime));
+                    reader.Read(OsuMemoryData.Skin);
                     UpdateLiveTokens(status);
                     _lastStatus = status;
                     _notUpdatingMemoryValues.Set();
@@ -185,6 +185,7 @@ namespace OsuMemoryEventSource
 
                 _lastStatus = status;
             }
+
             _notUpdatingMemoryValues.Set();
         }
 
@@ -403,7 +404,6 @@ namespace OsuMemoryEventSource
         private void SetSkinTokens()
         {
             var osuSkinsDirectory = Path.Combine(_settings.Get<string>(SettingNames.Instance.MainOsuDirectory), "Skins");
-            _reader?.Read(OsuMemoryData.Skin);
             var skinName = OsuMemoryData.Skin.Folder ?? string.Empty;
             _skinToken.Value = skinName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0
                 ? string.Empty

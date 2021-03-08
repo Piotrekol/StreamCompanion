@@ -63,7 +63,7 @@ namespace OsuMemoryEventSource
             if (!Started || !_settings.Get<bool>(_names.EnableMemoryScanner))
                 return result;
 
-            var mods = ReadMods(searchArgs.Status);
+            var mods = ReadMods(searchArgs);
             result.Mods = GetModsEx(mods);
 
             Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Debug);
@@ -77,10 +77,13 @@ namespace OsuMemoryEventSource
 
             return result;
         }
-        private int ReadMods(OsuStatus osuStatus, int retryCount = 0)
+        private int ReadMods(IMapSearchArgs searchArgs, int retryCount = 0)
         {
+            if (searchArgs is MemoryMapSearchArgs memorySearchArgs)
+                return memorySearchArgs.Mods;
+
             int mods;
-            if (osuStatus == OsuStatus.Playing || osuStatus == OsuStatus.Watching)
+            if (searchArgs.Status == OsuStatus.Playing || searchArgs.Status == OsuStatus.Watching)
             {
                 Thread.Sleep(250);
                 mods = ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
@@ -94,11 +97,11 @@ namespace OsuMemoryEventSource
             {
                 if (retryCount < 5)
                 {
-                    Logger.Log($"Mods read attempt failed - retrying (attempt {retryCount}); Status: {osuStatus}; read: {(Mods)mods}({mods})", LogLevel.Debug);
-                    return ReadMods(osuStatus, ++retryCount);
+                    Logger.Log($"Mods read attempt failed - retrying (attempt {retryCount}); Status: {searchArgs.Status}; read: {(Mods)mods}({mods})", LogLevel.Debug);
+                    return ReadMods(searchArgs, ++retryCount);
                 }
 
-                Logger.Log($"Mods read attempt failed after {retryCount} retries; Status: {osuStatus}", LogLevel.Debug);
+                Logger.Log($"Mods read attempt failed after {retryCount} retries; Status: {searchArgs.Status}", LogLevel.Debug);
                 mods = 0;
             }
 
