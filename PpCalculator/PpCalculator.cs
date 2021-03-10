@@ -118,7 +118,6 @@ namespace PpCalculator
             if (attributes == null)
                 return null;
 
-            DifficultyAttributes difficultyAttributes = null;
             //Implement other modes when need arises
             if (attributes is osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuDifficultyAttributes)
             {

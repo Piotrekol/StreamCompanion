@@ -22,9 +22,10 @@ namespace osu_StreamCompanion
 {
     static class Program
     {
-        public static string ScVersion ="v201020.22";
+        public static string ScVersion ="v210310.19";
         private static Initializer _initializer;
-        private const bool AllowMultiInstance = false;
+
+        private static bool AllowMultiInstance = false;
 
         /// <summary>
         /// The main entry point for the application.
@@ -32,6 +33,9 @@ namespace osu_StreamCompanion
         [STAThread]
         static void Main(string[] args)
         {
+#if False
+            AllowMultiInstance = true;
+#endif
             string appGuid = ((GuidAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GuidAttribute), false).GetValue(0)).Value.ToString();
             string mutexId = string.Format("Global\\{{{0}}}", appGuid);
 
@@ -43,13 +47,9 @@ namespace osu_StreamCompanion
                 return;
             }
 
-            if (AllowMultiInstance)
-#pragma warning disable 162
+            if (!OperatingSystem.IsWindows() || AllowMultiInstance)
                 Run(settingsProfileName);
-#pragma warning restore 162
             else
-#pragma warning disable 162
-
                 using (var mutex = new Mutex(false, mutexId))
                 {
 
@@ -84,8 +84,6 @@ namespace osu_StreamCompanion
                             mutex.ReleaseMutex();
                     }
                 }
-#pragma warning restore 162
-
         }
 
         private static string GetSettingsProfileNameFromArgs(string[] args)
@@ -109,7 +107,7 @@ namespace osu_StreamCompanion
             Application.Run(_initializer);
         }
 
-        private static void TaskSchedulerOnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+        private static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             HandleException(e.Exception);
         }
@@ -163,7 +161,6 @@ namespace osu_StreamCompanion
                 WaitForDebugger((Exception)e.ExceptionObject);
                 //throw (Exception)e.ExceptionObject;
 #endif
-#pragma warning disable 162
                 Exception ex = null;
                 try
                 {
@@ -173,7 +170,6 @@ namespace osu_StreamCompanion
                 {
                 }
                 HandleException(ex);
-#pragma warning restore 162
             }
         }
 #if DEBUG

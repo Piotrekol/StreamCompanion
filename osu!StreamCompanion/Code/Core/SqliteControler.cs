@@ -12,7 +12,7 @@ using StreamCompanionTypes.Interfaces.Services;
 namespace osu_StreamCompanion.Code.Core
 {
 
-    public class SqliteControler : IDatabaseController
+    public sealed class SqliteControler : IDatabaseController
     {
         private readonly SqliteConnector _sqlConnector;
         private Dictionary<string, MapIdFoundPair> _beatmapChecksums;

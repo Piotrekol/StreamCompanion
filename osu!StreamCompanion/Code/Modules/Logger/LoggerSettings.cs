@@ -10,7 +10,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.Logger
 {
-    internal class LoggerSettings : IModule, ISettingsSource
+    internal class LoggerSettings : IModule, ISettingsSource, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -32,7 +32,7 @@ namespace osu_StreamCompanion.Code.Modules.Logger
 
         private void SettingUpdated(object sender, SettingUpdated e)
         {
-            if (e.Name == _names.Console.Name)
+            if (e.Name == _names.Console.Name && OperatingSystem.IsWindows())
             {
                 if (settings.Get<bool>(_names.Console))
                 {
@@ -60,5 +60,10 @@ namespace osu_StreamCompanion.Code.Modules.Logger
         }
 
         public string SettingGroup { get; } = "General";
+
+        public void Dispose()
+        {
+            loggerSettingsControl?.Dispose();
+        }
     }
 }

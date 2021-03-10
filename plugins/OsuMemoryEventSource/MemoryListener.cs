@@ -162,7 +162,7 @@ namespace OsuMemoryEventSource
         {
             foreach (var memoryDataProcessor in _memoryDataProcessors)
             {
-                memoryDataProcessor.SetNewMap(map, cancellationToken);
+                _ = memoryDataProcessor.SetNewMap(map, cancellationToken);
             }
 
             _patternsDispatcher.SetOutputPatterns(map.OutputPatterns);

@@ -12,7 +12,7 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
-    public class TokensPreview : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
+    public sealed class TokensPreview : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
     {
         public bool Started { get; set; }
         private TokensPreviewSettings _commandsPreviewSettings;

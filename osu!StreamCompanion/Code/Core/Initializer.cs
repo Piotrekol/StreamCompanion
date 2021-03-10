@@ -53,7 +53,7 @@ namespace osu_StreamCompanion.Code.Core
 
             var saver = di.Locate<MainSaver>();
 
-            if (Settings.Get<bool>(_names.Console))
+            if (Settings.Get<bool>(_names.Console) && OperatingSystem.IsWindows())
             {
                 mainLogger.AddLogger(new ConsoleLogger(Settings));
             }

@@ -13,7 +13,7 @@ using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.Updater
 {
-    class Updater : IModule
+    class Updater : IModule, IDisposable
     {
         private readonly ILogger _logger;
         private IMainWindowModel _mainWindowHandle;
@@ -190,6 +190,12 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private void _mainWindowHandle_OnUpdateTextClicked(object sender, EventArgs e)
         {
             CheckForUpdates();
+        }
+
+        public void Dispose()
+        {
+            userDelayTask?.Dispose();
+            _updateForm?.Dispose();
         }
     }
 }

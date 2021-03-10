@@ -19,7 +19,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
             BeforeSend = BeforeSend
         });
 
-        private static SentryEvent? BeforeSend(SentryEvent arg)
+        private static SentryEvent BeforeSend(SentryEvent arg)
         {
             arg.User.IpAddress = null;
             return arg;

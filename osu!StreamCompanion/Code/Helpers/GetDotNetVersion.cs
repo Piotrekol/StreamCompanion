@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
 namespace osu_StreamCompanion.Code.Helpers
@@ -7,6 +8,9 @@ namespace osu_StreamCompanion.Code.Helpers
     {
         public static string Get45PlusFromRegistry()
         {
+            if (!OperatingSystem.IsWindows())
+                return $"Non-windows system: {RuntimeInformation.OSDescription}";
+
             try
             {
                 const string subkey = @"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\";
