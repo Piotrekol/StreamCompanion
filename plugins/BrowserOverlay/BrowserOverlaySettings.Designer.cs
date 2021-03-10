@@ -124,6 +124,11 @@ namespace BrowserOverlay
             0,
             0,
             0});
+            this.numericUpDown_positionY.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDown_positionY.Name = "numericUpDown_positionY";
             this.numericUpDown_positionY.Size = new System.Drawing.Size(79, 23);
             this.numericUpDown_positionY.TabIndex = 10;
@@ -146,6 +151,11 @@ namespace BrowserOverlay
             0,
             0,
             0});
+            this.numericUpDown_positionX.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDown_positionX.Name = "numericUpDown_positionX";
             this.numericUpDown_positionX.Size = new System.Drawing.Size(79, 23);
             this.numericUpDown_positionX.TabIndex = 8;
