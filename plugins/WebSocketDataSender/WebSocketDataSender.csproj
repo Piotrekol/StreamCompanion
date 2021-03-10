@@ -6,12 +6,12 @@
     <UseWindowsForms>true</UseWindowsForms>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	  <Platforms>x64;x86</Platforms>
+	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	<Platforms>x64;x86</Platforms>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -19,7 +19,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>bin\Debug_temp\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">

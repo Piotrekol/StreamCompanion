@@ -84,7 +84,7 @@ namespace Gamma
             return _gammaSettings;
         }
 
-        private void OnSettingUpdated(object? sender, EventArgs e)
+        private void OnSettingUpdated(object sender, EventArgs e)
         {
             _settings.SaveConfiguration(GammaConfiguration, _configuration);
         }

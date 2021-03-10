@@ -5,21 +5,19 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	  <Platforms>x64;x86</Platforms>
-
+	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	<Platforms>x64;x86</Platforms>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>bin\Debug_temp\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">

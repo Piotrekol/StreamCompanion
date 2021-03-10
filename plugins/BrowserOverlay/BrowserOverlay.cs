@@ -77,7 +77,7 @@ namespace BrowserOverlay
             return _browserOverlaySettings;
         }
 
-        private void OnSettingUpdated(object? sender, EventArgs e)
+        private void OnSettingUpdated(object sender, EventArgs e)
         {
             _settings.Add(BrowserOverlayConfigurationConfigEntry.Name, JsonConvert.SerializeObject(_browserOverlayConfiguration));
             SendConfiguration();

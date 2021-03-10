@@ -4,6 +4,7 @@
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<OutputType>Library</OutputType>
 		<Platforms>x64;x86</Platforms>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

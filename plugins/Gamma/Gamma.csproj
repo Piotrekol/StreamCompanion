@@ -7,9 +7,10 @@
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	  <Platforms>x64;x86</Platforms>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <OutputPath>bin\Debug_temp\</OutputPath>
   </PropertyGroup>
 
