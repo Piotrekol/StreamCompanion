@@ -1,11 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
 {
-    class FileSaveLocation : IModule, ISettingsSource
+    class FileSaveLocation : IModule, ISettingsSource, IDisposable
     {
         private FileSaveLocationSettings _fileSaveLocationSettings;
         private readonly ILogger _logger;
@@ -40,5 +41,9 @@ namespace osu_StreamCompanion.Code.Modules.FileSaveLocation
             return _fileSaveLocationSettings;
         }
 
+        public void Dispose()
+        {
+            _fileSaveLocationSettings?.Dispose();
+        }
     }
 }

@@ -1,10 +1,11 @@
-﻿using osu_StreamCompanion.Code.Misc;
+﻿using System;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.Donation
 {
-    class Donation : IModule, ISettingsSource
+    class Donation : IModule, ISettingsSource, IDisposable
     {
         public bool Started { get; set; }
 
@@ -33,6 +34,11 @@ namespace osu_StreamCompanion.Code.Modules.Donation
                 donationSettings = new DonationSettings();
             }
             return donationSettings;
+        }
+
+        public void Dispose()
+        {
+            donationSettings?.Dispose();
         }
     }
 }

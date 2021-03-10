@@ -109,7 +109,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
 
         private CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorTask(IMapSearchResult mapSearchResult) =>
-            new CancelableAsyncLazy<IPpCalculator>(async (cancellationToken) =>
+            new CancelableAsyncLazy<IPpCalculator>((cancellationToken) =>
             {
                 if (!(mapSearchResult.BeatmapsFound.Any() &&
                       mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)))
@@ -118,8 +118,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null);
                 var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
                 ppCalculator.Mods = (mapSearchResult.Mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                ppCalculator?.Calculate(cancellationToken);
-                return ppCalculator;
+                ppCalculator.Calculate(cancellationToken);
+                return Task.FromResult((IPpCalculator)ppCalculator);
             });
 
         private Task CreateTokens(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)

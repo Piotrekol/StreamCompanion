@@ -9,7 +9,7 @@ using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Modules.FirstRun
 {
-    public class FirstRun : IModule
+    public sealed class FirstRun : IModule, IDisposable
     {
         private ISettings _settings;
         private FirstRunFrm _setupFrm;
@@ -87,6 +87,11 @@ namespace osu_StreamCompanion.Code.Modules.FirstRun
         private void _setupFrm_Closing(object sender, EventArgs e)
         {
             CompletedSuccesfully = _setupFrm.CompletedSuccesfully;
+        }
+
+        public void Dispose()
+        {
+            _setupFrm?.Dispose();
         }
     }
 }

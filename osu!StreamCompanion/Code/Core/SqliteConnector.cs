@@ -12,7 +12,7 @@ using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core
 {
-    public class SqliteConnector : IDisposable, IMapDataSaver
+    public sealed class SqliteConnector : IDisposable, IMapDataSaver
     {
         private readonly ILogger _logger;
         private SQLiteConnection _mDbConnection;
@@ -161,7 +161,9 @@ namespace osu_StreamCompanion.Code.Core
 
         public void NonQuery(string query)
         {
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
             _insertSql = new SQLiteCommand(query, _mDbConnection);
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
             _insertSql.ExecuteNonQuery();
 
         }
@@ -169,7 +171,9 @@ namespace osu_StreamCompanion.Code.Core
         private string lastQueryParameters = string.Empty;
         private SQLiteDataReader Query(string query, IDictionary<string, string> replacements)
         {
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
             SQLiteCommand cmd = new SQLiteCommand(query, _mDbConnection);
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
             foreach (var replacement in replacements)
             {
                 cmd.Parameters.Add(replacement.Key, DbType.String).Value = replacement.Value;
@@ -182,7 +186,9 @@ namespace osu_StreamCompanion.Code.Core
         }
         public SQLiteDataReader Query(string query)
         {
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
             SQLiteCommand cmd = new SQLiteCommand(query, _mDbConnection);
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
             return cmd.ExecuteReader();
         }
         private void CreateFile(string filename, bool reset = false)
@@ -227,6 +233,8 @@ namespace osu_StreamCompanion.Code.Core
         public void Dispose()
         {
             CloseConnection();
+            _insertSql?.Dispose();
+            _transation?.Dispose();
         }
 
         public void StartMassStoring()
@@ -281,7 +289,9 @@ namespace osu_StreamCompanion.Code.Core
                 sql =
                     string.Format("INSERT OR REPLACE INTO withoutID ({0}) VALUES ({1})", _tableStruct.GetFieldnames(), _tableStruct.GetFieldnames("@"));
 
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
             _insertSql = new SQLiteCommand(sql, _mDbConnection);
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
             FillBeatmapParameters(beatmap);
             _insertSql.ExecuteNonQuery();
         }
@@ -290,7 +300,9 @@ namespace osu_StreamCompanion.Code.Core
         {
             string sql =
                     string.Format("INSERT OR REPLACE INTO Temp ({0}) VALUES ({1})", _tableStruct.GetFieldnames(), _tableStruct.GetFieldnames("@"));
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
             _insertSql = new SQLiteCommand(sql, _mDbConnection);
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
             FillBeatmapParameters(beatmap);
             try
             {

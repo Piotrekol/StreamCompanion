@@ -15,7 +15,7 @@ namespace osuOverlay
             _settings = settings;
             InitializeComponent();
 
-            checkBox_ingameOverlay.Checked = _settings.Get<bool>(SettingNames.Instance.EnableIngameOverlay);
+            checkBox_ingameOverlay.Checked = _settings.Get<bool>(IngameOverlay.EnableIngameOverlay);
             checkBox_ingameOverlay.CheckedChanged += CheckBoxIngameOverlayOnCheckedChanged;
         }
 

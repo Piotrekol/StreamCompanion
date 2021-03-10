@@ -1,31 +1,28 @@
-﻿using System;
+using System;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using osu_StreamCompanion.Code.Helpers;
+using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Core.Loggers
 {
+    [SupportedOSPlatform("windows")]
     class ConsoleLogger : ILogger, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private readonly ISettings _settings;
 
-        [DllImport("kernel32")]
-        private static extern bool AllocConsole();
-        [DllImport("Kernel32")]
-        public static extern void FreeConsole();
-
         public ConsoleLogger(ISettings settings)
         {
             _settings = settings;
-            AllocConsole();
+            NativeMethods.AllocConsole();
             Console.Title = "StreamCompanion logs";
             Console.SetOut(TextWriter.Synchronized(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true }));
             
@@ -36,7 +33,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
 
         public void Dispose()
         {
-            FreeConsole();
+            NativeMethods.FreeConsole();
         }
 
         public void Log(object logMessage, LogLevel loglvevel, params string[] vals)

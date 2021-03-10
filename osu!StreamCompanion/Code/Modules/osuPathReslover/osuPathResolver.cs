@@ -11,7 +11,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.osuPathReslover
 {
-    public class OsuPathResolver : ISettingsSource, IModule
+    public sealed class OsuPathResolver : ISettingsSource, IModule, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -114,7 +114,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
                     Log("ERROR: could not get directory from running osu! | {0}", e.Message);
                 }
             }
-            else
+            else if (OperatingSystem.IsWindows())
             {
                 try
                 {
@@ -173,6 +173,11 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
         private string LoadOsuDir()
         {
             return _settings.Get<string>(_names.MainOsuDirectory);
+        }
+
+        public void Dispose()
+        {
+            _frmSettings?.Dispose();
         }
     }
 }

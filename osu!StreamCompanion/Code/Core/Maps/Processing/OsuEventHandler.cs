@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamCompanionTypes;
@@ -13,7 +14,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
     
-    public class OsuEventHandler : IDisposable
+    public sealed class OsuEventHandler : IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
         private IContextAwareLogger _logger;
@@ -172,6 +173,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         public void Dispose()
         {
             workerCancellationTokenSource.Cancel();
+            workerCancellationTokenSource.Dispose();
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
         }
 
         private class WorkerState

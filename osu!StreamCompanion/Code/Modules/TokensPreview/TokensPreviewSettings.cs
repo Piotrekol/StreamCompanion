@@ -18,17 +18,20 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
         {
             InitializeComponent();
 
-            UpdateTask = new Task(UpdateLiveTokens);
-            UpdateTask.Start();
+            UpdateTask = Task.Run(() => UpdateLiveTokens(_cts.Token));
         }
 
-        public new void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _cts.Cancel();
-            base.Dispose();
+            if (disposing)
+            {
+                components?.Dispose();
+                _cts.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
-        private void UpdateLiveTokens()
+        private void UpdateLiveTokens(CancellationToken token)
         {
             try
             {
@@ -38,8 +41,7 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
 
                         Invoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
 
-
-                    _cts.Token.ThrowIfCancellationRequested();
+                    token.ThrowIfCancellationRequested();
 
                     Thread.Sleep(50);
                 }

@@ -16,7 +16,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
-    public class MapDataParser : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
+    public sealed class MapDataParser : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
