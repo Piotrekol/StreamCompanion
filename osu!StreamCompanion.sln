@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{7357
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickCounter", "plugins\ClickCounter\ClickCounter.csproj", "{DBB78CD2-7515-4920-BA93-28860EFD54B6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osuOverlayPlugin", "plugins\osuOverlay\osuOverlayPlugin\osuOverlayPlugin.csproj", "{E79D7BC8-AAD4-4BC1-9578-3FABB851B997}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextIngameOverlay", "plugins\osuOverlay\osuOverlayPlugin\TextIngameOverlay.csproj", "{E79D7BC8-AAD4-4BC1-9578-3FABB851B997}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osuPost", "plugins\osuPost\osuPost.csproj", "{909409E5-7DED-43FC-95D7-913C7576E91C}"
 EndProject
@@ -66,7 +66,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PpCalculatorTests", "PpCalc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PpCalculatorTypes", "PpCalculatorTypes\PpCalculatorTypes.csproj", "{2F81729B-8968-4B0A-8DBA-E29184CECFB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrowserOverlay", "plugins\BrowserOverlay\BrowserOverlay.csproj", "{82FD6762-E785-4FDE-8A08-3C741623E89B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrowserIngameOverlay", "plugins\BrowserOverlay\BrowserIngameOverlay.csproj", "{82FD6762-E785-4FDE-8A08-3C741623E89B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamma", "plugins\Gamma\Gamma.csproj", "{82B1293E-ED50-4CE7-9EFF-0F66A63801A1}"
 EndProject

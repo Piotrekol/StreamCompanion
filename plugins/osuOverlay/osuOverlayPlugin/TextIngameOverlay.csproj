@@ -9,6 +9,7 @@
 	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	<Platforms>x64;x86</Platforms>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<AssemblyName>TextIngameOverlay</AssemblyName>
   </PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\..\..\build\Debug\Plugins\</OutputPath>

@@ -4,6 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using osuOverlay.Loader;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -29,29 +31,25 @@ namespace osuOverlay
         private bool _pauseProcessTracking;
 
         public string Description { get; } = "";
-        public string Name { get; } = nameof(IngameOverlay);
+        public string Name { get; } = "TextIngameOverlay";
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
         CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
-
         public IngameOverlay(ILogger logger, ISettings settings, Delegates.Exit exiter)
         {
             _logger = logger;
             _settings = settings;
-
-            try
+            var enabled = _settings.Get<bool>(EnableIngameOverlay);
+            if (enabled && BrowserOverlayIsEnabled(_settings))
             {
-                SetNewMap(new MapSearchResult(new MapSearchArgs("dummy", OsuEventType.MapChange)), CancellationToken.None);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(
-                    $"IngameOverlay plugin version is not valid for this version of StreamCompanion. {Environment.NewLine} Either update or remove it from plugins folder",
-                    "osu!StreamCompanion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _settings.Add(EnableIngameOverlay.Name, false);
 
-                exiter("plugin version is invalid for current StreamCompanion version.");
+                var infoText =
+                    $"TextIngameOverlay and BrowserIngameOverlay can't be ran at the same time.{Environment.NewLine} TextIngameOverlay was disabled in order to prevent osu! crash.";
+                _logger.Log(infoText, LogLevel.Warning);
+                MessageBox.Show(infoText, "TextIngameOverlay Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             if (_settings.Get<bool>(EnableIngameOverlay))
@@ -60,6 +58,20 @@ namespace osuOverlay
                 progressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug));
                 Task.Run(() => WatchForProcessStart(cancellationToken.Token), cancellationToken.Token);
             }
+        }
+
+        private bool BrowserOverlayIsEnabled(ISettings settings)
+        {
+            if (settings.SettingsEntries.TryGetValue("BrowserOverlay", out var rawBrowserOverlayConfig))
+            {
+                var config = JsonConvert.DeserializeObject<JObject>(rawBrowserOverlayConfig?.ToString() ?? "");
+                if (config.TryGetValue("Enabled", out var enabledToken) && bool.TryParse(enabledToken?.ToString() ?? "", out var browserOverlayEnabled))
+                {
+                    return browserOverlayEnabled;
+                }
+            }
+
+            return false;
         }
 
         private Process GetOsuProcess()

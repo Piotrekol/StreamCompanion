@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using BrowserOverlay.Loader;
 using Newtonsoft.Json;
 using StreamCompanion.Common;
@@ -23,7 +24,7 @@ namespace BrowserOverlay
         public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", "{}");
 
         public string Description { get; } = string.Empty;
-        public string Name { get; } = nameof(BrowserOverlay);
+        public string Name { get; } = "BrowserIngameOverlay";
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = string.Empty;
         public string UpdateUrl { get; } = string.Empty;
@@ -51,6 +52,15 @@ namespace BrowserOverlay
             _restarter = restarter;
             _browserOverlayConfiguration = _settings.GetConfiguration<Configuration>(BrowserOverlayConfigurationConfigEntry);
             _browserOverlayConfiguration.OverlayConfiguration ??= new OverlayConfiguration();
+
+            if (_browserOverlayConfiguration.Enabled && TextOverlayIsEnabled(_settings))
+            {
+                _browserOverlayConfiguration.Enabled = false;
+                var infoText = $"TextIngameOverlay and BrowserIngameOverlay can't be ran at the same time.{Environment.NewLine} BrowserIngameOverlay was disabled in order to prevent osu! crash.";
+                _logger.Log(infoText, LogLevel.Warning);
+                MessageBox.Show(infoText, "BrowserIngameOverlay Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             if (_browserOverlayConfiguration.Enabled)
                 Initialize().HandleExceptions();
 
@@ -60,6 +70,17 @@ namespace BrowserOverlay
         public void SendConfiguration()
         {
             _dataConsumers.ForEach(x => x.Value.Handle("Sc-webOverlayConfiguration", JsonConvert.SerializeObject(_browserOverlayConfiguration.OverlayConfiguration)));
+        }
+
+        public static bool TextOverlayIsEnabled(ISettings settings)
+        {
+            if (settings.SettingsEntries.TryGetValue("EnableIngameOverlay", out var rawTextOverlayEnabled)
+                && bool.TryParse(rawTextOverlayEnabled?.ToString() ?? "", out var textOverlayEnabled))
+            {
+                return textOverlayEnabled;
+            }
+
+            return false;
         }
 
         public void Free()
