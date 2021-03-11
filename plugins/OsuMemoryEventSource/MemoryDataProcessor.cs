@@ -236,6 +236,7 @@ namespace OsuMemoryEventSource
             CreateToken("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning, OsuStatus.All, null);
             var playingOrWatching = OsuStatus.Playing | OsuStatus.Watching;
             var playingWatchingResults = playingOrWatching | OsuStatus.ResultsScreen;
+            CreateLiveToken("username", _rawData.Play.Username, TokenType.Live, "", string.Empty, playingWatchingResults, () => _rawData.Play.Username);
             CreateLiveToken("acc", _rawData.Play.Accuracy, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play.Accuracy);
             CreateLiveToken("katsu", _rawData.Play.HitKatu, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitKatu);
             CreateLiveToken("geki", _rawData.Play.HitGeki, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitGeki);
