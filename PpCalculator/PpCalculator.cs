@@ -154,10 +154,17 @@ namespace PpCalculator
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
                 mods = getMods(ruleset).ToArray();
+                try
+                {
+                    //TODO: cancellation token support
+                    PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, TimeSpan.FromSeconds(20));
+                }
+                catch (TimeoutException)
+                {
+                    return -2;
+                }
+
                 LastMods = newMods;
-
-                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods);
-
                 ScoreInfo.Mods = mods;
 
                 createPerformanceCalculator = true;

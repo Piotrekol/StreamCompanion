@@ -26,7 +26,7 @@ namespace FileMapDataSender
                         bytes = Encoding.Unicode.GetBytes(data);
                     using (var a = File.CreateViewStream())
                     {
-                        var contentSize = bytes.LongLength > a.Capacity
+                        var contentSize = bytes.LongLength > a.Capacity-1
                             ? (int)a.Capacity
                             : bytes.Length;
 
@@ -44,7 +44,7 @@ namespace FileMapDataSender
                 if (_files.ContainsKey(pipeName))
                     return _files[pipeName];
 
-                MapContainer f = new MapContainer() { File = MemoryMappedFile.CreateOrOpen(pipeName, 15 * 1024 * 1024) };
+                MapContainer f = new MapContainer() { File = MemoryMappedFile.CreateOrOpen(pipeName, 2 * 1024 * 1024) };
                 if (pipeName == "Sc-ingamePatterns" || pipeName== "Sc-webOverlayConfiguration" || pipeName.StartsWith("conf-") || pipeName.StartsWith("value-"))
                     f.ASCIIonly = true;
                 _files.Add(pipeName, f);

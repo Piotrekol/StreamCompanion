@@ -55,7 +55,7 @@ namespace ClickCounter
 
             disableSavingToDisk = _settings.Get<bool>(_names.DisableClickCounterWrite);
             Load();
-
+            _tokenSetter = Tokens.CreateTokenSetter(Name);
             if (_settings.Get<bool>(_names.ResetKeysOnRestart))
                 ResetKeys();
             HookAll();
@@ -64,7 +64,6 @@ namespace ClickCounter
                 _keysPerX.Start();
             }
 
-            _tokenSetter = Tokens.CreateTokenSetter(Name);
         }
 
         public void HookAll()

@@ -44,7 +44,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private void NewOsuEvent(object sender, IMapSearchArgs mapSearchArgs)
         {
-            if (mapSearchArgs == null)
+            if (mapSearchArgs == null || workerCancellationTokenSource.IsCancellationRequested)
                 return;
 
             _workerState.IsMemoryPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);

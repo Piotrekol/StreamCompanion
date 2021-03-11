@@ -161,7 +161,11 @@ namespace OsuMemoryEventSource
 
                 if (status != OsuStatus.Playing && status != OsuStatus.Watching)
                 {
-                    _rawData.PlayTime = (int)reader.ReadProperty(OsuMemoryData.GeneralData, nameof(GeneralData.AudioTime));
+                    var rawAudioTime = Retry.RetryMe(() =>
+                        reader.ReadProperty(OsuMemoryData.GeneralData, nameof(GeneralData.AudioTime)), (val => val != null), 5);
+                    if (int.TryParse(rawAudioTime?.ToString(), out var audioTime))
+                        _rawData.PlayTime = audioTime;
+
                     reader.Read(OsuMemoryData.Skin);
                     UpdateLiveTokens(status);
                     _lastStatus = status;
