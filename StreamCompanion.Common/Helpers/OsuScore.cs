@@ -33,7 +33,15 @@ namespace StreamCompanion.Common.Helpers
             if (hitErrors == null || hitErrors.Count == 0 || hitErrors.Any(x => x > 10000))
                 return 0;
 
-            double sum = hitErrors.Sum();
+            double sum;
+            try
+            {
+                sum = hitErrors.Sum();
+            }
+            catch (OverflowException)
+            {
+                return -1;
+            }
 
             double average = sum / hitErrors.Count;
             double variance = 0;
