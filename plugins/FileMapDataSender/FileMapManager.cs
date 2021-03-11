@@ -26,7 +26,7 @@ namespace FileMapDataSender
                         bytes = Encoding.Unicode.GetBytes(data);
                     using (var a = File.CreateViewStream())
                     {
-                        var contentSize = bytes.LongLength > a.Capacity
+                        var contentSize = bytes.LongLength > a.Capacity-1
                             ? (int)a.Capacity
                             : bytes.Length;
 
