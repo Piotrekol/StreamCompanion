@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -29,7 +31,7 @@ namespace ScGui
             AddTab("Map matching");
 
             //add tabs
-            foreach (var settingGroupName in _settingsList.Select(x=>x.SettingGroup).Distinct())
+            foreach (var settingGroupName in _settingsList.Select(x => x.SettingGroup).Distinct())
             {
                 if (!_groupControlPostions.ContainsKey(settingGroupName))
                     AddTab(settingGroupName);
@@ -47,11 +49,25 @@ namespace ScGui
                 var control = (UserControl)setting.GetUiSettings();
                 if (control == null)
                     continue;
-                //get control to add
+
                 //set proper control postion
                 control.Location = new Point(_groupControlPostions[setting.SettingGroup].StartWidth, _groupControlPostions[setting.SettingGroup].StartHeight);
-                //add control
-                tabControl.TabPages[tabNumber].Controls.Add(control);
+                
+                try
+                {
+                    //add control
+                    tabControl.TabPages[tabNumber].Controls.Add(control);
+                }
+                catch (Win32Exception)
+                {
+                    MessageBox.Show(
+                        $"Failed to initialize one of the controls in current tab.{Environment.NewLine}Move settings window to your primary monitor.{Environment.NewLine}If that doesn't work, review your windows DPI settings.",
+                        "StreamCompanion - settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    FreeControlsInUse();
+                    setting.Free();
+                    return;
+                }
+
                 //change start postion for next control in that group
                 _groupControlPostions[setting.SettingGroup].StartHeight += control.Height;
                 if (setting.SettingGroup == "Tokens Preview")
