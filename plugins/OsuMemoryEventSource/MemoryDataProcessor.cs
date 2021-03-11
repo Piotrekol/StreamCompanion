@@ -36,7 +36,7 @@ namespace OsuMemoryEventSource
         public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
         private Mods _mods;
         private PlayMode _playMode = PlayMode.Osu;
-        
+
         private IToken _strainsToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
@@ -128,7 +128,6 @@ namespace OsuMemoryEventSource
             var ppCalculator = await map.GetPpCalculator(cancellationToken);
             lock (_lockingObject)
             {
-
                 if (map.BeatmapsFound.Any() &&
                     map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
                 {
@@ -136,10 +135,7 @@ namespace OsuMemoryEventSource
                     _lastMisses = 0;
                     _lastCombo = 0;
                     if (map.SearchArgs.EventType == OsuEventType.MapChange)
-                    {
-                        var mods = map.Mods?.WorkingMods ?? "";
-                        _rawData.SetPpCalculator(ppCalculator, mods, cancellationToken);
-                    }
+                        _rawData.SetPpCalculator(ppCalculator, cancellationToken);
 
                     _newPlayStarted.Set();
                 }

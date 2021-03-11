@@ -61,6 +61,7 @@ namespace PpCalculator
             ppCalculator.LastMods = LastMods;
             if (PerformanceCalculator != null)
             {
+                ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.CreateCopy()).ToArray();
                 ppCalculator.PerformanceCalculator = Ruleset.CreatePerformanceCalculator(TimedDifficultyAttributes.Last().Attributes, ppCalculator.ScoreInfo);
                 ppCalculator.TimedDifficultyAttributes = TimedDifficultyAttributes;
                 ppCalculator.ResetPerformanceCalculator = false;

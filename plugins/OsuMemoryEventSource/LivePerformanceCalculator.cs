@@ -17,11 +17,9 @@ namespace OsuMemoryEventSource
 
         public IPpCalculator PpCalculator { get; private set; }
 
-        public void SetPpCalculator(IPpCalculator ppCalculator, string mods, CancellationToken cancellationToken)
+        public void SetPpCalculator(IPpCalculator ppCalculator, CancellationToken cancellationToken)
         {
-            ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             _currentPlayMode = (PlayMode)ppCalculator.RulesetId;
-
             try
             {
                 ppCalculator.Calculate(cancellationToken);
