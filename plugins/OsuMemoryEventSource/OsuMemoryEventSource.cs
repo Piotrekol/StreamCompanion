@@ -4,6 +4,7 @@ using System.Threading;
 using StreamCompanionTypes.Enums;
 using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 using OsuMemoryDataProvider.OsuMemoryModels.Direct;
+using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
@@ -86,11 +87,14 @@ namespace OsuMemoryEventSource
             if (searchArgs.Status == OsuStatus.Playing || searchArgs.Status == OsuStatus.Watching)
             {
                 Thread.Sleep(250);
-                mods = ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
+                var maybeMods = Retry.RetryMe(() => ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))), m => m != null, 5);
+                mods = maybeMods?.Value ?? -1;
             }
             else
             {
-                mods = (int)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods));
+                var maybeMods = Retry.RetryMe(() =>
+                    MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods)), (m => m != null), 5);
+                mods = int.TryParse(maybeMods?.ToString(), out var audioTime) ? audioTime : -1;
             }
 
             if ((mods < 0 || Helpers.IsInvalidCombination((Mods)mods)))
