@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
+using System.Linq;
 using System.Runtime.Versioning;
 using System.Text;
 
@@ -24,10 +25,11 @@ namespace FileMapDataSender
                         bytes = Encoding.ASCII.GetBytes(data.Replace("\\n", "\n"));
                     else
                         bytes = Encoding.Unicode.GetBytes(data);
+
                     using (var a = File.CreateViewStream())
                     {
-                        var contentSize = bytes.LongLength > a.Capacity-1
-                            ? (int)a.Capacity
+                        var contentSize = bytes.LongLength > a.Capacity - 1
+                            ? (int)a.Capacity - 1
                             : bytes.Length;
 
                         a.Write(bytes, 0, contentSize);
