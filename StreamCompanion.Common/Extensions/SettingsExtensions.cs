@@ -11,7 +11,7 @@ namespace StreamCompanion.Common
 
         private static readonly SettingNames _names = SettingNames.Instance;
 
-        public static string GetFullSongsLocation(ISettings settings)
+        public static string GetFullSongsLocation(this ISettings settings)
         {
             var dir = settings.Get<string>(_names.SongsFolderLocation);
             if (dir == _names.SongsFolderLocation.Default<string>())
@@ -21,6 +21,8 @@ namespace StreamCompanion.Common
             }
             return dir;
         }
+
+        public static string GetFullSkinsLocation(this ISettings settings) => Path.Combine(settings.Get<string>(_names.MainOsuDirectory), "Skins\\");
 
         public static T GetConfiguration<T>(this ISettings settings, ConfigEntry configEntry) where T : new()
         {

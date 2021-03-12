@@ -46,13 +46,9 @@ namespace WebSocketDataSender
             var endpoints = string.Join(Environment.NewLine, modulesList.Select(x => $"{x.Module.BaseRoute} - {x.Description}"));
 
             server
-                .WithModule(new ActionModule("/help", HttpVerbs.Any, ctx =>
-            {
-                ctx.Response.StatusCode = 404;
-                return ctx.SendStringAsync($"Usable endpoints:{Environment.NewLine}{endpoints}", "text", Encoding.Default);
-            }))
+                .WithModule(new ActionModule("/help", HttpVerbs.Any, ctx => ctx.SendStringAsync($"Usable endpoints:{Environment.NewLine}{endpoints}", "text", Encoding.Default)))
                 .WithStaticFolder("/", rootPath, false, m => m.WithDirectoryLister(DirectoryLister.Html));
-            
+
             return server;
         }
 

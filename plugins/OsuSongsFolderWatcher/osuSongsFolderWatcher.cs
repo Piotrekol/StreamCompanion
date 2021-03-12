@@ -8,6 +8,7 @@ using System.Runtime.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -57,13 +58,7 @@ namespace OsuSongsFolderWatcher
             if (_settings.Get<bool>(_names.LoadingRawBeatmaps))
                 _settings.Add(_names.LoadingRawBeatmaps.Name, false);
 
-            var dir = _settings.Get<string>(_names.SongsFolderLocation);
-            if (dir == _names.SongsFolderLocation.Default<string>())
-            {
-                dir = _settings.Get<string>(_names.MainOsuDirectory);
-                dir = Path.Combine(dir, "Songs\\");
-            }
-
+            var dir = settings.GetFullSongsLocation();
 
             if (Directory.Exists(dir))
             {

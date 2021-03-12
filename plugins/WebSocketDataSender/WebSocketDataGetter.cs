@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using EmbedIO;
 using EmbedIO.Actions;
+using EmbedIO.Files;
 using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanion.Common;
@@ -81,6 +82,8 @@ namespace WebSocketDataSender
                 ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
                 ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
                 ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio. Set \"crop\" query parameter to true to return image with exact size provided", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
+                ("View into user osu! Songs folder",new FileModule("/songs/", new FileSystemProvider(settings.GetFullSongsLocation(), false)).WithDirectoryLister(DirectoryLister.Html)),
+                ("View into user osu! Skins folder",new FileModule("/skins/", new FileSystemProvider(settings.GetFullSkinsLocation(), false)).WithDirectoryLister(DirectoryLister.Html)),
                 ("List of available overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
                 ("All StreamCompanion settings", new ActionModule("/settings",HttpVerbs.Get,GetSettings)),
             };
