@@ -51,7 +51,7 @@ namespace WebSocketDataSender
                 ctx.Response.StatusCode = 404;
                 return ctx.SendStringAsync($"Usable endpoints:{Environment.NewLine}{endpoints}", "text", Encoding.Default);
             }))
-                .WithStaticFolder("/", rootPath, true, m => m.WithoutContentCaching().WithDirectoryLister(DirectoryLister.Html));
+                .WithStaticFolder("/", rootPath, false, m => m.WithDirectoryLister(DirectoryLister.Html));
             
             return server;
         }
