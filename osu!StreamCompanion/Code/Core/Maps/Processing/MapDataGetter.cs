@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -107,15 +107,16 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }, cancellationToken);
         }
 
-
         private CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorTask(IMapSearchResult mapSearchResult) =>
             new CancelableAsyncLazy<IPpCalculator>((cancellationToken) =>
             {
                 if (!(mapSearchResult.BeatmapsFound.Any() &&
                       mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)))
                     return null;
-
-                var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, (mapSearchResult.PlayMode.HasValue && (int)mapSearchResult.PlayMode.Value > -1) ? (int?)mapSearchResult.PlayMode : null);
+                var desiredGamemode = (mapSearchResult.PlayMode.HasValue && (int)mapSearchResult.PlayMode.Value > -1 && (int)mapSearchResult.PlayMode.Value <= 3) 
+                    ? (int?)mapSearchResult.PlayMode 
+                    : null;
+                var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, desiredGamemode);
                 var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
                 ppCalculator.Mods = (mapSearchResult.Mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 ppCalculator.Calculate(cancellationToken);
