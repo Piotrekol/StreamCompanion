@@ -48,7 +48,7 @@ namespace osu_StreamCompanion.Code.Core
                 (Control.ModifierKeys & Keys.Control) != 0)
             {
                 Settings.Add(SettingNames.Instance.Console.Name, true, true);
-                Settings.Add(SettingNames.Instance.LogLevel.Name, LogLevel.Error.GetHashCode(), true);
+                Settings.Add(SettingNames.Instance.LogLevel.Name, LogLevel.Trace.GetHashCode(), true);
             }
 
             var saver = di.Locate<MainSaver>();
