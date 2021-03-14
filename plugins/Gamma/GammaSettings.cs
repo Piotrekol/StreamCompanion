@@ -61,9 +61,10 @@ namespace Gamma
         {
             Validate("MinAr", 0, 15);
             Validate("MaxAr", 0, 15);
-            Validate("Gamma", 0.2, 4.5);
+            Validate("Gamma", 0.228, 4.46);
             OnSettingUpdated?.Invoke(this, EventArgs.Empty);
         }
+
         private void Validate(string columnName, double min, double max)
         {
             for (int i = 0; i < dataGridView.Rows.Count; i++)
