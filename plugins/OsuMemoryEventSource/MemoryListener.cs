@@ -116,7 +116,7 @@ namespace OsuMemoryEventSource
                     osuEventType.HasValue
                     || mapIdDiffers || memoryStatusDiffers
                     || mapHashDiffers || gameModeDiffers
-                    || mapSelectionModsDiffer
+                    || mapSelectionModsDiffer || playingModsDiffer
                     || retries != _lastRetries
                 )
             )

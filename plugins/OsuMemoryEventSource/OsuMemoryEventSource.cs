@@ -94,7 +94,7 @@ namespace OsuMemoryEventSource
             {
                 var maybeMods = Retry.RetryMe(() =>
                     MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods)), (m => m != null), 5);
-                mods = int.TryParse(maybeMods?.ToString(), out var audioTime) ? audioTime : -1;
+                mods = int.TryParse(maybeMods?.ToString(), out var readMods) ? readMods : -1;
             }
 
             if ((mods < 0 || Helpers.IsInvalidCombination((Mods)mods)))
