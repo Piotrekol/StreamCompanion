@@ -128,8 +128,7 @@ namespace OsuMemoryEventSource
             var ppCalculator = await map.GetPpCalculator(cancellationToken);
             lock (_lockingObject)
             {
-                if (map.BeatmapsFound.Any() &&
-                    map.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation))
+                if (ppCalculator != null)
                 {
                     _sliderBreaks = 0;
                     _lastMisses = 0;

@@ -112,9 +112,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
                 if (!(mapSearchResult.BeatmapsFound.Any() &&
                       mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)))
-                    return null;
-                var desiredGamemode = (mapSearchResult.PlayMode.HasValue && (int)mapSearchResult.PlayMode.Value > -1 && (int)mapSearchResult.PlayMode.Value <= 3) 
-                    ? (int?)mapSearchResult.PlayMode 
+                    return Task.FromResult<IPpCalculator>(null);
+                var desiredGamemode = (mapSearchResult.PlayMode.HasValue && (int)mapSearchResult.PlayMode.Value > -1 && (int)mapSearchResult.PlayMode.Value <= 3)
+                    ? (int?)mapSearchResult.PlayMode
                     : null;
                 var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, desiredGamemode);
                 var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
