@@ -177,7 +177,7 @@ namespace WebSocketDataSender
                 var crop = context.Request.QueryString.ContainsKey("crop") &&
                            new[] { "true", "1" }.Contains(context.Request.QueryString["crop"].ToLowerInvariant());
 
-                if (crop && desiredWidth == 0 || desiredHeight == 0)
+                if (crop && (desiredWidth == 0 || desiredHeight == 0))
                 {
                     context.Response.StatusCode = 422;
                     await context.SendStringAsync("Missing required parameters: \"width\" & \"height\" ",
