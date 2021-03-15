@@ -138,8 +138,22 @@ namespace PpCalculator
         }
 
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
-            => Calculate(CancellationToken.None, endTime, categoryAttribs);
-        public double Calculate(CancellationToken cancellationToken, double? endTime = null, Dictionary<string, double> categoryAttribs = null)
+            => InternalCalculate(CancellationToken.None, endTime, categoryAttribs);
+
+        public double Calculate(CancellationToken cancellationToken, double? endTime = null,
+            Dictionary<string, double> categoryAttribs = null)
+        {
+            try
+            {
+                return InternalCalculate(cancellationToken, endTime, categoryAttribs);
+            }
+            catch (TimeoutException)
+            {
+                return -2;
+            }
+        }
+
+        private double InternalCalculate(CancellationToken cancellationToken, double? endTime = null, Dictionary<string, double> categoryAttribs = null)
         {
             if (WorkingBeatmap == null)
                 return -1d;
@@ -154,15 +168,9 @@ namespace PpCalculator
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
                 mods = getMods(ruleset).ToArray();
-                try
-                {
-                    //TODO: cancellation token support
-                    PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, TimeSpan.FromSeconds(20));
-                }
-                catch (TimeoutException)
-                {
-                    return -2;
-                }
+                //TODO: cancellation token support
+                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, TimeSpan.FromSeconds(20));
+
 
                 LastMods = newMods;
                 ScoreInfo.Mods = mods;
@@ -193,7 +201,7 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                (PerformanceCalculator, TimedDifficultyAttributes) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, ScoreInfo, cancellationToken);
+                (PerformanceCalculator, TimedDifficultyAttributes) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, PlayableBeatmap, ScoreInfo, cancellationToken);
                 ResetPerformanceCalculator = false;
             }
 
@@ -231,7 +239,7 @@ namespace PpCalculator
                 mods.Add(newMod);
             }
 
-            return mods;
+            return mods.Select(m => m.CreateCopy()).ToList();
         }
 
         public int GetMaxCombo(int? fromTime = null)
