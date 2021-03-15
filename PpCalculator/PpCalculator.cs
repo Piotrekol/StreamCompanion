@@ -138,7 +138,7 @@ namespace PpCalculator
         }
 
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
-            => InternalCalculate(CancellationToken.None, endTime, categoryAttribs);
+            => Calculate(CancellationToken.None, endTime, categoryAttribs);
 
         public double Calculate(CancellationToken cancellationToken, double? endTime = null,
             Dictionary<string, double> categoryAttribs = null)
