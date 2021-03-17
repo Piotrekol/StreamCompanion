@@ -93,9 +93,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 catch (OperationCanceledException)
                 {
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Program.HandleException(e);
+                    ex.Data["PreventedCrash"] = 1;
+                    _logger.Log(ex, LogLevel.Critical);
+                    _logger.Log("Prevented crash in event worker, token data for last event might be incorrect! This exception has been automatically reported.", LogLevel.Warning);
                 }
 
                 await Task.Delay(5);
