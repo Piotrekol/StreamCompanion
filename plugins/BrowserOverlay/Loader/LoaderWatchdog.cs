@@ -77,7 +77,8 @@ namespace BrowserOverlay.Loader
                         }
                     }
 
-                    await _currentOsuProcess.WaitForExitAsync(token);
+                    if (_currentOsuProcess != null)
+                        await _currentOsuProcess.WaitForExitAsync(token);
 
                     await Task.Delay(1000, token);
                 }
@@ -146,7 +147,7 @@ namespace BrowserOverlay.Loader
             _logger.Log($"Injection failed: {message}", LogLevel.Information);
             _logger.Log($"{helperProcessResult}", LogLevel.Debug);
 
-            if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound )
+            if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound)
             {
                 MessageBox.Show(message + Environment.NewLine + Environment.NewLine + $"browser Overlay result: {helperProcessResult}", "StreamCompanion - browser Overlay Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
