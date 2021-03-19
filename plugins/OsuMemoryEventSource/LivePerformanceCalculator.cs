@@ -40,37 +40,33 @@ namespace OsuMemoryEventSource
             if (PpCalculator == null || PpCalculator.RulesetId == (int)PlayMode.OsuMania)
                 return pp;
 
-            try
+            if (PlayTime <= 0)
             {
-                if (PlayTime <= 0)
-                {
-                    PpCalculator.Goods = 0;
-                    PpCalculator.Mehs = 0;
-                    PpCalculator.Combo = null;
-                    PpCalculator.PercentCombo = 100;
-                    return PpCalculator.Calculate(); //fc pp
-                }
-
-                if (_currentPlayMode == PlayMode.CatchTheBeat)
-                {
-                    PpCalculator.Goods = Play.Hit100;
-                    PpCalculator.Mehs = null;
-                    PpCalculator.Misses = Play.HitMiss;
-                    PpCalculator.Katsus = Play.HitKatu;
-                    PpCalculator.Combo = Play.MaxCombo;
-                    PpCalculator.Score = Play.Score;
-                }
-
-                ComboLeft = PpCalculator.GetMaxCombo((int)PlayTime);
-
-                var newMaxCombo = Math.Max(Play.MaxCombo, ComboLeft + Play.Combo);
-
-                PpCalculator.Combo = newMaxCombo;
-
-                pp = PpCalculator.Calculate(null);
-
+                PpCalculator.Goods = 0;
+                PpCalculator.Mehs = 0;
+                PpCalculator.Combo = null;
+                PpCalculator.PercentCombo = 100;
+                return PpCalculator.Calculate(); //fc pp
             }
-            catch { }
+
+            if (_currentPlayMode == PlayMode.CatchTheBeat)
+            {
+                PpCalculator.Goods = Play.Hit100;
+                PpCalculator.Mehs = null;
+                PpCalculator.Misses = Play.HitMiss;
+                PpCalculator.Katsus = Play.HitKatu;
+                PpCalculator.Combo = Play.MaxCombo;
+                PpCalculator.Score = Play.Score;
+            }
+
+            ComboLeft = PpCalculator.GetMaxCombo((int)PlayTime);
+
+            var newMaxCombo = Math.Max(Play.MaxCombo, ComboLeft + Play.Combo);
+
+            PpCalculator.Combo = newMaxCombo;
+
+            pp = PpCalculator.Calculate(null);
+
 
             return pp;
 
@@ -91,49 +87,60 @@ namespace OsuMemoryEventSource
 
         public double PPIfBeatmapWouldEndNow()
         {
-
             if (PpCalculator != null && PlayTime > 0)
-                try
+            {
+                PpCalculator.Goods = Play.Hit100;
+                PpCalculator.Mehs = Play.Hit50;
+                PpCalculator.Misses = Play.HitMiss;
+                PpCalculator.Combo = Play.MaxCombo;
+                PpCalculator.Score = Play.Score;
+                var pp = PpCalculator.Calculate(PlayTime, attribs);
+                if (!double.IsInfinity(pp))
                 {
-                    PpCalculator.Goods = Play.Hit100;
-                    PpCalculator.Mehs = Play.Hit50;
-                    PpCalculator.Misses = Play.HitMiss;
-                    PpCalculator.Combo = Play.MaxCombo;
-                    PpCalculator.Score = Play.Score;
-                    var pp = PpCalculator.Calculate(PlayTime, attribs);
-                    if (!double.IsInfinity(pp))
+                    double accuracy, aim, strain, speed;
+                    switch (_currentPlayMode)
                     {
-                        switch (_currentPlayMode)
-                        {
-                            case PlayMode.Taiko:
-                            case PlayMode.OsuMania:
-                                StrainPPIfBeatmapWouldEndNow = attribs["Strain"];
-                                AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
-                                AimPPIfBeatmapWouldEndNow = double.NaN;
-                                SpeedPPIfBeatmapWouldEndNow = double.NaN;
-                                break;
-                            case PlayMode.CatchTheBeat:
-                                break;
-                            default:
-                                AimPPIfBeatmapWouldEndNow = attribs["Aim"];
-                                SpeedPPIfBeatmapWouldEndNow = attribs["Speed"];
-                                AccPPIfBeatmapWouldEndNow = attribs["Accuracy"];
-                                break;
-                        }
-
-                        attribs.Clear();
-
-                        return pp;
+                        case PlayMode.Taiko:
+                        case PlayMode.OsuMania:
+                            attribs.TryGetValue("Strain", out strain);
+                            StrainPPIfBeatmapWouldEndNow = strain;
+                            attribs.TryGetValue("Accuracy", out accuracy);
+                            AccPPIfBeatmapWouldEndNow = accuracy;
+                            AimPPIfBeatmapWouldEndNow = double.NaN;
+                            SpeedPPIfBeatmapWouldEndNow = double.NaN;
+                            break;
+                        case PlayMode.CatchTheBeat:
+                            ResetValues();
+                            break;
+                        default:
+                            attribs.TryGetValue("Aim", out aim);
+                            AimPPIfBeatmapWouldEndNow = aim;
+                            attribs.TryGetValue("Speed", out speed);
+                            SpeedPPIfBeatmapWouldEndNow = speed;
+                            attribs.TryGetValue("Accuracy", out accuracy);
+                            AccPPIfBeatmapWouldEndNow = accuracy;
+                            StrainPPIfBeatmapWouldEndNow = double.NaN;
+                            break;
                     }
 
                     attribs.Clear();
+
+                    return pp;
                 }
-                catch { }
-            AimPPIfBeatmapWouldEndNow = double.NaN;
-            SpeedPPIfBeatmapWouldEndNow = double.NaN;
-            AccPPIfBeatmapWouldEndNow = double.NaN;
-            StrainPPIfBeatmapWouldEndNow = double.NaN;
+            }
+            ResetValues();
             return double.NaN;
+
+            void ResetValues()
+            {
+
+                attribs.Clear();
+
+                AimPPIfBeatmapWouldEndNow = double.NaN;
+                SpeedPPIfBeatmapWouldEndNow = double.NaN;
+                AccPPIfBeatmapWouldEndNow = double.NaN;
+                StrainPPIfBeatmapWouldEndNow = double.NaN;
+            }
         }
 
         public double NoChokePp()
@@ -143,22 +150,20 @@ namespace OsuMemoryEventSource
             if (PpCalculator == null || _currentPlayMode == PlayMode.OsuMania)
                 return pp;
 
-            try
-            {
-                PpCalculator.Goods = Play.Hit100;
-                PpCalculator.Mehs = Play.Hit50;
-                PpCalculator.Misses = 0;
-                PpCalculator.Combo = null;
-                PpCalculator.PercentCombo = 100;
-                PpCalculator.Score = Play.Score;
-                pp = PpCalculator.Calculate(PlayTime, null);
 
-                if (double.IsInfinity(pp))
-                {
-                    pp = Double.NaN;
-                }
+            PpCalculator.Goods = Play.Hit100;
+            PpCalculator.Mehs = Play.Hit50;
+            PpCalculator.Misses = 0;
+            PpCalculator.Combo = null;
+            PpCalculator.PercentCombo = 100;
+            PpCalculator.Score = Play.Score;
+            pp = PpCalculator.Calculate(PlayTime, null);
+
+            if (double.IsInfinity(pp))
+            {
+                pp = Double.NaN;
             }
-            catch { }
+
 
             return pp;
         }
@@ -170,22 +175,20 @@ namespace OsuMemoryEventSource
             if (PpCalculator == null)
                 return pp;
 
-            try
-            {
-                PpCalculator.Goods = null;
-                PpCalculator.Mehs = null;
-                PpCalculator.Misses = 0;
-                PpCalculator.Combo = null;
-                PpCalculator.PercentCombo = 100;
-                PpCalculator.Score = 1_000_000;
-                pp = PpCalculator.Calculate(PlayTime, null);
 
-                if (double.IsInfinity(pp))
-                {
-                    pp = Double.NaN;
-                }
+            PpCalculator.Goods = null;
+            PpCalculator.Mehs = null;
+            PpCalculator.Misses = 0;
+            PpCalculator.Combo = null;
+            PpCalculator.PercentCombo = 100;
+            PpCalculator.Score = 1_000_000;
+            pp = PpCalculator.Calculate(PlayTime, null);
+
+            if (double.IsInfinity(pp))
+            {
+                pp = Double.NaN;
             }
-            catch { }
+
 
             return pp;
         }

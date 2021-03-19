@@ -79,6 +79,7 @@ namespace osu_StreamCompanion.Code.Core
                       }
                       catch
                       {
+                          reason = "Plugin provided invalid reason object";
                       }
 
                       logger.Log("Plugin {0} has requested StreamCompanion shutdown! due to: {1}", LogLevel.Information,

@@ -66,12 +66,10 @@ namespace LiveVisualizer
 
             LoadConfiguration();
             PrepareDataPlots();
-
             EnableVisualizer(VisualizerData.Configuration.Enable);
-
             VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
 
-            Task.Run(UpdateLiveTokens).HandleExceptions();
+            _ = UpdateLiveTokens(cts.Token).HandleExceptions();
         }
 
         private void PrepareDataPlots()
@@ -247,7 +245,7 @@ namespace LiveVisualizer
             return null;
         }
 
-        private async Task UpdateLiveTokens()
+        private async Task UpdateLiveTokens(CancellationToken token)
         {
             while (true)
             {
@@ -286,14 +284,13 @@ namespace LiveVisualizer
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return;
+                    Logger.Log(ex,LogLevel.Error);
                 }
 
-                Thread.Sleep(22);
-
-                if (cts.Token.IsCancellationRequested)
+                await Task.Delay(22);
+                if (token.IsCancellationRequested)
                     return;
             }
         }

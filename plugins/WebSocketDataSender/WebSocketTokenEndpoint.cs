@@ -93,12 +93,17 @@ namespace WebSocketDataSender
             }
             catch (Exception ex)
             {
-                Logger.Log(ex, context.Id);
+                ex.Log(context.Id);
                 try
                 {
-                    await context.WebSocket.CloseAsync();
+                    if (context.WebSocket.State != WebSocketState.Closed)
+                        await context.WebSocket.CloseAsync();
                 }
-                catch{}
+                catch
+                {
+                    //ignored
+                    //We can't really do anything if connection can't be closed anymore. we somehow have invalid state there.
+                }
             }
         }
 
@@ -118,7 +123,10 @@ namespace WebSocketDataSender
                 {
                     tokenNames = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(str);
                 }
-                catch (Exception) { }
+                catch (Exception ex)
+                {
+                    ex.Log(context.Id);
+                }
 
                 if (tokenNames != null && tokenNames.Any())
                 {

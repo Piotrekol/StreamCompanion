@@ -12,42 +12,42 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
     public partial class TokensPreviewSettings : UserControl
     {
-        private Task UpdateTask;
         private CancellationTokenSource _cts = new CancellationTokenSource();
         public TokensPreviewSettings()
         {
             InitializeComponent();
 
-            UpdateTask = Task.Run(() => UpdateLiveTokens(_cts.Token));
+            _ = UpdateLiveTokens(_cts.Token);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                components?.Dispose();
+                _cts.Cancel();
                 _cts.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        private void UpdateLiveTokens(CancellationToken token)
+        private async Task UpdateLiveTokens(CancellationToken token)
         {
             try
             {
                 while (true)
                 {
                     if (liveTokens != null && this.IsHandleCreated)
-
                         Invoke((MethodInvoker)(() => { ProcessReplacements(liveTokens, 5, 35); }));
 
                     token.ThrowIfCancellationRequested();
-
-                    Thread.Sleep(50);
+                    await Task.Delay(50, token);
                 }
             }
-            catch (Exception)
+            catch
             {
+                //ignored
+                //Sometimes throws after exiting setting tab
             }
         }
 
