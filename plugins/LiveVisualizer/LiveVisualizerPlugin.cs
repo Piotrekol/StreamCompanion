@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using Color = System.Drawing.Color;
@@ -330,7 +331,7 @@ namespace LiveVisualizer
 
         public override void Dispose()
         {
-            cts?.Cancel();
+            cts?.TryCancel();
             _visualizerWindow?.Dispatcher.Invoke(() =>
             {
                 _visualizerWindow?.Close();

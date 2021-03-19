@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -174,9 +175,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         public void Dispose()
         {
-            workerCancellationTokenSource.Cancel();
+            workerCancellationTokenSource.TryCancel();
             workerCancellationTokenSource.Dispose();
-            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.TryCancel();
             _cancellationTokenSource.Dispose();
         }
 

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -27,7 +28,6 @@ namespace OsuSongsFolderWatcher
         private ILogger _logger;
         private IDatabaseController _databaseController;
         private int _numberOfBeatmapsCurrentlyBeingLoaded = 0;
-        private Task _workerTask;
         private CancellationTokenSource _cts = new CancellationTokenSource();
         private readonly ConcurrentQueue<FileSystemEventArgs> filesChanged = new ConcurrentQueue<FileSystemEventArgs>();
         private readonly MemoryCache memoryCache;
@@ -78,7 +78,7 @@ namespace OsuSongsFolderWatcher
                 _watcher.Created += Watcher_FileChanged;
                 _watcher.IncludeSubdirectories = true;
                 _watcher.EnableRaisingEvents = true;
-                _workerTask = Task.Run(ConsumerTask);
+                _ = Task.Run(() => ConsumerTask(_cts.Token));
             }
             else
             {
@@ -96,7 +96,7 @@ namespace OsuSongsFolderWatcher
             memoryCache.AddOrGetExisting(e.FullPath, e, cacheItemPolicy);
         }
 
-        private async Task ConsumerTask()
+        private async Task ConsumerTask(CancellationToken token)
         {
             while (true)
             {
@@ -104,7 +104,7 @@ namespace OsuSongsFolderWatcher
                 //TODO: more than anything this is a hack, needs proper debounce logic instead of using memorycache.
                 memoryCache.Trim(100);
 
-                if (_cts.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                     return;
                 if (filesChanged.TryDequeue(out var fsArgs))
                 {
@@ -151,7 +151,8 @@ namespace OsuSongsFolderWatcher
         public void Dispose()
         {
             _watcher?.Dispose();
-            _cts.Cancel();
+            _cts.TryCancel();
+            _cts.Dispose();
         }
         private IMapSearchArgs lastMapSearchArgs;
 

@@ -110,6 +110,7 @@ namespace OsuMemoryEventSource
                 return task.Result;
             }
             cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
             logger?.Log("task aborted", LogLevel.Debug);
             return default(T);
         }

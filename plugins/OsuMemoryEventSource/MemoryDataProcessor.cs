@@ -14,6 +14,7 @@ using OsuMemoryDataProvider.OsuMemoryModels;
 using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 using PpCalculatorTypes;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Extensions;
 using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
@@ -372,7 +373,8 @@ namespace OsuMemoryEventSource
 
         public void Dispose()
         {
-            cancellationTokenSource.Cancel();
+            cancellationTokenSource.TryCancel();
+            cancellationTokenSource.Dispose();
         }
 
         public void ToggleSmoothing(bool enable)

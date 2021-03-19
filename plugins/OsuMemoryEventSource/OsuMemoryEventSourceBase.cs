@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OsuMemoryDataProvider;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -186,7 +187,7 @@ namespace OsuMemoryEventSource
             _settings.SettingUpdated -= OnSettingsSettingUpdated;
             lock (_lockingObject)
             {
-                cts?.Cancel();
+                cts?.TryCancel();
                 memoryListener?.Dispose();
             }
         }

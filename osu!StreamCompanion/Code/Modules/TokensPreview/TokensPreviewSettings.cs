@@ -1,4 +1,4 @@
-﻿using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using System;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StreamCompanion.Common.Extensions;
 
 namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
@@ -24,7 +25,7 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
         {
             if (disposing)
             {
-                _cts.Cancel();
+                _cts.TryCancel();
                 _cts.Dispose();
                 components?.Dispose();
             }
