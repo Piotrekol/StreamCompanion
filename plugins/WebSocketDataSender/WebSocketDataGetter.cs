@@ -16,7 +16,6 @@ using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -40,14 +39,12 @@ namespace WebSocketDataSender
         public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "Web overlay";
 
-
-        private DataContainer _liveDataContainer = new DataContainer();
-        private DataContainer _mapDataContainer = new DataContainer();
+        private Dictionary<string, string> OutputPatterns { get; } = new Dictionary<string, string>();
         private HttpServer _server;
+        private WebOverlay.WebOverlay _webOverlay;
 
         public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 20727);
         public static ConfigEntry HttpServerAddress = new ConfigEntry("httpServerAddress", "http://localhost");
-        private WebOverlay.WebOverlay _webOverlay;
 
         public static string BaseAddress(ISettings settings) => BindAddress(settings).Replace("*", "localhost");
         public static string BindAddress(ISettings settings) => $"{settings.Get<string>(HttpServerAddress)}:{settings.Get<int>(HttpServerPort)}";
@@ -77,8 +74,7 @@ namespace WebSocketDataSender
 
             var modules = new List<(string Description, IWebModule Module)>
             {
-                ("WebSocket stream of output patterns containing live tokens", new WebSocketDataEndpoint("/liveData", true, _liveDataContainer)),
-                ("WebSocket stream of output patterns with do not contain live tokens", new WebSocketDataEndpoint("/mapData", true, _mapDataContainer)),
+                ("WebSocket stream of output patterns", new WebSocketOutputPatternsEndpoint("/outputPatterns", true, OutputPatterns)),
                 ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
                 ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
                 ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio. Set \"crop\" query parameter to true to return image with exact size provided", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
@@ -208,24 +204,28 @@ namespace WebSocketDataSender
 
         public void Handle(string content)
         {
-            _liveDataContainer.Data = content;
+            //TODO: modify IHighFrequencyDataConsumer to pass dictionary instead
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+            foreach (var kv in dict)
+            {
+                OutputPatterns[kv.Key] = kv.Value;
+            }
         }
 
         public void Handle(string name, string content)
         {
             // ignored
         }
-
         public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            Dictionary<string, string> output = new Dictionary<string, string>();
+            // Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var s in map.OutputPatterns)
             {
                 if (!s.IsMemoryFormat)
-                    output[s.Name] = s.GetFormatedPattern();
+                    OutputPatterns[s.Name] = s.GetFormatedPattern();
             }
-            var json = JsonConvert.SerializeObject(output);
-            _mapDataContainer.Data = json;
+            // var json = JsonConvert.SerializeObject(output);
+            // _mapDataContainer.Data = json;
         }
 
         public void Free()
