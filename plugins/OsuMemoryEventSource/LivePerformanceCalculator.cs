@@ -94,6 +94,7 @@ namespace OsuMemoryEventSource
                 PpCalculator.Misses = Play.HitMiss;
                 PpCalculator.Combo = Play.MaxCombo;
                 PpCalculator.Score = Play.Score;
+                attribs.Clear();
                 var pp = PpCalculator.Calculate(PlayTime, attribs);
                 if (!double.IsInfinity(pp))
                 {
@@ -123,8 +124,6 @@ namespace OsuMemoryEventSource
                             break;
                     }
 
-                    attribs.Clear();
-
                     return pp;
                 }
             }
@@ -133,9 +132,6 @@ namespace OsuMemoryEventSource
 
             void ResetValues()
             {
-
-                attribs.Clear();
-
                 AimPPIfBeatmapWouldEndNow = double.NaN;
                 SpeedPPIfBeatmapWouldEndNow = double.NaN;
                 AccPPIfBeatmapWouldEndNow = double.NaN;
