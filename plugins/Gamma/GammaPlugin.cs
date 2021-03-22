@@ -46,9 +46,11 @@ namespace Gamma
 
         public void SetNewMap(IMapSearchResult searchResult, CancellationToken cancellationToken)
         {
-            if (!searchResult.BeatmapsFound.Any() || searchResult.Action != OsuStatus.Playing)
+            if (!_configuration.Enabled || !searchResult.BeatmapsFound.Any() || searchResult.Action != OsuStatus.Playing)
             {
-                _gamma.Restore();
+                if (!float.IsNaN(_gamma.CurrentGamma))
+                    _gamma.Restore();
+
                 return;
             }
 

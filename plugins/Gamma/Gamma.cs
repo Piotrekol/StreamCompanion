@@ -9,7 +9,7 @@ namespace Gamma
     {
         private IntPtr createdDC;
         private WinApi.RAMP? _orginalRamp;
-        public float CurrentGamma { get; private set; }
+        public float CurrentGamma { get; private set; } = float.NaN;
         public Gamma(string screenDeviceName)
         {
             createdDC = WinApi.CreateDC(null, screenDeviceName, null, IntPtr.Zero);
@@ -47,7 +47,11 @@ namespace Gamma
                 return false;
             
             var ramp = _orginalRamp.Value;
-            return WinApi.SetDeviceGammaRamp(createdDC, ref ramp);
+            var restored = WinApi.SetDeviceGammaRamp(createdDC, ref ramp);
+            if (restored)
+                CurrentGamma = float.NaN;
+
+            return restored;
         }
 
         public void Dispose()
