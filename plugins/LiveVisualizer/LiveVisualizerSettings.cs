@@ -172,12 +172,12 @@ namespace LiveVisualizer
 
         private void linkLabel_UICredit1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://osu.ppy.sh/users/9173653");
+            ProcessExt.OpenUrl("https://osu.ppy.sh/users/9173653");
         }
 
         private void linkLabel_UICredit2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://osu.ppy.sh/users/4944211");
+            ProcessExt.OpenUrl("https://osu.ppy.sh/users/4944211");
         }
 
         private void Button_miniCounter_Click(object sender, EventArgs e)
