@@ -16,6 +16,7 @@ using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -74,12 +75,12 @@ namespace WebSocketDataSender
 
             var modules = new List<(string Description, IWebModule Module)>
             {
-                ("WebSocket stream of output patterns", new WebSocketOutputPatternsEndpoint("/outputPatterns", true, OutputPatterns)),
+                ("WebSocket stream of output patterns, with can be changed at any point by sending message with serialized JArray, containing case sensitive output pattern names", new WebSocketOutputPatternsEndpoint("/outputPatterns", true, OutputPatterns)),
                 ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
                 ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
                 ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio. Set \"crop\" query parameter to true to return image with exact size provided", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
-                ("View into user osu! Songs folder",new FileModule("/songs/", new FileSystemProvider(settings.GetFullSongsLocation(), false)).WithDirectoryLister(DirectoryLister.Html)),
-                ("View into user osu! Skins folder",new FileModule("/skins/", new FileSystemProvider(settings.GetFullSkinsLocation(), false)).WithDirectoryLister(DirectoryLister.Html)),
+                ("View into user osu! Songs folder", CreateSongsModule()),
+                ("View into user osu! Skins folder", CreateSkinsModule()),
                 ("List of available overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
                 ("All StreamCompanion settings", new ActionModule("/settings",HttpVerbs.Get,GetSettings)),
             };
@@ -195,6 +196,36 @@ namespace WebSocketDataSender
                     resizedImg.Save(responseStream, ImageFormat.Jpeg);
                 }
             }
+        }
+
+        private IWebModule CreateSongsModule()
+        {
+            var songsLocation = _settings.GetFullSongsLocation();
+            var errorMessage = $"Couldn't find songs folder at \"{songsLocation}\", /songs/ web endpoint has been disabled";
+            return CreateFolderModule(songsLocation, "/songs/", errorMessage);
+        }
+
+        private IWebModule CreateSkinsModule()
+        {
+            var skinsLocation = _settings.GetFullSkinsLocation();
+            var errorMessage = $"Couldn't find skins folder at \"{skinsLocation}\", /skins/ web endpoint has been disabled";
+            return CreateFolderModule(skinsLocation, "/skins/", errorMessage);
+        }
+
+        private IWebModule CreateFolderModule(string location, string baseRoute, string missingFolderErrorMessage)
+        {
+            IWebModule module = null;
+            if (!Directory.Exists(location))
+            {
+                _logger.Log(missingFolderErrorMessage, LogLevel.Warning);
+                module = new ActionModule(baseRoute, HttpVerbs.Any, c =>
+                {
+                    c.Response.StatusCode = 500;
+                    return c.SendStringAsync(missingFolderErrorMessage, "text", Encoding.UTF8);
+                });
+            }
+
+            return module ?? new FileModule(baseRoute, new FileSystemProvider(location, false)).WithDirectoryLister(DirectoryLister.Html);
         }
 
         public void Dispose()
