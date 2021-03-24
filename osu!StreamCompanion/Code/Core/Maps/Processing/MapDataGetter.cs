@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -119,7 +119,18 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, desiredGamemode);
                 var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
                 ppCalculator.Mods = (mapSearchResult.Mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                ppCalculator.Calculate(cancellationToken);
+                try
+                {
+                    ppCalculator.Calculate(cancellationToken);
+                }
+                //specifically for BeatmapInvalidForRulesetException (beatmap had invalid hitobject with missing position data)
+                catch (Exception e)
+                {
+                    e.Data["PreventedCrash"] = 1;
+                    _logger.Log(e, LogLevel.Critical);
+                    return Task.FromResult<IPpCalculator>(null);
+                }
+
                 return Task.FromResult((IPpCalculator)ppCalculator);
             });
 
