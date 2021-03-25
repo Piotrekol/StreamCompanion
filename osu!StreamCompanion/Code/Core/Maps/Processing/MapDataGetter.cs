@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -122,6 +122,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 try
                 {
                     ppCalculator.Calculate(cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 //specifically for BeatmapInvalidForRulesetException (beatmap had invalid hitobject with missing position data)
                 catch (Exception e)
