@@ -6,19 +6,15 @@ using StreamCompanionTypes.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using OsuMemoryDataProvider.OsuMemoryModels;
-using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
-using PpCalculatorTypes;
+using OsuMemoryDataProvider.OsuMemoryModels.Direct;
 using StreamCompanion.Common;
 using StreamCompanion.Common.Extensions;
-using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
-using Mods = CollectionManager.DataTypes.Mods;
+using CollectionManager.DataTypes;
 
 namespace OsuMemoryEventSource
 {
@@ -152,35 +148,46 @@ namespace OsuMemoryEventSource
                 if (!ReferenceEquals(OsuMemoryData, reader.OsuMemoryAddresses))
                 {
                     OsuMemoryData = reader.OsuMemoryAddresses;
-                    _rawData.Play = OsuMemoryData.Player;
                 }
                 if ((OsuStatus)_liveTokens["status"].Token.Value != status)
                     _liveTokens["status"].Token.Value = status;
 
                 _liveTokens["rawStatus"].Token.Value = rawStatus;
-
-                if (status != OsuStatus.Playing && status != OsuStatus.Watching)
+                int playTime = OsuMemoryData.GeneralData.AudioTime;
+                switch (status)
                 {
-                    var rawAudioTime = Retry.RetryMe(() =>
-                        reader.ReadProperty(OsuMemoryData.GeneralData, nameof(GeneralData.AudioTime)), (val => val != null), 5);
-                    if (int.TryParse(rawAudioTime?.ToString(), out var audioTime))
-                        _rawData.PlayTime = audioTime;
+                    case OsuStatus.Playing:
+                    case OsuStatus.Watching:
+                        {
+                            if (_lastStatus != OsuStatus.Playing && _lastStatus != OsuStatus.Watching)
+                            {
+                                _newPlayStarted.Set();
+                                Thread.Sleep(500);//Initial play delay
+                            }
 
-                    reader.Read(OsuMemoryData.Skin);
-                    UpdateLiveTokens(status);
-                    _lastStatus = status;
-                    _notUpdatingMemoryValues.Set();
-                    return;
+                            reader.Read(OsuMemoryData.Player);
+                            if (!ReferenceEquals(_rawData.Play, OsuMemoryData.Player))
+                                _rawData.Play = OsuMemoryData.Player;
+
+                        }
+                        break;
+                    case OsuStatus.ResultsScreen:
+                        reader.Read(OsuMemoryData.ResultsScreen);
+                        if (!ReferenceEquals(_rawData.Play, OsuMemoryData.ResultsScreen))
+                            _rawData.Play = OsuMemoryData.ResultsScreen;
+
+                        playTime = Convert.ToInt32(_rawData.PpCalculator?.BeatmapLength ?? 0);
+                        break;
+                    default:
+                        {
+                            reader.Read(OsuMemoryData.Skin);
+                            UpdateLiveTokens(status);
+                            _lastStatus = status;
+                            break;
+                        }
                 }
 
-                if (_lastStatus != OsuStatus.Playing && _lastStatus != OsuStatus.Watching)
-                {
-                    _newPlayStarted.Set();
-                    Thread.Sleep(500);//Initial play delay
-                }
-
-                reader.Read(OsuMemoryData.Player);
-                _rawData.PlayTime = OsuMemoryData.GeneralData.AudioTime;
+                _rawData.PlayTime = playTime;
                 _liveTokens["time"].Update();
 
                 _lastStatus = status;
@@ -237,7 +244,8 @@ namespace OsuMemoryEventSource
             var playingOrWatching = OsuStatus.Playing | OsuStatus.Watching;
             var playingWatchingResults = playingOrWatching | OsuStatus.ResultsScreen;
             CreateLiveToken("username", _rawData.Play.Username, TokenType.Live, "", string.Empty, playingWatchingResults, () => _rawData.Play.Username);
-            CreateLiveToken("acc", _rawData.Play.Accuracy, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play.Accuracy);
+            //TODO: manual acc calc from hit results
+            CreateLiveToken("acc", 0d, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play is Player p ? p.Accuracy : 0d);
             CreateLiveToken("katsu", _rawData.Play.HitKatu, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitKatu);
             CreateLiveToken("geki", _rawData.Play.HitGeki, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitGeki);
             CreateLiveToken("c300", _rawData.Play.Hit300, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.Hit300);
@@ -245,7 +253,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("c50", _rawData.Play.Hit50, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.Hit50);
             CreateLiveToken("miss", _rawData.Play.HitMiss, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitMiss);
             CreateLiveToken("grade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults,
-                () => CalculateGrade(_playMode, _mods, _rawData.Play.Accuracy, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss));
+                () => CalculateGrade(_playMode, _mods, _rawData.Play is Player p ? p.Accuracy : 0d, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss));
             CreateLiveToken("mapPosition", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero, OsuStatus.All, () =>
             {
                 if (_rawData.PlayTime != 0)
@@ -275,7 +283,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("comboLeft", _rawData.ComboLeft, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.ComboLeft);
             CreateLiveToken("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.Score);
             CreateLiveToken("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.MaxCombo);
-            CreateLiveToken("playerHp", _rawData.Play.HP, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play.HP);
+            CreateLiveToken("playerHp", 0d, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play is Player p ? p.HP : 0d);
 
             CreateLiveToken("ppIfMapEndsNow", InterpolatedValues[InterpolatedValueName.PpIfMapEndsNow].Current, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () =>
             {
@@ -319,12 +327,16 @@ namespace OsuMemoryEventSource
             });
             CreateLiveToken("unstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults, () =>
             {
-                InterpolatedValues[InterpolatedValueName.UnstableRate].Set(UnstableRate(_rawData.Play.HitErrors));
+                double unstableRate = 0d;
+                if (_rawData.Play is Player p)
+                    unstableRate = UnstableRate(p.HitErrors);
+
+                InterpolatedValues[InterpolatedValueName.UnstableRate].Set(unstableRate);
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
             CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults,
                 () => ConvertedUnstableRate((double)_liveTokens["unstableRate"].Token.Value, _mods));
-            CreateLiveToken("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults, () => _rawData.Play.HitErrors);
+            CreateLiveToken("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults, () => _rawData.Play is Player p ? p.HitErrors : null);
             CreateLiveToken("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All, () => DateTime.UtcNow.ToString("o"));
             CreateLiveToken("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All, () => DateTime.Now.TimeOfDay);
             CreateLiveToken("sliderBreaks", 0, TokenType.Live, "{0}", 0, playingWatchingResults, () =>

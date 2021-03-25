@@ -3,15 +3,15 @@ using OsuMemoryDataProvider;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 using OsuMemoryDataProvider.OsuMemoryModels.Direct;
 using PpCalculatorTypes;
-using StreamCompanionTypes.DataTypes;
 
 namespace OsuMemoryEventSource
 {
     public class LivePerformanceCalculator
     {
-        public Player Play { get; set; } = new Player();
+        public RulesetPlayData Play { get; set; } = new Player();
         public int PlayTime { get; set; }
         private PlayMode _currentPlayMode;
 

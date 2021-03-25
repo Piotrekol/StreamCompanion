@@ -30,15 +30,16 @@ namespace OsuMemoryEventSource
         private OsuMemoryStatus _lastStatusLog = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _currentStatus = OsuMemoryStatus.Unknown;
         private string _lastMapHash = "";
-        private int _lastMapSelectionMods = -2;
-        private int _lastPlayingMods = -2;
+        private int _lastSentMods = -2;
         private List<MemoryDataProcessor> _memoryDataProcessors;
         private PatternsDispatcher _patternsDispatcher;
         private ISettings _settings;
+        private readonly IContextAwareLogger _logger;
 
         public MemoryListener(ISettings settings, ISaver saver, IContextAwareLogger logger, int clientCount = 1)
         {
             _settings = settings;
+            _logger = logger;
             _settings.SettingUpdated += SettingUpdated;
             var tournamentMode = clientCount > 1;
             var mainClientId = tournamentMode
@@ -83,16 +84,28 @@ namespace OsuMemoryEventSource
 
             var gameMode = osuData.GeneralData.GameMode;
             var mapHash = osuData.Beatmap.Md5;
-            var mapSelectionMods = osuData.GeneralData.Mods;
-            var playingMods = -1;
+
+            var mods = osuData.GeneralData.Mods;
             if (status == OsuStatus.Playing || status == OsuStatus.Watching)
             {
-                var mods = ((Mods)reader.ReadProperty(osuData.Player, nameof(Player.Mods)))?.Value;
-                if (mods == null)
+                var rawMods = ((Mods)reader.ReadProperty(osuData.Player, nameof(Player.Mods)))?.Value;
+                if (rawMods == null)
                     return;
 
-                playingMods = mods.Value;
+                mods = rawMods.Value;
             }
+            else if (status == OsuStatus.ResultsScreen)
+            {
+                var rawMods = ((Mods)reader.ReadProperty(osuData.ResultsScreen, nameof(ResultsScreen.Mods)))?.Value;
+                if (rawMods == null)
+                    return;
+
+                mods = rawMods.Value;
+            }
+
+            if (Helpers.IsInvalidCombination((CollectionManager.DataTypes.Mods)mods))
+                return;
+
             var retries = osuData.GeneralData.Retries;
             var currentTime = osuData.GeneralData.AudioTime;
 
@@ -100,8 +113,7 @@ namespace OsuMemoryEventSource
             var mapIdDiffers = _lastMapId != _currentMapId;
             var memoryStatusDiffers = _lastStatus != _currentStatus;
             var gameModeDiffers = gameMode != _lastGameMode;
-            var mapSelectionModsDiffer = mapSelectionMods != _lastMapSelectionMods;
-            var playingModsDiffer = (status == OsuStatus.Watching || status == OsuStatus.Playing) && playingMods != _lastPlayingMods;
+            var modsDiffer = mods != _lastSentMods;
             OsuEventType? osuEventType = null;
             //"good enough" replay retry detection.
             if (isReplay.Value && _currentStatus == OsuMemoryStatus.Playing && _lastTime > currentTime && DateTime.UtcNow > _nextReplayRetryAllowedAt)
@@ -111,20 +123,19 @@ namespace OsuMemoryEventSource
             }
 
             _lastTime = currentTime;
-            var playInitialized = (status != OsuStatus.Watching && status != OsuStatus.Playing) || playingMods != -1;
+            var playInitialized = (status != OsuStatus.Watching && status != OsuStatus.Playing) || mods != -1;
             if (sendEvents && playInitialized && (
                     osuEventType.HasValue
                     || mapIdDiffers || memoryStatusDiffers
-                    || mapHashDiffers || gameModeDiffers
-                    || mapSelectionModsDiffer || playingModsDiffer
+                    || mapHashDiffers || gameModeDiffers || modsDiffer
                     || retries != _lastRetries
                 )
             )
             {
-                if (!osuEventType.HasValue || playingModsDiffer)
+                if (!osuEventType.HasValue || modsDiffer)
                 {
                     osuEventType =
-                        mapIdDiffers || mapHashDiffers || gameModeDiffers || mapSelectionModsDiffer || playingModsDiffer ? OsuEventType.MapChange //different mapId/hash/mode/mods(changed stats) = different map
+                        mapIdDiffers || mapHashDiffers || gameModeDiffers || modsDiffer ? OsuEventType.MapChange //different mapId/hash/mode/mods(changed stats) = different map
                         : memoryStatusDiffers ? OsuEventType.SceneChange //memory scene(status) change = Scene change
                         : _currentStatus == OsuMemoryStatus.Playing ? OsuEventType.PlayChange // map retry
                         : OsuEventType.MapChange; //bail
@@ -134,10 +145,8 @@ namespace OsuMemoryEventSource
                 _lastStatus = _currentStatus;
                 _lastRetries = retries;
                 _lastGameMode = gameMode;
-                _lastMapSelectionMods = mapSelectionMods;
                 _lastMapHash = mapHash;
-                _lastPlayingMods = playingMods;
-
+                _lastSentMods = mods;
                 var rawString = Retry.RetryMe(() => (string)reader.ReadProperty(osuData.Beatmap, nameof(CurrentBeatmap.Md5)),
                     s => (System.Text.Encoding.UTF8.GetByteCount(s ?? string.Empty) == s?.Length), 5) ?? string.Empty;
 
@@ -148,7 +157,7 @@ namespace OsuMemoryEventSource
                     Raw = rawString,
                     MapHash = mapHash,
                     PlayMode = (PlayMode)gameMode,
-                    Mods = playingMods != -1 ? playingMods : mapSelectionMods
+                    Mods = mods
                 });
             }
 
