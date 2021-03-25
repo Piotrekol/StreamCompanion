@@ -119,9 +119,6 @@ namespace OsuMemoryEventSource
 
         public async Task SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            if ((map.Action & OsuStatus.ResultsScreen) != 0)
-                return;
-
             var ppCalculator = await map.GetPpCalculator(cancellationToken);
             lock (_lockingObject)
             {
