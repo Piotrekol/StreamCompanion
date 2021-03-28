@@ -186,6 +186,7 @@ namespace OsuMemoryEventSource
 
                         break;
                     case OsuStatus.ResultsScreen:
+                        ReadLeaderboard = false;
                         reader.TryRead(OsuMemoryData.ResultsScreen);
                         if (!ReferenceEquals(_rawData.Play, OsuMemoryData.ResultsScreen))
                             _rawData.Play = OsuMemoryData.ResultsScreen;
@@ -193,6 +194,7 @@ namespace OsuMemoryEventSource
                         playTime = Convert.ToInt32(_rawData.PpCalculator?.BeatmapLength ?? 0);
                         break;
                     default:
+                        ReadLeaderboard = false;
                         _rawData.LeaderBoard = new LeaderBoard();
                         reader.TryRead(OsuMemoryData.Skin);
                         _lastStatus = status;
