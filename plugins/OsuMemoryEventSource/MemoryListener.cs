@@ -93,14 +93,14 @@ namespace OsuMemoryEventSource
             var mods = osuData.GeneralData.Mods;
             if (status == OsuStatus.Playing || status == OsuStatus.Watching)
             {
-                if (!reader.TryReadProperty(osuData.Player, nameof(Player.Mods), out var rawMods))
+                if (!reader.TryReadProperty(osuData.Player, nameof(Player.Mods), out var rawMods) || rawMods == null)
                     return;
 
                 mods = ((Mods)rawMods).Value;
             }
             else if (status == OsuStatus.ResultsScreen)
             {
-                if (!reader.TryReadProperty(osuData.ResultsScreen, nameof(ResultsScreen.Mods), out var rawMods))
+                if (!reader.TryReadProperty(osuData.ResultsScreen, nameof(ResultsScreen.Mods), out var rawMods) || rawMods == null)
                     return;
 
                 mods = ((Mods)rawMods).Value;

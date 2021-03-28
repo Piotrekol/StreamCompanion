@@ -88,13 +88,13 @@ namespace OsuMemoryEventSource
             {
                 Thread.Sleep(250);
 
-                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods),out var rawMods)
-                    ? ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)rawMods).Value
+                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods), out var rawMods)
+                    ? ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)rawMods)?.Value ?? -1
                     : -1;
             }
             else
             {
-                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods),out var rawMods)
+                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods), out var rawMods)
                     ? (int)rawMods
                     : -1;
             }

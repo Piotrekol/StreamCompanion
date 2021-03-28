@@ -118,7 +118,7 @@ namespace OsuMemoryEventSource
                         await Task.Delay(3000);
 
                         if (memoryReader.TryReadProperty(memoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods), out var rawMods))
-                            return ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)rawMods).Value;
+                            return ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)rawMods)?.Value ?? -3;
 
                         return -2;
                     }, 20000).Result;
