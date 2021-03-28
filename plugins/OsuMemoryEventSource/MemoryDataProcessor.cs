@@ -155,33 +155,30 @@ namespace OsuMemoryEventSource
                 {
                     case OsuStatus.Playing:
                     case OsuStatus.Watching:
+                        if (_lastStatus != OsuStatus.Playing && _lastStatus != OsuStatus.Watching)
                         {
-                            if (_lastStatus != OsuStatus.Playing && _lastStatus != OsuStatus.Watching)
-                            {
-                                _newPlayStarted.Set();
-                                Thread.Sleep(500);//Initial play delay
-                            }
-
-                            reader.Read(OsuMemoryData.Player);
-                            if (!ReferenceEquals(_rawData.Play, OsuMemoryData.Player))
-                                _rawData.Play = OsuMemoryData.Player;
-
+                            _newPlayStarted.Set();
+                            Thread.Sleep(500);//Initial play delay
                         }
+
+                        reader.TryRead(OsuMemoryData.Player);
+                        if (!ReferenceEquals(_rawData.Play, OsuMemoryData.Player))
+                            _rawData.Play = OsuMemoryData.Player;
+
                         break;
                     case OsuStatus.ResultsScreen:
-                        reader.Read(OsuMemoryData.ResultsScreen);
+                        reader.TryRead(OsuMemoryData.ResultsScreen);
                         if (!ReferenceEquals(_rawData.Play, OsuMemoryData.ResultsScreen))
                             _rawData.Play = OsuMemoryData.ResultsScreen;
 
                         playTime = Convert.ToInt32(_rawData.PpCalculator?.BeatmapLength ?? 0);
                         break;
                     default:
-                        {
-                            reader.Read(OsuMemoryData.Skin);
-                            UpdateLiveTokens(status);
-                            _lastStatus = status;
-                            break;
-                        }
+
+                        reader.TryRead(OsuMemoryData.Skin);
+                        _lastStatus = status;
+                        break;
+
                 }
 
                 _rawData.PlayTime = playTime;

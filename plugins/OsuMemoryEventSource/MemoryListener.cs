@@ -60,7 +60,9 @@ namespace OsuMemoryEventSource
         {
             var reader = clientReaders[0];
             var osuData = reader.OsuMemoryAddresses;
-            reader.Read(osuData.GeneralData);
+            if (!reader.TryRead(osuData.GeneralData))
+                return;
+
             _currentStatus = osuData.GeneralData.OsuStatus;
             if (_lastStatusLog != _currentStatus)
             {
@@ -71,14 +73,17 @@ namespace OsuMemoryEventSource
             if (_currentStatus == OsuMemoryStatus.NotRunning)
                 return;
 
-            reader.Read(osuData.Beatmap);
-            _currentMapId = osuData.Beatmap.Id;
-            var isReplay = (bool?)reader.ReadProperty(osuData.Player, nameof(Player.IsReplay));
-            if (isReplay == null)
+            if (!reader.TryRead(osuData.Beatmap))
                 return;
 
+            if (!reader.TryReadProperty(osuData.Player, nameof(Player.IsReplay), out var rawIsReplay))
+                return;
+
+            _currentMapId = osuData.Beatmap.Id;
+            var isReplay = (bool)rawIsReplay;
+
             OsuStatus status = _currentStatus.Convert();
-            status = status == OsuStatus.Playing && isReplay.Value
+            status = status == OsuStatus.Playing && isReplay
                 ? OsuStatus.Watching
                 : status;
 
@@ -88,19 +93,17 @@ namespace OsuMemoryEventSource
             var mods = osuData.GeneralData.Mods;
             if (status == OsuStatus.Playing || status == OsuStatus.Watching)
             {
-                var rawMods = ((Mods)reader.ReadProperty(osuData.Player, nameof(Player.Mods)))?.Value;
-                if (rawMods == null)
+                if (!reader.TryReadProperty(osuData.Player, nameof(Player.Mods), out var rawMods))
                     return;
 
-                mods = rawMods.Value;
+                mods = ((Mods)rawMods).Value;
             }
             else if (status == OsuStatus.ResultsScreen)
             {
-                var rawMods = ((Mods)reader.ReadProperty(osuData.ResultsScreen, nameof(ResultsScreen.Mods)))?.Value;
-                if (rawMods == null)
+                if (!reader.TryReadProperty(osuData.ResultsScreen, nameof(ResultsScreen.Mods), out var rawMods))
                     return;
 
-                mods = rawMods.Value;
+                mods = ((Mods)rawMods).Value;
             }
 
             if (Helpers.IsInvalidCombination((CollectionManager.DataTypes.Mods)mods))
@@ -116,7 +119,7 @@ namespace OsuMemoryEventSource
             var modsDiffer = mods != _lastSentMods;
             OsuEventType? osuEventType = null;
             //"good enough" replay retry detection.
-            if (isReplay.Value && _currentStatus == OsuMemoryStatus.Playing && _lastTime > currentTime && DateTime.UtcNow > _nextReplayRetryAllowedAt)
+            if (isReplay && _currentStatus == OsuMemoryStatus.Playing && _lastTime > currentTime && DateTime.UtcNow > _nextReplayRetryAllowedAt)
             {
                 osuEventType = OsuEventType.PlayChange;
                 _nextReplayRetryAllowedAt = DateTime.UtcNow.AddMilliseconds(500);
@@ -147,8 +150,13 @@ namespace OsuMemoryEventSource
                 _lastGameMode = gameMode;
                 _lastMapHash = mapHash;
                 _lastSentMods = mods;
-                var rawString = Retry.RetryMe(() => (string)reader.ReadProperty(osuData.Beatmap, nameof(CurrentBeatmap.Md5)),
-                    s => (System.Text.Encoding.UTF8.GetByteCount(s ?? string.Empty) == s?.Length), 5) ?? string.Empty;
+                var rawString = Retry.RetryMe(
+                    () =>
+                    {
+                        var validRead = reader.TryReadProperty(osuData.Beatmap, nameof(CurrentBeatmap.MapString), out var result);
+                        return (validRead, (string)result);
+                    },
+                    s => (s.validRead, s.Item2), 5) ?? string.Empty;
 
                 NewOsuEvent?.Invoke(this, new MemoryMapSearchArgs(osuEventType.Value)
                 {
