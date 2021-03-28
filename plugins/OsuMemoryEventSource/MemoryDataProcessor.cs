@@ -15,6 +15,8 @@ using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
 using CollectionManager.DataTypes;
+using Newtonsoft.Json;
+using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace OsuMemoryEventSource
 {
@@ -135,7 +137,7 @@ namespace OsuMemoryEventSource
             }
         }
 
-
+        private bool ReadLeaderboard = false;
         public void Tick(OsuStatus status, OsuMemoryStatus rawStatus, StructuredOsuMemoryReader reader)
         {
             _notUpdatingTokens.WaitOne();
@@ -165,6 +167,23 @@ namespace OsuMemoryEventSource
                         if (!ReferenceEquals(_rawData.Play, OsuMemoryData.Player))
                             _rawData.Play = OsuMemoryData.Player;
 
+                        //TODO: support for live multiplayer leaderboard
+                        if (!ReadLeaderboard)
+                        {
+                            //Read whole leaderboard once
+                            if (reader.TryRead(OsuMemoryData.LeaderBoard))
+                            {
+                                ReadLeaderboard = true;
+                                if (!ReferenceEquals(_rawData.LeaderBoard, OsuMemoryData.LeaderBoard))
+                                    _rawData.LeaderBoard = OsuMemoryData.LeaderBoard;
+                            }
+                        }
+                        else
+                        {
+                            //...then update main player data only
+                            reader.TryRead(OsuMemoryData.LeaderBoard.MainPlayer);
+                        }
+
                         break;
                     case OsuStatus.ResultsScreen:
                         reader.TryRead(OsuMemoryData.ResultsScreen);
@@ -174,7 +193,7 @@ namespace OsuMemoryEventSource
                         playTime = Convert.ToInt32(_rawData.PpCalculator?.BeatmapLength ?? 0);
                         break;
                     default:
-
+                        _rawData.LeaderBoard = new LeaderBoard();
                         reader.TryRead(OsuMemoryData.Skin);
                         _lastStatus = status;
                         break;
@@ -353,6 +372,22 @@ namespace OsuMemoryEventSource
                 return InterpolatedValues[InterpolatedValueName.liveStarRating].Current;
             });
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
+
+            var leadernoardSerializerSettings = new JsonSerializerSettings
+            {
+                Error = SerializationError
+            };
+            CreateLiveToken("leaderBoard", "{}", TokenType.Live, "", "{}", playingOrWatching, () =>
+            {
+                var data = JsonConvert.SerializeObject(_rawData.LeaderBoard, leadernoardSerializerSettings);
+                return data;
+            });
+        }
+
+        private void SerializationError(object sender, ErrorEventArgs e)
+        {
+            _logger.Log("Failed to serialize leaderboard token data.", LogLevel.Debug);
+            _logger.Log(e, LogLevel.Trace);
         }
 
         private void UpdateLiveTokens(OsuStatus status)
