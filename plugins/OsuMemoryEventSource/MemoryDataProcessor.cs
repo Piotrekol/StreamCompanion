@@ -375,20 +375,30 @@ namespace OsuMemoryEventSource
             });
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
 
-            var leadernoardSerializerSettings = new JsonSerializerSettings
+            var leaderBoardSerializerSettings = new JsonSerializerSettings
             {
                 Error = SerializationError
             };
-            CreateLiveToken("leaderBoard", "{}", TokenType.Live, "", "{}", playingOrWatching, () =>
+            object lastLeaderBoardObject = null;
+            string lastLeaderBoardData = "{}";
+            CreateLiveToken("leaderBoardPlayers", "{}", TokenType.Live, "", "{}", playingOrWatching, () =>
             {
-                var data = JsonConvert.SerializeObject(_rawData.LeaderBoard, leadernoardSerializerSettings);
-                return data;
+                if (ReferenceEquals(_rawData.LeaderBoard, lastLeaderBoardObject))
+                    return lastLeaderBoardData;
+
+                lastLeaderBoardObject = _rawData.LeaderBoard;
+                return lastLeaderBoardData = JsonConvert.SerializeObject(_rawData.LeaderBoard.Players, leaderBoardSerializerSettings);
+            });
+
+            CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () =>
+            {
+                return JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, leaderBoardSerializerSettings);
             });
         }
 
         private void SerializationError(object sender, ErrorEventArgs e)
         {
-            _logger.Log("Failed to serialize leaderboard token data.", LogLevel.Debug);
+            _logger.Log("Failed to serialize leaderBoard token data.", LogLevel.Debug);
             _logger.Log(e, LogLevel.Trace);
         }
 
