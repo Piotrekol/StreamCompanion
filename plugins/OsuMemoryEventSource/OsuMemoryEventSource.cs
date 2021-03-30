@@ -87,14 +87,16 @@ namespace OsuMemoryEventSource
             if (searchArgs.Status == OsuStatus.Playing || searchArgs.Status == OsuStatus.Watching)
             {
                 Thread.Sleep(250);
-                var maybeMods = Retry.RetryMe(() => ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))), m => m != null, 5);
-                mods = maybeMods?.Value ?? -1;
+
+                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods), out var rawMods)
+                    ? ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)rawMods)?.Value ?? -1
+                    : -1;
             }
             else
             {
-                var maybeMods = Retry.RetryMe(() =>
-                    MemoryReader.ReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods)), (m => m != null), 5);
-                mods = int.TryParse(maybeMods?.ToString(), out var readMods) ? readMods : -1;
+                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods), out var rawMods)
+                    ? (int)rawMods
+                    : -1;
             }
 
             if ((mods < 0 || Helpers.IsInvalidCombination((Mods)mods)))

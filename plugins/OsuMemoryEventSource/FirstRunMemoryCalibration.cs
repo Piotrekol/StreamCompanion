@@ -117,7 +117,10 @@ namespace OsuMemoryEventSource
                         SetCalibrationText("Initial search delay... waiting 3 seconds");
                         await Task.Delay(3000);
 
-                        return ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)memoryReader.ReadProperty(memoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods))).Value;
+                        if (memoryReader.TryReadProperty(memoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods), out var rawMods))
+                            return ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)rawMods)?.Value ?? -3;
+
+                        return -2;
                     }, 20000).Result;
 
                     Passed = mods == ExpectedMods;

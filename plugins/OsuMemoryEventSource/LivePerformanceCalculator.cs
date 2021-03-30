@@ -12,6 +12,7 @@ namespace OsuMemoryEventSource
     public class LivePerformanceCalculator
     {
         public RulesetPlayData Play { get; set; } = new Player();
+        public LeaderBoard LeaderBoard { get; set; } = new LeaderBoard();
         public int PlayTime { get; set; }
         private PlayMode _currentPlayMode;
 
