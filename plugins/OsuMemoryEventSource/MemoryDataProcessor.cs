@@ -33,6 +33,7 @@ namespace OsuMemoryEventSource
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
+        public static ConfigEntry MultiplayerLeaderBoardUpdateRate = new ConfigEntry("MultiplayerLeaderBoardUpdateRate", 250);
         private Mods _mods;
         private PlayMode _playMode = PlayMode.Osu;
 
@@ -138,6 +139,7 @@ namespace OsuMemoryEventSource
         }
 
         private bool ReadLeaderboard = false;
+        private DateTime _nextLeaderBoardUpdate = DateTime.MaxValue;
         public void Tick(OsuStatus status, OsuMemoryStatus rawStatus, StructuredOsuMemoryReader reader)
         {
             _notUpdatingTokens.WaitOne();
@@ -180,8 +182,17 @@ namespace OsuMemoryEventSource
                         }
                         else
                         {
-                            //...then update main player data only
-                            reader.TryRead(OsuMemoryData.LeaderBoard.MainPlayer);
+                            //Throttle whole leaderboard reads - Temporary solution until multiplayer detection is implemented, this should be only done in multiplayer
+                            if (_nextLeaderBoardUpdate > DateTime.UtcNow)
+                            {
+                                reader.TryRead(OsuMemoryData.LeaderBoard);
+                                _nextLeaderBoardUpdate = DateTime.UtcNow.AddMilliseconds(_settings.Get<int>(MultiplayerLeaderBoardUpdateRate));
+                            }
+                            else
+                            {
+                                //...then update main player data only
+                                reader.TryRead(OsuMemoryData.LeaderBoard.MainPlayer);
+                            }
                         }
 
                         break;
@@ -379,21 +390,25 @@ namespace OsuMemoryEventSource
             {
                 Error = SerializationError
             };
-            object lastLeaderBoardObject = null;
+            // object lastLeaderBoardObject = null;
             string lastLeaderBoardData = "{}";
-            CreateLiveToken("leaderBoardPlayers", "{}", TokenType.Live, "", "{}", playingOrWatching, () =>
+            DateTime lastLeaderBoardUpdate = DateTime.MinValue.AddMilliseconds(1);
+            CreateLiveToken("leaderBoardPlayers", "[]", TokenType.Live, "", "[]", playingOrWatching, () =>
             {
-                if (ReferenceEquals(_rawData.LeaderBoard, lastLeaderBoardObject))
+                ////TODO: assumes singleplayer(other player data never updates)
+                //if (ReferenceEquals(_rawData.LeaderBoard, lastLeaderBoardObject))
+                //    return lastLeaderBoardData;
+
+                //lastLeaderBoardObject = _rawData.LeaderBoard;
+                var nextUpdateAt = _nextLeaderBoardUpdate;
+                if (nextUpdateAt == lastLeaderBoardUpdate)
                     return lastLeaderBoardData;
 
-                lastLeaderBoardObject = _rawData.LeaderBoard;
+                lastLeaderBoardUpdate = nextUpdateAt;
                 return lastLeaderBoardData = JsonConvert.SerializeObject(_rawData.LeaderBoard.Players, leaderBoardSerializerSettings);
             });
 
-            CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () =>
-            {
-                return JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, leaderBoardSerializerSettings);
-            });
+            CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, leaderBoardSerializerSettings));
         }
 
         private void SerializationError(object sender, ErrorEventArgs e)
