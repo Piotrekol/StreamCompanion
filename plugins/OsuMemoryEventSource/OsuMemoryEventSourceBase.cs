@@ -92,7 +92,13 @@ namespace OsuMemoryEventSource
                 }
 
                 _clientMemoryReaders.AddRange(Enumerable.Range(0, clientCount)
-                    .Select(i => StructuredOsuMemoryReader.Instance.GetInstanceForWindowTitleHint($" Tournament Client {i}")));
+                    .Select(i =>
+                    {
+                        var instance = StructuredOsuMemoryReader.Instance.GetInstanceForWindowTitleHint(
+                                $" Tournament Client {i}");
+                        instance.OsuMemoryAddresses.Player.KeyOverlay = null;
+                        return instance;
+                    }));
 
                 //TODO: provide tournament-manager specific data via tokens
                 var _tournamentManagerMemoryReader = OsuMemoryReader.Instance.GetInstanceForWindowTitleHint("Tournament Manager");
@@ -102,6 +108,7 @@ namespace OsuMemoryEventSource
             else
             {
                 _clientMemoryReaders.Add(StructuredOsuMemoryReader.Instance);
+                StructuredOsuMemoryReader.Instance.OsuMemoryAddresses.Player.KeyOverlay = null;
             }
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
