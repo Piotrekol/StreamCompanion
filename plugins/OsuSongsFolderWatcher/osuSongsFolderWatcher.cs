@@ -111,11 +111,31 @@ namespace OsuSongsFolderWatcher
                     _settings.Add(_names.LoadingRawBeatmaps.Name, true);
                     Interlocked.Increment(ref _numberOfBeatmapsCurrentlyBeingLoaded);
                     _logger.Log($">Processing beatmap located at {fsArgs.FullPath}", LogLevel.Debug);
+                    Beatmap beatmap;
+                    try
+                    {
+                        beatmap = await BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Data["PreventedCrash"] = 1;
+                        _logger.Log(ex, LogLevel.Critical);
+                        Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded);
+                        continue;
+                    }
 
-                    var beatmap = await BeatmapHelpers.ReadBeatmap(fsArgs.FullPath);
+                    if (beatmap == null)
+                    {
+                        var ex = new BeatmapLoadFailedException();
+                        ex.Data["location"] = fsArgs.FullPath;
+                        ex.Data["changeType"] = fsArgs.ChangeType;
+                        _logger.Log(ex, LogLevel.Critical);
+                        _logger.Log($"Failed to load beatmap located at {fsArgs.FullPath}", LogLevel.Warning);
+                        Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded);
+                        continue;
+                    }
 
                     _databaseController.StoreTempBeatmap(beatmap);
-
                     _logger.Log(">Added new Temporary beatmap {0} - {1} [{2}]", LogLevel.Information, beatmap.ArtistRoman,
                         beatmap.TitleRoman, beatmap.DiffName);
                     if (Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded) == 0)
@@ -167,4 +187,5 @@ namespace OsuSongsFolderWatcher
         public string SearcherName { get; } = nameof(OsuSongsFolderWatcher);
         public int Priority { get; set; } = 1000;
     }
+    internal class BeatmapLoadFailedException : Exception { }
 }

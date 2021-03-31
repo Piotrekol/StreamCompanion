@@ -44,28 +44,9 @@ namespace OsuSongsFolderWatcher
         /// <returns></returns>
         public Beatmap LoadBeatmap(string file)
         {
-            IBeatmap lazerBeatmap;
-            DifficultyAttributes difficultyAttributes;
-            using (var raw = File.OpenRead(file))
-            using (var ms = new MemoryStream())
-            using (var sr = new LineBufferedReader(ms))
-            {
-                raw.CopyTo(ms);
-                ms.Position = 0;
-
-                var decoder = Decoder.GetDecoder<osu.Game.Beatmaps.Beatmap>(sr);
-                lazerBeatmap = decoder.Decode(sr);
-
-                lazerBeatmap.BeatmapInfo.Path = Path.GetFileName(file);
-                lazerBeatmap.BeatmapInfo.MD5Hash = ms.ComputeMD5Hash();
-
-                var ruleset = Rulesets.GetOrDefault(lazerBeatmap.BeatmapInfo.RulesetID);
-                lazerBeatmap.BeatmapInfo.Ruleset = ruleset.RulesetInfo;
-                difficultyAttributes = ruleset?.CreateDifficultyCalculator(new DummyConversionBeatmap(lazerBeatmap)).Calculate();
-
-                lazerBeatmap.BeatmapInfo.StarDifficulty = Math.Round(difficultyAttributes?.StarRating ?? 0, 2);
-                lazerBeatmap.BeatmapInfo.Length = CalculateLength(lazerBeatmap);
-            }
+            var (lazerBeatmap, difficultyAttributes) = LoadLazerBeatmap(file);
+            if (lazerBeatmap == null)
+                return null;
 
             short circles, sliders, spinners;
             circles = sliders = spinners = 0;
@@ -114,6 +95,37 @@ namespace OsuSongsFolderWatcher
                 LastPlayed = DateTime.MinValue,
                 LastSync = DateTime.MinValue
             };
+        }
+
+        private (IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes) LoadLazerBeatmap(string file)
+        {
+            IBeatmap lazerBeatmap;
+            DifficultyAttributes difficultyAttributes;
+            using (var raw = File.OpenRead(file))
+            using (var ms = new MemoryStream())
+            using (var sr = new LineBufferedReader(ms))
+            {
+                raw.CopyTo(ms);
+                ms.Position = 0;
+
+                var decoder = Decoder.GetDecoder<osu.Game.Beatmaps.Beatmap>(sr);
+                lazerBeatmap = decoder.Decode(sr);
+
+                lazerBeatmap.BeatmapInfo.Path = Path.GetFileName(file);
+                lazerBeatmap.BeatmapInfo.MD5Hash = ms.ComputeMD5Hash();
+
+                var ruleset = Rulesets.GetOrDefault(lazerBeatmap.BeatmapInfo.RulesetID);
+                if (ruleset == null)
+                    return (null, null);
+
+                lazerBeatmap.BeatmapInfo.Ruleset = ruleset.RulesetInfo;
+                difficultyAttributes = ruleset.CreateDifficultyCalculator(new DummyConversionBeatmap(lazerBeatmap)).Calculate();
+
+                lazerBeatmap.BeatmapInfo.StarDifficulty = Math.Round(difficultyAttributes?.StarRating ?? 0, 2);
+                lazerBeatmap.BeatmapInfo.Length = CalculateLength(lazerBeatmap);
+            }
+
+            return (lazerBeatmap, difficultyAttributes);
         }
 
         private double CalculateLength(IBeatmap b)
