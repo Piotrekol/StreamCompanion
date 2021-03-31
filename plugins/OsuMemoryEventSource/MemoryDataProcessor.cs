@@ -139,7 +139,7 @@ namespace OsuMemoryEventSource
         }
 
         private bool ReadLeaderboard = false;
-        private DateTime _nextLeaderBoardUpdate = DateTime.MaxValue;
+        private DateTime _nextLeaderBoardUpdate = DateTime.MinValue;
         public void Tick(OsuStatus status, OsuMemoryStatus rawStatus, StructuredOsuMemoryReader reader)
         {
             _notUpdatingTokens.WaitOne();
@@ -183,7 +183,7 @@ namespace OsuMemoryEventSource
                         else
                         {
                             //Throttle whole leaderboard reads - Temporary solution until multiplayer detection is implemented, this should be only done in multiplayer
-                            if (_nextLeaderBoardUpdate > DateTime.UtcNow)
+                            if (_nextLeaderBoardUpdate < DateTime.UtcNow)
                             {
                                 reader.TryRead(OsuMemoryData.LeaderBoard);
                                 _nextLeaderBoardUpdate = DateTime.UtcNow.AddMilliseconds(_settings.Get<int>(MultiplayerLeaderBoardUpdateRate));
