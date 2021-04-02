@@ -188,11 +188,12 @@ namespace OsuMemoryEventSource
                                 reader.TryRead(OsuMemoryData.LeaderBoard);
                                 _nextLeaderBoardUpdate = DateTime.UtcNow.AddMilliseconds(_settings.Get<int>(MultiplayerLeaderBoardUpdateRate));
                             }
-                            else
-                            {
-                                //...then update main player data only
-                                reader.TryRead(OsuMemoryData.LeaderBoard.MainPlayer);
-                            }
+                            //TODO: time 404, Fix required on memory reader side - read results in nullref
+                            //else
+                            //{
+                            //    //...then update main player data 
+                            //    reader.TryRead(OsuMemoryData.LeaderBoard.MainPlayer);
+                            //}
                         }
 
                         break;
