@@ -77,9 +77,11 @@ namespace WebSocketDataSender
                                 continue;
                             var kvValue = GetValue(watchedKv.Key);
 
-                            var valueIsDifferent = (kvValue is double kvv)
-                                ? watchedKv.Value == null || Math.Abs(kvv - (double)watchedKv.Value) > double.Epsilon
-                                : !kvValue.Equals(watchedKv.Value);
+                            var valueIsDifferent = (kvValue == null || watchedKv.Value == null)
+                                ? kvValue != watchedKv.Value
+                                    : (kvValue is double kvv)
+                                        ? watchedKv.Value == null || Math.Abs(kvv - (double)watchedKv.Value) > double.Epsilon
+                                        : !kvValue.Equals(watchedKv.Value);
                             if (valueIsDifferent)
                             {
                                 watchedKeyValues[watchedKv.Key] = kvValue;
