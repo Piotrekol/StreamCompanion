@@ -96,7 +96,7 @@ namespace OsuMemoryEventSource
                     {
                         var instance = StructuredOsuMemoryReader.Instance.GetInstanceForWindowTitleHint(
                                 $" Tournament Client {i}");
-                        instance.OsuMemoryAddresses.Player.KeyOverlay = null;
+                        instance.OsuMemoryAddresses.GeneralData.KeyOverlay = null;
                         return instance;
                     }));
 
@@ -108,7 +108,7 @@ namespace OsuMemoryEventSource
             else
             {
                 _clientMemoryReaders.Add(StructuredOsuMemoryReader.Instance);
-                StructuredOsuMemoryReader.Instance.OsuMemoryAddresses.Player.KeyOverlay = null;
+                StructuredOsuMemoryReader.Instance.OsuMemoryAddresses.GeneralData.KeyOverlay = null;
             }
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
