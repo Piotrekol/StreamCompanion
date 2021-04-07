@@ -119,6 +119,7 @@ namespace OsuSongsFolderWatcher
                     catch (Exception ex)
                     {
                         ex.Data["PreventedCrash"] = 1;
+                        ex.Data["location"] = fsArgs.FullPath;
                         _logger.Log(ex, LogLevel.Critical);
                         Interlocked.Decrement(ref _numberOfBeatmapsCurrentlyBeingLoaded);
                         continue;
