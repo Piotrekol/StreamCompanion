@@ -109,6 +109,7 @@ namespace OsuMemoryEventSource
             {
                 _clientMemoryReaders.Add(StructuredOsuMemoryReader.Instance);
                 StructuredOsuMemoryReader.Instance.OsuMemoryAddresses.GeneralData.KeyOverlay = null;
+                StructuredOsuMemoryReader.Instance.InvalidRead += OnInvalidMemoryRead;
             }
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
@@ -141,6 +142,11 @@ namespace OsuMemoryEventSource
             MemoryWorkerTask = Task.Run(MemoryWorker, cts.Token).HandleExceptions();
 
             Started = true;
+        }
+
+        private void OnInvalidMemoryRead(object sender, (object readObject, string propPath) e)
+        {
+            Logger.Log($"Failed to read \"{e.propPath}\" memory value", LogLevel.Warning);
         }
 
         public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
