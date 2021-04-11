@@ -25,6 +25,7 @@ namespace OsuMemoryEventSource
         private int _lastGameMode = -1;
         private int _lastRetries = -1;
         private int _lastTime = -1;
+        private readonly IToken _osuIsRunningToken = OsuMemoryEventSourceBase.LiveTokenSetter("osuIsRunning", false, TokenType.Live, null, false);
         private DateTime _nextReplayRetryAllowedAt = DateTime.MinValue;
         private OsuMemoryStatus _lastStatus = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _lastStatusLog = OsuMemoryStatus.Unknown;
@@ -60,7 +61,11 @@ namespace OsuMemoryEventSource
         {
             var reader = clientReaders[0];
             var osuData = reader.OsuMemoryAddresses;
-            if (!reader.TryRead(osuData.GeneralData))
+
+            var canRead = reader.CanRead;
+            _osuIsRunningToken.Value = canRead ? 1 : 0;
+            
+            if (!canRead || !reader.TryRead(osuData.GeneralData))
                 return;
 
             _currentStatus = osuData.GeneralData.OsuStatus;
