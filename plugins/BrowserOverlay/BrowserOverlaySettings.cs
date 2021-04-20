@@ -16,18 +16,16 @@ namespace BrowserOverlay
         private readonly Configuration _configuration;
         public EventHandler OnSettingUpdated;
         private bool _init = true;
+        private BindingList<OverlayTab> OverlayTabs;
+        private OverlayTab CurrentOverlayTab = null;
         public BrowserOverlaySettings(Configuration configuration)
         {
-            _configuration = configuration;
-            var overlayConfiguration = configuration.OverlayConfiguration;
             InitializeComponent();
 
-            numericUpDown_CanvasHeight.Value = overlayConfiguration.Canvas.Height;
-            numericUpDown_CanvasWidth.Value = overlayConfiguration.Canvas.Width;
-            numericUpDown_positionX.Value = overlayConfiguration.Position.X;
-            numericUpDown_positionY.Value = overlayConfiguration.Position.Y;
-            textBox_overlayUrl.Text = overlayConfiguration.Url;
-            numericUpDown_scale.Value = overlayConfiguration.Scale;
+            _configuration = configuration;
+            OverlayTabs = new BindingList<OverlayTab>(_configuration.OverlayTabs);
+            listBox_tabs.DataSource = OverlayTabs;
+
             panel_content.Enabled = checkBox_enable.Checked = configuration.Enabled;
 
             _init = false;
@@ -47,12 +45,14 @@ namespace BrowserOverlay
         {
             if (_init)
                 return;
-            _configuration.OverlayConfiguration.Canvas.Height = Convert.ToInt32(numericUpDown_CanvasHeight.Value);
-            _configuration.OverlayConfiguration.Canvas.Width = Convert.ToInt32(numericUpDown_CanvasWidth.Value);
-            _configuration.OverlayConfiguration.Position.X = Convert.ToInt32(numericUpDown_positionX.Value);
-            _configuration.OverlayConfiguration.Position.Y = Convert.ToInt32(numericUpDown_positionY.Value);
-            _configuration.OverlayConfiguration.Url = textBox_overlayUrl.Text;
-            _configuration.OverlayConfiguration.Scale = numericUpDown_scale.Value;
+
+            CurrentOverlayTab.Canvas.Height = Convert.ToInt32(numericUpDown_CanvasHeight.Value);
+            CurrentOverlayTab.Canvas.Width = Convert.ToInt32(numericUpDown_CanvasWidth.Value);
+            CurrentOverlayTab.Position.X = Convert.ToInt32(numericUpDown_positionX.Value);
+            CurrentOverlayTab.Position.Y = Convert.ToInt32(numericUpDown_positionY.Value);
+            CurrentOverlayTab.Url = textBox_overlayUrl.Text;
+            CurrentOverlayTab.Scale = numericUpDown_scale.Value;
+            OverlayTabs.ResetBindings();
             OnSettingUpdated?.Invoke(this, EventArgs.Empty);
         }
 
@@ -64,5 +64,37 @@ namespace BrowserOverlay
             panel_content.Enabled = _configuration.Enabled = checkBox_enable.Checked;
             OnSettingUpdated?.Invoke(this, EventArgs.Empty);
         }
+
+        private void button_addTab_Click(object sender, EventArgs e)
+        {
+            OverlayTabs.AddNew();
+            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void button_remove_Click(object sender, EventArgs e)
+        {
+            if (listBox_tabs.SelectedItem == null)
+                return;
+
+            OverlayTabs.Remove((OverlayTab)listBox_tabs.SelectedItem);
+            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void listBox_tabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CurrentOverlayTab = (OverlayTab)listBox_tabs.SelectedItem;
+            PopulateForm();
+        }
+
+        private void PopulateForm()
+        {
+            numericUpDown_CanvasHeight.Value = CurrentOverlayTab.Canvas.Height;
+            numericUpDown_CanvasWidth.Value = CurrentOverlayTab.Canvas.Width;
+            numericUpDown_positionX.Value = CurrentOverlayTab.Position.X;
+            numericUpDown_positionY.Value = CurrentOverlayTab.Position.Y;
+            textBox_overlayUrl.Text = CurrentOverlayTab.Url;
+            numericUpDown_scale.Value = CurrentOverlayTab.Scale;
+        }
+
     }
 }
