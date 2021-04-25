@@ -88,12 +88,14 @@ namespace BrowserOverlay
 
         private void PopulateForm()
         {
+            _init = true;
             numericUpDown_CanvasHeight.Value = CurrentOverlayTab.Canvas.Height;
             numericUpDown_CanvasWidth.Value = CurrentOverlayTab.Canvas.Width;
             numericUpDown_positionX.Value = CurrentOverlayTab.Position.X;
             numericUpDown_positionY.Value = CurrentOverlayTab.Position.Y;
             textBox_overlayUrl.Text = CurrentOverlayTab.Url;
             numericUpDown_scale.Value = CurrentOverlayTab.Scale;
+            _init = false;
         }
 
     }
