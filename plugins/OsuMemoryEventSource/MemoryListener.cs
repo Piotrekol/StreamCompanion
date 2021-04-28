@@ -78,6 +78,12 @@ namespace OsuMemoryEventSource
             if (_currentStatus == OsuMemoryStatus.NotRunning)
                 return;
 
+            if (_currentStatus == OsuMemoryStatus.Unknown)
+            {
+                _logger.Log($"Unknown memory status: {osuData.GeneralData.RawStatus}", LogLevel.Warning);
+                return;
+            }
+
             if (!reader.TryRead(osuData.Beatmap))
                 return;
 
