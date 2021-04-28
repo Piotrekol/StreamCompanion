@@ -309,6 +309,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.Combo);
             CreateLiveToken("comboLeft", _rawData.ComboLeft, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.ComboLeft);
             CreateLiveToken("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.Score);
+            CreateLiveToken("scoreV2", _rawData.Play.ScoreV2 ?? 0, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.ScoreV2 ?? 0);
             CreateLiveToken("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.MaxCombo);
             CreateLiveToken("playerHp", 0d, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play is Player p ? p.HP : 0d);
 
