@@ -44,12 +44,17 @@ namespace BrowserOverlay
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.panel_form = new System.Windows.Forms.Panel();
+            this.button_addTab = new System.Windows.Forms.Button();
+            this.listBox_tabs = new System.Windows.Forms.ListBox();
+            this.button_remove = new System.Windows.Forms.Button();
             this.panel_content = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_scale)).BeginInit();
+            this.panel_form.SuspendLayout();
             this.panel_content.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,7 +73,7 @@ namespace BrowserOverlay
             // 
             this.textBox_overlayUrl.Location = new System.Drawing.Point(82, 3);
             this.textBox_overlayUrl.Name = "textBox_overlayUrl";
-            this.textBox_overlayUrl.Size = new System.Drawing.Size(267, 23);
+            this.textBox_overlayUrl.Size = new System.Drawing.Size(520, 23);
             this.textBox_overlayUrl.TabIndex = 1;
             this.textBox_overlayUrl.TextChanged += new System.EventHandler(this.textBox_overlayUrl_TextChanged);
             // 
@@ -220,26 +225,67 @@ namespace BrowserOverlay
             this.label8.TabIndex = 16;
             this.label8.Text = "Y:";
             // 
+            // panel_form
+            // 
+            this.panel_form.Controls.Add(this.label2);
+            this.panel_form.Controls.Add(this.label8);
+            this.panel_form.Controls.Add(this.textBox_overlayUrl);
+            this.panel_form.Controls.Add(this.label7);
+            this.panel_form.Controls.Add(this.numericUpDown_CanvasWidth);
+            this.panel_form.Controls.Add(this.label6);
+            this.panel_form.Controls.Add(this.label3);
+            this.panel_form.Controls.Add(this.label1);
+            this.panel_form.Controls.Add(this.numericUpDown_CanvasHeight);
+            this.panel_form.Controls.Add(this.label5);
+            this.panel_form.Controls.Add(this.numericUpDown_positionX);
+            this.panel_form.Controls.Add(this.numericUpDown_scale);
+            this.panel_form.Controls.Add(this.label4);
+            this.panel_form.Controls.Add(this.numericUpDown_positionY);
+            this.panel_form.Location = new System.Drawing.Point(10, 317);
+            this.panel_form.Name = "panel_form";
+            this.panel_form.Size = new System.Drawing.Size(687, 160);
+            this.panel_form.TabIndex = 17;
+            // 
+            // button_addTab
+            // 
+            this.button_addTab.Location = new System.Drawing.Point(10, 276);
+            this.button_addTab.Name = "button_addTab";
+            this.button_addTab.Size = new System.Drawing.Size(75, 23);
+            this.button_addTab.TabIndex = 19;
+            this.button_addTab.Text = "Add tab";
+            this.button_addTab.UseVisualStyleBackColor = true;
+            this.button_addTab.Click += new System.EventHandler(this.button_addTab_Click);
+            // 
+            // listBox_tabs
+            // 
+            this.listBox_tabs.FormattingEnabled = true;
+            this.listBox_tabs.ItemHeight = 15;
+            this.listBox_tabs.Location = new System.Drawing.Point(10, 9);
+            this.listBox_tabs.Name = "listBox_tabs";
+            this.listBox_tabs.Size = new System.Drawing.Size(602, 259);
+            this.listBox_tabs.TabIndex = 20;
+            this.listBox_tabs.SelectedIndexChanged += new System.EventHandler(this.listBox_tabs_SelectedIndexChanged);
+            // 
+            // button_remove
+            // 
+            this.button_remove.Location = new System.Drawing.Point(91, 276);
+            this.button_remove.Name = "button_remove";
+            this.button_remove.Size = new System.Drawing.Size(130, 23);
+            this.button_remove.TabIndex = 21;
+            this.button_remove.Text = "Remove selected tab";
+            this.button_remove.UseVisualStyleBackColor = true;
+            this.button_remove.Click += new System.EventHandler(this.button_remove_Click);
+            // 
             // panel_content
             // 
-            this.panel_content.Controls.Add(this.label2);
-            this.panel_content.Controls.Add(this.label8);
-            this.panel_content.Controls.Add(this.textBox_overlayUrl);
-            this.panel_content.Controls.Add(this.label7);
-            this.panel_content.Controls.Add(this.numericUpDown_CanvasWidth);
-            this.panel_content.Controls.Add(this.label6);
-            this.panel_content.Controls.Add(this.label3);
-            this.panel_content.Controls.Add(this.label1);
-            this.panel_content.Controls.Add(this.numericUpDown_CanvasHeight);
-            this.panel_content.Controls.Add(this.label5);
-            this.panel_content.Controls.Add(this.numericUpDown_positionX);
-            this.panel_content.Controls.Add(this.numericUpDown_scale);
-            this.panel_content.Controls.Add(this.label4);
-            this.panel_content.Controls.Add(this.numericUpDown_positionY);
+            this.panel_content.Controls.Add(this.listBox_tabs);
+            this.panel_content.Controls.Add(this.button_remove);
+            this.panel_content.Controls.Add(this.panel_form);
+            this.panel_content.Controls.Add(this.button_addTab);
             this.panel_content.Location = new System.Drawing.Point(17, 37);
             this.panel_content.Name = "panel_content";
-            this.panel_content.Size = new System.Drawing.Size(362, 148);
-            this.panel_content.TabIndex = 17;
+            this.panel_content.Size = new System.Drawing.Size(707, 486);
+            this.panel_content.TabIndex = 22;
             // 
             // BrowserOverlaySettings
             // 
@@ -248,14 +294,15 @@ namespace BrowserOverlay
             this.Controls.Add(this.panel_content);
             this.Controls.Add(this.checkBox_enable);
             this.Name = "BrowserOverlaySettings";
-            this.Size = new System.Drawing.Size(385, 193);
+            this.Size = new System.Drawing.Size(770, 572);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_scale)).EndInit();
+            this.panel_form.ResumeLayout(false);
+            this.panel_form.PerformLayout();
             this.panel_content.ResumeLayout(false);
-            this.panel_content.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -278,6 +325,10 @@ namespace BrowserOverlay
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Panel panel_form;
+        private System.Windows.Forms.Button button_addTab;
+        private System.Windows.Forms.ListBox listBox_tabs;
+        private System.Windows.Forms.Button button_remove;
         private System.Windows.Forms.Panel panel_content;
     }
 }

@@ -51,7 +51,7 @@ namespace BrowserOverlay
             _dataConsumers = dataConsumers;
             _restarter = restarter;
             _browserOverlayConfiguration = _settings.GetConfiguration<Configuration>(BrowserOverlayConfigurationConfigEntry);
-            _browserOverlayConfiguration.OverlayConfiguration ??= new OverlayConfiguration();
+            _browserOverlayConfiguration.OverlayTabs ??= new List<OverlayTab> { new OverlayTab() };
 
             if (_browserOverlayConfiguration.Enabled && TextOverlayIsEnabled(_settings))
             {
@@ -69,7 +69,7 @@ namespace BrowserOverlay
 
         public void SendConfiguration()
         {
-            _dataConsumers.ForEach(x => x.Value.Handle("Sc-webOverlayConfiguration", JsonConvert.SerializeObject(_browserOverlayConfiguration.OverlayConfiguration)));
+            _dataConsumers.ForEach(x => x.Value.Handle("Sc-webOverlayConfiguration", JsonConvert.SerializeObject(_browserOverlayConfiguration.OverlayTabs)));
         }
 
         public static bool TextOverlayIsEnabled(ISettings settings)
@@ -159,26 +159,29 @@ namespace BrowserOverlay
     public class Configuration
     {
         public bool Enabled { get; set; } = true;
-        public OverlayConfiguration OverlayConfiguration { get; set; }
+        public List<OverlayTab> OverlayTabs { get; set; }
     }
-    public class OverlayConfiguration
+    public class OverlayTab
     {
         public string Url { get; set; } = "http://localhost:20727/overlays/SC_PP%20Counter/";
         public decimal Scale { get; set; } = 1;
         public Canvas Canvas { get; set; } = new Canvas();
         public Position Position { get; set; } = new Position();
+        public override string ToString() => $"{Url}, {Canvas}, {Position}, Scale:{Scale:0.###}";
     }
 
     public class Position
     {
         public int X = 0;
         public int Y = 0;
+        public override string ToString() => $"X:{X} Y:{Y}";
     }
 
     public class Canvas
     {
         public int Width = 500;
         public int Height = 90;
+        public override string ToString() => $"{Width}x{Height}";
     }
 
 }
