@@ -92,15 +92,15 @@ namespace OsuMemoryEventSource
 
             _currentMapId = osuData.Beatmap.Id;
             var isReplay = (bool)rawIsReplay;
-
             OsuStatus status = _currentStatus.Convert();
             status = status == OsuStatus.Playing && isReplay
                 ? OsuStatus.Watching
                 : status;
-
             var gameMode = osuData.GeneralData.GameMode;
-            var mapHash = osuData.Beatmap.Md5;
+            if (gameMode < 0 || gameMode > 3)
+                return;
 
+            var mapHash = osuData.Beatmap.Md5;
             var mods = osuData.GeneralData.Mods;
             if (status == OsuStatus.Playing || status == OsuStatus.Watching)
             {
