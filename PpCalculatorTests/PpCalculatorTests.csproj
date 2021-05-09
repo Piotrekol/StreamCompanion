@@ -17,7 +17,7 @@
 		  <Version>3.15.1</Version>
 	  </PackageReference>
 	  <PackageReference Include="StreamCompanionTypes">
-		  <Version>6.1.0</Version>
+		  <Version>6.2.0-int2</Version>
 	  </PackageReference>
 	  <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 	  <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

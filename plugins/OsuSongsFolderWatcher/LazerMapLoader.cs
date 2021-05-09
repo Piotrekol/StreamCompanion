@@ -1,53 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CollectionManager.DataTypes;
 using CollectionManager.Enums;
-using osu.Framework.Audio.Track;
-using osu.Framework.Extensions;
-using osu.Framework.Graphics.Textures;
-using osu.Game.Beatmaps;
-using osu.Game.Beatmaps.Formats;
-using osu.Game.IO;
-using osu.Game.Rulesets;
-using osu.Game.Rulesets.Catch;
-using osu.Game.Rulesets.Difficulty;
-using osu.Game.Rulesets.Mania;
 using osu.Game.Rulesets.Objects;
-using osu.Game.Rulesets.Osu;
-using osu.Game.Rulesets.Osu.Difficulty;
-using osu.Game.Rulesets.Taiko;
+using PpCalculator;
+using PpCalculatorTypes;
+using StreamCompanion.Common;
+using StreamCompanionTypes.DataTypes;
+using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Interfaces.Services;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
+using IBeatmap = osu.Game.Beatmaps.IBeatmap;
 
 namespace OsuSongsFolderWatcher
 {
-    public class LazerMapLoader
+    public static class LazerMapLoader
     {
-        public static LazerMapLoader Instance { get; } = new LazerMapLoader();
-
-        private LazerMapLoader()
-        { }
-
-        private Dictionary<int, Ruleset> Rulesets = new Dictionary<int, Ruleset>
+        
+        public static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> LoadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ILogger logger, CancellationToken cancellationToken)
         {
-            { 0 , new OsuRuleset() },
-            { 1 , new TaikoRuleset() },
-            { 2 , new CatchRuleset() },
-            { 3 , new ManiaRuleset() }
-        };
+            var createPpCalculatorTask = CreatePpCalculatorTask(osuFilePath, desiredPlayMode, mods, logger);
+            var iPpCalculator = await createPpCalculatorTask.GetValueAsync(cancellationToken);
+            if (iPpCalculator == null)
+                return (null, null);
 
-        /// <summary>
-        /// Prepares bare minimum information about beatmap
-        /// </summary>
-        /// <param name="file">beatmap path</param>
-        /// <returns></returns>
-        public Beatmap LoadBeatmap(string file)
+            var ppCalculator = (PpCalculator.PpCalculator)iPpCalculator;
+            var lazerBeatmap = ppCalculator!.PlayableBeatmap;
+
+            var mapAttributes = ppCalculator.AttributesAt(double.MaxValue);
+            var scBeatmap = ConvertToSCBeatmap(lazerBeatmap, mapAttributes, osuFilePath);
+
+            return (scBeatmap, createPpCalculatorTask);
+        }
+
+        private static Beatmap ConvertToSCBeatmap(IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes, string fullFilePath)
         {
-            var (lazerBeatmap, difficultyAttributes) = LoadLazerBeatmap(file);
-            if (lazerBeatmap == null)
-                return null;
-
             short circles, sliders, spinners;
             circles = sliders = spinners = 0;
             if (difficultyAttributes is OsuDifficultyAttributes osuAttributes)
@@ -57,6 +47,9 @@ namespace OsuSongsFolderWatcher
                 sliders = (short)osuAttributes.SliderCount;
             }
 
+            lazerBeatmap.BeatmapInfo.StarDifficulty = Math.Round(difficultyAttributes?.StarRating ?? 0, 2);
+            lazerBeatmap.BeatmapInfo.Length = CalculateLength(lazerBeatmap);
+            
             return new Beatmap
             {
                 PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID,
@@ -77,7 +70,7 @@ namespace OsuSongsFolderWatcher
                 SliderVelocity = lazerBeatmap.BeatmapInfo.BaseDifficulty.SliderMultiplier,
                 OverallDifficulty = lazerBeatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty,
                 Circles = circles,
-                Dir = Path.GetFileName(Path.GetDirectoryName(file)),
+                Dir = string.IsNullOrEmpty(fullFilePath) ? null : Path.GetFileName(Path.GetDirectoryName(fullFilePath)),
                 MapSetId = lazerBeatmap.BeatmapInfo.BeatmapSet?.OnlineBeatmapSetID ?? 0,
                 Mp3Name = lazerBeatmap.Metadata.AudioFile,
                 PreviewTime = Convert.ToInt32(lazerBeatmap.BeatmapInfo.Metadata.PreviewTime),
@@ -87,7 +80,7 @@ namespace OsuSongsFolderWatcher
                 StackLeniency = lazerBeatmap.BeatmapInfo.StackLeniency,
                 Tags = lazerBeatmap.Metadata.Tags ?? string.Empty,
                 TotalTime = Convert.ToInt32(lazerBeatmap.BeatmapInfo.Length),
-                OsuFileName = Path.GetFileName(file),
+                OsuFileName = string.IsNullOrEmpty(fullFilePath) ? null : Path.GetFileName(fullFilePath),
                 AudioOffset = 0,
                 DrainingTime = 0,
                 ThreadId = 0,
@@ -97,38 +90,7 @@ namespace OsuSongsFolderWatcher
             };
         }
 
-        private (IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes) LoadLazerBeatmap(string file)
-        {
-            IBeatmap lazerBeatmap;
-            DifficultyAttributes difficultyAttributes;
-            using (var raw = File.OpenRead(file))
-            using (var ms = new MemoryStream())
-            using (var sr = new LineBufferedReader(ms))
-            {
-                raw.CopyTo(ms);
-                ms.Position = 0;
-
-                var decoder = Decoder.GetDecoder<osu.Game.Beatmaps.Beatmap>(sr);
-                lazerBeatmap = decoder.Decode(sr);
-
-                lazerBeatmap.BeatmapInfo.Path = Path.GetFileName(file);
-                lazerBeatmap.BeatmapInfo.MD5Hash = ms.ComputeMD5Hash();
-
-                var ruleset = Rulesets.GetOrDefault(lazerBeatmap.BeatmapInfo.RulesetID);
-                if (ruleset == null)
-                    return (null, null);
-
-                lazerBeatmap.BeatmapInfo.Ruleset = ruleset.RulesetInfo;
-                difficultyAttributes = ruleset.CreateDifficultyCalculator(new DummyConversionBeatmap(lazerBeatmap)).Calculate();
-
-                lazerBeatmap.BeatmapInfo.StarDifficulty = Math.Round(difficultyAttributes?.StarRating ?? 0, 2);
-                lazerBeatmap.BeatmapInfo.Length = CalculateLength(lazerBeatmap);
-            }
-
-            return (lazerBeatmap, difficultyAttributes);
-        }
-
-        private double CalculateLength(IBeatmap b)
+        private static double CalculateLength(IBeatmap b)
         {
             if (!b.HitObjects.Any())
                 return 0;
@@ -142,19 +104,31 @@ namespace OsuSongsFolderWatcher
             return endTime - startTime;
         }
 
-        private class DummyConversionBeatmap : WorkingBeatmap
-        {
-            private readonly IBeatmap beatmap;
-
-            public DummyConversionBeatmap(IBeatmap beatmap)
-                : base(beatmap.BeatmapInfo, null)
+        private static CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorTask(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ILogger logger) =>
+            new CancelableAsyncLazy<IPpCalculator>((cancellationToken) =>
             {
-                this.beatmap = beatmap;
-            }
+                if (string.IsNullOrEmpty(osuFilePath))
+                    return Task.FromResult<IPpCalculator>(null);
 
-            protected override IBeatmap GetBeatmap() => beatmap;
-            protected override Texture GetBackground() => null;
-            protected override Track GetBeatmapTrack() => null;
-        }
+                var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)(desiredPlayMode ?? PlayMode.Osu), osuFilePath, null);
+                ppCalculator.Mods = (mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                try
+                {
+                    ppCalculator.Calculate(cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                //specifically for BeatmapInvalidForRulesetException (beatmap had invalid hitobject with missing position data)
+                catch (Exception e)
+                {
+                    e.Data["PreventedCrash"] = 1;
+                    logger.Log(e, LogLevel.Critical);
+                    return Task.FromResult<IPpCalculator>(null);
+                }
+
+                return Task.FromResult((IPpCalculator)ppCalculator);
+            });
     }
 }

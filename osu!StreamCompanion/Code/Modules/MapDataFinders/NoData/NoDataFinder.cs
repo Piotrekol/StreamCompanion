@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -23,14 +24,10 @@ namespace osu_StreamCompanion.Code.Modules.MapDataFinders.NoData
             _logger = logger;
         }
 
-        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
-        {
-            MapSearchResult mapSearchResult = new MapSearchResult(searchArgs);
+        public Task<IMapSearchResult> FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
+            => Task.FromResult<IMapSearchResult>(new MapSearchResult(searchArgs));
 
-            return mapSearchResult;
-        }
-
-        public OsuStatus SearchModes { get; } = OsuStatus.Playing|OsuStatus.Watching|OsuStatus.FalsePlaying|OsuStatus.Listening|OsuStatus.Null;
+        public OsuStatus SearchModes { get; } = OsuStatus.Playing | OsuStatus.Watching | OsuStatus.FalsePlaying | OsuStatus.Listening | OsuStatus.Null;
         public string SearcherName { get; } = "~NO DATA~";
     }
 }

@@ -120,27 +120,27 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             return mapSearchArgs;
         }
 
-        private Task HandleMapSearchArgs(IMapSearchArgs mapSearchArgs)
+        private async Task HandleMapSearchArgs(IMapSearchArgs mapSearchArgs)
         {
             if (mapSearchArgs == null)
-                return Task.CompletedTask;
+                return;
 
             _cancellationTokenSource = new CancellationTokenSource();
-            var mapSearchResult = FindBeatmaps(mapSearchArgs);
+            var mapSearchResult = await FindBeatmaps(mapSearchArgs);
             if (mapSearchResult == null)
-                return Task.CompletedTask;
+                return;
 
             if (!mapSearchResult.BeatmapsFound.Any() && mapSearchArgs.SourceName.Contains("OsuMemory"))
             {
                 _workerState.MemorySearchFailed = true;
-                return Task.CompletedTask;
+                return;
             }
 
             mapSearchResult.MapSource = mapSearchArgs.SourceName;
-            return HandleMapSearchResult(mapSearchResult);
+            await HandleMapSearchResult(mapSearchResult);
         }
 
-        private IMapSearchResult FindBeatmaps(IMapSearchArgs mapSearchArgs)
+        private async Task<IMapSearchResult> FindBeatmaps(IMapSearchArgs mapSearchArgs)
         {
             if (mapSearchArgs.MapId == 0 && string.IsNullOrEmpty(mapSearchArgs.MapHash) && string.IsNullOrEmpty(mapSearchArgs.Raw))
                 return null;
@@ -148,7 +148,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchArgs.EventType == OsuEventType.MapChange || _workerState.LastMapSearchResult == null || !_workerState.LastMapSearchResult.BeatmapsFound.Any())
             {
                 _logger.SetContextData("SearchingForBeatmaps", "1");
-                _workerState.LastMapSearchResult = _mainMapDataGetter.FindMapData(mapSearchArgs, _cancellationTokenSource.Token);
+                _workerState.LastMapSearchResult = await _mainMapDataGetter.FindMapData(mapSearchArgs, _cancellationTokenSource.Token);
                 _logger.SetContextData("SearchingForBeatmaps", "0");
                 return _workerState.LastMapSearchResult;
             }

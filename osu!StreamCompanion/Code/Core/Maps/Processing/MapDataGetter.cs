@@ -43,7 +43,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _settings = settings;
         }
 
-        public IMapSearchResult FindMapData(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
+        public async Task<IMapSearchResult> FindMapData(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
             IMapSearchResult mapSearchResult = null;
             IModsEx foundMods = null;
@@ -53,7 +53,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     continue;
                 try
                 {
-                    mapSearchResult = _mapDataFinders[i].FindBeatmap(searchArgs, cancellationToken);
+                    mapSearchResult = await _mapDataFinders[i].FindBeatmap(searchArgs, cancellationToken);
 
                 }
                 catch (Exception e)
@@ -85,7 +85,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             return Task.Run(async () =>
             {
-                mapSearchResult.SharedObjects.Add(CreatePpCalculatorTask(mapSearchResult));
+                if (await mapSearchResult.GetPpCalculator(CancellationToken.None) == null)
+                    mapSearchResult.SharedObjects.Add(CreatePpCalculatorTask(mapSearchResult));
+
                 await CreateTokens(mapSearchResult, cancellationToken);
                 if (cancellationToken.IsCancellationRequested)
                     return;

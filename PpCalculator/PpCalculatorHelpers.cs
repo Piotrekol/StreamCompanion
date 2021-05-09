@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace PpCalculator
@@ -50,8 +51,6 @@ namespace PpCalculator
             return GetPpCalculator(rulesetId);
         }
 
-
-
         /// <summary>
         /// Returns initalized performance calculator for specified ruleset(gamemode)<para/>
         /// Reuses provided calculator if possible
@@ -64,13 +63,18 @@ namespace PpCalculator
             => InternalGetPpCalculator(rulesetId, file, ppCalculator, 0);
 
         private static PpCalculator InternalGetPpCalculator(int rulesetId, string file, PpCalculator ppCalculator,
-            int retryCount)
+            int retryCount, ProcessorWorkingBeatmap workingBeatmap = null)
         {
             if (rulesetId != ppCalculator?.RulesetId)
                 ppCalculator = GetPpCalculator(rulesetId);
             try
             {
-                ppCalculator?.PreProcess(new ProcessorWorkingBeatmap(file));
+                workingBeatmap ??= new ProcessorWorkingBeatmap(file);
+                //Check if picked ruleset is valid for loaded beatmap
+                if (GetRulesetId(workingBeatmap.RulesetID, rulesetId) != rulesetId)
+                    return InternalGetPpCalculator(workingBeatmap.RulesetID, file, ppCalculator, retryCount, workingBeatmap);
+
+                ppCalculator?.PreProcess(workingBeatmap);
             }
             catch (IOException)
             {

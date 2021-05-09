@@ -18,7 +18,7 @@ namespace PpCalculator
     public abstract class PpCalculator : IPpCalculator, ICloneable
     {
         public ProcessorWorkingBeatmap WorkingBeatmap { get; protected set; }
-        protected IBeatmap PlayableBeatmap { get; set; }
+        public IBeatmap PlayableBeatmap { get; set; }
         protected abstract Ruleset Ruleset { get; }
 
         public virtual double Accuracy { get; set; } = 100;

@@ -44,6 +44,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Code\Modules\MapDataGetters\**" />
+    <EmbeddedResource Remove="Code\Modules\MapDataGetters\**" />
+    <None Remove="Code\Modules\MapDataGetters\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Update="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
       <Private>False</Private>
@@ -79,9 +84,6 @@
     <EmbeddedResource Include="Resources\logo_256x256.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Code\Modules\MapDataGetters\" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.7.1 %28x86 and x64%29</ProductName>
@@ -110,7 +112,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Sentry" Version="3.0.0" />
     <PackageReference Include="SharpCompress" Version="0.26.0" />
-    <PackageReference Include="StreamCompanionTypes" version="6.1.0" />
+    <PackageReference Include="StreamCompanionTypes" version="6.2.0-int2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

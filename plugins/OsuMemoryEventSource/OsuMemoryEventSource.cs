@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
 using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 using OsuMemoryDataProvider.OsuMemoryModels.Direct;
@@ -51,7 +52,7 @@ namespace OsuMemoryEventSource
             return userSettings;
         }
 
-        public IMapSearchResult FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
+        public Task<IMapSearchResult> FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
             if (!Started)
                 return null;
@@ -62,9 +63,9 @@ namespace OsuMemoryEventSource
             var result = new MapSearchResult(searchArgs);
 
             if (!Started || !_settings.Get<bool>(_names.EnableMemoryScanner))
-                return result;
+                return Task.FromResult<IMapSearchResult>(result);
 
-            var mods = ReadMods(searchArgs);
+            var mods = (int)searchArgs.Mods;
             result.Mods = GetModsEx(mods);
 
             Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Debug);
@@ -76,43 +77,9 @@ namespace OsuMemoryEventSource
                 result.Mods = null;
             }
 
-            return result;
+            return Task.FromResult<IMapSearchResult>(result);
         }
-        private int ReadMods(IMapSearchArgs searchArgs, int retryCount = 0)
-        {
-            if (searchArgs is MemoryMapSearchArgs memorySearchArgs)
-                return memorySearchArgs.Mods;
 
-            int mods;
-            if (searchArgs.Status == OsuStatus.Playing || searchArgs.Status == OsuStatus.Watching)
-            {
-                Thread.Sleep(250);
-
-                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.Player, nameof(Player.Mods), out var rawMods)
-                    ? ((OsuMemoryDataProvider.OsuMemoryModels.Abstract.Mods)rawMods)?.Value ?? -1
-                    : -1;
-            }
-            else
-            {
-                mods = MemoryReader.TryReadProperty(MemoryReader.OsuMemoryAddresses.GeneralData, nameof(GeneralData.Mods), out var rawMods)
-                    ? (int)rawMods
-                    : -1;
-            }
-
-            if ((mods < 0 || Helpers.IsInvalidCombination((Mods)mods)))
-            {
-                if (retryCount < 5)
-                {
-                    Logger.Log($"Mods read attempt failed - retrying (attempt {retryCount}); Status: {searchArgs.Status}; read: {(Mods)mods}({mods})", LogLevel.Debug);
-                    return ReadMods(searchArgs, ++retryCount);
-                }
-
-                Logger.Log($"Mods read attempt failed after {retryCount} retries; Status: {searchArgs.Status}", LogLevel.Debug);
-                mods = 0;
-            }
-
-            return mods;
-        }
         private IModsEx GetModsEx(int modsValue)
         {
             return _modParser?.GetModsFromEnum(modsValue);
