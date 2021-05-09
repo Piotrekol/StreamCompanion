@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -19,7 +19,7 @@ namespace OsuSongsFolderWatcher
 {
     public static class LazerMapLoader
     {
-        
+
         public static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> LoadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ILogger logger, CancellationToken cancellationToken)
         {
             var createPpCalculatorTask = CreatePpCalculatorTask(osuFilePath, desiredPlayMode, mods, logger);
@@ -31,12 +31,12 @@ namespace OsuSongsFolderWatcher
             var lazerBeatmap = ppCalculator!.PlayableBeatmap;
 
             var mapAttributes = ppCalculator.AttributesAt(double.MaxValue);
-            var scBeatmap = ConvertToSCBeatmap(lazerBeatmap, mapAttributes, osuFilePath);
+            var scBeatmap = ConvertToSCBeatmap(lazerBeatmap, mapAttributes, osuFilePath, mods.Mods);
 
             return (scBeatmap, createPpCalculatorTask);
         }
 
-        private static Beatmap ConvertToSCBeatmap(IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes, string fullFilePath)
+        private static Beatmap ConvertToSCBeatmap(IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes, string fullFilePath, Mods mods)
         {
             short circles, sliders, spinners;
             circles = sliders = spinners = 0;
@@ -60,7 +60,7 @@ namespace OsuSongsFolderWatcher
                 DiffName = lazerBeatmap.BeatmapInfo.Version ?? string.Empty,
                 Md5 = lazerBeatmap.BeatmapInfo.MD5Hash,
                 MapId = lazerBeatmap.BeatmapInfo.OnlineBeatmapID ?? 0,
-                ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID, new StarRating { { (int)Mods.Omod, lazerBeatmap.BeatmapInfo.StarDifficulty } } } },
+                ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID, new StarRating { { (int)(mods & Mods.MapChanging), lazerBeatmap.BeatmapInfo.StarDifficulty } } } },
                 MainBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMode),
                 MinBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMinimum),
                 MaxBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMaximum),
