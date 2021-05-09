@@ -44,7 +44,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="StreamCompanionTypes">
-			<Version>6.2.0-int2</Version>
+			<Version>7.0.0</Version>
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
 	</ItemGroup>

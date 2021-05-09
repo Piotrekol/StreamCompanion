@@ -112,7 +112,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Sentry" Version="3.0.0" />
     <PackageReference Include="SharpCompress" Version="0.26.0" />
-    <PackageReference Include="StreamCompanionTypes" version="6.2.0-int2" />
+    <PackageReference Include="StreamCompanionTypes" version="7.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
