@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Versioning;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -59,6 +61,11 @@ namespace OsuMemoryEventSource
 
         protected bool MemoryPoolingIsEnabled = false;
 
+        [SupportedOSPlatform("windows")]
+        static bool IsElevated =>
+            WindowsIdentity.GetCurrent().Owner?
+                .IsWellKnown(WellKnownSidType.BuiltinAdministratorsSid) ?? false;
+
         public OsuMemoryEventSourceBase(IContextAwareLogger logger, ISettings settings,
             IDatabaseController databaseControler, IModParser modParser,
             List<Lazy<IHighFrequencyDataConsumer>> highFrequencyDataConsumers, ISaver saver, Delegates.Exit exiter)
@@ -73,6 +80,11 @@ namespace OsuMemoryEventSource
             var clientCount = _settings.Get<bool>(TourneyMode)
                 ? _settings.Get<int>(ClientCount)
                 : 1;
+
+            if (OperatingSystem.IsWindows() && IsElevated)
+            {
+                Logger.Log("StreamCompanion is running as administrator/in elevated mode. This might cause issues!", LogLevel.Warning);
+            }
 
             if (_settings.Get<bool>(TourneyMode))
             {
