@@ -42,7 +42,11 @@ namespace OsuSongsFolderWatcher
             try
             {
                 result = await LazerMapLoader.LoadLazerBeatmapWithPerformanceCalculator(args.OsuFilePath, args.PlayMode,
-                    _modParser.GetModsFromEnum((int)args.Mods), _logger, cancellationToken);
+                    _modParser.GetModsFromEnum((int) args.Mods), _logger, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
