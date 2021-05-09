@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -48,8 +48,7 @@ namespace OsuSongsFolderWatcher
             }
 
             lazerBeatmap.BeatmapInfo.StarDifficulty = Math.Round(difficultyAttributes?.StarRating ?? 0, 2);
-            lazerBeatmap.BeatmapInfo.Length = CalculateLength(lazerBeatmap);
-            
+
             return new Beatmap
             {
                 PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID,
@@ -79,10 +78,10 @@ namespace OsuSongsFolderWatcher
                 Spinners = spinners,
                 StackLeniency = lazerBeatmap.BeatmapInfo.StackLeniency,
                 Tags = lazerBeatmap.Metadata.Tags ?? string.Empty,
-                TotalTime = Convert.ToInt32(lazerBeatmap.BeatmapInfo.Length),
+                TotalTime = Convert.ToInt32(CalculateLength(lazerBeatmap)),
                 OsuFileName = string.IsNullOrEmpty(fullFilePath) ? null : Path.GetFileName(fullFilePath),
                 AudioOffset = 0,
-                DrainingTime = 0,
+                DrainingTime = Convert.ToInt32(CalculateLength(lazerBeatmap, true)),
                 ThreadId = 0,
                 EditDate = DateTime.UtcNow,
                 LastPlayed = DateTime.MinValue,
@@ -90,17 +89,18 @@ namespace OsuSongsFolderWatcher
             };
         }
 
-        private static double CalculateLength(IBeatmap b)
+        private static double CalculateLength(IBeatmap b, bool drain = false)
         {
             if (!b.HitObjects.Any())
                 return 0;
 
             var lastObject = b.HitObjects.Last();
-
             //TODO: this isn't always correct (consider mania where a non-last object may last for longer than the last in the list).
             double endTime = lastObject.GetEndTime();
-            double startTime = b.HitObjects.First().StartTime;
+            if (!drain)
+                return endTime;
 
+            double startTime = b.HitObjects.First().StartTime;
             return endTime - startTime;
         }
 
