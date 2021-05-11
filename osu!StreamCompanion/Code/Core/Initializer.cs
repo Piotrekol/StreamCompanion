@@ -77,7 +77,6 @@ namespace osu_StreamCompanion.Code.Core
             DiContainer.Container.Locate<Updater>();
             DiContainer.Container.Locate<FirstRun>();
 
-            DiContainer.Container.Locate<IDatabaseController>();
             DiContainer.Container.Locate<OsuPathResolver>();
             DiContainer.Container.Locate<OsuFallbackDetector>();
 
