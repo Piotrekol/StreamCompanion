@@ -3,12 +3,15 @@ using OsuMemoryDataProvider;
 using StreamCompanionTypes.DataTypes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 using OsuMemoryDataProvider.OsuMemoryModels.Direct;
+using StreamCompanion.Common;
 using StreamCompanion.Common.Helpers;
+using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
@@ -25,7 +28,7 @@ namespace OsuMemoryEventSource
         private int _lastGameMode = -1;
         private int _lastRetries = -1;
         private int _lastTime = -1;
-        private readonly IToken _osuIsRunningToken = OsuMemoryEventSourceBase.LiveTokenSetter("osuIsRunning", false, TokenType.Live, null, false);
+        private readonly IToken _osuIsRunningToken = OsuMemoryEventSourceBase.LiveTokenSetter("osuIsRunning", 0, TokenType.Live, null, 0);
         private DateTime _nextReplayRetryAllowedAt = DateTime.MinValue;
         private OsuMemoryStatus _lastStatus = OsuMemoryStatus.Unknown;
         private OsuMemoryStatus _lastStatusLog = OsuMemoryStatus.Unknown;
@@ -64,7 +67,7 @@ namespace OsuMemoryEventSource
 
             var canRead = reader.CanRead;
             _osuIsRunningToken.Value = canRead ? 1 : 0;
-            
+
             if (!canRead || !reader.TryRead(osuData.GeneralData))
                 return;
 
@@ -84,7 +87,7 @@ namespace OsuMemoryEventSource
                 return;
             }
 
-            if (!reader.TryRead(osuData.Beatmap))
+            if (!reader.TryRead(osuData.Beatmap) || !TryGetOsuFileLocation(osuData.Beatmap, out var osuFileLocation))
                 return;
 
             if (!reader.TryReadProperty(osuData.Player, nameof(Player.IsReplay), out var rawIsReplay))
@@ -169,20 +172,37 @@ namespace OsuMemoryEventSource
                     },
                     s => (s.validRead, s.Item2), 5) ?? string.Empty;
 
-                NewOsuEvent?.Invoke(this, new MemoryMapSearchArgs(osuEventType.Value)
+                NewOsuEvent?.Invoke(this, new MapSearchArgs("OsuMemory",osuEventType.Value)
                 {
                     MapId = _currentMapId,
                     Status = status,
                     Raw = rawString,
                     MapHash = mapHash,
                     PlayMode = (PlayMode)gameMode,
-                    Mods = mods
+                    Mods = (CollectionManager.DataTypes.Mods)mods,
+                    OsuFilePath = osuFileLocation
                 });
             }
 
             for (int i = 0; i < clientReaders.Count; i++)
             {
                 _memoryDataProcessors[i].Tick(status, _currentStatus, clientReaders[i]);
+            }
+        }
+
+        private bool TryGetOsuFileLocation(CurrentBeatmap memoryBeatmap, out string osuFileLocation)
+        {
+            try
+            {
+                var songsLocation = _settings.GetFullSongsLocation();
+                osuFileLocation = Path.Combine(songsLocation, memoryBeatmap.FolderName, memoryBeatmap.OsuFileName);
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                //we have garbage data in either FolderName or OsuFileName
+                osuFileLocation = null;
+                return false;
             }
         }
 

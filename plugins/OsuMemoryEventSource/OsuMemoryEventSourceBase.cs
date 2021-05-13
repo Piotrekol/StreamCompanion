@@ -46,7 +46,6 @@ namespace OsuMemoryEventSource
         public string UpdateUrl { get; } = "";
 
         protected List<Lazy<IHighFrequencyDataConsumer>> _highFrequencyDataConsumers;
-        protected IDatabaseController _databaseController;
         protected IModParser _modParser;
         protected ISettings _settings;
         internal static IContextAwareLogger Logger;
@@ -67,11 +66,9 @@ namespace OsuMemoryEventSource
                 .IsWellKnown(WellKnownSidType.BuiltinAdministratorsSid) ?? false;
 
         public OsuMemoryEventSourceBase(IContextAwareLogger logger, ISettings settings,
-            IDatabaseController databaseControler, IModParser modParser,
-            List<Lazy<IHighFrequencyDataConsumer>> highFrequencyDataConsumers, ISaver saver, Delegates.Exit exiter)
+            IModParser modParser, List<Lazy<IHighFrequencyDataConsumer>> highFrequencyDataConsumers, ISaver saver, Delegates.Exit exiter)
         {
             _settings = settings;
-            _databaseController = databaseControler;
             _modParser = modParser;
             _highFrequencyDataConsumers = highFrequencyDataConsumers;
             Logger = logger;

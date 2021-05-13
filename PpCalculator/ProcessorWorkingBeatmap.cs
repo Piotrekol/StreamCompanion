@@ -14,6 +14,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using osu.Framework.Extensions;
 using osu.Game.IO;
 using osu.Game.Rulesets.Objects.Types;
 
@@ -66,7 +67,12 @@ namespace PpCalculator
             {
                 using (var stream = File.OpenRead(filename))
                 using (var streamReader = new LineBufferedReader(stream))
-                    return Decoder.GetDecoder<Beatmap>(streamReader).Decode(streamReader);
+                {
+                    var beatmap = Decoder.GetDecoder<Beatmap>(streamReader).Decode(streamReader);
+                    stream.Position = 0;
+                    beatmap.BeatmapInfo.MD5Hash = stream.ComputeMD5Hash();
+                    return beatmap;
+                }
             }
             catch (IOException)
             {
