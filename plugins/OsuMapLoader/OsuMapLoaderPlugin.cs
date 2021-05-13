@@ -34,7 +34,7 @@ namespace OsuSongsFolderWatcher
 
             if (!File.Exists(args.OsuFilePath))
             {
-                _logger.Log("Osu file supplied in search args was not found on disk!", LogLevel.Error);
+                _logger.Log($"Osu file supplied in search args was not found on disk! ({args.OsuFilePath})", LogLevel.Error);
                 return null;
             }
 
