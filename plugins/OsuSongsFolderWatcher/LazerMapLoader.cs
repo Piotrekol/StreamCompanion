@@ -68,6 +68,7 @@ namespace OsuSongsFolderWatcher
                 CircleSize = lazerBeatmap.BeatmapInfo.BaseDifficulty.CircleSize,
                 SliderVelocity = lazerBeatmap.BeatmapInfo.BaseDifficulty.SliderMultiplier,
                 OverallDifficulty = lazerBeatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty,
+                HpDrainRate = lazerBeatmap.BeatmapInfo.BaseDifficulty.DrainRate,
                 Circles = circles,
                 Dir = string.IsNullOrEmpty(fullFilePath) ? null : Path.GetFileName(Path.GetDirectoryName(fullFilePath)),
                 MapSetId = lazerBeatmap.BeatmapInfo.BeatmapSet?.OnlineBeatmapSetID ?? 0,
