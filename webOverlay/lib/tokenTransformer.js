@@ -48,7 +48,7 @@ function transformTokens(tokens) {
         },
       },
       mods: {
-        num: t['modsEnum'], //TODO: expose raw number value
+        num: t['modsEnum'],
         str: t['mods'].replace(/,/g, ''),
       },
       pp: {
@@ -187,7 +187,7 @@ function transformTokens(tokens) {
         score: t['score'],
         maxCombo: t['combo'],
         mods: {
-          num: 0,
+          num: t['modsEnum'],
           str: t['mods'].replace(/,/g, ''),
         },
       },
