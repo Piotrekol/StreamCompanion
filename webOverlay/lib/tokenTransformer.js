@@ -55,8 +55,8 @@ function transformTokens(tokens) {
         100: t['osu_mSSPP'],
         99: t['osu_m99PP'],
         98: t['osu_m98PP'],
-        97: 404, //TODO: add to pp calc
-        96: 404, //TODO: add to pp calc
+        97: t['osu_m97PP'],
+        96: t['osu_m96PP'],
         95: t['osu_m95PP'],
         strains: t['mapStrains'],
       },
