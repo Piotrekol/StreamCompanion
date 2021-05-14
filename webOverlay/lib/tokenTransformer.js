@@ -5,7 +5,7 @@ function transformTokens(tokens) {
       state: t['rawStatus'],
       skinFolder: t['skin'],
       gameMode: t['gameMode'],
-      isChatEnabled: 0, //TODO: missing value in SC
+      isChatEnabled: t['chatIsEnabled'],
       bm: {
         time: {
           firstObj: 6963, //TODO: expose in SC

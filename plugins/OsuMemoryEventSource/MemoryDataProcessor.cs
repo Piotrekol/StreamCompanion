@@ -411,6 +411,7 @@ namespace OsuMemoryEventSource
             });
 
             CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, leaderBoardSerializerSettings));
+            CreateLiveToken("chatIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ChatIsExpanded ? 1 : 0);
         }
 
         private void SerializationError(object sender, ErrorEventArgs e)
