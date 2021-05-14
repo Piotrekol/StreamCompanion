@@ -40,10 +40,10 @@ function transformTokens(tokens) {
           memoryHP: t['mHP'], //^
         },
         path: {
-          full: '509341 REOL - YoiYoi Kokon\\bg.jpg', //TODO: expose image name alone then do dir+'\\'+imagename
+          full: `${t['dir']}\\${t['backgroundImageFileName']}`,
           folder: t['dir'],
           file: t['osuFileName'],
-          bg: 'bg.jpg', //TODO: expose imagename
+          bg: t['backgroundImageFileName'],
           audio: t['mp3Name'],
         },
       },
