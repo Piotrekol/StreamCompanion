@@ -69,6 +69,7 @@ namespace ModsHandler
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < float.Epsilon ? c["MinBpm"].ToString("0") : $"{c["MinBpm"]:0}-{c["MaxBpm"]:0} ({c["MainBpm"]:0})";
 
                 _tokenSetter("mods", map.Mods?.ShownMods);
+                _tokenSetter("modsEnum", map.Mods?.Mods);
                 _tokenSetter("mAR", Math.Round(c["AR"], 2));
                 _tokenSetter("mCS", Math.Round(c["CS"], 2));
                 _tokenSetter("mOD", Math.Round(c["OD"], 2));

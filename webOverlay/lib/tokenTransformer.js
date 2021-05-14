@@ -48,7 +48,7 @@ function transformTokens(tokens) {
         },
       },
       mods: {
-        num: 16, //TODO: expose raw number value
+        num: t['modsEnum'], //TODO: expose raw number value
         str: t['mods'].replace(/,/g, ''),
       },
       pp: {
