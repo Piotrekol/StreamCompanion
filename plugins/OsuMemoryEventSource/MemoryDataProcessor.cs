@@ -473,8 +473,8 @@ namespace OsuMemoryEventSource
                 return;
 
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
-            _strainsToken.Value = ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
             _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
+            _strainsToken.Value = ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
         }
 
         private void SetSkinTokens()

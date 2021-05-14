@@ -23,6 +23,7 @@ namespace PpCalculatorTypes
         double Calculate(CancellationToken cancellationToken, double? endTime = null, Dictionary<string, double> categoryAttribs = null);
         int GetMaxCombo(int? fromTime = null);
         bool IsBreakTime(double time);
+        double FirstHitObjectTime();
         object Clone();
     }
 }
