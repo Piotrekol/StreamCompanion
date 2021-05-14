@@ -8,10 +8,10 @@ function transformTokens(tokens) {
       isChatEnabled: t['chatIsEnabled'],
       bm: {
         time: {
-          firstObj: 6963, //TODO: expose in SC
-          current: 21984, //TODO: expose in SC
+          firstObj: t['firstHitObjectTime'],
+          current: t['time'],
           full: t['totaltime'],
-          mp3: 269836,
+          mp3: t['time'],
         },
         id: t['mapid'],
         set: t['mapsetid'],
