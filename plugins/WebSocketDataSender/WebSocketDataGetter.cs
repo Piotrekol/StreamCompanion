@@ -202,14 +202,14 @@ namespace WebSocketDataSender
         {
             var songsLocation = _settings.GetFullSongsLocation();
             var errorMessage = $"Couldn't find songs folder at \"{songsLocation}\", /songs/ web endpoint has been disabled";
-            return CreateFolderModule(songsLocation, "/songs/", errorMessage);
+            return CreateFolderModule(songsLocation, "/Songs/", errorMessage);
         }
 
         private IWebModule CreateSkinsModule()
         {
             var skinsLocation = _settings.GetFullSkinsLocation();
             var errorMessage = $"Couldn't find skins folder at \"{skinsLocation}\", /skins/ web endpoint has been disabled";
-            return CreateFolderModule(skinsLocation, "/skins/", errorMessage);
+            return CreateFolderModule(skinsLocation, "/Skins/", errorMessage);
         }
 
         private IWebModule CreateFolderModule(string location, string baseRoute, string missingFolderErrorMessage)
