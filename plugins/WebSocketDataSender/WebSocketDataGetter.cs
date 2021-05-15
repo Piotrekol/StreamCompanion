@@ -132,8 +132,12 @@ namespace WebSocketDataSender
 
         private Task ListOverlays(IHttpContext context)
         {
+            var overlaysDir = Path.Combine(HttpContentRoot(_saver), "overlays");
+            var overlayIndexFileName = "index.html";
+            var fullPaths = Directory.GetFiles(overlaysDir, overlayIndexFileName, SearchOption.AllDirectories);
+            var relativePaths = fullPaths.Select(p => p.Substring(overlaysDir.Length + 1, p.Length - overlaysDir.Length - overlayIndexFileName.Length - 2));
             return context.SendStringAsync(
-                JsonConvert.SerializeObject(Directory.EnumerateDirectories(Path.Combine(HttpContentRoot(_saver), "overlays")).Select(x => Path.GetFileName(x))),
+                JsonConvert.SerializeObject(relativePaths),
                 "application/json", Encoding.UTF8);
         }
 
