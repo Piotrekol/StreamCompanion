@@ -84,7 +84,7 @@ function transformTokens(tokens) {
         0: t['miss'],
         sliderBreaks: t['sliderBreaks'],
         grade: {
-          current: osuGrade[t['grade']],
+          current: window.overlay.osuGrade[t['grade']],
           maxThisPlay: 'A', //TODO: ?
         },
         unstableRate: t['unstableRate'],
@@ -287,6 +287,7 @@ function CreateProxiedReconnectingWebSocket(url) {
     'unstableRate',
     'username',
   ];
+
   let rws = watchTokens(tokenNames, (values) => {
     Object.assign(tokensCache, values);
     proxy.onmessage({ data: JSON.stringify(transformTokens(tokensCache)) });

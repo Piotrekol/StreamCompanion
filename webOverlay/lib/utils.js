@@ -61,10 +61,10 @@ function _GetToken(rws, tokens, tokenName, decimalPlaces) {
     return '';
 }
 
-function _GetWebOverlaySettings(){
-      return fetch(`${config.getUrl()}/settings`)
-        .then((response) => response.json())
-        .then((responseData) => JSON.parse(responseData.WebOverlay_Config));
+function _GetWebOverlaySettings() {
+  return fetch(`${window.overlay.config.getUrl()}/settings`)
+    .then((response) => response.json())
+    .then((responseData) => JSON.parse(responseData.WebOverlay_Config));
 }
 
 function _IsInStatus(rws, tokens, osuStatuses) {

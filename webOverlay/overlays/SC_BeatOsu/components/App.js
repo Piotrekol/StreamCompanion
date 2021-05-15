@@ -39,7 +39,7 @@ const app = {
       mapTime,
       mapTimePercent,
       progressStyle,
-      osuGrade,
+      osuGrade: window.overlay.osuGrade,
     };
   },
 };

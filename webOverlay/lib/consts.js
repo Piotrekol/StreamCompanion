@@ -1,4 +1,4 @@
-let config = {
+(()=>{let config = {
   scheme: window.location.protocol.slice(0, -1),
   host: window.location.hostname,
   port: window.location.port,
@@ -13,6 +13,14 @@ let osuStatus = {
   Watching: 8,
   Editing: 16,
   ResultsScreen: 32,
+};
+let osuStatusFriendly = {
+  Null: { text: 'Null', value: 0 },
+  Listening: { text: 'Listening', value: 1 },
+  Playing: { text: 'Playing', value: 2 },
+  Watching: { text: 'Watching', value: 8 },
+  Editing: { text: 'Editing', value: 16 },
+  ResultsScreen: { text: 'ResultsScreen', value: 32 },
 };
 
 let rawOsuStatus = {
@@ -35,7 +43,28 @@ let rawOsuStatus = {
   RankingTeam: 18,
   ProcessingBeatmaps: 19,
   Tourney: 22,
-}
+};
+let rawOsuStatusFriendly = {
+  Unknown: { text: 'Unknown', value: -2 },
+  NotRunning: { text: 'NotRunning', value: -1 },
+  MainMenu: { text: 'Main Menu', value: 0 },
+  EditingMap: { text: 'Editing Map', value: 1 },
+  Playing: { text: 'Playing', value: 2 },
+  //GameShutdownAnimation: { text: 'GameShutdownAnimation', value: 3 },
+  SongSelectEdit: { text: 'Editing beatmap', value: 4 },
+  SongSelect: { text: 'Selecting song', value: 5 },
+  ResultsScreen: { text: 'Results screen', value: 7 },
+  //GameStartupAnimation: { text: 'GameStartupAnimation', value: 10 },
+  MultiplayerRooms: { text: 'Multiplayer Room selection', value: 11 },
+  MultiplayerRoom: { text: 'Multiplayer lobby', value: 12 },
+  MultiplayerSongSelect: { text: 'Multiplayer song selection', value: 13 },
+  MultiplayerResultsscreen: { text: 'Multiplayer results screen', value: 14 },
+  OsuDirect: { text: 'OsuDirect', value: 15 },
+  RankingTagCoop: { text: 'Multiplayer TagCoop results screen', value: 17 },
+  RankingTeam: { text: 'Multiplayer Teams results screen', value: 18 },
+  ProcessingBeatmaps: { text: 'Processing beatmaps', value: 19 },
+  Tourney: { text: 'Tourney manager', value: 22 },
+};
 
 let osuGrade = {
   0: 'SSH',
@@ -49,10 +78,15 @@ let osuGrade = {
   8: 'F',
   9: '',
 };
-
 window.overlay = {
   osuStatus,
+  osuStatusFriendly,
   rawOsuStatus,
+  rawOsuStatusFriendly,
   osuGrade,
   config,
 };
+
+})();
+
+
