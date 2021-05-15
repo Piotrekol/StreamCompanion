@@ -9,14 +9,14 @@ function transformTokens(tokens) {
       bm: {
         time: {
           firstObj: t['firstHitObjectTime'],
-          current: t['time'],
+          current: t['time']*1000,
           full: t['totaltime'],
-          mp3: t['time'],
+          mp3: t['totaltime'],
         },
         id: t['mapid'],
         set: t['mapsetid'],
         md5: t['md5'],
-        rankedStatus: t['state'],
+        rankedStatus: 0,//TODO: t['state'] gives state as a string (Approved/not updated..) instead of expected number & after lazer loader refactor seems to always return not updated
         metadata: {
           artist: t['artistRoman'],
           title: t['titleRoman'],
@@ -28,7 +28,7 @@ function transformTokens(tokens) {
           CS: t['mCS'],
           OD: t['mOD'],
           HP: t['mHP'],
-          SR: t['liveStars'],
+          SR: t['liveStarRating'],
           BPM: {
             min: t['minBpm'],
             max: t['maxBpm'],
@@ -249,7 +249,7 @@ function CreateProxiedReconnectingWebSocket(url) {
     'grade',
     'hitErrors',
     'katu',
-    'liveStars',
+    'liveStarRating',
     'mapid',
     'mapsetid',
     'mapStrains',
