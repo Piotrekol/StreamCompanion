@@ -268,7 +268,7 @@ function CreateProxiedReconnectingWebSocket(url) {
 
   let rws = watchTokens(tokenNames, (values) => {
     Object.assign(tokensCache, values);
-    proxy.onmessage({ data: JSON.stringify(transformTokens(tokensCache)) });
+    proxy.onmessage({ data:transformTokens(tokensCache)});
   });
 
   let origOnOpen = rws.onopen;
