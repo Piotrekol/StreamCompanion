@@ -114,67 +114,13 @@ function transformTokens(tokens) {
           count: 0,
         },
       },
-      leaderboard: {
-        hasLeaderboard: true,
-        isVisible: true,
-        ourplayer: {
-          name: 'Piotrekol',
-          score: 1470,
-          combo: 6,
-          maxCombo: 6,
-          mods: 'NM',
-          h300: 3,
-          h100: 0,
-          h50: 0,
-          h0: 0,
-          team: 0,
-          position: 3,
-          isPassing: 1,
-        },
-        slots: [
-          {
-            name: 'Piotrekol',
-            score: 9783580,
-            combo: 0,
-            maxCombo: 500,
-            mods: 'NM',
-            h300: 1185,
-            h100: 45,
-            h50: 1,
-            h0: 10,
-            team: 0,
-            position: 1,
-            isPassing: 1,
-          },
-          {
-            name: 'Piotrekol',
-            score: 8652960,
-            combo: 0,
-            maxCombo: 484,
-            mods: 'NM',
-            h300: 1167,
-            h100: 52,
-            h50: 0,
-            h0: 22,
-            team: 0,
-            position: 2,
-            isPassing: 1,
-          },
-          {
-            name: 'Piotrekol',
-            score: 1470,
-            combo: 6,
-            maxCombo: 6,
-            mods: 'NM',
-            h300: 3,
-            h100: 0,
-            h50: 0,
-            h0: 0,
-            team: 0,
-            position: 3,
-            isPassing: 1,
-          },
-        ],
+      rawLeaderboard: t['leaderBoardPlayers'],
+      rawLeaderboardMainPlayer: t['leaderBoardMainPlayer'],
+      cachedLeaderboard: null,
+      get leaderboard() {
+        return this.cachedLeaderboard !== null
+          ? this.cachedLeaderboard
+          : (this.cachedLeaderboard = convertSCLeaderBoard(this.rawLeaderboard, this.rawLeaderboardMainPlayer));
       },
       resultsScreen: {
         300: t['c300'],
@@ -221,6 +167,35 @@ function transformTokens(tokens) {
   };
 }
 
+function convertSCLeaderBoard(rawPlayers, rawMainPlayer) {
+  let players = JSON.parse(rawPlayers) || {};
+  let mainPlayer = JSON.parse(rawMainPlayer) || {};
+
+  return {
+    hasLeaderboard: players.length > 0,
+    isVisible: mainPlayer.IsLeaderboardVisible || false,
+    ourplayer: convertSCPlayerSlot(mainPlayer),
+    slots: players.map((p) => convertSCPlayerSlot(p)),
+  };
+}
+
+function convertSCPlayerSlot(player) {
+  return {
+    name: player.Username,
+    score: player.Score,
+    combo: player.Combo,
+    maxCombo: player.MaxCombo,
+    mods: player.Mods ? player.Mods.Value : 0, //TODO: this should be returning mod string instead of enum
+    h300: player.Hit300,
+    h100: player.Hit100,
+    h50: player.Hit50,
+    h0: player.HitMiss,
+    team: player.Team,
+    position: player.Position,
+    isPassing: player.IsPassing,
+  };
+}
+
 function CreateProxiedReconnectingWebSocket(url) {
   const tokensCache = {};
 
@@ -231,6 +206,9 @@ function CreateProxiedReconnectingWebSocket(url) {
     //onmessage,
   };
   const tokenNames = [
+    'leaderBoardPlayers',
+    'leaderBoardMainPlayer',
+    'ingameInterfaceIsEnabled',
     'acc',
     'artistRoman',
     'backgroundImageFileName',
