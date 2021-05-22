@@ -1,6 +1,9 @@
 function transformTokens(tokens) {
   const t = tokens;
   return {
+    settings: {
+      showInterface: t['ingameInterfaceIsEnabled'] || 0,
+    },
     menu: {
       state: t['rawStatus'],
       skinFolder: t['skin'],
