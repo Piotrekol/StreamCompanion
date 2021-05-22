@@ -39,6 +39,7 @@ namespace OsuMemoryEventSource
 
         private IToken _strainsToken;
         private IToken _firstHitObjectTimeToken;
+        private IToken _beatmapRankedStatusToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
 
@@ -87,6 +88,8 @@ namespace OsuMemoryEventSource
             _skinToken = _tokenSetter("skin", string.Empty, TokenType.Normal, null, string.Empty);
             _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
             _firstHitObjectTimeToken = _tokenSetter("firstHitObjectTime", 0d, TokenType.Normal, null, 0d);
+            _beatmapRankedStatusToken = _tokenSetter("rankedStatus", (short)0, TokenType.Normal, null, (short)0);
+
             InitLiveTokens();
 
             Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
@@ -472,6 +475,7 @@ namespace OsuMemoryEventSource
             if (!IsMainProcessor)
                 return;
 
+            _beatmapRankedStatusToken.Value = OsuMemoryData.Beatmap.Status;
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
             _strainsToken.Value = ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));

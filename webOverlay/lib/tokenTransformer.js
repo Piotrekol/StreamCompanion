@@ -16,7 +16,7 @@ function transformTokens(tokens) {
         id: t['mapid'],
         set: t['mapsetid'],
         md5: t['md5'],
-        rankedStatus: 0,//TODO: t['state'] gives state as a string (Approved/not updated..) instead of expected number & after lazer loader refactor seems to always return not updated
+        rankedStatus: t['rankedStatus'],
         metadata: {
           artist: t['artistRoman'],
           title: t['titleRoman'],
@@ -168,7 +168,7 @@ function transformTokens(tokens) {
 }
 
 function convertSCLeaderBoard(rawPlayers, rawMainPlayer) {
-  let players = JSON.parse(rawPlayers) || {};
+  let players = JSON.parse(rawPlayers) || [];
   let mainPlayer = JSON.parse(rawMainPlayer) || {};
 
   return {
@@ -207,6 +207,7 @@ function CreateProxiedReconnectingWebSocket(url) {
   };
   const tokenNames = [
     'leaderBoardPlayers',
+    'rankedStatus',
     'leaderBoardMainPlayer',
     'ingameInterfaceIsEnabled',
     'acc',
