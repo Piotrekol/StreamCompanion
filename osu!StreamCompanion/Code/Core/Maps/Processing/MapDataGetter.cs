@@ -56,6 +56,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     mapSearchResult = await _mapDataFinders[i].FindBeatmap(searchArgs, cancellationToken);
 
                 }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
                 catch (Exception e)
                 {
                     _logger.Log(e, LogLevel.Error);
