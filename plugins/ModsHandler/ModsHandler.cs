@@ -74,7 +74,7 @@ namespace ModsHandler
                 _tokenSetter("mCS", Math.Round(c["CS"], 2));
                 _tokenSetter("mOD", Math.Round(c["OD"], 2));
                 _tokenSetter("mHP", c["HP"], format: "{0:0.##}");
-                _tokenSetter("mStars", Math.Round(foundMap.Stars(map.PlayMode ?? PlayMode.Osu, mods), 2));
+                _tokenSetter("mStars", foundMap.Stars(map.PlayMode ?? PlayMode.Osu, mods), format: "{0:0.##}");
                 _tokenSetter("mBpm", bpm);
                 _tokenSetter("mMaxBpm", c["MaxBpm"], format: "{0:0}");
                 _tokenSetter("mMinBpm", c["MinBpm"], format: "{0:0}");

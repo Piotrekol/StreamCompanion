@@ -47,7 +47,7 @@ namespace OsuSongsFolderWatcher
                 sliders = (short)osuAttributes.SliderCount;
             }
 
-            lazerBeatmap.BeatmapInfo.StarDifficulty = Math.Round(difficultyAttributes?.StarRating ?? 0, 2);
+            lazerBeatmap.BeatmapInfo.StarDifficulty = difficultyAttributes?.StarRating ?? 0;
 
             return new Beatmap
             {
