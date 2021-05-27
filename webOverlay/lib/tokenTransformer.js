@@ -12,7 +12,7 @@ function transformTokens(tokens) {
       bm: {
         time: {
           firstObj: t['firstHitObjectTime'],
-          current: t['time']*1000,
+          current: t['time'] * 1000,
           full: t['totaltime'],
           mp3: t['totaltime'],
         },
@@ -94,7 +94,7 @@ function transformTokens(tokens) {
       },
       pp: {
         current: t['ppIfMapEndsNow'],
-        fc: t['noChokePp'], //TODO: not sure if this is same value
+        fc: t['noChokePp'],
         maxThisPlay: t['ppIfRestFced'],
       },
       rawKeyOverlay: t['keyOverlay'],
@@ -125,6 +125,7 @@ function transformTokens(tokens) {
           str: t['mods'].replace(/,/g, ''),
         },
       },
+      //TODO: tourney will have to be done at some other time
       tourney: {
         manager: {
           ipcState: 0,
@@ -217,12 +218,8 @@ function CreateProxiedReconnectingWebSocket(url) {
     //onmessage,
   };
   const tokenNames = [
-    'leaderBoardPlayers',
-    'rankedStatus',
-    'keyOverlay',
-    'leaderBoardMainPlayer',
-    'ingameInterfaceIsEnabled',
     'acc',
+    'AR',
     'artistRoman',
     'backgroundImageFileName',
     'c100',
@@ -231,6 +228,7 @@ function CreateProxiedReconnectingWebSocket(url) {
     'chatIsEnabled',
     'combo',
     'creator',
+    'CS',
     'currentMaxCombo',
     'diffName',
     'dir',
@@ -239,7 +237,12 @@ function CreateProxiedReconnectingWebSocket(url) {
     'geki',
     'grade',
     'hitErrors',
-    'katu',
+    'HP',
+    'ingameInterfaceIsEnabled',
+    'katsu',
+    'keyOverlay',
+    'leaderBoardMainPlayer',
+    'leaderBoardPlayers',
     'liveStarRating',
     'mapid',
     'mapsetid',
@@ -257,6 +260,7 @@ function CreateProxiedReconnectingWebSocket(url) {
     'mp3Name',
     'mStars',
     'noChokePp',
+    'OD',
     'osu_m95PP',
     'osu_m96PP',
     'osu_m97PP',
@@ -267,11 +271,11 @@ function CreateProxiedReconnectingWebSocket(url) {
     'playerHP',
     'ppIfMapEndsNow',
     'ppIfRestFced',
+    'rankedStatus',
     'rawStatus',
     'score',
     'skin',
     'sliderBreaks',
-    'state',
     'time',
     'titleRoman',
     'totaltime',
