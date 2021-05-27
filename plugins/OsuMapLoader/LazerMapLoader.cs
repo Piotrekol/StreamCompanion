@@ -28,13 +28,22 @@ namespace OsuSongsFolderWatcher
                 return (null, null);
 
             var ppCalculator = (PpCalculator.PpCalculator)iPpCalculator;
-            var lazerBeatmap = ppCalculator!.PlayableBeatmap;
+            var moddedMapAttributes = ppCalculator.AttributesAt(double.MaxValue);
 
-            var mapAttributes = ppCalculator.AttributesAt(double.MaxValue);
-            var scBeatmap = ConvertToSCBeatmap(lazerBeatmap, mapAttributes, osuFilePath, mods.Mods);
+            if (IsDifficultyNoMod(mods.Mods))
+                return (ConvertToSCBeatmap(ppCalculator.PlayableBeatmap, moddedMapAttributes, osuFilePath, mods.Mods), createPpCalculatorTask);
+
+
+            ppCalculator.Mods = null;
+            ppCalculator.Calculate(cancellationToken);
+            var noModMapAttributes = ppCalculator.AttributesAt(double.MaxValue);
+            var scBeatmap = ConvertToSCBeatmap(ppCalculator.PlayableBeatmap, noModMapAttributes, osuFilePath, Mods.Omod);
+            scBeatmap.ModPpStars[(PlayMode)ppCalculator.PlayableBeatmap.BeatmapInfo.RulesetID].Add((int)(mods.Mods & Mods.MapChanging), moddedMapAttributes?.StarRating ?? 0d);
 
             return (scBeatmap, createPpCalculatorTask);
         }
+
+        private static bool IsDifficultyNoMod(Mods mods) => (mods & Mods.MapChanging) == Mods.Omod;
 
         private static Beatmap ConvertToSCBeatmap(IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes, string fullFilePath, Mods mods)
         {
