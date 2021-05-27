@@ -37,10 +37,10 @@ function transformTokens(tokens) {
             max: t['maxBpm'],
           },
           fullSR: t['mStars'],
-          memoryAR: t['mAR'], //TODO: what is diference between these and non memory values above?
-          memoryCS: t['mCS'], //^
-          memoryOD: t['mOD'], //^
-          memoryHP: t['mHP'], //^
+          memoryAR: t['AR'],
+          memoryCS: t['CS'],
+          memoryOD: t['OD'],
+          memoryHP: t['HP'],
         },
         path: {
           full: `${t['dir']}\\${t['backgroundImageFileName']}`,
