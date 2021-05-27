@@ -26,6 +26,7 @@ namespace BackgroundImageProvider
         private readonly IContextAwareLogger _logger;
         private Tokens.TokenSetter _tokenSetter;
         private IToken _imageToken;
+        private IToken _imageNameToken;
         private IToken _imageLocationToken;
         private string _saveLocation;
         private string _lastCopiedFileLocation;
@@ -42,6 +43,7 @@ namespace BackgroundImageProvider
                 : $"Disabled, enable it in configuration manually under {EnableImageToken.Name}";
             _imageToken = _tokenSetter("backgroundImage", initialValue);
             _imageLocationToken = _tokenSetter("backgroundImageLocation", string.Empty);
+            _imageNameToken = _tokenSetter("backgroundImageFileName", string.Empty);
         }
 
         protected Task InternalCreateTokens(IMapSearchResult map, CancellationToken cancellationToken, int retryCount)
@@ -59,6 +61,7 @@ namespace BackgroundImageProvider
                                 File.Delete(_saveLocation);
 
                             File.Copy(imageLocation, _saveLocation);
+                            _imageNameToken.Value = Path.GetFileName(imageLocation);
                             if (_settings.Get<bool>(EnableImageToken))
                                 _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
 

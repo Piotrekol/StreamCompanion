@@ -108,13 +108,13 @@
             }),
             methods: {
                 overlayUrl: function (name) {
-                    return `${config.getUrl()}/overlays/${name}/`
+                    return `${this.config.getUrl()}/overlays/${name}/`
                 }
             },
             created: function () {
                 this.config = window.overlay.config
                 let t = this;
-                fetch(`${config.getUrl()}/overlayList`)
+                fetch(`${t.config.getUrl()}/overlayList`)
                     .then(response => response.json())
                     .then(data => t.overlays = data);
             }

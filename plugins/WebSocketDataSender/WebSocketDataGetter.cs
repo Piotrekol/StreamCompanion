@@ -132,8 +132,12 @@ namespace WebSocketDataSender
 
         private Task ListOverlays(IHttpContext context)
         {
+            var overlaysDir = Path.Combine(HttpContentRoot(_saver), "overlays");
+            var overlayIndexFileName = "index.html";
+            var fullPaths = Directory.GetFiles(overlaysDir, overlayIndexFileName, SearchOption.AllDirectories);
+            var relativePaths = fullPaths.Select(p => p.Substring(overlaysDir.Length + 1, p.Length - overlaysDir.Length - overlayIndexFileName.Length - 2));
             return context.SendStringAsync(
-                JsonConvert.SerializeObject(Directory.EnumerateDirectories(Path.Combine(HttpContentRoot(_saver), "overlays")).Select(x => Path.GetFileName(x))),
+                JsonConvert.SerializeObject(relativePaths),
                 "application/json", Encoding.UTF8);
         }
 
@@ -202,14 +206,14 @@ namespace WebSocketDataSender
         {
             var songsLocation = _settings.GetFullSongsLocation();
             var errorMessage = $"Couldn't find songs folder at \"{songsLocation}\", /songs/ web endpoint has been disabled";
-            return CreateFolderModule(songsLocation, "/songs/", errorMessage);
+            return CreateFolderModule(songsLocation, "/Songs/", errorMessage);
         }
 
         private IWebModule CreateSkinsModule()
         {
             var skinsLocation = _settings.GetFullSkinsLocation();
             var errorMessage = $"Couldn't find skins folder at \"{skinsLocation}\", /skins/ web endpoint has been disabled";
-            return CreateFolderModule(skinsLocation, "/skins/", errorMessage);
+            return CreateFolderModule(skinsLocation, "/Skins/", errorMessage);
         }
 
         private IWebModule CreateFolderModule(string location, string baseRoute, string missingFolderErrorMessage)

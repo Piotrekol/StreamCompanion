@@ -113,11 +113,15 @@ namespace PpCalculator
             return PlayableBeatmap != null && PlayableBeatmap.Breaks.Any(b => b.StartTime <= time && b.EndTime >= time);
         }
 
+        public double FirstHitObjectTime()
+            => PlayableBeatmap?.HitObjects.FirstOrDefault()?.StartTime ?? 0d;
+
         public DifficultyAttributes AttributesAt(double time)
         {
             var attributes = TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
             if (attributes == null)
                 return null;
+            
 
             //Implement other modes when need arises
             if (attributes is osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuDifficultyAttributes)
