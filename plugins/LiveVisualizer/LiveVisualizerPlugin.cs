@@ -252,7 +252,7 @@ namespace LiveVisualizer
             {
                 while (!VisualizerData.Configuration.Enable)
                 {
-                    await Task.Delay(500);
+                    await Task.Delay(500, token);
                 }
 
                 try
