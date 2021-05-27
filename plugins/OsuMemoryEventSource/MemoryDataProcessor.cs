@@ -168,7 +168,8 @@ namespace OsuMemoryEventSource
                             _newPlayStarted.Set();
                             Thread.Sleep(500);//Initial play delay
                         }
-
+                        
+                        reader.TryRead(OsuMemoryData.KeyOverlay);
                         reader.TryRead(OsuMemoryData.Player);
                         if (!ReferenceEquals(_rawData.Play, OsuMemoryData.Player))
                             _rawData.Play = OsuMemoryData.Player;
@@ -391,11 +392,16 @@ namespace OsuMemoryEventSource
                 return InterpolatedValues[InterpolatedValueName.liveStarRating].Current;
             });
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
-
-            var leaderBoardSerializerSettings = new JsonSerializerSettings
-            {
-                Error = SerializationError
-            };
+            
+            JsonSerializerSettings createJsonSerializerSettings(string serializationErrorMessage)
+                => new JsonSerializerSettings
+                {
+                    Error = (sender, args) =>
+                    {
+                        _logger.Log(serializationErrorMessage, LogLevel.Debug);
+                        _logger.Log(args, LogLevel.Trace);
+                    }
+                };
             // object lastLeaderBoardObject = null;
             string lastLeaderBoardData = "{}";
             DateTime lastLeaderBoardUpdate = DateTime.MinValue.AddMilliseconds(1);
@@ -411,20 +417,15 @@ namespace OsuMemoryEventSource
                     return lastLeaderBoardData;
 
                 lastLeaderBoardUpdate = nextUpdateAt;
-                return lastLeaderBoardData = JsonConvert.SerializeObject(_rawData.LeaderBoard.Players, leaderBoardSerializerSettings);
+                return lastLeaderBoardData = JsonConvert.SerializeObject(_rawData.LeaderBoard.Players, createJsonSerializerSettings("Failed to serialize leaderBoardPlayers token data."));
             });
 
-            CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, leaderBoardSerializerSettings));
+            CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, createJsonSerializerSettings("Failed to serialize leaderBoardMainPlayer token data.")));
+            CreateLiveToken("keyOverlay", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(OsuMemoryData.KeyOverlay, createJsonSerializerSettings("Failed to serialize keyOverlay token data.")));
             CreateLiveToken("chatIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ChatIsExpanded ? 1 : 0);
             CreateLiveToken("ingameInterfaceIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ShowPlayingInterface ? 1 : 0);
         }
-
-        private void SerializationError(object sender, ErrorEventArgs e)
-        {
-            _logger.Log("Failed to serialize leaderBoard token data.", LogLevel.Debug);
-            _logger.Log(e, LogLevel.Trace);
-        }
-
+        
         private void UpdateLiveTokens(OsuStatus status)
         {
             foreach (var liveToken in _liveTokens)

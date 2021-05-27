@@ -98,24 +98,10 @@ function transformTokens(tokens) {
         fc: t['noChokePp'], //TODO: not sure if this is same value
         maxThisPlay: t['ppIfRestFced'],
       },
-      keyOverlay: {
-        //TODO: keyOverlay
-        k1: {
-          isPressed: true,
-          count: 5,
-        },
-        k2: {
-          isPressed: false,
-          count: 1,
-        },
-        m1: {
-          isPressed: false,
-          count: 0,
-        },
-        m2: {
-          isPressed: false,
-          count: 0,
-        },
+      rawKeyOverlay: t['keyOverlay'],
+      cachedKeyOverlay: null,
+      get keyOverlay() {
+        return this.cachedKeyOverlay !== null ? this.cachedKeyOverlay : (this.cachedKeyOverlay = convertSCKeyOverlay(this.rawKeyOverlay));
       },
       rawLeaderboard: t['leaderBoardPlayers'],
       rawLeaderboardMainPlayer: t['leaderBoardMainPlayer'],
@@ -170,9 +156,32 @@ function transformTokens(tokens) {
   };
 }
 
+function convertSCKeyOverlay(rawKeyOverlay) {
+  let keys = JSON.parse(rawKeyOverlay || '{}');
+
+  return {
+    k1: {
+      isPressed: keys.K1Pressed,
+      count: keys.K1Count,
+    },
+    k2: {
+      isPressed: keys.K2Pressed,
+      count: keys.K2Count,
+    },
+    m1: {
+      isPressed: keys.M1Pressed,
+      count: keys.M1Count,
+    },
+    m2: {
+      isPressed: keys.M2Pressed,
+      count: keys.M2Count,
+    },
+  };
+}
+
 function convertSCLeaderBoard(rawPlayers, rawMainPlayer) {
-  let players = JSON.parse(rawPlayers) || [];
-  let mainPlayer = JSON.parse(rawMainPlayer) || {};
+  let players = JSON.parse(rawPlayers || '[]');
+  let mainPlayer = JSON.parse(rawMainPlayer || '{}');
 
   return {
     hasLeaderboard: players.length > 0,
@@ -211,6 +220,7 @@ function CreateProxiedReconnectingWebSocket(url) {
   const tokenNames = [
     'leaderBoardPlayers',
     'rankedStatus',
+    'keyOverlay',
     'leaderBoardMainPlayer',
     'ingameInterfaceIsEnabled',
     'acc',
@@ -272,7 +282,7 @@ function CreateProxiedReconnectingWebSocket(url) {
 
   let rws = watchTokens(tokenNames, (values) => {
     Object.assign(tokensCache, values);
-    proxy.onmessage({ data:transformTokens(tokensCache)});
+    proxy.onmessage({ data: transformTokens(tokensCache) });
   });
 
   let origOnOpen = rws.onopen;
