@@ -43,13 +43,15 @@ namespace OsuMemoryEventSource
 
             if (PlayTime <= 0)
             {
+                //fc pp
                 PpCalculator.Goods = 0;
                 PpCalculator.Mehs = 0;
                 PpCalculator.Combo = null;
                 PpCalculator.PercentCombo = 100;
-                return PpCalculator.Calculate(); //fc pp
+                ComboLeft = PpCalculator.GetMaxCombo(PlayTime);
+                return PpCalculator.Calculate();
             }
-
+            
             if (_currentPlayMode == PlayMode.CatchTheBeat)
             {
                 PpCalculator.Goods = Play.Hit100;
@@ -60,17 +62,10 @@ namespace OsuMemoryEventSource
                 PpCalculator.Score = Play.Score;
             }
 
-            ComboLeft = PpCalculator.GetMaxCombo((int)PlayTime);
-
+            ComboLeft = PpCalculator.GetMaxCombo(PlayTime);
             var newMaxCombo = Math.Max(Play.MaxCombo, ComboLeft + Play.Combo);
-
             PpCalculator.Combo = newMaxCombo;
-
-            pp = PpCalculator.Calculate(null);
-
-
-            return pp;
-
+            return PpCalculator.Calculate();
         }
         private string PlayDataToString(PlayContainer p)
         {
