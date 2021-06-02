@@ -27,6 +27,7 @@ namespace BrowserOverlay
             listBox_tabs.DataSource = OverlayTabs;
 
             panel_content.Enabled = checkBox_enable.Checked = configuration.Enabled;
+            panel_form.Enabled = OverlayTabs.Any();
 
             _init = false;
         }
@@ -43,7 +44,7 @@ namespace BrowserOverlay
 
         private void SettingValueUpdated()
         {
-            if (_init)
+            if (_init || CurrentOverlayTab == null)
                 return;
 
             CurrentOverlayTab.Canvas.Height = Convert.ToInt32(numericUpDown_CanvasHeight.Value);
@@ -83,18 +84,21 @@ namespace BrowserOverlay
         private void listBox_tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
             CurrentOverlayTab = (OverlayTab)listBox_tabs.SelectedItem;
-            PopulateForm();
+            panel_form.Enabled = CurrentOverlayTab != null;
+            if (panel_form.Enabled)
+                PopulateForm(CurrentOverlayTab);
+
         }
 
-        private void PopulateForm()
+        private void PopulateForm(OverlayTab overlayTab)
         {
             _init = true;
-            numericUpDown_CanvasHeight.Value = CurrentOverlayTab.Canvas.Height;
-            numericUpDown_CanvasWidth.Value = CurrentOverlayTab.Canvas.Width;
-            numericUpDown_positionX.Value = CurrentOverlayTab.Position.X;
-            numericUpDown_positionY.Value = CurrentOverlayTab.Position.Y;
-            textBox_overlayUrl.Text = CurrentOverlayTab.Url;
-            numericUpDown_scale.Value = CurrentOverlayTab.Scale;
+            numericUpDown_CanvasHeight.Value = overlayTab.Canvas.Height;
+            numericUpDown_CanvasWidth.Value = overlayTab.Canvas.Width;
+            numericUpDown_positionX.Value = overlayTab.Position.X;
+            numericUpDown_positionY.Value = overlayTab.Position.Y;
+            textBox_overlayUrl.Text = overlayTab.Url;
+            numericUpDown_scale.Value = overlayTab.Scale;
             _init = false;
         }
 
