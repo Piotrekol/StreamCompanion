@@ -127,11 +127,29 @@ namespace BrowserOverlay
             _overlayDownloadForm.Show();
             if (!File.Exists(zipFileLocation))
             {
-                await DownloadOverlay(zipFileLocation);
-            }
+                var tempFileLocation = $"{zipFileLocation}.tmp";
+                if (File.Exists(tempFileLocation))
+                    File.Delete(tempFileLocation);
 
-            if (!File.Exists(zipFileLocation))
-                return;
+                try
+                {
+                    await DownloadOverlay(tempFileLocation);
+                }
+                catch (WebException ex)
+                {
+                    _overlayDownloadForm.SetStatus("problem during download - restart SC to try again");
+                    _logger.Log(ex, LogLevel.Error);
+                    return;
+                }
+
+                if (!File.Exists(tempFileLocation))
+                {
+                    _overlayDownloadForm.SetStatus("Failed to download assets - restart SC to try again");
+                    return;
+                }
+                
+                File.Move(tempFileLocation, zipFileLocation);
+            }
 
             _overlayDownloadForm.SetStatus("unpacking files...");
             ZipFile.ExtractToDirectory(zipFileLocation, osuFolderDirectory, true);
