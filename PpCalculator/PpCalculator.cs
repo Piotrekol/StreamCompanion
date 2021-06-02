@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using osu.Game.Rulesets.Osu.Objects;
 using PpCalculatorTypes;
 using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
 using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
@@ -121,7 +122,6 @@ namespace PpCalculator
             var attributes = TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
             if (attributes == null)
                 return null;
-            
 
             //Implement other modes when need arises
             if (attributes is osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuDifficultyAttributes)
@@ -259,8 +259,20 @@ namespace PpCalculator
 
         protected int GetMaxCombo(IBeatmap beatmap) => GetMaxCombo(beatmap.HitObjects);
 
-        protected int GetComboFromTime(IBeatmap beatmap, int fromTime) =>
-            GetMaxCombo(beatmap.HitObjects.Where(h => h.StartTime > fromTime).ToList());
+        protected int GetComboFromTime(IBeatmap beatmap, int fromTime)
+        {
+            var hitObjects = new List<HitObject>();
+            foreach (var hitObject in beatmap.HitObjects)
+            {
+                if (hitObject.StartTime > fromTime)
+                    hitObjects.Add(hitObject);
+                else if (hitObject is Slider slider)
+                    hitObjects.AddRange(slider.NestedHitObjects.Where(h => h.StartTime > fromTime));
+            }
+
+            return GetMaxCombo(hitObjects);
+        }
+
         protected int GetComboToTime(IBeatmap beatmap, int toTime) =>
             GetMaxCombo(beatmap.HitObjects.Where(h => h.StartTime < toTime).ToList());
 
