@@ -167,7 +167,7 @@ namespace osu_StreamCompanion.Code.Modules.osuPathReslover
         private void SaveOsuDir(string dir)
         {
             if (dir != string.Empty)
-                _settings.Add(_names.MainOsuDirectory.Name, dir);
+                _settings.Add(_names.MainOsuDirectory.Name, dir, true);
         }
 
         private string LoadOsuDir()

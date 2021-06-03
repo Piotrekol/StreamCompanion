@@ -59,7 +59,7 @@ namespace osu_StreamCompanion.Code.Windows
 
         public MainWindowUpdater()
         {
-            BeatmapsLoaded = "Beatmaps not loaded";
+            BeatmapsLoaded = "";
             NowPlaying = "Nothing is playing at the moment";
             UpdateText = string.Format("No updates found ({0})", "v121212.13");
             Version = Program.ScVersion;

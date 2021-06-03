@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -92,12 +93,17 @@ namespace ScGui
             {
                 _mainWindow?.SetTheme(_settings.Get<string>(Theme));
             }
+            else if (e.Name == _names.MainOsuDirectory.Name)
+            {
+                _mainWindowModel.BeatmapsLoaded = _settings.GetFullOsuLocation();
+            }
         }
 
         private void ShowWindow()
         {
             if (_mainWindow == null)
             {
+                _mainWindowModel.BeatmapsLoaded = _settings.GetFullOsuLocation();
                 _mainWindow = new MainWindow(_mainWindowModel, _settings);
                 _mainWindow.OnOpenSettingsClicked += (_, __) =>
                 {
