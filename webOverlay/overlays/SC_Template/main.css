@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+}
+* {
+  color: black;
+  font-family: 'Comfortaa';
+}
+.large {
+  font-size: 35px;
+}
+.hide {
+  display: none;
+}
+
+[v-cloak] {
+  display: none;
+}
