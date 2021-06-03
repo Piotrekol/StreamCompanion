@@ -168,7 +168,7 @@ namespace OsuMemoryEventSource
                             _newPlayStarted.Set();
                             Thread.Sleep(500);//Initial play delay
                         }
-                        
+
                         reader.TryRead(OsuMemoryData.KeyOverlay);
                         reader.TryRead(OsuMemoryData.Player);
                         if (!ReferenceEquals(_rawData.Play, OsuMemoryData.Player))
@@ -313,8 +313,7 @@ namespace OsuMemoryEventSource
              });
             CreateLiveToken("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.Combo);
             CreateLiveToken("comboLeft", _rawData.ComboLeft, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.ComboLeft);
-            CreateLiveToken("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.Score);
-            CreateLiveToken("scoreV2", _rawData.Play.ScoreV2 ?? 0, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.ScoreV2 ?? 0);
+            CreateLiveToken("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.ScoreV2.HasValue && _rawData.Play.ScoreV2 > 0 ? _rawData.Play.ScoreV2.Value : _rawData.Play.Score);
             CreateLiveToken("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.MaxCombo);
             CreateLiveToken("playerHp", 0d, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play is Player p ? p.HP : 0d);
 
@@ -392,7 +391,7 @@ namespace OsuMemoryEventSource
                 return InterpolatedValues[InterpolatedValueName.liveStarRating].Current;
             });
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
-            
+
             JsonSerializerSettings createJsonSerializerSettings(string serializationErrorMessage)
                 => new JsonSerializerSettings
                 {
@@ -425,7 +424,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("chatIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ChatIsExpanded ? 1 : 0);
             CreateLiveToken("ingameInterfaceIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ShowPlayingInterface ? 1 : 0);
         }
-        
+
         private void UpdateLiveTokens(OsuStatus status)
         {
             foreach (var liveToken in _liveTokens)
