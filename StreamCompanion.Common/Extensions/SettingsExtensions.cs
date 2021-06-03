@@ -24,6 +24,8 @@ namespace StreamCompanion.Common
 
         public static string GetFullSkinsLocation(this ISettings settings) => Path.Combine(settings.Get<string>(_names.MainOsuDirectory), "Skins\\");
 
+        public static string GetFullOsuLocation(this ISettings settings) => settings.Get<string>(_names.MainOsuDirectory);
+
         public static T GetConfiguration<T>(this ISettings settings, ConfigEntry configEntry) where T : new()
         {
             var rawConfiguration = settings.Get<string>(configEntry);
