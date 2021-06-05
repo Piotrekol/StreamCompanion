@@ -27,12 +27,11 @@ namespace OsuSongsFolderWatcher
             if (iPpCalculator == null)
                 return (null, null);
 
-            var ppCalculator = (PpCalculator.PpCalculator)iPpCalculator;
+            var ppCalculator = (PpCalculator.PpCalculator)iPpCalculator.Clone();
             var moddedMapAttributes = ppCalculator.AttributesAt(double.MaxValue);
 
             if (IsDifficultyNoMod(mods.Mods))
                 return (ConvertToSCBeatmap(ppCalculator.PlayableBeatmap, moddedMapAttributes, osuFilePath, mods.Mods), createPpCalculatorTask);
-
 
             ppCalculator.Mods = null;
             ppCalculator.Calculate(cancellationToken);
