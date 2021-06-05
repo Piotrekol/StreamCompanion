@@ -122,6 +122,11 @@ namespace PpCalculator
         public double FirstHitObjectTime()
             => PlayableBeatmap?.HitObjects.FirstOrDefault()?.StartTime ?? 0d;
 
+        public IEnumerable<TimingPoint> TimingPoints()
+        {
+            return PlayableBeatmap?.ControlPointInfo?.TimingPoints.Select(tp => new TimingPoint(tp.Time, Math.Round(tp.BPM, 5), Math.Round(tp.BeatLength, 5))) ?? Enumerable.Empty<TimingPoint>();
+        }
+
         public DifficultyAttributes AttributesAt(double time)
         {
             var attributes = TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;

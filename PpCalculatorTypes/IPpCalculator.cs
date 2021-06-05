@@ -25,6 +25,8 @@ namespace PpCalculatorTypes
         bool IsBreakTime(double time);
         double FirstHitObjectTime();
         public IEnumerable<BreakPeriod> Breaks();
+        public IEnumerable<TimingPoint> TimingPoints();
+
         object Clone();
     }
 }

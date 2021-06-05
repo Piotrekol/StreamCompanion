@@ -42,6 +42,7 @@ namespace OsuMemoryEventSource
         private IToken _strainsToken;
         private IToken _firstHitObjectTimeToken;
         private IToken _MapBreaksToken;
+        private IToken _MapTimingPointsToken;
         private IToken _beatmapRankedStatusToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
@@ -92,8 +93,9 @@ namespace OsuMemoryEventSource
             _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
             _firstHitObjectTimeToken = _tokenSetter("firstHitObjectTime", 0d, TokenType.Normal, null, 0d);
             _MapBreaksToken = _tokenSetter("mapBreaks", new List<BreakPeriod>(), TokenType.Normal, null, new List<BreakPeriod>());
+            _MapTimingPointsToken = _tokenSetter("mapTimingPoints", new List<TimingPoint>(), TokenType.Normal, null, new List<TimingPoint>());
             _beatmapRankedStatusToken = _tokenSetter("rankedStatus", (short)0, TokenType.Normal, null, (short)0);
-
+            
             InitLiveTokens();
 
             Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
@@ -484,6 +486,7 @@ namespace OsuMemoryEventSource
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
             _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
+            _MapTimingPointsToken.Value = ppCalculator?.TimingPoints().ToList();
             _strainsToken.Value = ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
         }
 
