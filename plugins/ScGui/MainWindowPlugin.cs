@@ -169,16 +169,14 @@ namespace ScGui
                 if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.MapSource != "Msn")
                 {
                     nowPlaying += $" [{foundMap.DiffName}] {map.Mods?.ShownMods ?? ""}";
-                    nowPlaying += $"{Environment.NewLine}NoMod:{foundMap.StarsNomod:##.###}";
+                    nowPlaying += $"{Environment.NewLine}NoMod:{foundMap.StarsNomod:##.###} ";
 
                     var mods = map.Mods?.Mods ?? Mods.Omod;
                     var token = Tokens.AllTokens.FirstOrDefault(t => t.Key.ToLower() == "mstars").Value;
                     if (mods != Mods.Omod && token != null)
-                    {
-                        nowPlaying += $" Modded: {token.Value:##.###} {map.Action}";
-                    }
-                    else
-                        nowPlaying += $"{map.Action}";
+                        nowPlaying += $"Modded: {token.Value:##.###} ";
+
+                    nowPlaying += $"{map.Action}";
                 }
                 _mainWindowModel.NowPlaying = nowPlaying;
             }
