@@ -114,6 +114,11 @@ namespace PpCalculator
             return PlayableBeatmap != null && PlayableBeatmap.Breaks.Any(b => b.StartTime <= time && b.EndTime >= time);
         }
 
+        public IEnumerable<BreakPeriod> Breaks()
+        {
+            return PlayableBeatmap?.Breaks.Select(b => new BreakPeriod(b.StartTime, b.EndTime, b.HasEffect)) ?? Enumerable.Empty<BreakPeriod>();
+        }
+
         public double FirstHitObjectTime()
             => PlayableBeatmap?.HitObjects.FirstOrDefault()?.StartTime ?? 0d;
 

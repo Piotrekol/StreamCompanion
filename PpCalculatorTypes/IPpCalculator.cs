@@ -24,6 +24,7 @@ namespace PpCalculatorTypes
         int GetMaxCombo(int? fromTime = null);
         bool IsBreakTime(double time);
         double FirstHitObjectTime();
+        public IEnumerable<BreakPeriod> Breaks();
         object Clone();
     }
 }

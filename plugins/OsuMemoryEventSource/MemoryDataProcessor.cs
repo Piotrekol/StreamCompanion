@@ -6,6 +6,7 @@ using StreamCompanionTypes.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OsuMemoryDataProvider.OsuMemoryModels;
@@ -16,6 +17,7 @@ using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
 using CollectionManager.DataTypes;
 using Newtonsoft.Json;
+using PpCalculatorTypes;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 
 namespace OsuMemoryEventSource
@@ -39,6 +41,7 @@ namespace OsuMemoryEventSource
 
         private IToken _strainsToken;
         private IToken _firstHitObjectTimeToken;
+        private IToken _MapBreaksToken;
         private IToken _beatmapRankedStatusToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
@@ -88,6 +91,7 @@ namespace OsuMemoryEventSource
             _skinToken = _tokenSetter("skin", string.Empty, TokenType.Normal, null, string.Empty);
             _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
             _firstHitObjectTimeToken = _tokenSetter("firstHitObjectTime", 0d, TokenType.Normal, null, 0d);
+            _MapBreaksToken = _tokenSetter("mapBreaks", new List<BreakPeriod>(), TokenType.Normal, null, new List<BreakPeriod>());
             _beatmapRankedStatusToken = _tokenSetter("rankedStatus", (short)0, TokenType.Normal, null, (short)0);
 
             InitLiveTokens();
@@ -479,6 +483,7 @@ namespace OsuMemoryEventSource
             _beatmapRankedStatusToken.Value = OsuMemoryData.Beatmap.Status;
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
+            _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
             _strainsToken.Value = ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
         }
 
