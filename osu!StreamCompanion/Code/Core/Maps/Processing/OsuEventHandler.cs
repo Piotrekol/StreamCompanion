@@ -17,6 +17,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
     public sealed class OsuEventHandler : IDisposable
     {
+        public static ConfigEntry ConserveMemory = new ConfigEntry("ConserveMemory", true);
+
         private readonly SettingNames _names = SettingNames.Instance;
         private IContextAwareLogger _logger;
         private readonly MainMapDataGetter _mainMapDataGetter;
@@ -125,10 +127,14 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchArgs == null)
                 return;
 
+
             _cancellationTokenSource.Dispose();
             _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
             var mapSearchResult = await FindBeatmaps(mapSearchArgs, cancellationToken);
+            if (_settings.Get<bool>(ConserveMemory))
+                GC.Collect();
+
             if (mapSearchResult == null)
                 return;
 
