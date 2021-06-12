@@ -22,6 +22,7 @@ namespace OsuMemoryEventSource
         {
             if (!Token.CanSave(status) || Updater == null)
             {
+                Token.Reset();
                 return;
             }
 
