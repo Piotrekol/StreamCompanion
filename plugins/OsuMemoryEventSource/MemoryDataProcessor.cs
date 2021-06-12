@@ -46,6 +46,8 @@ namespace OsuMemoryEventSource
         private IToken _beatmapRankedStatusToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
+        private IToken _statusToken;
+        private IToken _rawStatusToken;
 
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
@@ -95,9 +97,9 @@ namespace OsuMemoryEventSource
             _MapBreaksToken = _tokenSetter("mapBreaks", new List<BreakPeriod>(), TokenType.Normal, null, new List<BreakPeriod>());
             _MapTimingPointsToken = _tokenSetter("mapTimingPoints", new List<TimingPoint>(), TokenType.Normal, null, new List<TimingPoint>());
             _beatmapRankedStatusToken = _tokenSetter("rankedStatus", (short)0, TokenType.Normal, null, (short)0);
-            
+            _statusToken = _tokenSetter("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null);
+            _rawStatusToken = _tokenSetter("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning);
             InitLiveTokens();
-
             Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
         }
 
@@ -160,10 +162,10 @@ namespace OsuMemoryEventSource
                 {
                     OsuMemoryData = reader.OsuMemoryAddresses;
                 }
-                if ((OsuStatus)_liveTokens["status"].Token.Value != status)
-                    _liveTokens["status"].Token.Value = status;
+                if ((OsuStatus)_statusToken.Value != status)
+                    _statusToken.Value = status;
 
-                _liveTokens["rawStatus"].Token.Value = rawStatus;
+                _rawStatusToken.Value = rawStatus;
                 int playTime = OsuMemoryData.GeneralData.AudioTime;
                 switch (status)
                 {
@@ -246,7 +248,7 @@ namespace OsuMemoryEventSource
 
         public void _tokensUpdated()
         {
-            TokensUpdated?.Invoke(this, (OsuStatus)_liveTokens["status"].Token.Value);
+            TokensUpdated?.Invoke(this, (OsuStatus)_statusToken.Value);
         }
 
         public Tokens Tokens
@@ -263,11 +265,6 @@ namespace OsuMemoryEventSource
             }
         }
 
-        private void CreateToken(string name, object value, TokenType tokenType, string format,
-            object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
-        {
-            _liveTokens[name] = new LiveToken(_tokenSetter($"{TokensPath}{name}", value, tokenType, format, defaultValue, statusWhitelist), updater);
-        }
         private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
@@ -277,8 +274,6 @@ namespace OsuMemoryEventSource
 
         private void InitLiveTokens()
         {
-            CreateToken("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null, OsuStatus.All, null);
-            CreateToken("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning, OsuStatus.All, null);
             var playingOrWatching = OsuStatus.Playing | OsuStatus.Watching;
             var playingWatchingResults = playingOrWatching | OsuStatus.ResultsScreen;
             CreateLiveToken("username", _rawData.Play.Username, TokenType.Live, "", string.Empty, playingWatchingResults, () => _rawData.Play.Username);
