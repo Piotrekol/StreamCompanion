@@ -434,10 +434,7 @@ namespace OsuMemoryEventSource
             {
                 try
                 {
-                    if (liveToken.Value.Token.CanSave(status))
-                    {
-                        liveToken.Value.Update(status);
-                    }
+                    liveToken.Value.Update(status);
                 }
                 catch (TaskCanceledException) { }
                 catch (OperationCanceledException) { }
