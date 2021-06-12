@@ -55,6 +55,50 @@ namespace StreamCompanion.Common.Helpers
         }
 
         /// <summary>
+        /// Calculates accuracy
+        /// </summary>
+        /// <param name="mode">Currently used PlayMode</param>
+        /// <param name="c50">number of 50 hits</param>
+        /// <param name="c100">number of 100 hits</param>
+        /// <param name="c300">number of 300 hits</param>
+        /// <param name="cMiss">number of misses</param>
+        /// <param name="countGeki">number of geki hits - mania only</param>
+        /// <param name="countKatu">number of katu hits - ctb/mania only</param>
+        /// <returns></returns>
+        public static double CalculateAccuracy(PlayMode mode, ushort c50, ushort c100, ushort c300, ushort cMiss, ushort countGeki = 0, ushort countKatu = 0)
+        {
+            int totalHits;
+            switch (mode)
+            {
+                case PlayMode.CatchTheBeat:
+                    totalHits = c50 + c100 + c300 + cMiss + countKatu;
+                    break;
+                case PlayMode.OsuMania:
+                    totalHits = c50 + c100 + c300 + cMiss + countGeki + countKatu;
+                    break;
+                default:
+                    //osu & taiko
+                    totalHits = c50 + c100 + c300 + cMiss;
+                    break;
+            }
+
+            if (totalHits <= 0)
+                return 1;
+
+            switch (mode)
+            {
+                case PlayMode.Taiko:
+                    return (float)(c100 * 150 + c300 * 300) / (totalHits * 300);
+                case PlayMode.CatchTheBeat:
+                    return (float)(c50 + c100 + c300) / totalHits;
+                case PlayMode.OsuMania:
+                    return (float)(c50 * 50 + c100 * 100 + countKatu * 200 + (c300 + countGeki) * 300) / (totalHits * 300);
+                default:
+                    return (float)(c50 * 50 + c100 * 100 + c300 * 300) / (totalHits * 300);
+            }
+        }
+
+        /// <summary>
         /// Calculates osu grade
         /// </summary>
         /// <param name="mode">Currently used PlayMode</param>
