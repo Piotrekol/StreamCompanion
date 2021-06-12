@@ -14,7 +14,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
-    
+
     public sealed class OsuEventHandler : IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
@@ -62,7 +62,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             _logger.Log($"Received event: {eventData}", LogLevel.Debug);
             if (mapSearchArgs.SourceName.Contains("OsuMemory"))
             {
-                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.TryCancel();
                 TasksMemory.Clear();
                 _logger.SetContextData("OsuMemory_event", eventData);
 
@@ -80,7 +80,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             {
                 if (workerCancellationTokenSource.IsCancellationRequested)
                 {
-                    _cancellationTokenSource?.Cancel();
+                    _cancellationTokenSource?.TryCancel();
                     return;
                 }
 
@@ -125,8 +125,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchArgs == null)
                 return;
 
+            _cancellationTokenSource.Dispose();
             _cancellationTokenSource = new CancellationTokenSource();
-            var mapSearchResult = await FindBeatmaps(mapSearchArgs);
+            var cancellationToken = _cancellationTokenSource.Token;
+            var mapSearchResult = await FindBeatmaps(mapSearchArgs, cancellationToken);
             if (mapSearchResult == null)
                 return;
 
@@ -137,18 +139,19 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }
 
             mapSearchResult.MapSource = mapSearchArgs.SourceName;
-            await HandleMapSearchResult(mapSearchResult);
+            await HandleMapSearchResult(mapSearchResult, cancellationToken);
         }
 
-        private async Task<IMapSearchResult> FindBeatmaps(IMapSearchArgs mapSearchArgs)
+        private async Task<IMapSearchResult> FindBeatmaps(IMapSearchArgs mapSearchArgs, CancellationToken token)
         {
             if (mapSearchArgs.MapId == 0 && string.IsNullOrEmpty(mapSearchArgs.MapHash) && string.IsNullOrEmpty(mapSearchArgs.Raw))
+                //TODO: TEST
                 return null;
 
             if (mapSearchArgs.EventType == OsuEventType.MapChange || _workerState.LastMapSearchResult == null || !_workerState.LastMapSearchResult.BeatmapsFound.Any())
             {
                 _logger.SetContextData("SearchingForBeatmaps", "1");
-                _workerState.LastMapSearchResult = await _mainMapDataGetter.FindMapData(mapSearchArgs, _cancellationTokenSource.Token);
+                _workerState.LastMapSearchResult = await _mainMapDataGetter.FindMapData(mapSearchArgs, token);
                 _logger.SetContextData("SearchingForBeatmaps", "0");
                 return _workerState.LastMapSearchResult;
             }
@@ -160,7 +163,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             searchResult.BeatmapsFound.AddRange(_workerState.LastMapSearchResult.BeatmapsFound);
             return searchResult;
         }
-        private async Task HandleMapSearchResult(IMapSearchResult mapSearchResult)
+        private async Task HandleMapSearchResult(IMapSearchResult mapSearchResult, CancellationToken token)
         {
             _logger.SetContextData("searchResult", new
             {
@@ -170,7 +173,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 action = mapSearchResult.Action.ToString()
             }.ToString());
 
-            await _mainMapDataGetter.ProcessMapResult(mapSearchResult, _cancellationTokenSource.Token);
+            await _mainMapDataGetter.ProcessMapResult(mapSearchResult, token);
         }
 
         public void Dispose()
