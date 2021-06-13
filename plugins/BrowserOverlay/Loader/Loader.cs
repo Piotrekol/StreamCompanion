@@ -9,6 +9,7 @@ namespace BrowserOverlay.Loader
 {
     public class Loader : ApplicationContext
     {
+        private string _lastMessage = string.Empty;
 
         public bool IsAlreadyInjected(string dllLocation)
             => DllInjector.GetInstance.IsAlreadyLoaded("osu!", Path.GetFileName(dllLocation)).LoadedResult ==
@@ -20,14 +21,14 @@ namespace BrowserOverlay.Loader
             while (GetOsuProcess() != null)
             {
                 await Task.Delay(2000, cancellationToken);
-                progress?.Report("Waiting for osu! process to close");
+                Report(progress, "Waiting for osu! process to close");
             }
 
             Process process;
             do
             {
                 await Task.Delay(2000, cancellationToken);
-                progress?.Report("Waiting for osu! process to start");
+                Report(progress, "Waiting for osu! process to start");
             } while (!(
                 (process = GetOsuProcess()) != null
                 && !process.MainWindowTitle.Contains("osu! updater")
@@ -40,6 +41,15 @@ namespace BrowserOverlay.Loader
             var result = dllInjector.Inject("osu!", dllLocation);
 
             return new InjectionResult(result.InjectionResult, result.errorCode, result.Win32Error, "_");
+        }
+
+        private void Report(IProgress<string> progress, string message)
+        {
+            if (_lastMessage == message)
+                return;
+
+            _lastMessage = message;
+            progress?.Report(message);
         }
 
         private Process GetOsuProcess()
