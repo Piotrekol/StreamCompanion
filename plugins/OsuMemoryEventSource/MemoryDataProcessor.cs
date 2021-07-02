@@ -52,6 +52,7 @@ namespace OsuMemoryEventSource
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
         private int _sliderBreaks = 0;
+        private List<TimingPoint> _reversedMapTimingPoints;
 
         private enum InterpolatedValueName
         {
@@ -394,6 +395,7 @@ namespace OsuMemoryEventSource
                 return InterpolatedValues[InterpolatedValueName.liveStarRating].Current;
             });
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
+            CreateLiveToken("currentBpm", 0d, TokenType.Live, "{0}", 0d, OsuStatus.All, () => _reversedMapTimingPoints?.FirstOrDefault(t => t.StartTime < _rawData.PlayTime)?.BPM ?? 0d);
 
             JsonSerializerSettings createJsonSerializerSettings(string serializationErrorMessage)
                 => new JsonSerializerSettings
@@ -480,7 +482,17 @@ namespace OsuMemoryEventSource
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
             _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
-            _MapTimingPointsToken.Value = ppCalculator?.TimingPoints().ToList();
+            var mapTimingPoints = ppCalculator?.TimingPoints().ToList();
+            _MapTimingPointsToken.Value = mapTimingPoints;
+            if (mapTimingPoints == null)
+                _reversedMapTimingPoints = new List<TimingPoint>();
+            else
+            {
+                mapTimingPoints = mapTimingPoints.ToList();
+                mapTimingPoints.Reverse();
+                _reversedMapTimingPoints = mapTimingPoints;
+            }
+
             _strainsToken.Value = ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
         }
 
