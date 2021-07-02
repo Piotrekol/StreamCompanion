@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -10,10 +11,14 @@ namespace BrowserOverlay.Loader
     public class Loader : ApplicationContext
     {
         private string _lastMessage = string.Empty;
+        public event EventHandler BeforeInjection;
 
         public bool IsAlreadyInjected(string dllLocation)
             => DllInjector.GetInstance.IsAlreadyLoaded("osu!", Path.GetFileName(dllLocation)).LoadedResult ==
                DllInjector.LoadedResult.Loaded;
+
+        public IEnumerable<string> ListModules()
+            => DllInjector.GetInstance.ListModules("osu!");
 
         public async Task<InjectionResult> Inject(string dllLocation, IProgress<string> progress,
             CancellationToken cancellationToken)
@@ -35,6 +40,7 @@ namespace BrowserOverlay.Loader
                 && !string.IsNullOrEmpty(process.MainWindowTitle))
             );
 
+            BeforeInjection?.Invoke(this, EventArgs.Empty);
             progress?.Report("Injecting");
 
             DllInjector dllInjector = DllInjector.GetInstance;

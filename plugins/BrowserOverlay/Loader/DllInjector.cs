@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -95,29 +98,14 @@ namespace BrowserOverlay.Loader
 
             return (DllInjectionResult.Success, 0, 0);
         }
+
         public (LoadedResult LoadedResult, int ErrorCode) IsAlreadyLoaded(string procName, string dllName)
         {
             try
             {
-                var processes = Process.GetProcessesByName(procName);
-                Process osuProcess = null;
-                foreach (var p in processes)
-                {
-                    if (p.ProcessName == procName)
-                    {
-                        osuProcess = p;
-                        break;
-                    }
-                }
-
-                if (osuProcess != null)
-                {
-                    foreach (ProcessModule pm in osuProcess.Modules)
-                    {
-                        if (pm.ModuleName == dllName)
-                            return (LoadedResult.Loaded, 0);
-                    }
-                }
+                var moduleFound = ListModules(procName).Any(moduleName => moduleName == dllName);
+                if (moduleFound)
+                    return (LoadedResult.Loaded, 0);
             }
             catch (Exception ex)
             {
@@ -126,8 +114,19 @@ namespace BrowserOverlay.Loader
             }
 
             return (LoadedResult.NotLoaded, 0);
-
         }
+
+        public IEnumerable<string> ListModules(string procName)
+        {
+            var processes = Process.GetProcessesByName(procName);
+            var process = processes.FirstOrDefault(p => p.ProcessName == procName);
+            if (process != null)
+            {
+                foreach (ProcessModule pm in process.Modules)
+                    yield return pm.ModuleName;
+            }
+        }
+
         (bool Success, int ErrorCode) bInject(uint pToBeInjected, string sDllPath)
         {
             IntPtr hndProc = OpenProcess((0x2 | 0x8 | 0x10 | 0x20 | 0x400), 1, pToBeInjected);

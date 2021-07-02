@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,11 +23,17 @@ namespace BrowserOverlay.Loader
             _logger = logger;
             _processName = processName;
             DllLocation = dllLocation;
+            _loader.BeforeInjection += BeforeInjection;
         }
 
-        private bool IsAlreadyInjected()
+        private void BeforeInjection(object sender, EventArgs e)
         {
-            return _loader.IsAlreadyInjected(DllLocation);
+            var moduleList = _loader.ListModules();
+            var unknownModules = moduleList.Select(m => m.ToLowerInvariant()).Except(KnownOsuModules.Modules).ToList();
+            if (unknownModules.Any())
+                _logger.Log($"This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{Environment.NewLine}{string.Join(Environment.NewLine, unknownModules)}", LogLevel.Debug);
+            else
+                _logger.Log("osu! module list is clean", LogLevel.Debug);
         }
 
         public async Task WatchForProcessStart(CancellationToken token)
@@ -43,7 +50,7 @@ namespace BrowserOverlay.Loader
                     {
                         _logger.Log("Checking osu! overlay injection status.", LogLevel.Debug);
                         var resultCode = DllInjectionResult.Success;
-                        if (IsAlreadyInjected())
+                        if (_loader.IsAlreadyInjected(DllLocation))
                         {
                             _logger.Log("Already injected & running.", LogLevel.Debug);
                         }
