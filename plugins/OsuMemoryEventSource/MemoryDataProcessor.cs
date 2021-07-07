@@ -15,10 +15,10 @@ using StreamCompanion.Common;
 using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
-using CollectionManager.DataTypes;
 using Newtonsoft.Json;
 using PpCalculatorTypes;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
+using Mods = CollectionManager.DataTypes.Mods;
 
 namespace OsuMemoryEventSource
 {
@@ -36,6 +36,7 @@ namespace OsuMemoryEventSource
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
         public static ConfigEntry MultiplayerLeaderBoardUpdateRate = new ConfigEntry("MultiplayerLeaderBoardUpdateRate", 250);
+        public static ConfigEntry SongSelectionScoresUpdateRate = new ConfigEntry("SongSelectionScoresUpdateRate", 250);
         private Mods _mods;
         private PlayMode _playMode = PlayMode.Osu;
 
@@ -153,6 +154,7 @@ namespace OsuMemoryEventSource
 
         private bool ReadLeaderboard = false;
         private DateTime _nextLeaderBoardUpdate = DateTime.MinValue;
+        private DateTime _nextSongSelectionScoresUpdate = DateTime.MinValue;
         public void Tick(OsuStatus status, OsuMemoryStatus rawStatus, StructuredOsuMemoryReader reader)
         {
             _notUpdatingTokens.WaitOne();
@@ -223,6 +225,11 @@ namespace OsuMemoryEventSource
                         ReadLeaderboard = false;
                         _rawData.LeaderBoard = new LeaderBoard();
                         reader.TryRead(OsuMemoryData.Skin);
+                        if (_nextSongSelectionScoresUpdate < DateTime.UtcNow)
+                        {
+                            reader.TryRead(OsuMemoryData.SongSelectionScores);
+                            _nextSongSelectionScoresUpdate = DateTime.UtcNow.AddMilliseconds(_settings.Get<int>(SongSelectionScoresUpdateRate));
+                        }
                         _lastStatus = status;
                         break;
 
@@ -428,6 +435,11 @@ namespace OsuMemoryEventSource
             CreateLiveToken("keyOverlay", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(OsuMemoryData.KeyOverlay, createJsonSerializerSettings("Failed to serialize keyOverlay token data.")));
             CreateLiveToken("chatIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ChatIsExpanded ? 1 : 0);
             CreateLiveToken("ingameInterfaceIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ShowPlayingInterface ? 1 : 0);
+            
+            CreateLiveToken("songSelectionRankingType", RankingType.Unknown, TokenType.Live, null, RankingType.Unknown, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.RankingType);
+            CreateLiveToken("songSelectionTotalScores", 0, TokenType.Live, null, 0, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.TotalScores);
+            CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores,createJsonSerializerSettings("Failed to serialize songSelection scores.")));
+            CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore, createJsonSerializerSettings("failed to serialize songSelectionMainPlayer score.")));
         }
 
         private void UpdateLiveTokens(OsuStatus status)
