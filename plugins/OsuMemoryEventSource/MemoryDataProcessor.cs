@@ -276,8 +276,7 @@ namespace OsuMemoryEventSource
         private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            _liveTokens[name] = new LiveToken(_liveTokenSetter($"{TokensPath}{name}", value, tokenType, format, defaultValue, statusWhitelist), updater) { IsLazy = false };
-            //_liveTokens[name] = new LiveToken(_liveTokenSetter(name, new Lazy<object>(() => value), tokenType, format, defaultValue, statusWhitelist), updater) { IsLazy = false };
+            _liveTokens[name] = new LiveToken(_liveTokenSetter(name, new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist), updater) { IsLazy = true };
         }
 
         private void InitLiveTokens()
