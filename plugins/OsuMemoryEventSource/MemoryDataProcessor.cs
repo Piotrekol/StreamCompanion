@@ -16,6 +16,7 @@ using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
 using Newtonsoft.Json;
+using OsuMemoryEventSource.Extensions;
 using PpCalculatorTypes;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 using Mods = CollectionManager.DataTypes.Mods;
@@ -31,6 +32,7 @@ namespace OsuMemoryEventSource
 
         private ISettings _settings;
         private readonly IContextAwareLogger _logger;
+        private readonly IModParser _modParser;
         private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
@@ -77,11 +79,13 @@ namespace OsuMemoryEventSource
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
         public bool IsMainProcessor { get; private set; }
         public string TokensPath { get; private set; }
-        public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, bool isMainProcessor,
+        public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, IModParser modParser,
+            bool isMainProcessor,
             string tokensPath)
         {
             _settings = settings;
             _logger = logger;
+            _modParser = modParser;
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
             {
                 InterpolatedValues.Add(v, new InterpolatedValue(0.15));
@@ -437,8 +441,8 @@ namespace OsuMemoryEventSource
             
             CreateLiveToken("songSelectionRankingType", RankingType.Unknown, TokenType.Live, null, RankingType.Unknown, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.RankingType);
             CreateLiveToken("songSelectionTotalScores", 0, TokenType.Live, null, 0, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.TotalScores);
-            CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores,createJsonSerializerSettings("Failed to serialize songSelection scores.")));
-            CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore, createJsonSerializerSettings("failed to serialize songSelectionMainPlayer score.")));
+            CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores.Convert(_modParser), createJsonSerializerSettings("Failed to serialize songSelection scores.")));
+            CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore?.Convert(_modParser), createJsonSerializerSettings("failed to serialize songSelectionMainPlayer score.")));
         }
 
         private void UpdateLiveTokens(OsuStatus status)

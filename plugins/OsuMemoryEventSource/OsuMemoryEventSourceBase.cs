@@ -134,7 +134,7 @@ namespace OsuMemoryEventSource
                 return;
             }
 
-            memoryListener = new MemoryListener(settings, saver, logger, clientCount);
+            memoryListener = new MemoryListener(settings, saver, modParser, logger, clientCount);
             memoryListener.NewOsuEvent += async (s, args) =>
             {
                 while (NewOsuEvent == null)

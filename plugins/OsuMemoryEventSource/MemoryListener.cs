@@ -40,7 +40,8 @@ namespace OsuMemoryEventSource
         private ISettings _settings;
         private readonly IContextAwareLogger _logger;
 
-        public MemoryListener(ISettings settings, ISaver saver, IContextAwareLogger logger, int clientCount = 1)
+        public MemoryListener(ISettings settings, ISaver saver, IModParser modParser, IContextAwareLogger logger,
+            int clientCount = 1)
         {
             _settings = settings;
             _logger = logger;
@@ -50,7 +51,7 @@ namespace OsuMemoryEventSource
                 ? _settings.Get<int>(OsuMemoryEventSourceBase.DataClientId)
                 : 0;
             _memoryDataProcessors = Enumerable.Range(0, clientCount)
-                .Select(x => new MemoryDataProcessor(settings, logger, x == mainClientId, tournamentMode ? $"client_{x}_" : string.Empty)).ToList();
+                .Select(x => new MemoryDataProcessor(settings, logger, modParser, x == mainClientId, tournamentMode ? $"client_{x}_" : string.Empty)).ToList();
             _patternsDispatcher = new PatternsDispatcher(settings, saver);
             var mainProcessor = _memoryDataProcessors.First(p => p.IsMainProcessor);
             mainProcessor.TokensUpdated += (sender, status) => _patternsDispatcher.TokensUpdated(status);
