@@ -193,16 +193,19 @@ namespace OsuMemoryEventSource
 
         private bool TryGetOsuFileLocation(CurrentBeatmap memoryBeatmap, out string osuFileLocation)
         {
+            osuFileLocation = null;
             try
             {
                 var songsLocation = _settings.GetFullSongsLocation();
+                if (string.IsNullOrEmpty(memoryBeatmap.FolderName) || string.IsNullOrEmpty(songsLocation))
+                    return false;
+
                 osuFileLocation = Path.Combine(songsLocation, memoryBeatmap.FolderName, memoryBeatmap.OsuFileName);
                 return true;
             }
             catch (ArgumentException)
             {
                 //we have garbage data in either FolderName or OsuFileName
-                osuFileLocation = null;
                 return false;
             }
         }
