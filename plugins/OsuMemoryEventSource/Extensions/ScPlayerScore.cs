@@ -8,7 +8,7 @@ namespace OsuMemoryEventSource.Extensions
     {
         private readonly PlayerScore _playerScore;
         public string Username => _playerScore.Username;
-        public int Mods => _playerScore.Mods.Value;
+        public int ModsEnum => _playerScore.Mods.Value;
         public int Mode => _playerScore.Mode;
         public ushort MaxCombo => _playerScore.MaxCombo;
         public virtual int Score => _playerScore.Score;
@@ -22,7 +22,7 @@ namespace OsuMemoryEventSource.Extensions
         public int? UserId => _playerScore.UserId;
 
         public double Accuracy { get; set; }
-        public string ModsStr { get; set; }
+        public string Mods { get; set; }
         public OsuGrade Grade { get; set; }
 
         public ScPlayerScore(PlayerScore playerScore)

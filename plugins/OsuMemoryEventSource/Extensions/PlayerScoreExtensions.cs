@@ -19,8 +19,8 @@ namespace OsuMemoryEventSource.Extensions
                 _playerScores[playerScore] = scPlayerScore = new ScPlayerScore(playerScore);
 
             scPlayerScore.Accuracy = OsuScore.CalculateAccuracy((PlayMode)scPlayerScore.Mode, scPlayerScore.Hit50, scPlayerScore.Hit100, scPlayerScore.Hit300, scPlayerScore.HitMiss, scPlayerScore.HitGeki, scPlayerScore.HitKatu) * 100;
-            scPlayerScore.Grade = OsuScore.CalculateGrade((PlayMode)scPlayerScore.Mode, (Mods)scPlayerScore.Mods, scPlayerScore.Accuracy, scPlayerScore.Hit50, scPlayerScore.Hit100, scPlayerScore.Hit300, scPlayerScore.HitMiss);
-            scPlayerScore.ModsStr = modParser.GetModsFromEnum(scPlayerScore.Mods, true);
+            scPlayerScore.Grade = OsuScore.CalculateGrade((PlayMode)scPlayerScore.Mode, (Mods)scPlayerScore.ModsEnum, scPlayerScore.Accuracy, scPlayerScore.Hit50, scPlayerScore.Hit100, scPlayerScore.Hit300, scPlayerScore.HitMiss);
+            scPlayerScore.Mods = modParser.GetModsFromEnum(scPlayerScore.ModsEnum, true);
 
             return scPlayerScore;
         }
