@@ -17,6 +17,7 @@ using StreamCompanionTypes.Interfaces.Services;
 using static StreamCompanion.Common.Helpers.OsuScore;
 using Newtonsoft.Json;
 using OsuMemoryEventSource.Extensions;
+using OsuMemoryEventSource.LiveTokens;
 using PpCalculatorTypes;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 using Mods = CollectionManager.DataTypes.Mods;
@@ -33,7 +34,7 @@ namespace OsuMemoryEventSource
         private ISettings _settings;
         private readonly IContextAwareLogger _logger;
         private readonly IModParser _modParser;
-        private readonly Dictionary<string, LiveToken> _liveTokens = new Dictionary<string, LiveToken>();
+        private readonly Dictionary<string, BaseLiveToken> _liveTokens = new();
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
@@ -280,7 +281,7 @@ namespace OsuMemoryEventSource
         private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            _liveTokens[name] = new LiveToken(_liveTokenSetter(name, new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist), updater) { IsLazy = true };
+            _liveTokens[name] = new LazyLiveToken(_liveTokenSetter(name, new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist), updater);
         }
 
         private void InitLiveTokens()
