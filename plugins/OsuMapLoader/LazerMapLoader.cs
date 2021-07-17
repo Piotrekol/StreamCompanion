@@ -42,7 +42,7 @@ namespace OsuSongsFolderWatcher
             return (scBeatmap, createPpCalculatorTask);
         }
 
-        private static bool IsDifficultyNoMod(Mods mods) => (mods & Mods.MapChanging) == Mods.Omod;
+        private static bool IsDifficultyNoMod(Mods mods) => (mods & ~(Mods.Td | Mods.Sd | Mods.Au | Mods.Ap | Mods.Pf | Mods.Cm | Mods.Tp)) == Mods.Omod;
 
         private static Beatmap ConvertToSCBeatmap(IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes, string fullFilePath, Mods mods)
         {
