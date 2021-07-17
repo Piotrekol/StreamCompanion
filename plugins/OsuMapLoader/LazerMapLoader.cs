@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -68,7 +68,7 @@ namespace OsuSongsFolderWatcher
                 Md5 = lazerBeatmap.BeatmapInfo.MD5Hash,
                 MapId = lazerBeatmap.BeatmapInfo.OnlineBeatmapID ?? 0,
                 ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID, new StarRating { { (int)(mods & Mods.MapChanging), lazerBeatmap.BeatmapInfo.StarDifficulty } } } },
-                MainBpm = Math.Round(lazerBeatmap.BeatmapInfo.BPM),
+                MainBpm = Math.Round(60000 / lazerBeatmap.GetMostCommonBeatLength()),
                 MinBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMinimum),
                 MaxBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMaximum),
                 Creator = lazerBeatmap.Metadata.AuthorString ?? string.Empty,
