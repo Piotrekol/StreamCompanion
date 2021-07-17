@@ -68,7 +68,7 @@ namespace OsuSongsFolderWatcher
                 Md5 = lazerBeatmap.BeatmapInfo.MD5Hash,
                 MapId = lazerBeatmap.BeatmapInfo.OnlineBeatmapID ?? 0,
                 ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID, new StarRating { { (int)(mods & Mods.MapChanging), lazerBeatmap.BeatmapInfo.StarDifficulty } } } },
-                MainBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMode),
+                MainBpm = Math.Round(lazerBeatmap.BeatmapInfo.BPM),
                 MinBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMinimum),
                 MaxBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMaximum),
                 Creator = lazerBeatmap.Metadata.AuthorString ?? string.Empty,
