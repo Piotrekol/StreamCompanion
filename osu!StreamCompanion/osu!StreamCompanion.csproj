@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -109,7 +109,6 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Realm" Version="10.3.0" />
     <PackageReference Include="Sentry" Version="3.6.0" />
     <PackageReference Include="SharpCompress" Version="0.28.3" />
     <PackageReference Include="StreamCompanionTypes" version="7.2.0" />
