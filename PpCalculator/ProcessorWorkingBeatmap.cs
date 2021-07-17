@@ -17,6 +17,7 @@ using System.Threading;
 using osu.Framework.Extensions;
 using osu.Game.IO;
 using osu.Game.Rulesets.Objects.Types;
+using osu.Game.Skinning;
 
 namespace PpCalculator
 {
@@ -61,7 +62,7 @@ namespace PpCalculator
                 beatmap.BeatmapInfo.OnlineBeatmapID = beatmapId;
         }
 
-        private static Beatmap readFromFile(string filename,int retryCount=0)
+        private static Beatmap readFromFile(string filename, int retryCount = 0)
         {
             try
             {
@@ -90,6 +91,9 @@ namespace PpCalculator
         protected override IBeatmap GetBeatmap() => beatmap;
         protected override Texture GetBackground() => null;
         protected override Track GetBeatmapTrack() => null;
+        protected override ISkin GetSkin() => null;
+
+        public override Stream GetStream(string storagePath) => null;
 
         public static Ruleset GetRulesetFromLegacyID(int id)
         {
