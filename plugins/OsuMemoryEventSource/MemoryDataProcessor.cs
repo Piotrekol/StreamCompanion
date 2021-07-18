@@ -52,6 +52,8 @@ namespace OsuMemoryEventSource
         private IToken _skinPathToken;
         private IToken _statusToken;
         private IToken _rawStatusToken;
+        private IToken _beatmapIdToken;
+        private IToken _beatmapSetIdToken;
 
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
@@ -96,8 +98,8 @@ namespace OsuMemoryEventSource
             IsMainProcessor = isMainProcessor;
             TokensPath = tokensPath;
 
+            //TODO: Refactor these out to separate class already..(and make sure these run under isMainProcessor only)
             _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
-
             _skinToken = _tokenSetter("skin", string.Empty, TokenType.Normal, null, string.Empty);
             _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
             _firstHitObjectTimeToken = _tokenSetter("firstHitObjectTime", 0d, TokenType.Normal, null, 0d);
@@ -106,6 +108,9 @@ namespace OsuMemoryEventSource
             _beatmapRankedStatusToken = _tokenSetter("rankedStatus", (short)0, TokenType.Normal, null, (short)0);
             _statusToken = _tokenSetter("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null);
             _rawStatusToken = _tokenSetter("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning);
+            _beatmapIdToken = _tokenSetter("mapId", 0, TokenType.Normal, null, 0);
+            _beatmapSetIdToken = _tokenSetter("mapSetId", 0, TokenType.Normal, null, 0);
+
             InitLiveTokens();
             Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
         }
@@ -491,6 +496,8 @@ namespace OsuMemoryEventSource
 
             _mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
+            _beatmapIdToken.Value = OsuMemoryData.Beatmap.Id;
+            _beatmapSetIdToken.Value = OsuMemoryData.Beatmap.SetId;
             if (!IsMainProcessor)
                 return;
 
