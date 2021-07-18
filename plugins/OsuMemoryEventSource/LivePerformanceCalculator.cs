@@ -1,7 +1,9 @@
 using CollectionManager.Enums;
 using OsuMemoryDataProvider;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 using OsuMemoryDataProvider.OsuMemoryModels.Direct;
@@ -15,8 +17,15 @@ namespace OsuMemoryEventSource
         public LeaderBoard LeaderBoard { get; set; } = new LeaderBoard();
         public int PlayTime { get; set; }
         private PlayMode _currentPlayMode;
-
         public IPpCalculator PpCalculator { get; private set; }
+        private ConcurrentDictionary<string, IPpCalculator> ppCalculators = new();
+
+        public int ComboLeft { get; private set; } = 0;
+        public double StrainPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
+        public double AimPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
+        public double SpeedPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
+        public double AccPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
+        Dictionary<string, double> attribs = new();
 
         public void SetPpCalculator(IPpCalculator ppCalculator, CancellationToken cancellationToken)
         {
@@ -32,66 +41,64 @@ namespace OsuMemoryEventSource
             }
 
             PpCalculator = ppCalculator;
+            ppCalculators.Clear();
+        }
+
+        private IPpCalculator GetPpCalculator([CallerMemberName] string name = "")
+        {
+            if (!ppCalculators.TryGetValue(name, out var ppCalculator))
+                ppCalculators[name] = ppCalculator = (IPpCalculator)PpCalculator?.Clone();
+
+            return ppCalculator;
         }
 
         public double PPIfRestFCed()
         {
             double pp = double.NaN;
-
-            if (PpCalculator == null || PpCalculator.RulesetId == (int)PlayMode.OsuMania)
+            var ppCalculator = GetPpCalculator();
+            if (ppCalculator == null || ppCalculator.RulesetId == (int)PlayMode.OsuMania)
                 return pp;
 
             if (PlayTime <= 0)
             {
                 //fc pp
-                PpCalculator.Goods = 0;
-                PpCalculator.Mehs = 0;
-                PpCalculator.Combo = null;
-                PpCalculator.PercentCombo = 100;
-                ComboLeft = PpCalculator.GetMaxCombo(PlayTime);
-                return PpCalculator.Calculate();
+                ppCalculator.Goods = 0;
+                ppCalculator.Mehs = 0;
+                ppCalculator.Misses = 0;
+                ppCalculator.Combo = null;
+                ppCalculator.PercentCombo = 100;
+                ComboLeft = ppCalculator.GetMaxCombo(PlayTime);
+                return ppCalculator.Calculate();
             }
-            
+
             if (_currentPlayMode == PlayMode.CatchTheBeat)
             {
-                PpCalculator.Goods = Play.Hit100;
-                PpCalculator.Mehs = null;
-                PpCalculator.Misses = Play.HitMiss;
-                PpCalculator.Katsus = Play.HitKatu;
-                PpCalculator.Combo = Play.MaxCombo;
-                PpCalculator.Score = Play.Score;
+                ppCalculator.Goods = Play.Hit100;
+                ppCalculator.Mehs = null;
+                ppCalculator.Misses = Play.HitMiss;
+                ppCalculator.Katsus = Play.HitKatu;
+                ppCalculator.Combo = Play.MaxCombo;
+                ppCalculator.Score = Play.Score;
             }
 
-            ComboLeft = PpCalculator.GetMaxCombo(PlayTime);
+            ComboLeft = ppCalculator.GetMaxCombo(PlayTime);
             var newMaxCombo = Math.Max(Play.MaxCombo, ComboLeft + Play.Combo);
-            PpCalculator.Combo = newMaxCombo;
-            return PpCalculator.Calculate();
+            ppCalculator.Combo = newMaxCombo;
+            return ppCalculator.Calculate();
         }
-        private string PlayDataToString(PlayContainer p)
-        {
-            return $"{p.C300}/{p.C100}/{p.C50}/{p.CMiss}|" +
-                   $"acc:{p.Acc},combo: {p.Combo},maxCombo {p.MaxCombo}|";
-        }
-
-        public int ComboLeft { get; private set; } = 0;
-        public double StrainPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
-        public double AimPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
-        public double SpeedPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
-        public double AccPPIfBeatmapWouldEndNow { get; private set; } = double.NaN;
-
-        Dictionary<string, double> attribs = new Dictionary<string, double>();
 
         public double PPIfBeatmapWouldEndNow()
         {
-            if (PpCalculator != null && PlayTime > 0)
+            var ppCalculator = GetPpCalculator();
+            if (ppCalculator != null && PlayTime > 0)
             {
-                PpCalculator.Goods = Play.Hit100;
-                PpCalculator.Mehs = Play.Hit50;
-                PpCalculator.Misses = Play.HitMiss;
-                PpCalculator.Combo = Play.MaxCombo;
-                PpCalculator.Score = Play.Score;
+                ppCalculator.Goods = Play.Hit100;
+                ppCalculator.Mehs = Play.Hit50;
+                ppCalculator.Misses = Play.HitMiss;
+                ppCalculator.Combo = Play.MaxCombo;
+                ppCalculator.Score = Play.Score;
                 attribs.Clear();
-                var pp = PpCalculator.Calculate(PlayTime, attribs);
+                var pp = ppCalculator.Calculate(PlayTime, attribs);
                 if (!double.IsInfinity(pp))
                 {
                     double accuracy, aim, strain, speed;
@@ -138,24 +145,23 @@ namespace OsuMemoryEventSource
         public double NoChokePp()
         {
             double pp = double.NaN;
+            var ppCalculator = GetPpCalculator();
 
-            if (PpCalculator == null || _currentPlayMode == PlayMode.OsuMania)
+            if (ppCalculator == null || _currentPlayMode == PlayMode.OsuMania)
                 return pp;
 
-
-            PpCalculator.Goods = Play.Hit100;
-            PpCalculator.Mehs = Play.Hit50;
-            PpCalculator.Misses = 0;
-            PpCalculator.Combo = null;
-            PpCalculator.PercentCombo = 100;
-            PpCalculator.Score = Play.Score;
-            pp = PpCalculator.Calculate(PlayTime, null);
+            ppCalculator.Goods = Play.Hit100;
+            ppCalculator.Mehs = Play.Hit50;
+            ppCalculator.Misses = 0;
+            ppCalculator.Combo = null;
+            ppCalculator.PercentCombo = 100;
+            ppCalculator.Score = Play.Score;
+            pp = ppCalculator.Calculate(PlayTime, null);
 
             if (double.IsInfinity(pp))
             {
                 pp = Double.NaN;
             }
-
 
             return pp;
         }
@@ -163,27 +169,24 @@ namespace OsuMemoryEventSource
         public double SimulatedPp()
         {
             double pp = double.NaN;
-
-            if (PpCalculator == null)
+            var ppCalculator = GetPpCalculator();
+            if (ppCalculator == null)
                 return pp;
 
-
-            PpCalculator.Goods = null;
-            PpCalculator.Mehs = null;
-            PpCalculator.Misses = 0;
-            PpCalculator.Combo = null;
-            PpCalculator.PercentCombo = 100;
-            PpCalculator.Score = 1_000_000;
-            pp = PpCalculator.Calculate(PlayTime, null);
+            ppCalculator.Goods = null;
+            ppCalculator.Mehs = null;
+            ppCalculator.Misses = 0;
+            ppCalculator.Combo = null;
+            ppCalculator.PercentCombo = 100;
+            ppCalculator.Score = 1_000_000;
+            pp = ppCalculator.Calculate(PlayTime, null);
 
             if (double.IsInfinity(pp))
             {
                 pp = Double.NaN;
             }
 
-
             return pp;
         }
-
     }
 }
