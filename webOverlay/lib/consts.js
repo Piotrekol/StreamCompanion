@@ -78,12 +78,23 @@ let osuGrade = {
   8: 'F',
   9: '',
 };
+
+let scoresType = {
+  0: 'Local',
+  1: 'Top',
+  2: 'Selected mods',
+  3: 'Friends',
+  4: 'Country',
+  10: '', //Unknown
+};
+
 window.overlay = {
   osuStatus,
   osuStatusFriendly,
   rawOsuStatus,
   rawOsuStatusFriendly,
   osuGrade,
+  scoresType,
   config,
 };
 
