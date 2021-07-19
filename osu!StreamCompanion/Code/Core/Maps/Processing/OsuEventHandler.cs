@@ -157,7 +157,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
             if (mapSearchArgs.EventType == OsuEventType.MapChange || _workerState.LastMapSearchResult == null || !_workerState.LastMapSearchResult.BeatmapsFound.Any())
             {
-                await DelayBeatmapSearch(token)
+                await DelayBeatmapSearch(token);
                 _logger.SetContextData("SearchingForBeatmaps", "1");
                 _workerState.LastMapSearchResult = await _mainMapDataGetter.FindMapData(mapSearchArgs, token);
                 _logger.SetContextData("SearchingForBeatmaps", "0");
