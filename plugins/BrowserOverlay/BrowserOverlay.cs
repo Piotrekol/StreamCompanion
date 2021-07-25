@@ -28,7 +28,7 @@ namespace BrowserOverlay
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = string.Empty;
         public string UpdateUrl { get; } = string.Empty;
-        public string SettingGroup { get; } = "Browser overlay";
+        public string SettingGroup { get; } = "In-game overlay__Browser overlay";
 
         private readonly IContextAwareLogger _logger;
         private readonly ISettings _settings;

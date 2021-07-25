@@ -19,7 +19,7 @@ namespace OsuMemoryEventSource
     public class OsuMemoryEventSource : OsuMemoryEventSourceBase,
         IMapDataFinder, ISettingsSource, IFirstRunControlProvider
     {
-        public string SettingGroup { get; } = "Map matching";
+        public string SettingGroup { get; } = "General__Miscellaneous";
         public int Priority { get; set; } = 100;
         public OsuMemoryEventSource(IContextAwareLogger logger, ISettings settings,
             IModParser modParser, List<Lazy<IHighFrequencyDataConsumer>> highFrequencyDataConsumers,
