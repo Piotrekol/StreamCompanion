@@ -12,7 +12,7 @@ namespace ModsHandler
 
         private ISettings _settings;
         private ModParserSettings _modParserSettings;
-        public string SettingGroup { get; } = "Map matching";
+        public string SettingGroup { get; } = "General__Miscellaneous";
 
         public ModParser(ISettings settings)
         {
