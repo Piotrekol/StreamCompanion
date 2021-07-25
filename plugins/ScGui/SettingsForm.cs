@@ -95,8 +95,8 @@ namespace ScGui
             {
                 var splitterIndex = tabPathRemaining.IndexOf("__", StringComparison.InvariantCulture);
                 tabName = tabPathRemaining.Substring(0, splitterIndex);
-                pathUntilNow = tabPathRemaining.Substring(0, splitterIndex);
                 tabPathRemaining = tabPathRemaining.Substring(splitterIndex + 2);
+                pathUntilNow = fullTabPath.Replace($"__{tabPathRemaining}", string.Empty);
             }
             else
             {

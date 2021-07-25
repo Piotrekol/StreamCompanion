@@ -42,6 +42,7 @@
             this.tvSettings.Name = "tvSettings";
             this.tvSettings.ShowLines = false;
             this.tvSettings.ShowNodeToolTips = true;
+            this.tvSettings.ShowPlusMinus = false;
             this.tvSettings.ShowRootLines = false;
             this.tvSettings.Size = new System.Drawing.Size(189, 595);
             this.tvSettings.TabIndex = 1;
