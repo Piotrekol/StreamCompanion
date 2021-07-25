@@ -29,35 +29,55 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
-            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tvSettings = new System.Windows.Forms.TreeView();
+            this.pSettingTab = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // tabControl
+            // tvSettings
             // 
-            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl.Location = new System.Drawing.Point(0, 0);
-            this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(656, 511);
-            this.tabControl.TabIndex = 0;
-            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
+            this.tvSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.tvSettings.FullRowSelect = true;
+            this.tvSettings.Location = new System.Drawing.Point(3, 3);
+            this.tvSettings.Name = "tvSettings";
+            this.tvSettings.ShowLines = false;
+            this.tvSettings.ShowNodeToolTips = true;
+            this.tvSettings.ShowRootLines = false;
+            this.tvSettings.Size = new System.Drawing.Size(189, 595);
+            this.tvSettings.TabIndex = 1;
+            this.tvSettings.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvSettings_BeforeCollapse);
+            this.tvSettings.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvSettings_AfterSelect);
+            // 
+            // pSettingTab
+            // 
+            this.pSettingTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pSettingTab.Location = new System.Drawing.Point(195, 3);
+            this.pSettingTab.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pSettingTab.Name = "pSettingTab";
+            this.pSettingTab.Size = new System.Drawing.Size(769, 595);
+            this.pSettingTab.TabIndex = 2;
             // 
             // SettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(656, 511);
-            this.Controls.Add(this.tabControl);
+            this.ClientSize = new System.Drawing.Size(967, 601);
+            this.Controls.Add(this.pSettingTab);
+            this.Controls.Add(this.tvSettings);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(672, 550);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MinimumSize = new System.Drawing.Size(780, 640);
             this.Name = "SettingsForm";
-            this.Text = "osu!StreamCompanion Settings";
+            this.Text = "StreamCompanion Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SettingsForm_FormClosed);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TreeView tvSettings;
+        private System.Windows.Forms.Panel pSettingTab;
     }
 }
