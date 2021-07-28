@@ -18,6 +18,8 @@ namespace PpCalculator.Tests
         [TestCase(5, 0, 0, 595, "HD,DT", 616.147, 1185330)]
         [TestCase(9, 0, 0, 858, "HD,DT", 685.722, 2333273)]
         [TestCase(25, 0, 2, 1631, "HD,DT,HR", 1240.605, 2486881)]
+        [TestCase(14, 0, 0, 1434, "HD,DT", 378.170, 812010)]
+        [TestCase(8, 0, 0, 1573, "", 423.651, 1154766)]
         public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
 
