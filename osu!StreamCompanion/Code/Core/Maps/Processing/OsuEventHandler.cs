@@ -157,7 +157,10 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
             if (mapSearchArgs.EventType == OsuEventType.MapChange || _workerState.LastMapSearchResult == null || !_workerState.LastMapSearchResult.BeatmapsFound.Any())
             {
+                //these value resets are required in order to maintain eventType order(MapChange, then multiple SceneChange/PlayChange events for same map) whenever previous map search was aborted
+                mapSearchArgs.EventType = OsuEventType.MapChange;
                 _workerState.LastMapSearchResult = null;
+
                 await DelayBeatmapSearch(token);
                 _logger.SetContextData("SearchingForBeatmaps", "1");
                 _workerState.LastMapSearchResult = await _mainMapDataGetter.FindMapData(mapSearchArgs, token);
