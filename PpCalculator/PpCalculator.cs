@@ -62,7 +62,7 @@ namespace PpCalculator
             ppCalculator.LastMods = LastMods;
             if (PerformanceCalculator != null)
             {
-                ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.CreateCopy()).ToArray();
+                ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.DeepClone()).ToArray();
                 ppCalculator.PerformanceCalculator = Ruleset.CreatePerformanceCalculator(TimedDifficultyAttributes.Last().Attributes, ppCalculator.ScoreInfo);
                 ppCalculator.TimedDifficultyAttributes = TimedDifficultyAttributes;
                 ppCalculator.ResetPerformanceCalculator = false;
@@ -253,7 +253,7 @@ namespace PpCalculator
                 mods.Add(newMod);
             }
 
-            return mods.Select(m => m.CreateCopy()).ToList();
+            return mods.Select(m => m.DeepClone()).ToList();
         }
 
         public int GetMaxCombo(int? fromTime = null)
