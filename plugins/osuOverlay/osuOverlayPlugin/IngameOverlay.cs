@@ -22,7 +22,7 @@ namespace osuOverlay
         public static readonly ConfigEntry EnableIngameOverlay = new ConfigEntry("EnableIngameOverlay", true);
 
         private ISettings _settings;
-        public string SettingGroup { get; } = "General";
+        public string SettingGroup { get; } = "In-game overlay__Text overlay";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
         private Process _currentOsuProcess;

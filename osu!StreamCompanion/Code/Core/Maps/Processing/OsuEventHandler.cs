@@ -17,7 +17,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
     public sealed class OsuEventHandler : IDisposable
     {
-        public static ConfigEntry ConserveMemory = new ConfigEntry("ConserveMemory", true);
+        public static ConfigEntry ConserveCpuInterval = new("ConserveCpuInterval", 350);
+        public static ConfigEntry ConserveMemory = new("ConserveMemory", true);
 
         private readonly SettingNames _names = SettingNames.Instance;
         private IContextAwareLogger _logger;
@@ -156,6 +157,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
             if (mapSearchArgs.EventType == OsuEventType.MapChange || _workerState.LastMapSearchResult == null || !_workerState.LastMapSearchResult.BeatmapsFound.Any())
             {
+                //these value resets are required in order to maintain eventType order(MapChange, then multiple SceneChange/PlayChange events for same map) whenever previous map search was aborted
+                mapSearchArgs.EventType = OsuEventType.MapChange;
+                _workerState.LastMapSearchResult = null;
+
+                await DelayBeatmapSearch(token);
                 _logger.SetContextData("SearchingForBeatmaps", "1");
                 _workerState.LastMapSearchResult = await _mainMapDataGetter.FindMapData(mapSearchArgs, token);
                 _logger.SetContextData("SearchingForBeatmaps", "0");
@@ -169,6 +175,15 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             searchResult.BeatmapsFound.AddRange(_workerState.LastMapSearchResult.BeatmapsFound);
             return searchResult;
         }
+
+        private Task DelayBeatmapSearch(CancellationToken token)
+        {
+            var interval = _settings.Get<int>(ConserveCpuInterval);
+            return interval > 0
+                ? Task.Delay(interval, token)
+                : Task.CompletedTask;
+        }
+
         private async Task HandleMapSearchResult(IMapSearchResult mapSearchResult, CancellationToken token)
         {
             _logger.SetContextData("searchResult", new

@@ -59,7 +59,7 @@ namespace osu_StreamCompanion.Code.Modules.Logger
             return loggerSettingsControl;
         }
 
-        public string SettingGroup { get; } = "General";
+        public string SettingGroup { get; } = "General__Logging";
 
         public void Dispose()
         {

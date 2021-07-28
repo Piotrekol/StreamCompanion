@@ -52,6 +52,8 @@ namespace OsuMemoryEventSource
         private IToken _skinPathToken;
         private IToken _statusToken;
         private IToken _rawStatusToken;
+        private IToken _beatmapIdToken;
+        private IToken _beatmapSetIdToken;
 
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
@@ -96,8 +98,8 @@ namespace OsuMemoryEventSource
             IsMainProcessor = isMainProcessor;
             TokensPath = tokensPath;
 
+            //TODO: Refactor these out to separate class already..(and make sure these run under isMainProcessor only)
             _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
-
             _skinToken = _tokenSetter("skin", string.Empty, TokenType.Normal, null, string.Empty);
             _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
             _firstHitObjectTimeToken = _tokenSetter("firstHitObjectTime", 0d, TokenType.Normal, null, 0d);
@@ -106,6 +108,9 @@ namespace OsuMemoryEventSource
             _beatmapRankedStatusToken = _tokenSetter("rankedStatus", (short)0, TokenType.Normal, null, (short)0);
             _statusToken = _tokenSetter("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null);
             _rawStatusToken = _tokenSetter("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning);
+            _beatmapIdToken = _tokenSetter("mapid", 0, TokenType.Normal, null, 0);
+            _beatmapSetIdToken = _tokenSetter("mapsetid", 0, TokenType.Normal, null, 0);
+
             InitLiveTokens();
             Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
         }
@@ -281,7 +286,7 @@ namespace OsuMemoryEventSource
         private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            _liveTokens[name] = new LazyLiveToken(_liveTokenSetter(name, new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist), updater);
+            _liveTokens[name] = new LazyLiveToken(_liveTokenSetter($"{TokensPath}{name}", new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist), updater);
         }
 
         private void InitLiveTokens()
@@ -494,6 +499,8 @@ namespace OsuMemoryEventSource
             if (!IsMainProcessor)
                 return;
 
+            _beatmapIdToken.Value = OsuMemoryData.Beatmap.Id;
+            _beatmapSetIdToken.Value = OsuMemoryData.Beatmap.SetId;
             _beatmapRankedStatusToken.Value = OsuMemoryData.Beatmap.Status;
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
