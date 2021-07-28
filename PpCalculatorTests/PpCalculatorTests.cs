@@ -15,8 +15,9 @@ namespace PpCalculator.Tests
         private const string base_url = "https://osu.ppy.sh";
 
         [Test]
-        [TestCase(5, 0, 0, 595, "HD,DT", 629.901, 1185330)]
-        [TestCase(9, 0, 0, 858, "HD,DT", 707.372, 2333273)]
+        [TestCase(5, 0, 0, 595, "HD,DT", 616.147, 1185330)]
+        [TestCase(9, 0, 0, 858, "HD,DT", 685.722, 2333273)]
+        [TestCase(25, 0, 2, 1631, "HD,DT,HR", 1240.605, 2486881)]
         public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
 
