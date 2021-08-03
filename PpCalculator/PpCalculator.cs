@@ -219,6 +219,14 @@ namespace PpCalculator
                 ResetPerformanceCalculator = false;
             }
 
+            if (endTime.HasValue)
+            {
+                if (_Mods.Any(m => m == "DT"))
+                    endTime *= 2;
+                else if (_Mods.Any(m => m == "HT"))
+                    endTime /= 2;
+            }
+
             try
             {
 
