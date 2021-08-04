@@ -31,11 +31,23 @@ namespace PpCalculator
         public virtual int Score { get; set; }
 
         private string[] _Mods { get; set; }
-
+        private double endTimeSpeedMultiplier = 1;
         public virtual string[] Mods
         {
             get => _Mods;
-            set => _Mods = value;
+            set
+            {
+                endTimeSpeedMultiplier = 1;
+                if (value != null)
+                {
+                    if (value.Any(m => m == "DT"))
+                        endTimeSpeedMultiplier = 2;
+                    else if (value.Any(m => m == "HT"))
+                        endTimeSpeedMultiplier = 0.5;
+                }
+
+                _Mods = value;
+            }
         }
 
         public virtual int Misses { get; set; }
@@ -199,14 +211,10 @@ namespace PpCalculator
             if (!hitObjects.Any())
                 return 0d;
 
-            int beatmapMaxCombo = GetMaxCombo(hitObjects);
-
-            var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * beatmapMaxCombo);
+            var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
             var statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katsus);
-
             var score = Score;
             var accuracy = GetAccuracy(statistics);
-
 
             ScoreInfo.Accuracy = accuracy;
             ScoreInfo.MaxCombo = maxCombo;
@@ -219,22 +227,18 @@ namespace PpCalculator
                 ResetPerformanceCalculator = false;
             }
 
-            if (endTime.HasValue)
-            {
-                if (_Mods.Any(m => m == "DT"))
-                    endTime *= 2;
-                else if (_Mods.Any(m => m == "HT"))
-                    endTime /= 2;
-            }
-
             try
             {
+                if (endTime.HasValue)
+                {
+                    endTime *= endTimeSpeedMultiplier;
+                    return PerformanceCalculator.Calculate(endTime.Value,
+                        TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ??
+                        TimedDifficultyAttributes.First().Attributes,
+                        categoryAttribs);
+                }
 
-                return endTime.HasValue
-                    ? PerformanceCalculator.Calculate(endTime.Value,
-                        TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ?? TimedDifficultyAttributes.First().Attributes,
-                        categoryAttribs)
-                    : PerformanceCalculator.Calculate(categoryAttribs);
+                return PerformanceCalculator.Calculate(categoryAttribs);
             }
             catch (InvalidOperationException)
             {
