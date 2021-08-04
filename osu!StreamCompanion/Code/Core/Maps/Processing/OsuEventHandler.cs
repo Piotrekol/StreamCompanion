@@ -91,11 +91,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 {
                     await HandleMapSearchArgs(GetSearchArgs());
                 }
-                catch (TaskCanceledException)
-                {
-                }
                 catch (OperationCanceledException)
                 {
+                    _workerState.LastProcessingCancelled = true;
                 }
                 catch (Exception ex)
                 {
@@ -128,7 +126,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchArgs == null)
                 return;
 
-
             _cancellationTokenSource.Dispose();
             _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
@@ -152,15 +149,21 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private async Task<IMapSearchResult> FindBeatmaps(IMapSearchArgs mapSearchArgs, CancellationToken token)
         {
             if (mapSearchArgs.MapId == 0 && string.IsNullOrEmpty(mapSearchArgs.MapHash) && string.IsNullOrEmpty(mapSearchArgs.Raw))
-                //TODO: TEST
                 return null;
 
-            if (mapSearchArgs.EventType == OsuEventType.MapChange || _workerState.LastMapSearchResult == null || !_workerState.LastMapSearchResult.BeatmapsFound.Any())
+            bool performMapSearch = true;
+            if (_workerState.LastProcessingCancelled)
             {
-                //these value resets are required in order to maintain eventType order(MapChange, then multiple SceneChange/PlayChange events for same map) whenever previous map search was aborted
+                _workerState.LastProcessingCancelled = false;
+                //preserve previous search results if we have same map file with same mods
+                performMapSearch = string.IsNullOrWhiteSpace(mapSearchArgs.MapHash)
+                                   || _workerState.LastMapSearchResult.SearchArgs.MapHash != mapSearchArgs.MapHash
+                                   || _workerState.LastMapSearchResult.SearchArgs.Mods != mapSearchArgs.Mods;
                 mapSearchArgs.EventType = OsuEventType.MapChange;
-                _workerState.LastMapSearchResult = null;
+            }
 
+            if (performMapSearch && (mapSearchArgs.EventType == OsuEventType.MapChange || _workerState.LastMapSearchResult == null || !_workerState.LastMapSearchResult.BeatmapsFound.Any()))
+            {
                 await DelayBeatmapSearch(token);
                 _logger.SetContextData("SearchingForBeatmaps", "1");
                 _workerState.LastMapSearchResult = await _mainMapDataGetter.FindMapData(mapSearchArgs, token);
@@ -168,12 +171,15 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 return _workerState.LastMapSearchResult;
             }
 
+            _logger.Log((!performMapSearch ? "Skipped map search & " : "") + "Reusing last search result", LogLevel.Trace);
+
             var searchResult = new MapSearchResult(mapSearchArgs)
             {
                 Mods = _workerState.LastMapSearchResult.Mods
             };
             searchResult.BeatmapsFound.AddRange(_workerState.LastMapSearchResult.BeatmapsFound);
-            return searchResult;
+            searchResult.SharedObjects.AddRange(_workerState.LastMapSearchResult.SharedObjects);
+            return _workerState.LastMapSearchResult = searchResult;
         }
 
         private Task DelayBeatmapSearch(CancellationToken token)
@@ -210,6 +216,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             public bool IsMemoryPoolingEnabled { get; set; }
             public bool MemorySearchFailed { get; set; }
             public IMapSearchResult LastMapSearchResult { get; set; }
+            public bool LastProcessingCancelled { get; set; }
         }
     }
 }

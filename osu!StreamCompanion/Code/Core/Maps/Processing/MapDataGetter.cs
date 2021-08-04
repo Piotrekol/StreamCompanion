@@ -89,9 +89,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             return Task.Run(async () =>
             {
-                if (await mapSearchResult.GetPpCalculator(CancellationToken.None) == null)
-                    mapSearchResult.SharedObjects.Add(CreatePpCalculatorTask(mapSearchResult));
-
                 await CreateTokens(mapSearchResult, cancellationToken);
                 if (cancellationToken.IsCancellationRequested)
                     return;
@@ -112,35 +109,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 SetNewMap(mapSearchResult, cancellationToken);
             }, cancellationToken);
         }
-
-        private CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorTask(IMapSearchResult mapSearchResult) =>
-            new CancelableAsyncLazy<IPpCalculator>((cancellationToken) =>
-            {
-                if (!(mapSearchResult.BeatmapsFound.Any() &&
-                      mapSearchResult.BeatmapsFound[0].IsValidBeatmap(_settings, out var mapLocation)))
-                    return Task.FromResult<IPpCalculator>(null);
-                var desiredGamemode = mapSearchResult.PlayMode.HasValue ? (int?)mapSearchResult.PlayMode : null;
-                var playMode = (PlayMode)PpCalculatorHelpers.GetRulesetId((int)mapSearchResult.BeatmapsFound[0].PlayMode, desiredGamemode);
-                var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)playMode, mapLocation, null);
-                ppCalculator.Mods = (mapSearchResult.Mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                try
-                {
-                    ppCalculator.Calculate(cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    throw;
-                }
-                //specifically for BeatmapInvalidForRulesetException (beatmap had invalid hitobject with missing position data)
-                catch (Exception e)
-                {
-                    e.Data["PreventedCrash"] = 1;
-                    _logger.Log(e, LogLevel.Critical);
-                    return Task.FromResult<IPpCalculator>(null);
-                }
-
-                return Task.FromResult((IPpCalculator)ppCalculator);
-            });
 
         private Task CreateTokens(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
