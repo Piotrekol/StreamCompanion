@@ -12,6 +12,8 @@ mkdir Output
 
 REM copy files to new folder
 cp -r ./Release/* ./Output/
+REM copy web overlay
+robocopy ./webOverlay ./build/Output/Files/Web /E
 
 REM remove debug symbols
 rm ./Output/*.pdb
@@ -32,3 +34,9 @@ REM create installer (Inno Setup 6)
 7z a .\build\ingameOverlay.zip .\build\Release_unsafe\*
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\osuOverlayScript.iss"
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\browserOverlayScript.iss"
+
+type nul > .\build\Output\.portableMode
+7z a .\build\ingameOverlay.zip .\build\Release_unsafe\*
+7z a .\build\StreamCompanion-portable.zip .\build\Output\*
+7z a .\build\StreamCompanion-portable-browserOverlay.zip .\build\Release_browserOverlay\*
+7z a .\build\StreamCompanion-portable-ingameOverlay.zip .\build\Release_unsafe\*
