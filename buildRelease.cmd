@@ -9,4 +9,7 @@ build\nuget.exe restore
 REM build solution
 build\msbuild.bat . /p:Configuration=Release /p:Platform=x86
 
+REM copy web overlays
+robocopy .\webOverlay .\build\Release\Files\Web /E
+
 pause

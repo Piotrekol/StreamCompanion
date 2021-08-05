@@ -4,6 +4,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 {
     public class UpdateContainer
     {
+        public bool PortableMode { get; set; }
         public string Version { get; set; }
         public string DownloadPageUrl { get; set; }
         public string ExeDownloadUrl { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -22,6 +23,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private const string githubChangelogUrl = baseGithubUrl + "/releases";
         private DateTime _currentVersion = Helpers.Helpers.GetDateFromVersionString(Program.ScVersion);
         private Exception exception = null;
+        private Lazy<bool> portableMode = new(() => File.Exists(".portableMode"));
         public bool Started { get; set; }
         internal static string UpdaterExeName = "StreamCompanion Updater.exe";
 
@@ -122,6 +124,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                             Version = newestReleaseVersion,
                             ExpectedExeSizeInBytes = asset["size"].ToObject<int>(),
                             DownloadPageUrl = json["html_url"].ToString(),
+                            PortableMode = portableMode.Value,
                             Changelog = GetChangelog()
                         };
                         await SetStatus(string.Format("Update to version {0} is available",

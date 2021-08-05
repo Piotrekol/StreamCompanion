@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 
 namespace osu_StreamCompanion.Code.Modules.Updater
 {
@@ -22,26 +23,29 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 
         private void SetLabels()
         {
-            this.label_currentVersion.Text = string.Format("Your version: {0}", Program.ScVersion);
-            this.label_newVersion.Text = string.Format("Newest version avaliable: {0}", UpdateContainer.Version);
-            this.richTextBox_changelog.Rtf = UpdateContainer.GetChangelog(true);
+            label_currentVersion.Text = string.Format("Your version: {0}", Program.ScVersion);
+            label_newVersion.Text = string.Format("Newest version avaliable: {0}", UpdateContainer.Version);
+            richTextBox_changelog.Rtf = UpdateContainer.GetChangelog(true);
+            if (UpdateContainer.PortableMode)
+            {
+                button_update.Text = "Releases";
+            }
         }
 
         private void StartUpdate()
         {
-            
             panel_downloadProgress.Visible = true;
             var fullTempSavePath = saveDirectory + tempFileName;
-            if(File.Exists(fullTempSavePath))
+            if (File.Exists(fullTempSavePath))
                 File.Delete(fullTempSavePath);
             using (WebClient wc = new WebClient())
             {
                 wc.DownloadProgressChanged += WcOnDownloadProgressChanged;
-                wc.DownloadFileCompleted+=WcOnDownloadFileCompleted;
+                wc.DownloadFileCompleted += WcOnDownloadFileCompleted;
                 wc.DownloadFileAsync(new System.Uri(UpdateContainer.ExeDownloadUrl), fullTempSavePath);
             }
         }
-        
+
         private void WcOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs args)
         {
             var fullTempSavePath = saveDirectory + tempFileName;
@@ -50,14 +54,14 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             if (args.Error != null)
             {
                 MessageBox.Show("There was a problem with download. \n " + args.Error.Message);
-                if(File.Exists(fullTempSavePath))
+                if (File.Exists(fullTempSavePath))
                     File.Delete(fullTempSavePath);
                 return;
             }
+
             if (args.Cancelled)
-            {
                 return;
-            }
+
             FileInfo file = new FileInfo(fullTempSavePath);
             var downloadedSize = file.Length;
             var expectedSize = UpdateContainer.ExpectedExeSizeInBytes;
@@ -68,18 +72,13 @@ namespace osu_StreamCompanion.Code.Modules.Updater
                     "Download error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
-
-
-
-
 
             if (File.Exists(fullSavePath))
                 File.Delete(fullSavePath);
+
             if (File.Exists(fullTempSavePath))
             {
                 File.Move(fullTempSavePath, fullSavePath);
-
                 Process.Start(Updater.UpdaterExeName, string.Format("\"{0}\" \"{1}\"", fullSavePath, " /VERYSILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS"));
                 Program.SafeQuit();
             }
@@ -88,14 +87,14 @@ namespace osu_StreamCompanion.Code.Modules.Updater
         private void WcOnDownloadProgressChanged(object o, DownloadProgressChangedEventArgs args)
         {
             this.progressBar1.Value = args.ProgressPercentage;
-            this.label_downloadProgress.Text = string.Format("{0:0.##,9}MB/{1:0.##,9}MB  {2}%", 
+            this.label_downloadProgress.Text = string.Format("{0:0.##,9}MB/{1:0.##,9}MB  {2}%",
                 bytesToMbytes(args.BytesReceived), bytesToMbytes(args.TotalBytesToReceive), args.ProgressPercentage);
         }
 
         private double bytesToMbytes(long bytes)
         {
             if (bytes > 0)
-                return bytes / (1024d* 1024d);
+                return bytes / (1024d * 1024d);
             return 0;
         }
         private void button_cancel_Click(object sender, EventArgs e)
@@ -106,6 +105,12 @@ namespace osu_StreamCompanion.Code.Modules.Updater
 
         private void button_update_Click(object sender, EventArgs e)
         {
+            if (UpdateContainer.PortableMode)
+            {
+                ProcessExt.OpenUrl(UpdateContainer.DownloadPageUrl);
+                return;
+            }
+
             button_update.Enabled = false;
             StartUpdate();
         }
