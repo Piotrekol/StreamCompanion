@@ -13,7 +13,7 @@ mkdir Output
 REM copy files to new folder
 cp -r ./Release/* ./Output/
 REM copy web overlay
-robocopy ../webOverlay ./build/Output/Files/Web /E
+robocopy ../webOverlay ./Output/Files/Web /E
 
 REM remove debug symbols
 rm ./Output/*.pdb
