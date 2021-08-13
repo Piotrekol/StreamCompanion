@@ -6,11 +6,21 @@ namespace OsuMemoryEventSource
     {
         Linear, EaseIn, EaseOutQuint
     }
+
+    public class RoundedInterpolatedValue : InterpolatedValue
+    {
+        public int DecimalPlaces { get; set; } = 3;
+        public override double Current => Math.Round(base.Current, DecimalPlaces);
+
+        public RoundedInterpolatedValue(double speed) : base(speed)
+        {
+        }
+    }
+
     public class InterpolatedValue
     {
-
         public InterpolationType InterpolationType { get; set; } = InterpolationType.EaseOutQuint;
-        public double Current { get; private set; } = 0;
+        public virtual double Current { get; private set; } = 0;
         private double _orginalValue = 0;
         private double _finalValue = 0;
         private double _transitionSpeed;

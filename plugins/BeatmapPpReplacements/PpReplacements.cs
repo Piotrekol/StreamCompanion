@@ -140,7 +140,7 @@ namespace BeatmapPpReplacements
 
             _ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            return ppCalculator.Calculate(cancellationToken);
+            return Math.Round(ppCalculator.Calculate(cancellationToken), 3);
         }
     }
 }

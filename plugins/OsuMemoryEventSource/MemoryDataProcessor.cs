@@ -77,7 +77,7 @@ namespace OsuMemoryEventSource
         private ManualResetEvent _notUpdatingMemoryValues = new ManualResetEvent(true);
         private ManualResetEvent _newPlayStarted = new ManualResetEvent(true);
 
-        private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new Dictionary<InterpolatedValueName, InterpolatedValue>();
+        private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
         public bool IsMainProcessor { get; private set; }
@@ -91,7 +91,7 @@ namespace OsuMemoryEventSource
             _modParser = modParser;
             foreach (var v in (InterpolatedValueName[])Enum.GetValues(typeof(InterpolatedValueName)))
             {
-                InterpolatedValues.Add(v, new InterpolatedValue(0.15));
+                InterpolatedValues.Add(v, new RoundedInterpolatedValue(0.15));
             }
 
             ToggleSmoothing(true);
