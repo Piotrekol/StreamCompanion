@@ -38,4 +38,4 @@ REM create installer (Inno Setup 6)
 type nul > .\build\Output\.portableMode
 7z a .\build\StreamCompanion-portable.zip .\build\Output\*
 7z a .\build\StreamCompanion-portable-browserOverlay.zip .\build\Release_browserOverlay\*
-7z a .\build\StreamCompanion-portable-ingameOverlay.zip .\build\Release_unsafe\*
+7z a .\build\StreamCompanion-portable-textOverlay.zip .\build\Release_unsafe\*

@@ -34,20 +34,22 @@
             // checkBox_ingameOverlay
             // 
             this.checkBox_ingameOverlay.AutoSize = true;
-            this.checkBox_ingameOverlay.Location = new System.Drawing.Point(4, 4);
+            this.checkBox_ingameOverlay.Location = new System.Drawing.Point(5, 5);
+            this.checkBox_ingameOverlay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.checkBox_ingameOverlay.Name = "checkBox_ingameOverlay";
-            this.checkBox_ingameOverlay.Size = new System.Drawing.Size(233, 17);
+            this.checkBox_ingameOverlay.Size = new System.Drawing.Size(277, 19);
             this.checkBox_ingameOverlay.TabIndex = 0;
-            this.checkBox_ingameOverlay.Text = "Enable ingame overlay (Requires SC restart)";
+            this.checkBox_ingameOverlay.Text = "Enable text ingame overlay (Requires SC restart)";
             this.checkBox_ingameOverlay.UseVisualStyleBackColor = true;
             // 
             // IngameOverlaySettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.checkBox_ingameOverlay);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "IngameOverlaySettings";
-            this.Size = new System.Drawing.Size(259, 24);
+            this.Size = new System.Drawing.Size(302, 28);
             this.ResumeLayout(false);
             this.PerformLayout();
 
