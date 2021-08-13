@@ -295,8 +295,8 @@ namespace OsuMemoryEventSource
             var playingWatchingResults = playingOrWatching | OsuStatus.ResultsScreen;
             CreateLiveToken("username", _rawData.Play.Username, TokenType.Live, "", string.Empty, playingWatchingResults, () => _rawData.Play.Username);
             CreateLiveToken("acc", 0d, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play is Player player
-                ? player.Accuracy
-                : CalculateAccuracy(_playMode, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss, _rawData.Play.HitGeki, _rawData.Play.HitKatu) * 100
+                ? Math.Round(player.Accuracy, 2)
+                : Math.Round(CalculateAccuracy(_playMode, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss, _rawData.Play.HitGeki, _rawData.Play.HitKatu) * 100, 2)
                 );
             CreateLiveToken("katsu", _rawData.Play.HitKatu, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitKatu);
             CreateLiveToken("geki", _rawData.Play.HitGeki, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitGeki);
