@@ -22,6 +22,7 @@ namespace osuOverlay
         public static readonly ConfigEntry EnableIngameOverlay = new ConfigEntry("EnableIngameOverlay", true);
 
         private ISettings _settings;
+        private readonly Delegates.Restart _restarter;
         public string SettingGroup { get; } = "In-game overlay__Text overlay";
         private IngameOverlaySettings _overlaySettings;
         private ILogger _logger;
@@ -37,10 +38,11 @@ namespace osuOverlay
         public string UpdateUrl { get; } = "";
         CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
-        public IngameOverlay(ILogger logger, ISettings settings, Delegates.Exit exiter)
+        public IngameOverlay(ILogger logger, ISettings settings, Delegates.Restart restarter)
         {
             _logger = logger;
             _settings = settings;
+            _restarter = restarter;
             var enabled = _settings.Get<bool>(EnableIngameOverlay);
             if (enabled && BrowserOverlayIsEnabled(_settings))
             {
@@ -241,6 +243,7 @@ namespace osuOverlay
             if (_overlaySettings == null || _overlaySettings.IsDisposed)
             {
                 _overlaySettings = new IngameOverlaySettings(_settings);
+                _overlaySettings.OverlayToggled += (_, value) => _restarter($"Text overlay was toggled. isEnabled:{value}");
             }
             return _overlaySettings;
         }

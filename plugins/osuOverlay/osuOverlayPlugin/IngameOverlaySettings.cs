@@ -9,7 +9,7 @@ namespace osuOverlay
     {
 
         private readonly ISettings _settings;
-
+        public event EventHandler<bool> OverlayToggled;
         public IngameOverlaySettings(ISettings settings)
         {
             _settings = settings;
@@ -22,7 +22,12 @@ namespace osuOverlay
         private void CheckBoxIngameOverlayOnCheckedChanged(object sender, EventArgs eventArgs)
         {
             _settings.Add(IngameOverlay.EnableIngameOverlay.Name, checkBox_ingameOverlay.Checked);
+            OnOverlayToggled(checkBox_ingameOverlay.Checked);
         }
 
+        protected virtual void OnOverlayToggled(bool value)
+        {
+            OverlayToggled?.Invoke(this, value);
+        }
     }
 }

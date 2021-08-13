@@ -14,7 +14,7 @@ namespace BrowserOverlay
     public partial class BrowserOverlaySettings : UserControl
     {
         private readonly Configuration _configuration;
-        public EventHandler OnSettingUpdated;
+        public EventHandler<(string SettingName, object Value)?> SettingUpdated;
         private bool _init = true;
         private BindingList<OverlayTab> OverlayTabs;
         private OverlayTab CurrentOverlayTab = null;
@@ -54,7 +54,7 @@ namespace BrowserOverlay
             CurrentOverlayTab.Url = textBox_overlayUrl.Text;
             CurrentOverlayTab.Scale = numericUpDown_scale.Value;
             OverlayTabs.ResetBindings();
-            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+            OnSettingUpdated();
         }
 
         private void checkBox_enable_CheckedChanged(object sender, EventArgs e)
@@ -63,13 +63,13 @@ namespace BrowserOverlay
                 return;
 
             panel_content.Enabled = _configuration.Enabled = checkBox_enable.Checked;
-            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+            OnSettingUpdated("enable", checkBox_enable.Checked);
         }
 
         private void button_addTab_Click(object sender, EventArgs e)
         {
             OverlayTabs.AddNew();
-            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+            OnSettingUpdated();
         }
 
         private void button_remove_Click(object sender, EventArgs e)
@@ -78,7 +78,7 @@ namespace BrowserOverlay
                 return;
 
             OverlayTabs.Remove((OverlayTab)listBox_tabs.SelectedItem);
-            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+            SettingUpdated?.Invoke(this, null);
         }
 
         private void listBox_tabs_SelectedIndexChanged(object sender, EventArgs e)
@@ -102,5 +102,13 @@ namespace BrowserOverlay
             _init = false;
         }
 
+        protected virtual void OnSettingUpdated()
+        {
+            SettingUpdated?.Invoke(this, null);
+        }
+        protected virtual void OnSettingUpdated(string settingName, object value)
+        {
+            SettingUpdated?.Invoke(this, (settingName, value));
+        }
     }
 }

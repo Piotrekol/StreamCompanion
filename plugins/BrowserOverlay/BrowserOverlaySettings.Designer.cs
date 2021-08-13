@@ -63,9 +63,9 @@ namespace BrowserOverlay
             this.checkBox_enable.AutoSize = true;
             this.checkBox_enable.Location = new System.Drawing.Point(17, 12);
             this.checkBox_enable.Name = "checkBox_enable";
-            this.checkBox_enable.Size = new System.Drawing.Size(61, 19);
+            this.checkBox_enable.Size = new System.Drawing.Size(299, 19);
             this.checkBox_enable.TabIndex = 0;
-            this.checkBox_enable.Text = "Enable";
+            this.checkBox_enable.Text = "Enable browser ingame overlay (Requires SC restart)";
             this.checkBox_enable.UseVisualStyleBackColor = true;
             this.checkBox_enable.CheckedChanged += new System.EventHandler(this.checkBox_enable_CheckedChanged);
             // 

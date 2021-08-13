@@ -93,16 +93,20 @@ namespace BrowserOverlay
             if (_browserOverlaySettings == null || _browserOverlaySettings.IsDisposed)
             {
                 _browserOverlaySettings = new BrowserOverlaySettings(_browserOverlayConfiguration);
-                _browserOverlaySettings.OnSettingUpdated += OnSettingUpdated;
+                _browserOverlaySettings.SettingUpdated += OnSettingUpdated;
             }
             return _browserOverlaySettings;
         }
 
-        private void OnSettingUpdated(object sender, EventArgs e)
+        private void OnSettingUpdated(object sender, (string SettingName, object Value)? eventData)
         {
             _settings.Add(BrowserOverlayConfigurationConfigEntry.Name, JsonConvert.SerializeObject(_browserOverlayConfiguration));
             SendConfiguration();
+            
+            if (eventData != null && eventData.Value.SettingName == "enable")
+                _restarter($"Browser overlay was toggled. isEnabled:{eventData.Value.Value}");
         }
+
 
         private async Task Initialize()
         {
@@ -147,7 +151,7 @@ namespace BrowserOverlay
                     _overlayDownloadForm.SetStatus("Failed to download assets - restart SC to try again");
                     return;
                 }
-                
+
                 File.Move(tempFileLocation, zipFileLocation);
             }
 
