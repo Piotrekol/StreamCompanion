@@ -151,12 +151,15 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchArgs.MapId == 0 && string.IsNullOrEmpty(mapSearchArgs.MapHash) && string.IsNullOrEmpty(mapSearchArgs.Raw))
                 return null;
 
-            bool performMapSearch = true;
+            var performMapSearch = true;
             if (_workerState.LastProcessingCancelled)
             {
                 _workerState.LastProcessingCancelled = false;
-                //preserve previous search results if we have same map file with same mods
-                performMapSearch = string.IsNullOrWhiteSpace(mapSearchArgs.MapHash)
+                //preserve previous search results if we have same playMode & same map _file hash_ & same mods
+                performMapSearch = _workerState.LastMapSearchResult == null
+                                   || _workerState.LastMapSearchResult.PlayMode != mapSearchArgs.PlayMode
+                                   || !_workerState.LastMapSearchResult.BeatmapsFound.Any()
+                                   || string.IsNullOrWhiteSpace(mapSearchArgs.MapHash)
                                    || _workerState.LastMapSearchResult.SearchArgs.MapHash != mapSearchArgs.MapHash
                                    || _workerState.LastMapSearchResult.SearchArgs.Mods != mapSearchArgs.Mods;
                 mapSearchArgs.EventType = OsuEventType.MapChange;
