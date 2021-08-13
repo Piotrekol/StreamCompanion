@@ -57,6 +57,19 @@ namespace PpCalculator.Tests
             Assert.That(calculatedPp, Is.EqualTo(expectedPp).Within(0.01));
         }
 
+        [Test]
+        [TestCase(2462439, 500)]
+        public void HasSamePpForStaticAndTimedCalculate(int mapId, double lengthCorrection = 0)
+        {
+            var ppCalculator = new OsuCalculator();
+            ppCalculator.PreProcess(GetMapPath(2462439));
+
+            var ssPp = ppCalculator.Calculate();
+            var endPerfectPp = ppCalculator.Calculate(ppCalculator.WorkingBeatmap.Length + lengthCorrection, new Dictionary<string, double>());
+
+            Assert.AreEqual(ssPp, endPerfectPp);
+        }
+
         private string GetMapPath(int mapId)
         {
             if (!Directory.Exists("cache"))
