@@ -58,19 +58,44 @@ namespace PpCalculator.Tests
         }
 
         [Test]
-        [TestCase(2462439,"", 500)]
-        [TestCase(2462439,"DT", 500)]
+        [TestCase(2462439, "", 500)]
+        [TestCase(2462439, "DT", 500)]
         [TestCase(2462439, "HT", 500)]
-        public void HasSamePpForStaticAndTimedCalculate(int mapId,string mods, double lengthCorrection = 0)
+        public void HasSamePpForStaticAndTimedCalculate(int mapId, string mods, double lengthCorrection = 0)
         {
             var ppCalculator = new OsuCalculator();
-            ppCalculator.PreProcess(GetMapPath(2462439));
+            ppCalculator.PreProcess(GetMapPath(mapId));
             ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
             var ssPp = ppCalculator.Calculate();
             var endPerfectPp = ppCalculator.Calculate(ppCalculator.WorkingBeatmap.Length + lengthCorrection, new Dictionary<string, double>());
 
             Assert.AreEqual(ssPp, endPerfectPp);
+        }
+
+        [Test]
+        [TestCase(2462439, 59_936)]
+        public void HasSamePpAtSpecificMapTimeWithTimedAndCutMap(int mapId, double cutTime)
+        {
+            foreach (var mods in new[] { "", "DT", "HT" })
+                _HasSamePpAtSpecificMapTimeWithTimedAndCutMap(mapId, mods, cutTime);
+        }
+        private void _HasSamePpAtSpecificMapTimeWithTimedAndCutMap(int mapId, string mods, double cutTime)
+        {
+            var aaa = cutTime * 0.75;
+            var ppCalculator1 = new OsuCalculator();
+            ppCalculator1.PreProcess($@".\cache\{mapId}_cut.osu");
+            ppCalculator1.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            var cutPp = ppCalculator1.Calculate();
+
+            var ppCalculator2 = new OsuCalculator();
+            ppCalculator2.PreProcess(GetMapPath(mapId));
+            ppCalculator2.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            var fullPp = ppCalculator2.Calculate();
+            var timedPp = ppCalculator2.Calculate(cutTime, new Dictionary<string, double>());
+
+            Assert.That(cutPp, Is.EqualTo(timedPp).Within(0.001), () => $"Mods: {mods}");
+            Assert.AreNotEqual(fullPp, timedPp, $"fullPp has same value! Mods: {mods}");
         }
 
         private string GetMapPath(int mapId)

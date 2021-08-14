@@ -26,6 +26,12 @@
   <ItemGroup>
     <ProjectReference Include="..\PpCalculator\PpCalculator.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="cache\2462439_cut.osu">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 	<Choose>
 		<When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
 			<ItemGroup>
