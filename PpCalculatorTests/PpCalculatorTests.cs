@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using CollectionManager.DataTypes;
 using NUnit.Framework;
 using osu.Framework.IO.Network;
-using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
-
 
 namespace PpCalculator.Tests
 {
@@ -80,9 +77,9 @@ namespace PpCalculator.Tests
             foreach (var mods in new[] { "", "DT", "HT" })
                 _HasSamePpAtSpecificMapTimeWithTimedAndCutMap(mapId, mods, cutTime);
         }
+
         private void _HasSamePpAtSpecificMapTimeWithTimedAndCutMap(int mapId, string mods, double cutTime)
         {
-            var aaa = cutTime * 0.75;
             var ppCalculator1 = new OsuCalculator();
             ppCalculator1.PreProcess($@".\cache\{mapId}_cut.osu");
             ppCalculator1.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);

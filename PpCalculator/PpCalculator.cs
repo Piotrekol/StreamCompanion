@@ -217,12 +217,9 @@ namespace PpCalculator
             try
             {
                 if (endTime.HasValue)
-                {
                     return PerformanceCalculator.Calculate(endTime.Value,
                         TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ??
-                        TimedDifficultyAttributes.First().Attributes,
-                        categoryAttribs);
-                }
+                        TimedDifficultyAttributes.First().Attributes, categoryAttribs);
 
                 return PerformanceCalculator.Calculate(categoryAttribs);
             }
