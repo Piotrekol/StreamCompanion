@@ -41,9 +41,9 @@ namespace PpCalculator
                 if (value != null)
                 {
                     if (value.Any(m => m == "DT"))
-                        endTimeSpeedMultiplier = 2;
+                        endTimeSpeedMultiplier = 0.75;
                     else if (value.Any(m => m == "HT"))
-                        endTimeSpeedMultiplier = 0.5;
+                        endTimeSpeedMultiplier = 1.5;
                 }
 
                 _Mods = value;
