@@ -58,11 +58,14 @@ namespace PpCalculator.Tests
         }
 
         [Test]
-        [TestCase(2462439, 500)]
-        public void HasSamePpForStaticAndTimedCalculate(int mapId, double lengthCorrection = 0)
+        [TestCase(2462439,"", 500)]
+        [TestCase(2462439,"DT", 500)]
+        [TestCase(2462439, "HT", 500)]
+        public void HasSamePpForStaticAndTimedCalculate(int mapId,string mods, double lengthCorrection = 0)
         {
             var ppCalculator = new OsuCalculator();
             ppCalculator.PreProcess(GetMapPath(2462439));
+            ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
             var ssPp = ppCalculator.Calculate();
             var endPerfectPp = ppCalculator.Calculate(ppCalculator.WorkingBeatmap.Length + lengthCorrection, new Dictionary<string, double>());
