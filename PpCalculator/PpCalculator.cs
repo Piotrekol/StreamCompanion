@@ -31,23 +31,10 @@ namespace PpCalculator
         public virtual int Score { get; set; }
 
         private string[] _Mods { get; set; }
-        private double endTimeSpeedMultiplier = 1;
         public virtual string[] Mods
         {
             get => _Mods;
-            set
-            {
-                endTimeSpeedMultiplier = 1;
-                if (value != null)
-                {
-                    if (value.Any(m => m == "DT"))
-                        endTimeSpeedMultiplier = 2;
-                    else if (value.Any(m => m == "HT"))
-                        endTimeSpeedMultiplier = 0.5;
-                }
-
-                _Mods = value;
-            }
+            set => _Mods = value;
         }
 
         public virtual int Misses { get; set; }
@@ -230,13 +217,9 @@ namespace PpCalculator
             try
             {
                 if (endTime.HasValue)
-                {
-                    endTime *= endTimeSpeedMultiplier;
                     return PerformanceCalculator.Calculate(endTime.Value,
                         TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ??
-                        TimedDifficultyAttributes.First().Attributes,
-                        categoryAttribs);
-                }
+                        TimedDifficultyAttributes.First().Attributes, categoryAttribs);
 
                 return PerformanceCalculator.Calculate(categoryAttribs);
             }
