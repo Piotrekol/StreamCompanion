@@ -46,6 +46,7 @@ namespace OsuSongsFolderWatcher
 
         private static Beatmap ConvertToSCBeatmap(IBeatmap lazerBeatmap, DifficultyAttributes difficultyAttributes, string fullFilePath, Mods mods)
         {
+            SanityCheck(lazerBeatmap);
             short circles, sliders, spinners;
             circles = sliders = spinners = 0;
             if (difficultyAttributes is OsuDifficultyAttributes osuAttributes)
@@ -56,7 +57,6 @@ namespace OsuSongsFolderWatcher
             }
 
             lazerBeatmap.BeatmapInfo.StarDifficulty = difficultyAttributes?.StarRating ?? 0;
-
             return new Beatmap
             {
                 PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID,
@@ -96,6 +96,22 @@ namespace OsuSongsFolderWatcher
                 LastPlayed = DateTime.MinValue,
                 LastSync = DateTime.MinValue
             };
+        }
+
+        private static void SanityCheck(IBeatmap lazerBeatmap)
+        {
+            if (lazerBeatmap == null)
+                throw new LazerNullReferenceException("lazerBeatmap");
+            if (lazerBeatmap.Metadata == null)
+                throw new LazerNullReferenceException("lazerBeatmap.Metadata");
+            if (lazerBeatmap.BeatmapInfo == null)
+                throw new LazerNullReferenceException("lazerBeatmap.BeatmapInfo");
+            if (lazerBeatmap.ControlPointInfo == null)
+                throw new LazerNullReferenceException("lazerBeatmap.ControlPointInfo");
+            if (lazerBeatmap.BeatmapInfo.BaseDifficulty == null)
+                throw new LazerNullReferenceException("lazerBeatmap.BeatmapInfo.BaseDifficulty");
+            if (lazerBeatmap.BeatmapInfo.Metadata == null)
+                throw new LazerNullReferenceException("lazerBeatmap.BeatmapInfo.Metadata");
         }
 
         private static double CalculateLength(IBeatmap b, bool drain = false)
