@@ -19,7 +19,8 @@
   - Magic(and more)
 
 ## Help!
-StreamCompanion has a wiki explaining most of its functionality. [Give it a read][wiki] if you are having problems or wish to know what SC can do.
+StreamCompanion has a wiki explaining most of its functionality. [Give it a read][wiki] if you are having problems or wish to know what SC can do.  
+Still clueless? Ask on [Discord][discord].
 
 Any contributions / constructive criticism is appreciated 
 
