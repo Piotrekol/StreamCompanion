@@ -48,7 +48,12 @@ export default defineUserConfig<DefaultThemeOptions>({
     docsDir: 'docs/docs',
     locales: {
       '/': {
-        //navbar: [],
+        navbar: [
+          {
+            text:"Discord",
+            link:"https://discord.gg/N854wYZ"
+          }
+        ],
         sidebar: sidebar.en,
         editLinkText: 'Edit this page on GitHub',
       },

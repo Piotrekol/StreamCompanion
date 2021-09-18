@@ -8,8 +8,9 @@ export const en: SidebarConfig = {
         '/guide/README.md',
         '/guide/getting-started.md',
         '/guide/configuration.md',
-        '/guide/ingame-overlay.md',
-        '/guide/additional-web-overlays.md',
+        '/guide/in-game-overlays.md',
+        '/guide/gamma.md',
+        '/guide/tournament-mode.md',
         
         '/cookbook/',
         '/development/'
@@ -33,6 +34,7 @@ export const en: SidebarConfig = {
             '/development/SC/',
             '/development/SC/api.md',
             '/development/SC/creating-plugin.md',
+            '/development/SC/linuxSupport.md',
           ],
         },
       ],
