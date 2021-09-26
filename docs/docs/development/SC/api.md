@@ -3,6 +3,12 @@
 ::: tip
 All example urls in this section require you to have StreamCompanion running, with some song selected.
 :::
+
+::: tip
+By default all connections to api are restricted to browser requests from local computer (localhost).  
+That can be changed by enabling **remote access** in `Web overlay` settings tab.
+:::
+
 ## WebSocket endpoints
 
 ### `tokens`
@@ -19,7 +25,7 @@ To have access to all current token values you need to cache them:
 
 ### `outputPatterns`
 
-WebSocket stream of output patterns, with can be changed at any point by sending message with serialized JArray, containing case sensitive output pattern names
+WebSocket stream of output patterns, which can be changed at any point by sending message with serialized JArray, containing case sensitive output pattern names
 
 This works in same manner as [tokens](#tokens) endpoint. Same code can be reused by replacing endpoint with `ws://localhost:20727/outputPatterns` and provide output pattern names instead of token names.
 

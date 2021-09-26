@@ -1,7 +1,7 @@
 # Configuration
 
 Now that you have StreamCompanion up and running, you'll need to know how to work with the data it produces.  
-StreamCompanion provides several ways of interacting with the data it creates. Each datapoint is delivered using so-called `tokens` with can contain all sorts of data - usually it's a number(map AR, pp) or text(map title), but in some cases that can be whole json object(song selection ranking).  
+StreamCompanion provides several ways of interacting with the data it creates. Each datapoint is delivered using so-called `tokens` which can contain all sorts of data - usually it's a number(map AR, pp) or text(map title), but in some cases that can be whole json object(song selection ranking).  
 
 These tokens can be interacted with in 3 ways:
 

@@ -2,7 +2,7 @@
 
 ## Why
 
-StreamCompanion repository makes use of git submodules with need to be fetched in order to be able to compile StreamCompanion itself.  
+StreamCompanion repository makes use of git submodules which need to be fetched in order to be able to compile StreamCompanion itself.  
 If you do not intend to compile StreamCompanion you can get source by simply downloading repository zip from github, otherwise continue.
 
 ## Prerequisites

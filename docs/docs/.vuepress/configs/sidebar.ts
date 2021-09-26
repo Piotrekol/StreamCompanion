@@ -33,7 +33,9 @@ export const en: SidebarConfig = {
           children: [
             '/development/SC/',
             '/development/SC/api.md',
-            '/development/SC/creating-plugin.md',
+            '/development/SC/creating-a-plugin.md',
+            '/development/SC/event-flow.md',
+            '/development/SC/types-rundown.md',            
             '/development/SC/linuxSupport.md',
           ],
         },

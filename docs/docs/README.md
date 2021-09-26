@@ -18,7 +18,7 @@ features:
   - title: In-game overlay
     details: Display any content inside osu! itself, be it simple text or full fledged web overlay.
   - title: Gamma
-    details: Built in screen-gamma with adjusts with current map AR.
+    details: Built in screen-gamma which adjusts with current map AR.
   - title: Plugins
     details: C# Plugin API, allowing plugins to provide lots of custom features.
   - title: HTTP/WS API
