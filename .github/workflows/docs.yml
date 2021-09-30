@@ -30,13 +30,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - run: cd docs
-      - run: yarn install --frozen-lockfile
-      - run: yarn docs:build
+      - run: cd docs && yarn install --frozen-lockfile
+      - run: cd docs && yarn docs:build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/.vuepress/dist
+          publish_dir: ./docs/docs/.vuepress/dist
