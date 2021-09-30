@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<OutputPath>..\SCInstall\Plugins\</OutputPath>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
+	</ItemGroup>
+</Project>

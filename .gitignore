@@ -201,3 +201,8 @@ innoSetup/Output/
 osu!StreamCompanion/Properties/Annotations\.cs
 
 build/*/*
+
+#docs
+.temp
+.cache
+docs/docs/.vuepress/dist/
