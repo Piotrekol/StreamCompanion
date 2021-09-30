@@ -2,8 +2,11 @@ name: GitHub Pages
 
 on:
   push:
-    tags: 
-      - docs-*
+    branches: 
+      - master
+    paths:
+    - "docs/**"
+    - .github/workflows/docs.yml
 
 jobs:
   deploy:
