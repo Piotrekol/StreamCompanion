@@ -19,13 +19,13 @@ namespace newTestPlugin
         private ISettings Settings;
         private ILogger Logger;
         private Tokens.TokenSetter tokenSetter;
-        public static ConfigEntry configEntry = new ConfigEntry("myConfigName", "defaultValue");
+        public static ConfigEntry lastMapConfigEntry = new ConfigEntry("myConfigName", "defaultValue");
         public MyPlugin(ISettings settings, ILogger logger)
         {
             Settings = settings;
             Logger = logger;
             tokenSetter = Tokens.CreateTokenSetter("MyPlugin");
-            Logger.Log(settings.Get<string>(configEntry), LogLevel.Trace);
+            Logger.Log(settings.Get<string>(lastMapConfigEntry), LogLevel.Trace);
         }
 
         public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
@@ -52,6 +52,7 @@ namespace newTestPlugin
             }
 
             Logger.Log("SetNewMapAsync", LogLevel.Trace);
+            return Task.CompletedTask;
         }
     }
 }

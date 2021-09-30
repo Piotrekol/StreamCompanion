@@ -38,7 +38,7 @@ Arguments which are/were used for finding current beatmap data.
 * `PlayMode` - What play mode was selected in the song selection screen in osu!.
 * `SharedObjects` - Misc objects shared between core plugins.
 
-### StreamCompanionTypes.Interfaces
+## StreamCompanionTypes.Interfaces
 
 ### `IPlugin`
 
@@ -52,7 +52,7 @@ Provides a method for searching beatmap data based on data inside `MapSearchArgs
 
 Used for creating StreamCompanion first run steps.
 
-### StreamCompanionTypes.Interfaces.Consumers
+## StreamCompanionTypes.Interfaces.Consumers
 
 ### `IMapDataConsumer`
 
@@ -64,7 +64,7 @@ Used for passing frequently updating(live tokens) data around.
 This one can be both implemented if you want to add another output source, and consumed (as `IList<IHighFrequencyDataConsumer>`) if you need to send data.  
 Data is sent via MMF(Memory-mapped files), TCP(when enabled in settings) & web socket output patterns endpoint.
 
-### StreamCompanionTypes.Interfaces.Sources
+## StreamCompanionTypes.Interfaces.Sources
 
 ### `ITokensSource`
 
@@ -82,7 +82,7 @@ Provides a method for creating output patterns. At that point map data and all t
 Provides a way of creating settings GUI.  
 Object returned from `GetUiSettings()` should be a winForm `UserControl`.
 
-### StreamCompanionTypes.Interfaces.Services
+## StreamCompanionTypes.Interfaces.Services
 
 Implementations for these interfaces are provided by StreamCompanion, and can be retrieved by specifying these in your plugin constructor.
 

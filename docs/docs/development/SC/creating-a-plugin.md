@@ -49,7 +49,7 @@ Project with everything mentioned so far can be found [here](/misc/PluginProject
 * request multiple services from SC and store these for later use (lines 19-27)
 * create&update tokens (lines 31-41).
 * store persistent settings between runs (lines 22 and 38).
-* use final event data(tokens/map search result) (lines 43-55).
+* use final event data(tokens/map search result) (lines 43-56).
 
 @[code csharp](./apiExamples/plugin/3.cs)
 
