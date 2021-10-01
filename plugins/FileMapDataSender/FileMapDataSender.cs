@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
 using System.Threading;
+using System.Threading.Tasks;
 using StreamCompanionTypes.Interfaces.Consumers;
 
 namespace FileMapDataSender
@@ -26,7 +27,7 @@ namespace FileMapDataSender
             _fileMapManager.Write(fileName, content);
         }
 
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             var ingamePatterns = new List<string>();
             foreach (var s in map.OutputPatterns)
@@ -53,6 +54,8 @@ namespace FileMapDataSender
             }
 
             _fileMapManager.Write("Sc-ingamePatterns", string.Join(" ", ingamePatterns) + " ");
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()

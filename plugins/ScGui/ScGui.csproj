@@ -40,8 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="StreamCompanionTypes">
-      <Version>7.0.0</Version>
+    <PackageReference Include="StreamCompanionTypes" version="8.0.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />

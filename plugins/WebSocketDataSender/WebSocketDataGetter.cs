@@ -251,16 +251,16 @@ namespace WebSocketDataSender
         {
             // ignored
         }
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
-            // Dictionary<string, string> output = new Dictionary<string, string>();
             foreach (var s in map.OutputPatterns)
             {
                 if (!s.IsMemoryFormat)
                     OutputPatterns[s.Name] = s.GetFormatedPattern();
             }
-            // var json = JsonConvert.SerializeObject(output);
-            // _mapDataContainer.Data = json;
+
+            return Task.CompletedTask;
         }
 
         public void Free()
@@ -272,6 +272,5 @@ namespace WebSocketDataSender
         {
             return _webOverlay.GetUiSettings();
         }
-
     }
 }

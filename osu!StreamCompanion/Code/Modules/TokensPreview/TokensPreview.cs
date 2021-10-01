@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -12,7 +13,7 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace osu_StreamCompanion.Code.Modules.TokensPreview
 {
-    public sealed class TokensPreview : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
+    public sealed class TokensPreview : IModule, IOutputPatternSource, ISettingsSource, IDisposable
     {
         public bool Started { get; set; }
         private TokensPreviewSettings _commandsPreviewSettings;
@@ -46,12 +47,12 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             Started = true;
         }
 
-        public List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status)
+        public Task<List<IOutputPattern>> GetOutputPatterns(IMapSearchResult map, Tokens tokens, OsuStatus status)
         {
             if (_commandsPreviewSettings != null && !_commandsPreviewSettings.IsDisposed)
-                _commandsPreviewSettings.Add(replacements);
+                _commandsPreviewSettings.Add(tokens);
 
-            return null;
+            return Task.FromResult<List<IOutputPattern>>(null);
         }
 
         private void AdjustTokenFormats(IReadOnlyDictionary<string, IToken> tokensDictionary)

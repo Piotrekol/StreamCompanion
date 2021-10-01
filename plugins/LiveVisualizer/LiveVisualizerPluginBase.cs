@@ -11,7 +11,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace LiveVisualizer
 {
-    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternGenerator,
+    public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternSource,
         ISettingsSource, IDisposable
     {
         private LiveVisualizerSettings _liveVisualizerSettings;
@@ -38,15 +38,16 @@ namespace LiveVisualizer
             _liveVisualizerSettings?.Dispose();
         }
 
-        public void SetNewMap(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (disposed)
-                return;
+                return Task.CompletedTask;
 
-            ProcessNewMap(mapSearchResult);
+            ProcessNewMap(map);
+            return Task.CompletedTask;
         }
 
-        public abstract List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status);
+        public abstract Task<List<IOutputPattern>> GetOutputPatterns(IMapSearchResult map, Tokens tokens, OsuStatus status);
 
         public void Free()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using osu_StreamCompanion.Code.Misc;
@@ -16,7 +17,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
-    public sealed class MapDataParser : IModule, IOutputPatternGenerator, ISettingsSource, IDisposable
+    public sealed class MapDataParser : IModule, IOutputPatternSource, ISettingsSource, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
@@ -113,23 +114,24 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
             Save();
         }
 
-        public List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status)
+        public Task<List<IOutputPattern>> GetOutputPatterns(IMapSearchResult map, Tokens tokens, OsuStatus status)
         {
             List<IOutputPattern> ret = null;
 
-            if (replacements != null)
+            if (tokens != null)
             {
                 ret = new List<IOutputPattern>();
                 foreach (var p in _patterns)
                 {
                     var newPattern = (OutputPattern)p.Clone();
-                    newPattern.Replacements = replacements;
+                    newPattern.Replacements = tokens;
                     ret.Add(newPattern);
                 }
                 if (_parserSettings != null && !_parserSettings.IsDisposed)
-                    _parserSettings.SetPreview(replacements, status);
+                    _parserSettings.SetPreview(tokens, status);
             }
-            return ret;
+
+            return Task.FromResult(ret);
         }
 
         public string FormatMapString(string toFormat, Dictionary<string, string> replacements)

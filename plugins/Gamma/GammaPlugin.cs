@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gamma.Models;
 using StreamCompanion.Common;
@@ -44,14 +45,14 @@ namespace Gamma
             _gamma = new Gamma(_originalScreenDeviceName);
         }
 
-        public void SetNewMap(IMapSearchResult searchResult, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult searchResult, CancellationToken cancellationToken)
         {
             if (!_configuration.Enabled || !searchResult.BeatmapsFound.Any() || searchResult.Action != OsuStatus.Playing)
             {
                 if (!float.IsNaN(_gamma.CurrentGamma))
                     _gamma.Restore();
 
-                return;
+                return Task.CompletedTask;
             }
 
             if (_originalScreenDeviceName != _configuration.ScreenDeviceName)
@@ -67,6 +68,8 @@ namespace Gamma
                 _gamma.Set(gamma.Value);
             else
                 _gamma.Restore();
+
+            return Task.CompletedTask;
         }
 
         private float? GetGammaForAr(double ar) => _configuration.GammaRanges.FirstOrDefault(x => x.MaxAr >= ar && x.MinAr <= ar)?.Gamma;

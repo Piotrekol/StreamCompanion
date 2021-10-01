@@ -21,7 +21,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
     public class MainMapDataGetter
     {
         private readonly List<IMapDataFinder> _mapDataFinders;
-        private readonly List<IOutputPatternGenerator> _outputPatternGenerators;
+        private readonly List<IOutputPatternSource> _outputPatternSources;
         private readonly List<IMapDataConsumer> _mapDataConsumers;
         private List<ITokensSource> _tokenSources;
 
@@ -31,11 +31,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private readonly SettingNames _names = SettingNames.Instance;
 
         public MainMapDataGetter(List<IMapDataFinder> mapDataFinders, List<IMapDataConsumer> mapDataConsumers,
-            List<IOutputPatternGenerator> outputPatternGenerators, List<ITokensSource> tokenSources,
+            List<IOutputPatternSource> outputPatternSources, List<ITokensSource> tokenSources,
             MainSaver saver, ILogger logger, Settings settings)
         {
             _mapDataFinders = mapDataFinders.OrderByDescending(x => x.Priority).ToList();
-            _outputPatternGenerators = outputPatternGenerators;
+            _outputPatternSources = outputPatternSources;
             _mapDataConsumers = mapDataConsumers;
             _tokenSources = tokenSources;
             _saver = saver;
@@ -99,14 +99,15 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                     tokens.Add(token.Key, token.Value);
                 }
 
-                mapSearchResult.OutputPatterns.AddRange(GetOutputPatterns(tokens, mapSearchResult.Action));
+                mapSearchResult.OutputPatterns.AddRange(await GetOutputPatterns(mapSearchResult, tokens, mapSearchResult.Action));
 
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
                 if (!_settings.Get<bool>(_names.DisableDiskPatternWrite))
                     SaveMapStrings(mapSearchResult.OutputPatterns, mapSearchResult.Action);
-                SetNewMap(mapSearchResult, cancellationToken);
+                
+                await SetNewMap(mapSearchResult, cancellationToken);
             }, cancellationToken);
         }
 
@@ -136,18 +137,17 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                         _saver.Save(p.Name + ".txt", p.GetFormatedPattern());
                     else
                         _saver.Save(p.Name + ".txt", "");
-
                 }
             }
         }
 
 
-        private List<IOutputPattern> GetOutputPatterns(Tokens tokens, OsuStatus status)
+        private async Task<List<IOutputPattern>> GetOutputPatterns(IMapSearchResult map, Tokens tokens, OsuStatus status)
         {
             var ret = new List<IOutputPattern>();
-            foreach (var dataGetter in _outputPatternGenerators)
+            foreach (var dataGetter in _outputPatternSources)
             {
-                var temp = dataGetter.GetOutputPatterns(tokens, status);
+                var temp = await dataGetter.GetOutputPatterns(map, tokens, status);
                 if (temp?.Count > 0)
                 {
                     ret.AddRange(temp);
@@ -156,11 +156,11 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             return ret;
         }
 
-        private void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        private async Task SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
         {
             foreach (var dataGetter in _mapDataConsumers)
             {
-                dataGetter.SetNewMap(map, cancellationToken);
+                await dataGetter.SetNewMapAsync(map, cancellationToken);
             }
         }
     }
