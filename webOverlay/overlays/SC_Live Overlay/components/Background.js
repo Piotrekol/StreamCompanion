@@ -5,6 +5,9 @@ const background = {
           <slot />
       </div>
     `,
+    props: {
+      dimcolor: {},
+  },
   setup(props, context) {
     const data = Vue.reactive({
       tokens: { backgroundImageLocation: '', md5: '', mapsetid: '' },
@@ -13,7 +16,7 @@ const background = {
       rws: {},
     });
     const backgroundDiv = Vue.ref(null);
-    const boxStyle = Vue.computed(() => `background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)),url(${data.backgroundUrl});`);
+    const boxStyle = Vue.computed(() => `background-image: linear-gradient(to bottom, ${props.dimcolor}, ${props.dimcolor}),url(${data.backgroundUrl});`);
 
     Vue.watch(
       () => data.tokens.backgroundImageLocation,
