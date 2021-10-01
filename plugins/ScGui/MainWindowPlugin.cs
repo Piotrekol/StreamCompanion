@@ -95,15 +95,21 @@ namespace ScGui
             }
             else if (e.Name == _names.MainOsuDirectory.Name)
             {
-                _mainWindowModel.BeatmapsLoaded = _settings.GetFullOsuLocation();
+                UpdateStatusText();
             }
+        }
+
+        private void UpdateStatusText()
+        {
+            var tourneyMode = _settings.GetRaw("TournamentMode").ToLowerInvariant() == "true";
+            _mainWindowModel.BeatmapsLoaded = $"{(tourneyMode ? "In tourney mode! " : "")}{_settings.GetFullOsuLocation()}";
         }
 
         private void ShowWindow()
         {
             if (_mainWindow == null)
             {
-                _mainWindowModel.BeatmapsLoaded = _settings.GetFullOsuLocation();
+                UpdateStatusText();
                 _mainWindow = new MainWindow(_mainWindowModel, _settings);
                 _mainWindow.OnOpenSettingsClicked += (_, __) =>
                 {
