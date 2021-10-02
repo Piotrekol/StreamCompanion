@@ -3382,7 +3382,7 @@ vue@^3.2.3:
     "@vue/server-renderer" "3.2.19"
     "@vue/shared" "3.2.19"
 
-vuepress@^2.0.0-beta.25:
+vuepress@^2.0.0-beta.26:
   version "2.0.0-beta.26"
   resolved "https://registry.yarnpkg.com/vuepress/-/vuepress-2.0.0-beta.26.tgz#39fa19b44bea31203828fdc1ae203bf7fab5146a"
   integrity sha512-mh/UMfte9rhzGdRIwhsnDVUUpLsMD1R4DtY8IGruBextMKOFhO+vlwygUpJwR464hzsusCvpt8jzv7TrkJLadA==
