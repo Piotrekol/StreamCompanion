@@ -2,8 +2,8 @@ import { defineUserConfig } from '@vuepress/cli';
 import type { DefaultThemeOptions } from '@vuepress/theme-default';
 import { sidebar } from './configs';
 
-const isProd = process.env.NODE_ENV === 'production'
-
+const isProd = process.env.NODE_ENV === 'production';
+console.log('isProd:', isProd);
 export default defineUserConfig<DefaultThemeOptions>({
   lang: 'en-US',
   title: 'StreamCompanion',
@@ -53,9 +53,9 @@ export default defineUserConfig<DefaultThemeOptions>({
       '/': {
         navbar: [
           {
-            text:"Discord",
-            link:"https://discord.gg/N854wYZ"
-          }
+            text: 'Discord',
+            link: 'https://discord.gg/N854wYZ',
+          },
         ],
         sidebar: sidebar.en,
         editLinkText: 'Edit this page on GitHub',

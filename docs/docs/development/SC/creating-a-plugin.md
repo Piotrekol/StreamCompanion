@@ -39,7 +39,7 @@ Replace `newTestPlugin` with name of your project(not class name!)
 With that done, your plugin can be now easily tested and debugged without ever leaving Visual Studio - Start debugging (Debug->Start debugging at the top menu) to test any changes.
 
 ::: tip
-Project with everything mentioned so far can be found [here](/misc/PluginProject.zip) and can be used as a template. Remember to change namespace and plugin class name!
+Project with everything mentioned so far can be found [here](../../misc/PluginProject.zip) and can be used as a template. Remember to change namespace and plugin class name!
 :::
 
 ## Interacting with events

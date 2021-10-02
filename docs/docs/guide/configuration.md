@@ -6,8 +6,8 @@ StreamCompanion provides several ways of interacting with the data it creates. E
 These tokens can be interacted with in 3 ways:
 
 * [Output patterns](#output-patterns) - Initial, and most basic way to work with the tokens.
-* [Web overlays](#web-overlays) - Use provided [api endpoints](/development/SC/api) to interact with the tokens & data on disk.
-* [Writing your own plugin(s)](/development/SC/creating-plugin) - Use built-in plugin system to create custom behaviors and new tokens.
+* [Web overlays](#web-overlays) - Use provided [api endpoints](../development/SC/api) to interact with the tokens & data on disk.
+* [Writing your own plugin(s)](../development/SC/creating-a-plugin) - Use built-in plugin system to create custom behaviors and new tokens.
 
 ## Output patterns
 
@@ -34,7 +34,7 @@ There's also an optional syntax for formatting and doing simple, in-place calcul
 
 ## Web overlays
 
-These are small web pages, which read data from StreamCompanion [api endpoints](/development/SC/api).
+These are small web pages, which read data from StreamCompanion [api endpoints](../development/SC/api).
 
 Several overlays are ready to use at [overlays index page](http://localhost:20727/) - click on any overlay name that you would like to use and use the page url as either:
 
