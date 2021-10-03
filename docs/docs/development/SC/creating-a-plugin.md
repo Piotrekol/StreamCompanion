@@ -1,7 +1,7 @@
 # Creating plugins
 
 ::: tip
-This is written in a tutorial-like style. Skip to next section for raw documentation.
+This is written in a tutorial-like style. Skip to next sections for raw documentation.
 :::
 
 ## Basic template
@@ -54,3 +54,29 @@ Project with everything mentioned so far can be found [here](../../misc/PluginPr
 @[code csharp](./apiExamples/plugin/3.cs)
 
 For more understanding when these methods are executed proceed to next section.
+
+## Creating settings GUI
+
+In order to create user interface for settings, we will have to do few small modifications to the project. Namely:
+
+* Use net5.0-windows instead of net standard
+* Specify that we want to use winForms, which is current way of adding settings GUI
+
+@[code xml{3,6}](./apiExamples/plugin/4.csproj)
+
+Create new UserControl in the project by right clicking on project name, Add & New item. From the list select UserControl and name it. We'll name it `SettingsUserControl` for this plugin.  
+
+![Project add new item](./images/VSCreateItem.png)  
+
+Now that we have UserControl in our plugin lets provide it to StreamCompanion by implementing `ISettingsSource`:
+
+@[code csharp{8,14,15,21-32}](./apiExamples/plugin/4.cs)
+First we have to provide `SettingGroup` with will be used as group name in settings tabs. As for 2 methods:
+
+* `GetUiSettings()` - This should be used for initalizing your userControl. Every time user navigates to your `SettingGroup` this will get called.
+* `Free()` - Destroy UserControl instance and do any other necessary cleanup work. Every time user navigates away from your `SettingGroup` this will get called.
+
+With that done it's now up to you, to decide how you want to handle/design your UserControl. I'd suggest to either:
+
+* Pass `ISettings` instance to user control and modify settings inside, [Example](https://github.com/Piotrekol/StreamCompanion/blob/3b787fa1f8853384408a1cde40ddbcd7674aeb57/plugins/ModsHandler/ModParser.cs#L47-L59).
+* Use events to pop any user setting changes back to main plugin class and handle it there, [Example](https://github.com/Piotrekol/StreamCompanion/blob/e099ee0d6a75e56a0c1048c6640095a9aef2d2c0/plugins/Gamma/GammaPlugin.cs#L77-L90).

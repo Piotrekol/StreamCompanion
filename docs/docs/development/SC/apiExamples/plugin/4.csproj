@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<TargetFramework>net5.0-windows</TargetFramework>
+	<Nullable>enable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<UseWindowsForms>true</UseWindowsForms>
+	<OutputPath>..\SCInstall\Plugins\</OutputPath>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
+	</ItemGroup>
+</Project>
