@@ -6,8 +6,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
@@ -60,12 +58,6 @@ namespace ModsHandler
                 var foundMap = map.BeatmapsFound[0];
                 var mods = map.Mods?.Mods ?? Mods.Omod;
                 var c = _difficultyCalculator.ApplyMods(foundMap, mods);
-
-                if ((mods & Mods.Nc) != 0)
-                {
-                    mods -= Mods.Nc;
-                    mods |= Mods.Dt;
-                }
                 var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < float.Epsilon ? c["MinBpm"].ToString("0") : $"{c["MinBpm"]:0}-{c["MaxBpm"]:0} ({c["MainBpm"]:0})";
 
                 _tokenSetter("mods", map.Mods?.ShownMods);
