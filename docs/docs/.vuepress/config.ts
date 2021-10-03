@@ -3,12 +3,15 @@ import type { DefaultThemeOptions } from '@vuepress/theme-default';
 import { sidebar } from './configs';
 
 const isProd = process.env.NODE_ENV === 'production';
+const urlBase = isProd ? '/StreamCompanion/' : '/';
 console.log('isProd:', isProd);
+console.log('urlBase:', urlBase);
+
 export default defineUserConfig<DefaultThemeOptions>({
   lang: 'en-US',
   title: 'StreamCompanion',
   description: 'osu! information extractor... on steroids',
-  base: isProd ? '/StreamCompanion/' : '',
+  base: urlBase,
   head: [
     [
       'link',
