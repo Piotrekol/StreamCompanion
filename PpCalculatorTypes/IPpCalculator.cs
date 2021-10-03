@@ -9,6 +9,7 @@ namespace PpCalculatorTypes
         int? Combo { get; set; }
         double PercentCombo { get; set; }
         int Score { get; set; }
+        double ScoreMultiplier { get; }
         string[] Mods { get; set; }
         int Misses { get; set; }
         int? Mehs { get; set; }

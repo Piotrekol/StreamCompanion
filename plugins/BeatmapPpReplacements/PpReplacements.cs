@@ -135,11 +135,9 @@ namespace BeatmapPpReplacements
 
         private double GetPp(CancellationToken cancellationToken, IPpCalculator ppCalculator, double acc, string mods = "", int score = 0)
         {
-            ppCalculator.Accuracy = acc;
-            ppCalculator.Score = score;
-
             _ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
+            ppCalculator.Accuracy = acc;
+            ppCalculator.Score = (int)(score * ppCalculator.ScoreMultiplier);
             return Math.Round(ppCalculator.Calculate(cancellationToken), 3);
         }
     }

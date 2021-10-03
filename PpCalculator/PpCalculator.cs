@@ -34,7 +34,14 @@ namespace PpCalculator
         public virtual string[] Mods
         {
             get => _Mods;
-            set => _Mods = value;
+            set
+            {
+                if (_Mods == value || (value != null && _Mods != null && _Mods.SequenceEqual(value)))
+                    return;
+
+                _Mods = value;
+                scoreMultiplier = new Lazy<double>(CalculateScoreMultiplier);
+            }
         }
 
         public virtual int Misses { get; set; }
@@ -52,13 +59,17 @@ namespace PpCalculator
         public int RulesetId => Ruleset.RulesetInfo.ID ?? 0;
         public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
 
+        public double ScoreMultiplier => scoreMultiplier.Value;
+        private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
+
         public object Clone()
         {
             var ppCalculator = CreateInstance();
             ppCalculator.WorkingBeatmap = WorkingBeatmap;
             ppCalculator.PlayableBeatmap = PlayableBeatmap;
-            ppCalculator.Mods = Mods;
+            ppCalculator._Mods = _Mods;
             ppCalculator.LastMods = LastMods;
+            ppCalculator.scoreMultiplier = scoreMultiplier;
             if (PerformanceCalculator != null)
             {
                 ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.DeepClone()).ToArray();
@@ -180,7 +191,7 @@ namespace PpCalculator
             var newMods = _Mods != null ? string.Concat(_Mods) : "";
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
-                mods = getMods(ruleset).ToArray();
+                mods = GetOsuMods(ruleset).ToArray();
                 //TODO: cancellation token support
                 PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, TimeSpan.FromSeconds(20));
 
@@ -230,7 +241,7 @@ namespace PpCalculator
         }
 
 
-        private List<Mod> getMods(Ruleset ruleset)
+        private List<Mod> GetOsuMods(Ruleset ruleset)
         {
             var mods = new List<Mod>();
             if (_Mods == null)
@@ -276,6 +287,17 @@ namespace PpCalculator
             }
 
             return GetMaxCombo(hitObjects);
+        }
+
+        private double CalculateScoreMultiplier()
+        {
+            var mods = GetOsuMods(Ruleset).ToArray();
+            double scoreMultiplier = 1.0;
+            IEnumerable<Mod> scoreIncreaseMods = Ruleset.GetModsFor(ModType.DifficultyIncrease);
+            foreach (var m in mods.Where(m => !scoreIncreaseMods.Contains(m)))
+                scoreMultiplier *= m.ScoreMultiplier;
+
+            return scoreMultiplier;
         }
 
         protected int GetComboToTime(IBeatmap beatmap, int toTime) =>
