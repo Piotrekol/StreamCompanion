@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using StreamCompanionTypes;
@@ -69,7 +70,7 @@ namespace TcpSocketDataSender
             }
         }
 
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (tcpSocketIsEnabled)
             {
@@ -82,6 +83,8 @@ namespace TcpSocketDataSender
                 var json = JsonConvert.SerializeObject(output);
                 _tcpSocketManager.Write(json);
             }
+
+            return Task.CompletedTask;
         }
         
         public string SettingGroup { get; } = "Output patterns";

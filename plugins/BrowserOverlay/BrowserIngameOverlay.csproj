@@ -19,7 +19,7 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="StreamCompanionTypes" Version="7.0.0" />
+    <PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
   </ItemGroup>
 
 	<ItemGroup>

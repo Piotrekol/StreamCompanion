@@ -161,9 +161,10 @@ namespace OsuMemoryEventSource
             return memoryListener?.CreateTokensAsync(map, cancellationToken) ?? Task.CompletedTask;
         }
 
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             memoryListener?.SetNewMap(map, cancellationToken);
+            return Task.CompletedTask;
         }
 
         protected virtual void OnSettingsSettingUpdated(object sender, SettingUpdated e) { }

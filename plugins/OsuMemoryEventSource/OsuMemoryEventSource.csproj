@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net5.0-windows</TargetFramework>
 		<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -43,8 +43,7 @@
 		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="StreamCompanionTypes">
-			<Version>7.2.0</Version>
+		<PackageReference Include="StreamCompanionTypes" version="8.0.0">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
 	</ItemGroup>

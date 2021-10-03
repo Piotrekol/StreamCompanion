@@ -166,7 +166,7 @@ namespace ScGui
             _settingsForm = null;
         }
 
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             if (map.BeatmapsFound.Any())
             {
@@ -190,6 +190,8 @@ namespace ScGui
             {
                 _mainWindowModel.NowPlaying = "Map data not found: " + map.MapSearchString;
             }
+
+            return Task.CompletedTask;
         }
 
         public void Free()

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using StreamCompanionTypes.Interfaces;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace osu_StreamCompanion.Code.Windows
 {

@@ -248,7 +248,7 @@ namespace osuOverlay
             return _overlaySettings;
         }
 
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             try
             {
@@ -258,6 +258,8 @@ namespace osuOverlay
             {
                 // ignored
             }
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()

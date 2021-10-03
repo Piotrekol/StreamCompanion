@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -71,10 +72,10 @@ namespace osuPost
             }
         }
 
-        public void SetNewMap(IMapSearchResult map, CancellationToken cancellationToken)
+        public Task SetNewMapAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             api.NewMap(map);
-            
+            return Task.CompletedTask;
         }
 
         public void Dispose()

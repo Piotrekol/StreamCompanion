@@ -239,11 +239,11 @@ namespace LiveVisualizer
             }
         }
 
-        public override List<IOutputPattern> GetOutputPatterns(Tokens replacements, OsuStatus status)
+        public override Task<List<IOutputPattern>> GetOutputPatterns(IMapSearchResult map, Tokens tokens, OsuStatus status)
         {
-            Tokens = replacements.ToList();
+            Tokens = tokens.ToList();
 
-            return null;
+            return Task.FromResult<List<IOutputPattern>>(null);
         }
 
         private async Task UpdateLiveTokens(CancellationToken token)
@@ -287,7 +287,7 @@ namespace LiveVisualizer
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex,LogLevel.Error);
+                    Logger.Log(ex, LogLevel.Error);
                 }
 
                 await Task.Delay(22);
