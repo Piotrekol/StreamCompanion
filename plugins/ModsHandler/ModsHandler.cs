@@ -62,15 +62,15 @@ namespace ModsHandler
 
                 _tokenSetter("mods", map.Mods?.ShownMods);
                 _tokenSetter("modsEnum", map.Mods?.Mods);
-                _tokenSetter("mAR", Math.Round(c["AR"], 2));
-                _tokenSetter("mCS", Math.Round(c["CS"], 2));
-                _tokenSetter("mOD", Math.Round(c["OD"], 2));
-                _tokenSetter("mHP", c["HP"], format: "{0:0.##}");
-                _tokenSetter("mStars", foundMap.Stars(map.PlayMode ?? PlayMode.Osu, mods), format: "{0:0.##}");
+                _tokenSetter("mAR", Math.Round(c["AR"], 2), format: "{0:0.##}");
+                _tokenSetter("mCS", Math.Round(c["CS"], 2), format: "{0:0.##}");
+                _tokenSetter("mOD", Math.Round(c["OD"], 2), format: "{0:0.##}");
+                _tokenSetter("mHP", Math.Round(c["HP"], 2), format: "{0:0.##}");
+                _tokenSetter("mStars", Math.Round(foundMap.Stars(map.PlayMode ?? PlayMode.Osu, mods), 3), format: "{0:0.##}");
                 _tokenSetter("mBpm", bpm);
-                _tokenSetter("mMaxBpm", c["MaxBpm"], format: "{0:0}");
-                _tokenSetter("mMinBpm", c["MinBpm"], format: "{0:0}");
-                _tokenSetter("mMainBpm", c["MainBpm"], format: "{0:0}");
+                _tokenSetter("mMaxBpm", Math.Round(c["MaxBpm"], 2), format: "{0:0}");
+                _tokenSetter("mMinBpm", Math.Round(c["MinBpm"], 2), format: "{0:0}");
+                _tokenSetter("mMainBpm", Math.Round(c["MainBpm"], 2), format: "{0:0}");
             }
             else
             {
