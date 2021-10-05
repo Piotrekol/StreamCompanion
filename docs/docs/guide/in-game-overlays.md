@@ -19,6 +19,8 @@ Used to display any web overlay in-game.
 
 Repeat steps 2-5 for as many web overlays you want. Keep in mind however that running too many or too big(canvas size) overlays will result in a noticeable game performance penalty.
 
+### Troubleshooting
+
 ::: warning This overlay works with some, but not all other overlays
 
 Known **working**:  
@@ -27,6 +29,11 @@ Discord, Steam, Nvidia overlay
 Known **not working** (either doesn't show anything or crashes osu!):  
 Rivatuner OSD, reshade
 :::
+
+First off - try restarting your PC.  
+
+In case overlay still fails to display anything you can check what other applications are trying to interact with osu!. Restart StreamCompanion with logging level set to `Trace` and start osu! in order to create a list of unknown files loaded in osu! in `Files/Logs/`.  
+Googling these files individually will most of the time give you a good idea what application it is from. Try disabling some/all of these, and seeing if that changes anything.
 
 ## Text overlay
 
