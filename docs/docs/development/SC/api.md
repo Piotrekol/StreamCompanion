@@ -35,7 +35,8 @@ This works in same manner as [tokens](#tokens) endpoint. Same code can be reused
 
 All tokens available in StreamCompanion in form of json object.
 ::: tip
-This endpoint should be used only as a tokens reference. Use these via [tokens](#tokens) WebSocket endpoint in actual implementations.
+This endpoint should be used only as a tokens reference. Use these via [tokens](#tokens) WebSocket endpoint in actual implementations.  
+**Ignoring this will result in unnecessary resource usage**, as live token values are computed only when used.
 :::
 
 ::: details Example output
