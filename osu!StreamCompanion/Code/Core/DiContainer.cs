@@ -141,9 +141,10 @@ namespace osu_StreamCompanion.Code.Core
             var assemblies = new List<Assembly>();
             foreach (var file in fileList)
             {
+                var fileName = Path.GetFileNameWithoutExtension(file);
                 try
                 {
-                    var assemblyName = new AssemblyName(Path.GetFileNameWithoutExtension(file));
+                    var assemblyName = new AssemblyName(fileName);
                     assemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName));
                 }
                 catch (BadImageFormatException e)
@@ -175,6 +176,13 @@ namespace osu_StreamCompanion.Code.Core
                         "StreamCompanion could not load any of the plugins because of not enough permissions." + Environment.NewLine + Environment.NewLine
                         + "Please reinstall StreamCompanion.", "StreamCompanion - ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Program.SafeQuit();
+                }
+                catch (FileLoadException e)
+                {
+                    MessageBox.Show($"Plugin \"{fileName}\" could not get loaded. StreamCompanion will continue to work, however, some features might be missing." +
+                                Environment.NewLine + Environment.NewLine + "Error:" +
+                                Environment.NewLine + e,
+                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
 
