@@ -28,6 +28,7 @@ namespace ScGui
 
             InitializeComponent();
 
+            Title = $"StreamCompanion ({(Environment.Is64BitProcess ? "x64" : "x86")})";
             SetTheme(_settings.Get<string>(MainWindowPlugin.Theme));
             Style = (Style)FindResource(typeof(Window));
             DataContext = data;
