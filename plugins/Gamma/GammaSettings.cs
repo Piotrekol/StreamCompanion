@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -46,6 +46,13 @@ namespace Gamma
             checkBox_enabled.Checked = _configuration.Enabled;
 
             SetEnabled();
+            textBox_description.Text = string.Join(Environment.NewLine,
+                "MinAr - minimum AR to trigger gamma change (0,01-15,00)",
+                "MaxAr - maximum AR to trigger gamma change (0,01-15,00)",
+                "Gamma - gamma value to apply (0,228 ~ 4,46)",
+                "0,228 being really bright and 5 really dark.",
+                "Gamma activates only when playing and both MinAr and MaxAr conditions are satisfied"
+                );
             _init = false;
         }
 

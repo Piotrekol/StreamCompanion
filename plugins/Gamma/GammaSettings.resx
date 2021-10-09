@@ -57,11 +57,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="textBox1.Text" xml:space="preserve">
-    <value>MinAr - minimum AR to trigger gamma change (0,01-15,00)  
-MaxAr - maximum AR to trigger gamma change (0,01-15,00)  
-Gamma - gamma value to apply (0,228 ~ 4,46)  
-0,228 being really bright and 5 really dark.  
-Gamma activates only when playing and both MinAr and MaxAr conditions are satisfied </value>
-  </data>
 </root>

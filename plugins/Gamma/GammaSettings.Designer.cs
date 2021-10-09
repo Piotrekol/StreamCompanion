@@ -1,4 +1,4 @@
-﻿
+
 namespace Gamma
 {
     partial class GammaSettings
@@ -29,10 +29,9 @@ namespace Gamma
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GammaSettings));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.checkBox_enabled = new System.Windows.Forms.CheckBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_description = new System.Windows.Forms.TextBox();
             this.comboBox_display = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -61,17 +60,17 @@ namespace Gamma
             this.checkBox_enabled.UseVisualStyleBackColor = true;
             this.checkBox_enabled.CheckedChanged += new System.EventHandler(this.checkBox_enabled_CheckedChanged);
             // 
-            // textBox1
+            // textBox_description
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(0, 318);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(653, 112);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.Text = resources.GetString("textBox1.Text");
+            this.textBox_description.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_description.Location = new System.Drawing.Point(0, 319);
+            this.textBox_description.Multiline = true;
+            this.textBox_description.Name = "textBox_description";
+            this.textBox_description.ReadOnly = true;
+            this.textBox_description.Size = new System.Drawing.Size(653, 82);
+            this.textBox_description.TabIndex = 5;
+            this.textBox_description.Text = "text set in code\r\ntext set in code\r\ntext set in code\r\ntext set in code\r\ntext set " +
+    "in code";
             // 
             // comboBox_display
             // 
@@ -101,7 +100,7 @@ namespace Gamma
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox_display);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox_description);
             this.Controls.Add(this.checkBox_enabled);
             this.Controls.Add(this.dataGridView);
             this.Name = "GammaSettings";
@@ -116,7 +115,7 @@ namespace Gamma
 
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.CheckBox checkBox_enabled;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_description;
         private System.Windows.Forms.ComboBox comboBox_display;
         private System.Windows.Forms.Label label1;
     }
