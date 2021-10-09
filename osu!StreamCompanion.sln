@@ -330,10 +330,8 @@ Global
 		{3CA7BE44-68FA-40A9-8809-7BE650EFA335}.Release|x86.Build.0 = Release|Any CPU
 		{2CD73747-6AC0-480E-8128-4310DF941A6B}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{2CD73747-6AC0-480E-8128-4310DF941A6B}.Debug|x86.ActiveCfg = Debug|Win32
-		{2CD73747-6AC0-480E-8128-4310DF941A6B}.Debug|x86.Build.0 = Debug|Win32
 		{2CD73747-6AC0-480E-8128-4310DF941A6B}.Release|Any CPU.ActiveCfg = Release|Win32
 		{2CD73747-6AC0-480E-8128-4310DF941A6B}.Release|x86.ActiveCfg = Release|Win32
-		{2CD73747-6AC0-480E-8128-4310DF941A6B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
