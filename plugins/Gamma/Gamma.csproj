@@ -6,15 +6,15 @@
 	  <UseWindowsForms>true</UseWindowsForms>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	  <Platforms>x64;x86</Platforms>
+	  <Platforms>x86;AnyCPU</Platforms>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <OutputPath>bin\Debug_temp\</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
 
