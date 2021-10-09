@@ -164,7 +164,7 @@ namespace osuOverlay.Loader
                 return (false, 3);
             }
 
-            IntPtr lpLLAddress = LoadLibraryAAddress ?? GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA"); //new IntPtr(0x76E80BD0);
+            IntPtr lpLLAddress = LoadLibraryAAddress ?? GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
             if (lpLLAddress == INTPTR_ZERO)
             {

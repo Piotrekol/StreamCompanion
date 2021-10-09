@@ -48,7 +48,7 @@ namespace osuOverlay.Loader
             public string szModule;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szExePath;
-        };
+        }
 
         public static List<MODULEENTRY32> X32BitModules(this Process proc)
             => X32BitModules((uint)proc.Id);

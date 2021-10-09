@@ -124,4 +124,3 @@ namespace osu_StreamCompanion.Code.Core
         }
     }
 }
-
