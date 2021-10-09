@@ -17,6 +17,9 @@
     <OutputPath>..\..\..\build\Release_unsafe\Plugins\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Dlls\X32ProcessOverlayHelper.exe" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="IngameOverlaySettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -26,6 +29,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Dlls\osuOverlay.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dlls\X32ProcessOverlayHelper.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

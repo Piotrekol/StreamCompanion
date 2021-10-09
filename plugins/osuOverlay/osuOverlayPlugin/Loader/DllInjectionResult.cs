@@ -8,5 +8,6 @@
         InjectionFailed = 12,
         Timeout = 13,
         Cancelled = 14,
+        HelperProcessFailed = 15,
     }
 }

@@ -7,8 +7,9 @@
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    </PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Debug|x86' ">
+  <Platforms>x86;AnyCPU</Platforms>
+  </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>..\..\build\Debug\Plugins\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

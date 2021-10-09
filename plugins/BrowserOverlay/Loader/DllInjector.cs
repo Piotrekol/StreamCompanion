@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace BrowserOverlay.Loader
 {
-    public sealed class DllInjector
+    public class DllInjector
     {
 
         public enum LoadedResult
@@ -42,6 +42,12 @@ namespace BrowserOverlay.Loader
         static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttribute, IntPtr dwStackSize, IntPtr lpStartAddress,
             IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
+        const UInt32 WAIT_ABANDONED = 0x00000080;
+        const UInt32 WAIT_OBJECT_0 = 0x00000000;
+        const UInt32 WAIT_TIMEOUT = 0x00000102;
+
         static DllInjector _instance;
 
         public static DllInjector GetInstance
@@ -56,7 +62,7 @@ namespace BrowserOverlay.Loader
             }
         }
 
-        DllInjector() { }
+        protected DllInjector() { }
 
         public (DllInjectionResult InjectionResult, int errorCode, int Win32Error) Inject(string sProcName, string sDllPath)
         {
@@ -83,20 +89,42 @@ namespace BrowserOverlay.Loader
             }
 
             var loadedResult = IsAlreadyLoaded(sProcName, Path.GetFileName(sDllPath));
-
             if (loadedResult.LoadedResult == LoadedResult.Loaded)
                 return (DllInjectionResult.Success, 0, 0);
 
             if (loadedResult.LoadedResult == LoadedResult.Error)
                 return (DllInjectionResult.InjectionFailed, -1, 0);
 
-            var injectionResult = bInject(_procId, sDllPath);
+            var libAddress = GetLoadLibraryAAddress();
+            if(libAddress == IntPtr.Zero)
+                return (DllInjectionResult.HelperProcessFailed, -1, 0);
+
+            var injectionResult = BInject(_procId, sDllPath, libAddress);
             if (!injectionResult.Success)
             {
                 return (DllInjectionResult.InjectionFailed, injectionResult.ErrorCode, Marshal.GetLastWin32Error());
             }
 
             return (DllInjectionResult.Success, 0, 0);
+        }
+
+        private IntPtr GetLoadLibraryAAddress()
+        {
+            var file = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Plugins", "Dlls", "X32ProcessOverlayHelper.exe");
+            var process = Process.Start(new ProcessStartInfo
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                FileName = file,
+                Arguments = "proc LoadLibraryA"
+            });
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+                return IntPtr.Zero;
+
+            var rawAddress = process.StandardOutput.ReadToEnd().Trim();
+            return new IntPtr(Convert.ToInt32(rawAddress, 16));
         }
 
         public (LoadedResult LoadedResult, int ErrorCode) IsAlreadyLoaded(string procName, string dllName)
@@ -122,12 +150,12 @@ namespace BrowserOverlay.Loader
             var process = processes.FirstOrDefault(p => p.ProcessName == procName);
             if (process != null)
             {
-                foreach (ProcessModule pm in process.Modules)
-                    yield return pm.ModuleName;
+                foreach (var pm in process.X32BitModules())
+                    yield return Path.GetFileName(pm.szExePath);
             }
         }
 
-        (bool Success, int ErrorCode) bInject(uint pToBeInjected, string sDllPath)
+        protected virtual (bool Success, int ErrorCode) BInject(uint pToBeInjected, string sDllPath, IntPtr? LoadLibraryAAddress = null)
         {
             IntPtr hndProc = OpenProcess((0x2 | 0x8 | 0x10 | 0x20 | 0x400), 1, pToBeInjected);
 
@@ -136,7 +164,7 @@ namespace BrowserOverlay.Loader
                 return (false, 3);
             }
 
-            IntPtr lpLLAddress = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            IntPtr lpLLAddress = LoadLibraryAAddress ?? GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA"); //new IntPtr(0x76E80BD0);
 
             if (lpLLAddress == INTPTR_ZERO)
             {
@@ -157,15 +185,19 @@ namespace BrowserOverlay.Loader
                 return (false, 6);
             }
 
-            if (CreateRemoteThread(hndProc, (IntPtr)null, INTPTR_ZERO, lpLLAddress, lpAddress, 0, (IntPtr)null) == INTPTR_ZERO)
+            IntPtr threadHandle;
+            if ((threadHandle = CreateRemoteThread(hndProc, (IntPtr)null, INTPTR_ZERO, lpLLAddress, lpAddress, 0, (IntPtr)null)) == INTPTR_ZERO)
             {
                 return (false, 7);
             }
+
+            var objectResult = WaitForSingleObject(threadHandle, 3000);
+            if (objectResult == WAIT_ABANDONED || objectResult == WAIT_TIMEOUT)
+                return (false, 100 + (int)objectResult);
 
             CloseHandle(hndProc);
 
             return (true, 0);
         }
     }
-
 }
