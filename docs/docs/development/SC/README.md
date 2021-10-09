@@ -19,12 +19,9 @@
 
 ## Building solution in Visual Studio
 
-* **Step 1:** When you first open StreamCompanion solution it might have incorrect configuration selected, leading to solution-wide errors. To fix that you need to change configuration to either `Debug/x86` or `Release/x86`  
-![VSError][VSError]
-<!--TODO: this will be fixed(and this step removed) whenever SC migrates to using AnyCPU configuration-->
+* **Step 1:** Open `osu!StreamCompanion.sln` located in main folder.  
 
 * **Step 2:** Build whole solution by pressing <kbd>CTRL+SHIFT+B</kbd> or right click on top solution node and select `build`.
 
 * **Step 3:** StreamCompanion can be now ran either from `build` folder or from Visual Studio with full debugger capability across plugins if it was built in `Debug` configuration.
 
-[VSError]: <./images/VisualStudioSolutionError.png>
