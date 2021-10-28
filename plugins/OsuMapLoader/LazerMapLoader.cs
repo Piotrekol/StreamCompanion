@@ -49,11 +49,35 @@ namespace OsuSongsFolderWatcher
             SanityCheck(lazerBeatmap);
             short circles, sliders, spinners;
             circles = sliders = spinners = 0;
-            if (difficultyAttributes is OsuDifficultyAttributes osuAttributes)
+            switch (difficultyAttributes)
             {
-                circles = (short)osuAttributes.HitCircleCount;
-                spinners = (short)osuAttributes.SpinnerCount;
-                sliders = (short)osuAttributes.SliderCount;
+                case OsuDifficultyAttributes osuAttributes:
+                    {
+                        circles = (short)osuAttributes.HitCircleCount;
+                        sliders = (short)osuAttributes.SliderCount;
+                        spinners = (short)osuAttributes.SpinnerCount;
+                        break;
+                    }
+                case TaikoDifficultyAttributes taikoAttributes:
+                    {
+                        circles = (short)taikoAttributes.HitCount;
+                        sliders = (short)taikoAttributes.DrumRollCount;
+                        spinners = (short)taikoAttributes.SwellCount;
+                        break;
+                    }
+                case CatchDifficultyAttributes catchAttributes:
+                    {
+                        circles = (short)catchAttributes.FruitCount;
+                        sliders = (short)catchAttributes.JuiceStreamCount;
+                        spinners = (short)catchAttributes.BananaShowerCount;
+                        break;
+                    }
+                case ManiaDifficultyAttributes maniaAttributes:
+                    {
+                        circles = (short)maniaAttributes.NoteCount;
+                        sliders = (short)maniaAttributes.HoldNoteCount;
+                        break;
+                    }
             }
 
             lazerBeatmap.BeatmapInfo.StarDifficulty = difficultyAttributes?.StarRating ?? 0;

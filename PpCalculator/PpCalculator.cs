@@ -13,6 +13,9 @@ using osu.Game.Rulesets.Osu.Objects;
 using PpCalculatorTypes;
 using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
 using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
+using osu.Game.Rulesets.Mania.Objects;
+using osu.Game.Rulesets.Taiko.Objects;
+using osu.Game.Rulesets.Catch.Objects;
 
 namespace PpCalculator
 {
@@ -143,22 +146,46 @@ namespace PpCalculator
             if (attributes == null)
                 return null;
 
-            //Implement other modes when need arises
-            if (attributes is osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuDifficultyAttributes)
+            switch (attributes)
             {
-                return new OsuDifficultyAttributes(osuDifficultyAttributes.StarRating, osuDifficultyAttributes.MaxCombo)
-                {
-                    AimStrain = osuDifficultyAttributes.AimStrain,
-                    SpeedStrain = osuDifficultyAttributes.SpeedStrain,
-                    ApproachRate = osuDifficultyAttributes.ApproachRate,
-                    OverallDifficulty = osuDifficultyAttributes.OverallDifficulty,
-                    HitCircleCount = osuDifficultyAttributes.HitCircleCount,
-                    SliderCount = osuDifficultyAttributes.SliderCount,
-                    SpinnerCount = osuDifficultyAttributes.SpinnerCount
-                };
+                case osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuAttributes:
+                    {
+                        return new OsuDifficultyAttributes(osuAttributes.StarRating, osuAttributes.MaxCombo)
+                        {
+                            AimStrain = osuAttributes.AimStrain,
+                            SpeedStrain = osuAttributes.SpeedStrain,
+                            ApproachRate = osuAttributes.ApproachRate,
+                            OverallDifficulty = osuAttributes.OverallDifficulty,
+                            HitCircleCount = osuAttributes.HitCircleCount,
+                            SliderCount = osuAttributes.SliderCount,
+                            SpinnerCount = osuAttributes.SpinnerCount
+                        };
+                    }
+                case osu.Game.Rulesets.Mania.Difficulty.ManiaDifficultyAttributes maniaAttributes:
+                    return new ManiaDifficultyAttributes(maniaAttributes.StarRating, maniaAttributes.MaxCombo)
+                    {
+                        NoteCount = PlayableBeatmap.HitObjects.Count(h => h is Note),
+                        HoldNoteCount = PlayableBeatmap.HitObjects.Count(h => h is HoldNote),
+                        GreatHitWindow = maniaAttributes.GreatHitWindow
+                    };
+                case osu.Game.Rulesets.Taiko.Difficulty.TaikoDifficultyAttributes taikoAttributes:
+                    return new TaikoDifficultyAttributes(taikoAttributes.StarRating, taikoAttributes.MaxCombo)
+                    {
+                        HitCount = PlayableBeatmap.HitObjects.Count(h => h is Hit),
+                        DrumRollCount = PlayableBeatmap.HitObjects.Count(h => h is DrumRoll),
+                        SwellCount = PlayableBeatmap.HitObjects.Count(h => h is Swell),
+                        GreatHitWindow = taikoAttributes.GreatHitWindow
+                    };
+                case osu.Game.Rulesets.Catch.Difficulty.CatchDifficultyAttributes ctbAttributes:
+                    return new CatchDifficultyAttributes(ctbAttributes.StarRating, ctbAttributes.MaxCombo)
+                    {
+                        FruitCount = PlayableBeatmap.HitObjects.Count(h => h is Fruit),
+                        JuiceStreamCount = PlayableBeatmap.HitObjects.Count(h => h is JuiceStream),
+                        BananaShowerCount = PlayableBeatmap.HitObjects.Count(h => h is BananaShower),
+                    };
+                default:
+                    return new DifficultyAttributes(attributes.StarRating, attributes.MaxCombo);
             }
-
-            return new DifficultyAttributes(attributes.StarRating, attributes.MaxCombo);
         }
 
         public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
