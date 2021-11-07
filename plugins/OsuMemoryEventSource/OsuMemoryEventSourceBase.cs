@@ -58,8 +58,6 @@ namespace OsuMemoryEventSource
         private CancellationTokenSource cts = new CancellationTokenSource();
         private int _poolingMsDelay = 33;
 
-        protected bool MemoryPoolingIsEnabled = false;
-
         [SupportedOSPlatform("windows")]
         static bool IsElevated =>
             WindowsIdentity.GetCurrent().Owner?
@@ -121,19 +119,7 @@ namespace OsuMemoryEventSource
 
             _settings.SettingUpdated += OnSettingsSettingUpdated;
 
-            bool isFallback = _settings.Get<bool>(_names.OsuFallback);
-            bool memoryScannerIsEnabled = _settings.Get<bool>(_names.EnableMemoryScanner);
-            MemoryPoolingIsEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
-
             _poolingMsDelay = _settings.Get<int>(_names.MemoryPoolingFrequency);
-            if (!memoryScannerIsEnabled)
-                return;
-            if (isFallback)
-            {
-                _settings.Add(_names.EnableMemoryScanner.Name, false);
-                return;
-            }
-
             memoryListener = new MemoryListener(settings, saver, modParser, logger, clientCount);
             memoryListener.NewOsuEvent += async (s, args) =>
             {
@@ -177,9 +163,8 @@ namespace OsuMemoryEventSource
                     if (cts.IsCancellationRequested)
                         return;
 
-                    memoryListener?.Tick(_clientMemoryReaders, MemoryPoolingIsEnabled);
+                    memoryListener?.Tick(_clientMemoryReaders, true);
 
-                    //Note that anything below ~20ms will result in wildly inaccurate delays
                     await Task.Delay(_poolingMsDelay);
                 }
             }

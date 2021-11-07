@@ -70,9 +70,6 @@ namespace OsuMemoryEventSource
             pictureBox1.Image = StreamCompanionHelper.StreamCompanionLogo();
 
             CurrentMap = _maps[rnd.Next(0, _maps.Count)];
-
-            _settings.Add(_names.EnableMemoryScanner.Name, true);
-            _settings.Add(_names.EnableMemoryPooling.Name, true);
         }
 
         private void SetCalibrationText(string text)

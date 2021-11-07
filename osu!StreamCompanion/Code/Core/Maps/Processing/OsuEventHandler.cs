@@ -51,7 +51,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchArgs == null || workerCancellationTokenSource.IsCancellationRequested)
                 return;
 
-            _workerState.IsMemoryPoolingEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
             var eventData = new
             {
                 eventType = mapSearchArgs.EventType,
@@ -110,7 +109,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             IMapSearchArgs mapSearchArgs;
 
-            if (_workerState.IsMemoryPoolingEnabled && !_workerState.MemorySearchFailed)
+            if (!_workerState.MemorySearchFailed)
             {
                 TasksMemory.TryPop(out mapSearchArgs);
                 return mapSearchArgs;
@@ -216,7 +215,6 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private class WorkerState
         {
-            public bool IsMemoryPoolingEnabled { get; set; }
             public bool MemorySearchFailed { get; set; }
             public IMapSearchResult LastMapSearchResult { get; set; }
             public bool LastProcessingCancelled { get; set; }
