@@ -1,3 +1,6 @@
 [submodule "submodules/osu"]
 	path = submodules/osu
 	url = https://github.com/Piotrekol/osu
+[submodule "webOverlay"]
+	path = webOverlay
+	url = https://github.com/Piotrekol/StreamCompanion-overlays

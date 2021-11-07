@@ -15,23 +15,11 @@ namespace ModsHandler
         public ModParserSettings(ISettings settings)
         {
             _settings = settings;
-            _settings.SettingUpdated += SettingUpdated;
-            this.Enabled = _settings.Get<bool>(_names.EnableMemoryScanner);
             InitializeComponent();
             textBox_Mods.Text = _settings.Get<string>(_names.NoModsDisplayText);
             radioButton_longMods.Checked = _settings.Get<bool>(_names.UseLongMods);
             radioButton_shortMods.Checked = !radioButton_longMods.Checked;
             init = false;
-        }
-
-        private void SettingUpdated(object sender, SettingUpdated settingUpdated)
-        {
-            if (this.IsHandleCreated)
-                this.BeginInvoke((MethodInvoker)(() =>
-           {
-               if (settingUpdated.Name == _names.EnableMemoryScanner.Name)
-                   this.Enabled = _settings.Get<bool>(_names.EnableMemoryScanner);
-           }));
         }
 
         private void textBox_Mods_TextChanged(object sender, EventArgs e)

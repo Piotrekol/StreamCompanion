@@ -27,15 +27,6 @@ namespace OsuMemoryEventSource
         {
         }
 
-        protected override void OnSettingsSettingUpdated(object sender, SettingUpdated e)
-        {
-            if (e.Name == _names.EnableMemoryPooling.Name)
-            {
-                base.MemoryPoolingIsEnabled = _settings.Get<bool>(_names.EnableMemoryPooling);
-            }
-            base.OnSettingsSettingUpdated(sender, e);
-        }
-
         public void Free()
         {
             userSettings?.Dispose();
@@ -61,13 +52,8 @@ namespace OsuMemoryEventSource
                 throw new ArgumentException(nameof(searchArgs));
 
             var result = new MapSearchResult(searchArgs);
-
-            if (!Started || !_settings.Get<bool>(_names.EnableMemoryScanner))
-                return Task.FromResult<IMapSearchResult>(result);
-
             var mods = (int)searchArgs.Mods;
             result.Mods = GetModsEx(mods);
-
             Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Debug);
 
             Mods eMods = result.Mods?.Mods ?? Mods.Omod;

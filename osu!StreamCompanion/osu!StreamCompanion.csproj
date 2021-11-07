@@ -53,7 +53,6 @@
     <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternEdit.cs" />
     <Compile Update="Code\Modules\MapDataParsers\Parser1\PatternList.cs" />
     <Compile Update="Code\Modules\FileSaveLocation\FileSaveLocationSettings.cs" />
-    <Compile Update="Code\Modules\MapDataFinders\osuMemoryID\MemoryDataFinderSettings.cs" />
     <Compile Update="Code\Modules\osuPathReslover\osuPathResolverSettings.cs" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
