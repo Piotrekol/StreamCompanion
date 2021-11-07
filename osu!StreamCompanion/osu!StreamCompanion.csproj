@@ -97,8 +97,8 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Sentry" Version="3.9.4" />
-    <PackageReference Include="SharpCompress" Version="0.29.0" />
+    <PackageReference Include="Sentry" Version="3.10.0" />
+    <PackageReference Include="SharpCompress" Version="0.30.0" />
     <PackageReference Include="StreamCompanionTypes" version="8.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="5.0.0" />
