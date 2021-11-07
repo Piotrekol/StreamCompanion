@@ -218,7 +218,7 @@ namespace PpCalculator
             var newMods = _Mods != null ? string.Concat(_Mods) : "";
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
-                mods = GetOsuMods(ruleset).ToArray();
+                mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).ToArray();
                 //TODO: cancellation token support
                 PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, TimeSpan.FromSeconds(20));
 
@@ -268,16 +268,16 @@ namespace PpCalculator
         }
 
 
-        private List<Mod> GetOsuMods(Ruleset ruleset)
+        private List<IMod> GetOsuMods(Ruleset ruleset)
         {
-            var mods = new List<Mod>();
+            var mods = new List<IMod>();
             if (_Mods == null)
                 return mods;
 
-            var availableMods = ruleset.GetAllMods().ToList();
+            var availableMods = ruleset.AllMods;
             foreach (var modString in _Mods)
             {
-                Mod newMod = availableMods.FirstOrDefault(m => string.Equals(m.Acronym, modString, StringComparison.CurrentCultureIgnoreCase));
+                IMod newMod = availableMods.FirstOrDefault(m => string.Equals(m.Acronym, modString, StringComparison.CurrentCultureIgnoreCase));
                 if (newMod == null)
                 {
                     continue;
@@ -286,7 +286,7 @@ namespace PpCalculator
                 mods.Add(newMod);
             }
 
-            return mods.Select(m => m.DeepClone()).ToList();
+            return mods;
         }
 
         public int GetMaxCombo(int? fromTime = null)
@@ -322,7 +322,7 @@ namespace PpCalculator
             double scoreMultiplier = 1.0;
             IEnumerable<Mod> scoreIncreaseMods = Ruleset.GetModsFor(ModType.DifficultyIncrease);
             foreach (var m in mods.Where(m => !scoreIncreaseMods.Contains(m)))
-                scoreMultiplier *= m.ScoreMultiplier;
+                scoreMultiplier *= m.CreateInstance().ScoreMultiplier;
 
             return scoreMultiplier;
         }
