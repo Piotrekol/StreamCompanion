@@ -200,7 +200,7 @@ namespace OsuMemoryEventSource
                 if (string.IsNullOrEmpty(memoryBeatmap.FolderName) || string.IsNullOrEmpty(songsLocation))
                     return false;
 
-                osuFileLocation = Path.Combine(songsLocation, memoryBeatmap.FolderName, memoryBeatmap.OsuFileName);
+                osuFileLocation = Path.Combine(songsLocation, memoryBeatmap.FolderName.TrimEnd(), memoryBeatmap.OsuFileName);
                 return true;
             }
             catch (ArgumentException)
