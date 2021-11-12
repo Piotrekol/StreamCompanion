@@ -79,8 +79,7 @@ namespace OsuSongsFolderWatcher
                         break;
                     }
             }
-
-            lazerBeatmap.BeatmapInfo.StarDifficulty = difficultyAttributes?.StarRating ?? 0;
+            lazerBeatmap.BeatmapInfo.StarRating = difficultyAttributes?.StarRating ?? 0;
             return new Beatmap
             {
                 PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID,
@@ -88,10 +87,10 @@ namespace OsuSongsFolderWatcher
                 ArtistUnicode = lazerBeatmap.Metadata.ArtistUnicode ?? string.Empty,
                 TitleRoman = lazerBeatmap.Metadata.Title ?? string.Empty,
                 TitleUnicode = lazerBeatmap.Metadata.TitleUnicode ?? string.Empty,
-                DiffName = lazerBeatmap.BeatmapInfo.Version ?? string.Empty,
+                DiffName = lazerBeatmap.BeatmapInfo.DifficultyName ?? string.Empty,
                 Md5 = lazerBeatmap.BeatmapInfo.MD5Hash,
                 MapId = lazerBeatmap.BeatmapInfo.OnlineBeatmapID ?? 0,
-                ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID, new StarRating { { (int)(mods & Mods.MapChanging), lazerBeatmap.BeatmapInfo.StarDifficulty } } } },
+                ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID, new StarRating { { (int)(mods & Mods.MapChanging), lazerBeatmap.BeatmapInfo.StarRating } } } },
                 MainBpm = Math.Round(60000 / lazerBeatmap.GetMostCommonBeatLength()),
                 MinBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMinimum),
                 MaxBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMaximum),
