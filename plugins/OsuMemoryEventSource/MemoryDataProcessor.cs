@@ -42,6 +42,7 @@ namespace OsuMemoryEventSource
         public static ConfigEntry SongSelectionScoresUpdateRate = new ConfigEntry("SongSelectionScoresUpdateRate", 250);
         private Mods _mods;
         private PlayMode _playMode = PlayMode.Osu;
+        private int _hitObjectCount = 0;
 
         private IToken _strainsToken;
         private IToken _firstHitObjectTimeToken;
@@ -306,6 +307,14 @@ namespace OsuMemoryEventSource
             CreateLiveToken("miss", _rawData.Play.HitMiss, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitMiss);
             CreateLiveToken("grade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults,
                 () => CalculateGrade(_playMode, _mods, _rawData.Play is Player p ? p.Accuracy : 0d, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss));
+            CreateLiveToken("maxGrade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults, () =>
+            {
+                var play = _rawData.Play;
+                var h300left = _hitObjectCount - play.Hit300 - play.Hit100 - play.Hit50 - play.HitMiss;
+                var newHit300 = (ushort)(h300left + play.Hit300);
+                var acc = CalculateAccuracy(_playMode, play.Hit50, play.Hit100, newHit300, play.HitMiss, play.HitGeki, play.HitKatu) * 100;
+                return CalculateGrade(_playMode, _mods, acc, play.Hit50, play.Hit100, newHit300, play.HitMiss);
+            });
             CreateLiveToken("mapPosition", TimeSpan.Zero, TokenType.Live, "{0:mm\\:ss}", TimeSpan.Zero, OsuStatus.All, () =>
             {
                 if (_rawData.PlayTime != 0)
@@ -444,7 +453,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("keyOverlay", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(OsuMemoryData.KeyOverlay, createJsonSerializerSettings("Failed to serialize keyOverlay token data.")));
             CreateLiveToken("chatIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ChatIsExpanded ? 1 : 0);
             CreateLiveToken("ingameInterfaceIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ShowPlayingInterface ? 1 : 0);
-            
+
             CreateLiveToken("songSelectionRankingType", RankingType.Unknown, TokenType.Live, null, RankingType.Unknown, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.RankingType);
             CreateLiveToken("songSelectionTotalScores", 0, TokenType.Live, null, 0, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.TotalScores);
             CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores.Convert(_modParser), createJsonSerializerSettings("Failed to serialize songSelection scores.")));
@@ -496,6 +505,8 @@ namespace OsuMemoryEventSource
 
             _mods = mapSearchResult.Mods?.Mods ?? Mods.Omod;
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
+            var map = mapSearchResult.BeatmapsFound[0];
+            _hitObjectCount = map.Circles + map.Sliders + map.Spinners;
             if (!IsMainProcessor)
                 return;
 
