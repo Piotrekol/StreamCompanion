@@ -18,6 +18,8 @@ namespace PpCalculator.Tests
         [TestCase(14, 0, 0, 1434, "HD,DT", 409.395, 812010)]
         [TestCase(8, 0, 0, 1573, "", 427.733, 1154766)]
         [TestCase(25, 6, 2, 2784, "HR", 434.831, 1228616)]
+        [TestCase(60, 0, 6, 1015, "", 279.127, 3267957)]
+        [TestCase(2, 0, 0, 1947, "HD,HR", 461.646, 2956396)]
         public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
 
@@ -52,7 +54,8 @@ namespace PpCalculator.Tests
 
             var calculatedPp = ppCalculator.Calculate();
 
-            Assert.That(calculatedPp, Is.EqualTo(expectedPp).Within(0.01));
+            //pp values match 1:1 values on osu! side, but osu!api values that we are comparing against are provided with 3 decimal points(rounded).
+            Assert.That(calculatedPp, Is.EqualTo(expectedPp).Within(0.002));
         }
 
         [Test]
