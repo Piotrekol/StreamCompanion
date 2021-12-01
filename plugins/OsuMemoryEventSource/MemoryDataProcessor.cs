@@ -43,6 +43,7 @@ namespace OsuMemoryEventSource
         private Mods _mods;
         private PlayMode _playMode = PlayMode.Osu;
         private int _hitObjectCount = 0;
+        private double _bpmMultiplier = 1;
 
         private IToken _strainsToken;
         private IToken _firstHitObjectTimeToken;
@@ -420,7 +421,7 @@ namespace OsuMemoryEventSource
                 return InterpolatedValues[InterpolatedValueName.liveStarRating].Current;
             });
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
-            CreateLiveToken("currentBpm", 0d, TokenType.Live, "{0}", 0d, OsuStatus.All, () => _reversedMapTimingPoints?.FirstOrDefault(t => t.StartTime < _rawData.PlayTime)?.BPM ?? 0d);
+            CreateLiveToken("currentBpm", 0d, TokenType.Live, "{0}", 0d, OsuStatus.All, () => (_reversedMapTimingPoints?.FirstOrDefault(t => t.StartTime < _rawData.PlayTime)?.BPM ?? 0d) * _bpmMultiplier);
 
             JsonSerializerSettings createJsonSerializerSettings(string serializationErrorMessage)
                 => new JsonSerializerSettings
@@ -507,6 +508,11 @@ namespace OsuMemoryEventSource
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
             var map = mapSearchResult.BeatmapsFound[0];
             _hitObjectCount = map.Circles + map.Sliders + map.Spinners;
+            _bpmMultiplier = (_mods & Mods.Dt) != 0 
+                ? 1.5 
+                : (_mods & Mods.Ht) != 0 
+                    ? 0.75 
+                    : 1;
             if (!IsMainProcessor)
                 return;
 
