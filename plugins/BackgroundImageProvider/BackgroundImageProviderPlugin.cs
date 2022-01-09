@@ -57,22 +57,24 @@ namespace BackgroundImageProvider
                     {
                         if (_lastCopiedFileLocation != imageLocation)
                         {
-                            if (File.Exists(_saveLocation))
-                                File.Delete(_saveLocation);
-
-                            File.Copy(imageLocation, _saveLocation);
                             _imageNameToken.Value = Path.GetFileName(imageLocation);
-                            if (_settings.Get<bool>(EnableImageToken))
-                                _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
-
                             _imageLocationToken.Value = _lastCopiedFileLocation = imageLocation;
+                            if (_settings.Get<bool>(EnableImageToken))
+                            {
+                                if (File.Exists(_saveLocation))
+                                    File.Delete(_saveLocation);
+
+                                File.Copy(imageLocation, _saveLocation);
+                                if (_settings.Get<bool>(EnableImageToken))
+                                    _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
+                            }
                         }
 
                         return Task.CompletedTask;
                     }
                 }
 
-                if (File.Exists(_saveLocation))
+                if (_settings.Get<bool>(EnableImageToken) && File.Exists(_saveLocation))
                     File.Delete(_saveLocation);
 
                 _imageToken.Value = null;
