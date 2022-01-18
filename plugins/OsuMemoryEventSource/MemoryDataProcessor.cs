@@ -56,6 +56,7 @@ namespace OsuMemoryEventSource
         private IToken _rawStatusToken;
         private IToken _beatmapIdToken;
         private IToken _beatmapSetIdToken;
+        private IToken _totalAudioTime;
 
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
@@ -112,6 +113,7 @@ namespace OsuMemoryEventSource
             _rawStatusToken = _tokenSetter("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning);
             _beatmapIdToken = _tokenSetter("mapid", 0, TokenType.Normal, null, 0);
             _beatmapSetIdToken = _tokenSetter("mapsetid", 0, TokenType.Normal, null, 0);
+            _totalAudioTime = _tokenSetter("totalAudioTime", 0d, TokenType.Normal, "{0:0.##}", 0d);
 
             InitLiveTokens();
             Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
@@ -519,6 +521,7 @@ namespace OsuMemoryEventSource
             _beatmapIdToken.Value = OsuMemoryData.Beatmap.Id;
             _beatmapSetIdToken.Value = OsuMemoryData.Beatmap.SetId;
             _beatmapRankedStatusToken.Value = OsuMemoryData.Beatmap.Status;
+            _totalAudioTime.Value = OsuMemoryData.GeneralData.TotalAudioTime;
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
             _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
