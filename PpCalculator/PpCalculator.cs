@@ -16,6 +16,7 @@ using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
 using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Taiko.Objects;
 using osu.Game.Rulesets.Catch.Objects;
+using osu.Game.Beatmaps.Formats;
 
 namespace PpCalculator
 {
@@ -64,6 +65,12 @@ namespace PpCalculator
 
         public double ScoreMultiplier => scoreMultiplier.Value;
         private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
+
+        static PpCalculator()
+        {
+            //Required for <=v4 maps
+            LegacyDifficultyCalculatorBeatmapDecoder.Register();
+        }
 
         public object Clone()
         {
