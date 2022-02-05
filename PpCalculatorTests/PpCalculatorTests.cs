@@ -99,7 +99,7 @@ namespace PpCalculator.Tests
             Assert.AreNotEqual(fullPp, timedPp, $"fullPp has same value! Mods: {mods}");
         }
 
-        private string GetMapPath(int mapId)
+        public static string GetMapPath(int mapId)
         {
             if (!Directory.Exists("cache"))
                 Directory.CreateDirectory("cache");
