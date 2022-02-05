@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using NUnit.Framework;
-using osu.Framework.IO.Network;
+﻿using NUnit.Framework;
 
 namespace PpCalculator.Tests
 {
     [TestFixture()]
     public class StarRatingTests
     {
-        private const string base_url = "https://osu.ppy.sh";
-
         [Test]
         [TestCase(5.74062d, 1185330)]
         [TestCase(5.73106d, 2333273)]
@@ -30,6 +24,5 @@ namespace PpCalculator.Tests
 
             Assert.That(calculatedSR, Is.EqualTo(expectedSR).Within(0.002));
         }
-
     }
 }
