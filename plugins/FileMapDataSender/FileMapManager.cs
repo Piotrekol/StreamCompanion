@@ -34,6 +34,7 @@ namespace FileMapDataSender
 
                         a.Write(bytes, 0, contentSize);
                         a.WriteByte(0);
+                        a.WriteByte(0);
                     }
                 }
             }
