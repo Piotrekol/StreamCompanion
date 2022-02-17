@@ -117,9 +117,22 @@ namespace osu_StreamCompanion
             HandleException(e.Exception);
         }
 
+        /// <summary>
+        /// Is user currently performing an action that should not be interuppted no matter what (aka. Do not ever steal focus from osu! when user is playing)
+        /// </summary>
+        /// <returns></returns>
+        public static bool UserCanBeNotified()
+        {
+            if (!StreamCompanionTypes.DataTypes.Tokens.AllTokens.TryGetValue("status", out var statusToken))
+                return false;
+
+            return ((OsuStatus)statusToken.Value & OsuStatus.Playing) == 0;
+        }
+
         static void HandleNonLoggableException(NonLoggableException ex)
         {
-            MessageBox.Show(ex.CustomMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (UserCanBeNotified())
+                MessageBox.Show(ex.CustomMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         public static void SafeQuit()
         {
@@ -130,9 +143,10 @@ namespace osu_StreamCompanion
             catch (Exception ex)
             {
                 MainLogger.Instance.Log(ex, LogLevel.Error);
-                MessageBox.Show(
-                    $"There was a problem while shutting down Stream Companion. Some of the settings might have not been saved.{Environment.NewLine}{Environment.NewLine}{ex}",
-                    "Stream Companion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (UserCanBeNotified())
+                    MessageBox.Show(
+                        $"There was a problem while shutting down Stream Companion. Some of the settings might have not been saved.{Environment.NewLine}{Environment.NewLine}{ex}",
+                        "Stream Companion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             Quit();
         }
@@ -242,10 +256,12 @@ namespace osu_StreamCompanion
                 //also reports to sentry if enabled
                 MainLogger.Instance.Log(ex, LogLevel.Critical);
 
-                MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                var form = new Error(errorResult.Text, null);
-                form.ShowDialog();
+                if (UserCanBeNotified())
+                {
+                    MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    var form = new Error(errorResult.Text, null);
+                    form.ShowDialog();
+                }
             }
             finally
             {
