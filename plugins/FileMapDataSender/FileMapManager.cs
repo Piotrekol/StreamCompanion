@@ -28,8 +28,8 @@ namespace FileMapDataSender
 
                     using (var a = File.CreateViewStream())
                     {
-                        var contentSize = bytes.LongLength > a.Capacity - 1
-                            ? (int)a.Capacity - 1
+                        var contentSize = bytes.LongLength > a.Capacity - 2
+                            ? (int)a.Capacity - 2
                             : bytes.Length;
 
                         a.Write(bytes, 0, contentSize);
