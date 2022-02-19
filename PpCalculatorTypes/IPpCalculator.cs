@@ -29,5 +29,8 @@ namespace PpCalculatorTypes
         public IEnumerable<TimingPoint> TimingPoints();
 
         object Clone();
+        HitPoint[][] CalculateAccuracyHeatmap(int msToKeep = 0);
+        void PushHitEvent(float x, float y, double time);
+        void ClearHitEvents();
     }
 }

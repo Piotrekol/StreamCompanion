@@ -21,6 +21,7 @@ using OsuMemoryEventSource.LiveTokens;
 using PpCalculatorTypes;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 using Mods = CollectionManager.DataTypes.Mods;
+using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
 
 namespace OsuMemoryEventSource
 {
@@ -136,6 +137,7 @@ namespace OsuMemoryEventSource
                 if (_newPlayStarted.WaitOne(0))
                 {
                     _sliderBreaks = 0;
+                    _rawData.PpCalculator?.ClearHitEvents();
                     _newPlayStarted.Reset();
                 }
 
@@ -194,6 +196,7 @@ namespace OsuMemoryEventSource
                             Thread.Sleep(500);//Initial play delay
                         }
 
+                        reader.TryRead(OsuMemoryData.Replay);
                         reader.TryRead(OsuMemoryData.KeyOverlay);
                         reader.TryRead(OsuMemoryData.Player);
                         if (!ReferenceEquals(_rawData.Play, OsuMemoryData.Player))
@@ -461,6 +464,32 @@ namespace OsuMemoryEventSource
             CreateLiveToken("songSelectionTotalScores", 0, TokenType.Live, null, 0, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.TotalScores);
             CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores.Convert(_modParser), createJsonSerializerSettings("Failed to serialize songSelection scores.")));
             CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore?.Convert(_modParser), createJsonSerializerSettings("failed to serialize songSelectionMainPlayer score.")));
+            var lastReplayFrameCount = 0;
+            CreateLiveToken("accuracyHeatmap", "[]", TokenType.Live, null, "[]", playingOrWatching, () =>
+            {
+                var ppCalculator = _rawData.PpCalculator;
+                if (ppCalculator == null || _playMode != PlayMode.Osu)
+                    return "[]";
+
+                _notUpdatingMemoryValues.WaitOne();
+                _notUpdatingTokens.Reset();
+                var framesCount = OsuMemoryData.Replay.ReplayFrames.Count(f => f.Time <= _rawData.PlayTime);
+                _notUpdatingTokens.Set();
+                if (lastReplayFrameCount != framesCount)
+                {
+                    for (int i = lastReplayFrameCount; i < OsuMemoryData.Replay.ReplayFrames.Count; i++)
+                    {
+                        var frame = OsuMemoryData.Replay.ReplayFrames[i];
+                        if (frame.KeyPressState == 0)
+                            continue;
+                        _rawData.PpCalculator.PushHitEvent(frame.X, frame.Y, frame.Time);
+                    }
+
+                    lastReplayFrameCount = framesCount;
+                }
+
+                return JsonConvert.SerializeObject(_rawData.PpCalculator?.CalculateAccuracyHeatmap(25000), createJsonSerializerSettings("failed to serialize accuracyHeatmap."));
+            });
         }
 
         private void UpdateLiveTokens(OsuStatus status)

@@ -55,16 +55,24 @@ namespace PpCalculator
         public virtual int? Goods { get; set; }
         public int? Katsus { get; set; }
 
-        protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
+        protected virtual ScoreInfo ScoreInfo { get; set; }
 
         protected PerformanceCalculator PerformanceCalculator { get; set; }
         protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
-
+        protected OsuAccuracyHeatmap OsuAccuracyHeatmap { get; set; }
         public int RulesetId => Ruleset.RulesetInfo.ID ?? 0;
         public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
 
         public double ScoreMultiplier => scoreMultiplier.Value;
         private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
+
+        public PpCalculator()
+        {
+            ScoreInfo = new ScoreInfo()
+            {
+                HitEvents = new List<HitEvent>()
+            };
+        }
 
         static PpCalculator()
         {
@@ -85,6 +93,7 @@ namespace PpCalculator
                 ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.DeepClone()).ToArray();
                 ppCalculator.PerformanceCalculator = Ruleset.CreatePerformanceCalculator(TimedDifficultyAttributes.Last().Attributes, ppCalculator.ScoreInfo);
                 ppCalculator.TimedDifficultyAttributes = TimedDifficultyAttributes;
+                ppCalculator.OsuAccuracyHeatmap = OsuAccuracyHeatmap;
                 ppCalculator.ResetPerformanceCalculator = false;
             }
 
@@ -255,6 +264,7 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
+                ClearHitEvents();
                 (PerformanceCalculator, TimedDifficultyAttributes) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, PlayableBeatmap, ScoreInfo, cancellationToken);
                 ResetPerformanceCalculator = false;
             }
@@ -332,6 +342,53 @@ namespace PpCalculator
                 scoreMultiplier *= m.CreateInstance().ScoreMultiplier;
 
             return scoreMultiplier;
+        }
+
+        private List<HitObject> hitHitObjects = new List<HitObject>();
+        public HitPoint[][] CalculateAccuracyHeatmap(int msToKeep = 0)
+        {
+            if (OsuAccuracyHeatmap == null)
+                OsuAccuracyHeatmap = new OsuAccuracyHeatmap(ScoreInfo, PlayableBeatmap);
+
+            OsuAccuracyHeatmap.CalculateSlow(msToKeep);
+            return OsuAccuracyHeatmap.Points;
+        }
+
+        private OsuHitObject HitObjectAt(double time)
+        {
+            return (OsuHitObject)PlayableBeatmap.HitObjects.Except(hitHitObjects).LastOrDefault(x => x.StartTime <= time && (x.HitWindows.CanBeHit(time - x.StartTime)));
+        }
+
+        public HitObject PreviousHitObject(OsuHitObject hitObject)
+        {
+            var idx = ((List<OsuHitObject>)PlayableBeatmap.HitObjects).IndexOf(hitObject);
+            if (idx <= 0)
+                return null;
+
+            return PlayableBeatmap.HitObjects[idx - 1];
+        }
+
+        public void ClearHitEvents()
+        {
+            ScoreInfo.HitEvents.Clear();
+            hitHitObjects.Clear();
+            OsuAccuracyHeatmap = null;
+        }
+
+        public void PushHitEvent(float x, float y, double time)
+        {
+            //TODO: lots of fake misses(wrongly mapped hit events). easily visible with HR. fairly sure that some of the "hits" are also mapped incorrectly.
+            var hitObject = HitObjectAt(time);
+            if (hitObject == null)
+                return;
+            
+            //var hitResult = Math.Pow(x - hitObject.X, 2) + Math.Pow(y - hitObject.Y, 2) >= Math.Pow(hitObject.Radius, 2)
+            //    ? HitResult.Miss
+            //    : HitResult.None;
+
+            hitHitObjects.Add(hitObject);
+            var previousHitObject = PreviousHitObject(hitObject);
+            ScoreInfo.HitEvents.Add(new HitEvent(time, HitResult.None, hitObject, previousHitObject, new osuTK.Vector2(x, y)));
         }
 
         protected int GetComboToTime(IBeatmap beatmap, int toTime) =>
