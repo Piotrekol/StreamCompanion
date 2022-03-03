@@ -91,12 +91,13 @@ namespace OsuMemoryEventSource
             if (!reader.TryRead(osuData.Beatmap) || !TryGetOsuFileLocation(osuData.Beatmap, out var osuFileLocation))
                 return;
 
-            if (!reader.TryReadProperty(osuData.Player, nameof(Player.IsReplay), out var rawIsReplay))
+            _currentMapId = osuData.Beatmap.Id;
+            OsuStatus status = _currentStatus.Convert();
+            object rawIsReplay = false;
+            if (status == OsuStatus.Playing && !reader.TryReadProperty(osuData.Player, nameof(Player.IsReplay), out rawIsReplay))
                 return;
 
-            _currentMapId = osuData.Beatmap.Id;
             var isReplay = (bool)rawIsReplay;
-            OsuStatus status = _currentStatus.Convert();
             status = status == OsuStatus.Playing && isReplay
                 ? OsuStatus.Watching
                 : status;
