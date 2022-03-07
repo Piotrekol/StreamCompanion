@@ -107,10 +107,6 @@ namespace OsuMemoryEventSource
                     }));
 
                 //TODO: provide tournament-manager specific data via tokens
-#pragma warning disable CS0618 // Type or member is obsolete
-                var _tournamentManagerMemoryReader = OsuMemoryReader.Instance.GetInstanceForWindowTitleHint("Tournament Manager");
-#pragma warning restore CS0618 // Type or member is obsolete
-
                 Logger.Log($"{_clientMemoryReaders.Count} client readers prepared", LogLevel.Information);
             }
             else
