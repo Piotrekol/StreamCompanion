@@ -15,6 +15,7 @@ namespace StreamCompanion.Common
             if (ppCalculator == null)
                 return strains;
 
+            ppCalculator.Score = 1_000_000;
             var mapLength = ppCalculator.BeatmapLength;
             //data for 2min map
             var strainLength = 5000;
