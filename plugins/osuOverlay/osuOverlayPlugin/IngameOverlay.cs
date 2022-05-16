@@ -173,12 +173,13 @@ namespace osuOverlay
                     message =
                         "Could not find osuOverlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
                     break;
+                case DllInjectionResult.HelperProcessFailed:
                 case DllInjectionResult.InjectionFailed:
                     {
                         //ERROR_ACCESS_DENIED
-                        if (helperProcessResult.Win32ErrorCode == 5)
+                        if (helperProcessResult.Win32ErrorCode == 5 || (helperProcessResult.Win32ErrorCode == 0 && helperProcessResult.ErrorCode == -2))
                         {
-                            message = $"Your antivirus has blocked an attempt to add ingame overlay to osu!.";
+                            message = $"Your antivirus has blocked an attempt to add browser overlay to osu!. Adding an antivirus exception to SC folder & installing text overlay again might help.";
                         }
                         else
                         {
@@ -194,13 +195,12 @@ namespace osuOverlay
                     _logger.Log("Injection success.", LogLevel.Information);
                     return;
             }
+
             _logger.Log($"Injection failed: {message}", LogLevel.Information);
             _logger.Log($"{helperProcessResult}", LogLevel.Debug);
-
             if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound && !cancellationToken.IsCancellationRequested)
             {
-                MessageBox.Show(message + Environment.NewLine + Environment.NewLine + $"Ingame Overlay result: {helperProcessResult}", "StreamCompanion - ingameOverlay Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show(message + Environment.NewLine + $"Raw error data: {helperProcessResult}", "StreamCompanion - text overlay Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -97,7 +97,7 @@ namespace BrowserOverlay.Loader
 
             var libAddress = GetLoadLibraryAAddress();
             if(libAddress == IntPtr.Zero)
-                return (DllInjectionResult.HelperProcessFailed, -1, 0);
+                return (DllInjectionResult.HelperProcessFailed, -2, 0);
 
             var injectionResult = BInject(_procId, sDllPath, libAddress);
             if (!injectionResult.Success)
