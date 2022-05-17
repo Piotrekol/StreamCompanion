@@ -18,6 +18,7 @@ namespace ScGui
         public event EventHandler OnOpenSettingsClicked;
         public event EventHandler OnOpenInfoClicked;
         public event EventHandler OnUpdateClicked;
+        public event EventHandler OnPpClicked;
 
         public MainWindow(IMainWindowModel data, ISettings settings)
         {
@@ -41,9 +42,10 @@ namespace ScGui
                 themeName = WindowsThemeHelper.GetWindowsTheme() == WindowsThemeHelper.WindowsTheme.Light
                     ? "Light"
                     : "Dark";
-                    
+
             Resources.MergedDictionaries[0].Source = new Uri($"./themes/{themeName}.xaml", UriKind.Relative);
         }
+
         private void OnStateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized && _settings.Get<bool>(MainWindowPlugin.minimizeToTaskbar))
@@ -59,9 +61,15 @@ namespace ScGui
         {
             OnOpenSettingsClicked?.Invoke(this, EventArgs.Empty);
         }
+
         private void ButtonInfo_OnClick(object sender, RoutedEventArgs e)
         {
             OnOpenInfoClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ButtonPp_OnClick(object sender, RoutedEventArgs e)
+        {
+            OnPpClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private void LabelUpdate_OnClick(object sender, RoutedEventArgs e)

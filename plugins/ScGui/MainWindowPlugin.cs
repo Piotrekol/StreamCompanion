@@ -40,6 +40,9 @@ namespace ScGui
         public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "General";
 
+        private static string BaseAddress(ISettings settings) => BindAddress(settings).Replace("*", "localhost");
+        private static string BindAddress(ISettings settings) => $"{settings.GetRaw("httpServerAddress", "")}:{settings.GetRaw("httpServerPort", "20727")}";
+
         private NotifyIcon CreateNotifyIcon()
         {
             var cms = new ContextMenuStrip
@@ -72,6 +75,7 @@ namespace ScGui
 
             return notifyIcon;
         }
+
         public MainWindowPlugin(ISettings settings, IMainWindowModel mainWindowModel, List<Lazy<ISettingsSource>> settingsSources, Delegates.Exit exitAction)
         {
             _settings = settings;
@@ -129,6 +133,7 @@ namespace ScGui
                     aboutFrm.ShowDialog();
                 };
                 _mainWindow.OnUpdateClicked += (sender, args) => _mainWindowModel.UpdateTextClicked(sender, args);
+                _mainWindow.OnPpClicked += (_, __) => ProcessExt.OpenUrl(BaseAddress(_settings));
                 _mainWindow.Show();
 
             }
