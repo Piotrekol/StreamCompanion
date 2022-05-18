@@ -61,6 +61,7 @@ namespace OsuMemoryEventSource
         private ushort _lastMisses = 0;
         private ushort _lastCombo = 0;
         private int _sliderBreaks = 0;
+        private double _firstHitObjectTime = 0;
         private List<TimingPoint> _reversedMapTimingPoints;
 
         private enum InterpolatedValueName
@@ -405,8 +406,11 @@ namespace OsuMemoryEventSource
             CreateLiveToken("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All, () => DateTime.Now.TimeOfDay);
             CreateLiveToken("sliderBreaks", 0, TokenType.Live, "{0}", 0, playingWatchingResults, () =>
             {
-                var currentMisses = (ushort)_liveTokens["miss"].Token.Value;
-                var currentCombo = (ushort)_liveTokens["combo"].Token.Value;
+                if (_firstHitObjectTime > _rawData.PlayTime)
+                    return _sliderBreaks = 0;
+
+                var currentMisses = _rawData.Play.HitMiss;
+                var currentCombo = _rawData.Play.Combo;
 
                 if (_lastMisses == currentMisses && _lastCombo > currentCombo)
                     _sliderBreaks++;
@@ -510,10 +514,10 @@ namespace OsuMemoryEventSource
             _playMode = mapSearchResult.PlayMode ?? PlayMode.Osu;
             var map = mapSearchResult.BeatmapsFound[0];
             _hitObjectCount = map.Circles + map.Sliders + map.Spinners;
-            _bpmMultiplier = (_mods & Mods.Dt) != 0 
-                ? 1.5 
-                : (_mods & Mods.Ht) != 0 
-                    ? 0.75 
+            _bpmMultiplier = (_mods & Mods.Dt) != 0
+                ? 1.5
+                : (_mods & Mods.Ht) != 0
+                    ? 0.75
                     : 1;
             if (!IsMainProcessor)
                 return;
@@ -523,7 +527,7 @@ namespace OsuMemoryEventSource
             _beatmapRankedStatusToken.Value = OsuMemoryData.Beatmap.Status;
             _totalAudioTime.Value = OsuMemoryData.GeneralData.TotalAudioTime;
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
-            _firstHitObjectTimeToken.Value = ppCalculator?.FirstHitObjectTime();
+            _firstHitObjectTimeToken.Value = _firstHitObjectTime = ppCalculator?.FirstHitObjectTime() ?? 0d;
             _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
             var mapTimingPoints = ppCalculator?.TimingPoints().ToList();
             _MapTimingPointsToken.Value = mapTimingPoints;
