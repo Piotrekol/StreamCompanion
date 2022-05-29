@@ -19,8 +19,35 @@ namespace OsuSongsFolderWatcher
 {
     public static class LazerMapLoader
     {
+        public static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> LoadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, IContextAwareLogger logger, CancellationToken cancellationToken)
+        {
+            const int retryLimit = 5;
+            var retryCount = 0;
+            for (; ; )
+            {
+                try
+                {
+                    var result = await loadLazerBeatmapWithPerformanceCalculator(osuFilePath, desiredPlayMode, mods, logger, cancellationToken);
+                    if ((result.Beatmap != null && result.CreatePpCalculatorLazyTask != null) || retryCount >= retryLimit)
+                        return result;
+                }
+                catch (Exception ex)
+                {
+                    if (retryCount >= retryLimit)
+                    {
+                        ex.Data["retryCount"] = retryCount;
+                        logger.Log($"Failed to load beatmap located at \"{osuFilePath}\" after {retryLimit} retries", LogLevel.Warning);
+                        throw;
+                    }
 
-        public static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> LoadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ILogger logger, CancellationToken cancellationToken)
+                    logger.Log($"Retrying failed beatmap load - retry {retryCount + 1}", LogLevel.Warning);
+                }
+
+                await Task.Delay(150 * ++retryCount);
+            }
+        }
+
+        private static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> loadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ILogger logger, CancellationToken cancellationToken)
         {
             var createPpCalculatorTask = CreatePpCalculatorTask(osuFilePath, desiredPlayMode, mods, logger);
             var iPpCalculator = await createPpCalculatorTask.GetValueAsync(cancellationToken);

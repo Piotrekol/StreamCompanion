@@ -14,7 +14,7 @@ namespace OsuSongsFolderWatcher
 {
     public class OsuMapLoaderPlugin : IPlugin, IMapDataFinder
     {
-        private readonly ILogger _logger;
+        private readonly IContextAwareLogger _logger;
         private readonly IModParser _modParser;
         public string Description { get; } = "Provides beatmap data by parsing .osu files using osu!lazer";
         public string Name { get; } = nameof(OsuMapLoaderPlugin);
@@ -22,7 +22,7 @@ namespace OsuSongsFolderWatcher
         public string Url { get; } = string.Empty;
         public string UpdateUrl { get; } = string.Empty;
 
-        public OsuMapLoaderPlugin(ILogger logger, IModParser modParser)
+        public OsuMapLoaderPlugin(IContextAwareLogger logger, IModParser modParser)
         {
             _logger = logger;
             _modParser = modParser;
