@@ -31,6 +31,10 @@ namespace OsuSongsFolderWatcher
                     if ((result.Beatmap != null && result.CreatePpCalculatorLazyTask != null) || retryCount >= retryLimit)
                         return result;
                 }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     if (retryCount >= retryLimit)
