@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -123,10 +123,17 @@ namespace BrowserOverlay
                 {
                     InjectionProgressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug))
                 };
+                _loaderWatchdog.BeforeInjection += async (_, __) => await DownloadAndUnpackOverlay(zipFileLocation, osuFolderDirectory);
                 _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
                 return;
             }
 
+            if (await DownloadAndUnpackOverlay(zipFileLocation, osuFolderDirectory))
+                _restarter("browser overlay installation/update finished");
+        }
+
+        private async Task<bool> DownloadAndUnpackOverlay(string zipFileLocation, string osuFolderDirectory)
+        {
             _overlayDownloadForm = new OverlayDownload();
             _overlayDownloadForm.Show();
             if (!File.Exists(zipFileLocation))
@@ -143,13 +150,13 @@ namespace BrowserOverlay
                 {
                     _overlayDownloadForm.SetStatus("problem during download - restart SC to try again");
                     _logger.Log(ex, LogLevel.Error);
-                    return;
+                    return false;
                 }
 
                 if (!File.Exists(tempFileLocation))
                 {
                     _overlayDownloadForm.SetStatus("Failed to download assets - restart SC to try again");
-                    return;
+                    return false;
                 }
 
                 File.Move(tempFileLocation, zipFileLocation);
@@ -158,7 +165,7 @@ namespace BrowserOverlay
             _overlayDownloadForm.SetStatus("unpacking files...");
             ZipFile.ExtractToDirectory(zipFileLocation, osuFolderDirectory, true);
             _overlayDownloadForm.Close();
-            _restarter("browser overlay installation/update finished");
+            return true;
         }
 
         private async Task DownloadOverlay(string destination)

@@ -17,16 +17,21 @@ namespace BrowserOverlay.Loader
         public Progress<string> InjectionProgressReporter;
         private readonly Loader _loader = new Loader();
         private Process _currentOsuProcess;
+        public event EventHandler BeforeInjection
+        {
+            add => _loader.BeforeInjection += value;
+            remove => _loader.BeforeInjection -= value;
+        }
 
         public LoaderWatchdog(ILogger logger, string dllLocation, string processName = "osu!")
         {
             _logger = logger;
             _processName = processName;
             DllLocation = dllLocation;
-            _loader.BeforeInjection += BeforeInjection;
+            BeforeInjection += OnBeforeInjection;
         }
 
-        private void BeforeInjection(object sender, EventArgs e)
+        private void OnBeforeInjection(object sender, EventArgs e)
         {
             var moduleList = _loader.ListModules();
             var unknownModules = moduleList.Select(m => m.ToLowerInvariant()).Except(KnownOsuModules.Modules).ToList();
