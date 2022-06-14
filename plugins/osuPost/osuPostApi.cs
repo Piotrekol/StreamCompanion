@@ -213,7 +213,9 @@ namespace osuPost
             string htmlResult;
             try
             {
+#pragma warning disable SYSLIB0014 // WebClient is deprecated, use HttpClient instead
                 using (WebClient wc = new WebClient())
+#pragma warning restore SYSLIB0014 // WebClient is deprecated, use HttpClient instead
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                     htmlResult = wc.UploadString(uri, postParams);

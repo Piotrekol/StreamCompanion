@@ -2,9 +2,11 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Runtime.Versioning;
 
 namespace WebSocketDataSender
 {
+    [SupportedOSPlatform("Windows")]
     public static class ImageExtensions
     {
         /// <summary>

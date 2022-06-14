@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable SYSLIB0014 // WebClient is deprecated, use HttpClient instead
+using System;
 using System.Net;
 
 namespace osu_StreamCompanion.Code.Misc
@@ -22,3 +23,4 @@ namespace osu_StreamCompanion.Code.Misc
         }
     }
 }
+#pragma warning restore SYSLIB0014 // WebClient is deprecated, use HttpClient instead

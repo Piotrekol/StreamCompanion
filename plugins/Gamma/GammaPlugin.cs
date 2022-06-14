@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +14,6 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace Gamma
 {
-    [SupportedOSPlatform("windows")]
     public class GammaPlugin : IPlugin, IMapDataConsumer, ISettingsSource, IDisposable
     {
         public static ConfigEntry GammaConfiguration = new ConfigEntry("GammaConfiguration", "{}");
@@ -36,6 +34,12 @@ namespace Gamma
 
         public GammaPlugin(ILogger logger, ISettings settings)
         {
+            if (!OperatingSystem.IsWindows())
+            {
+                logger.Log("Gamma plugin works only under windows - disabling", LogLevel.Warning);
+                return;
+            }
+
             _logger = logger;
             _settings = settings;
             _configuration = settings.GetConfiguration<Configuration>(GammaConfiguration);

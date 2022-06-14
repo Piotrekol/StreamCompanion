@@ -45,6 +45,9 @@ namespace ScGui
 
         private NotifyIcon CreateNotifyIcon()
         {
+            if (!OperatingSystem.IsWindows())
+                return null;
+
             var cms = new ContextMenuStrip
             {
                 Items =

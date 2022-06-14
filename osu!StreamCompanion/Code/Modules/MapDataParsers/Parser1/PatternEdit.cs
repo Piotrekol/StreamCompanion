@@ -95,12 +95,16 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 "To Center",
                 "To Right"
             };
-
-            using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
+            if (OperatingSystem.IsWindows())
             {
-                var fontNames = fontsCollection.Families.Select(f => f.Name).ToList();
-                comboBox_font.DataSource = fontNames;
-                comboBox_font.SelectedItem = fontNames.First(f => f == "Arial");
+                using (InstalledFontCollection fontsCollection = new InstalledFontCollection())
+                {
+#pragma warning disable CA1416 // Validate platform compatibility
+                    var fontNames = fontsCollection.Families.Select(f => f.Name).ToList();
+#pragma warning restore CA1416 // Validate platform compatibility
+                    comboBox_font.DataSource = fontNames;
+                    comboBox_font.SelectedItem = fontNames.First(f => f == "Arial");
+                }
             }
         }
 
@@ -252,6 +256,9 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 
         private void comboBox_font_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!OperatingSystem.IsWindows())
+                return;
+
             var font = (string)comboBox_font.SelectedItem;
             try
             {
