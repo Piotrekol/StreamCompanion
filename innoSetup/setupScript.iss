@@ -168,7 +168,7 @@ procedure InitializeWizard;
 begin
   if NetRuntimeIsMissing() then
   begin
-    idpAddFile('https://download.visualstudio.microsoft.com/download/pr/5681bdf9-0a48-45ac-b7bf-21b7b61657aa/bbdc43bc7bf0d15b97c1a98ae2e82ec0/windowsdesktop-runtime-6.0.5-win-x64.exe', ExpandConstant('{tmp}\NetRuntimeInstaller.exe'));
+    idpAddFile('https://aka.ms/dotnet/6.0/windowsdesktop-runtime-win-x64.exe', ExpandConstant('{tmp}\NetRuntimeInstaller.exe'));
     idpDownloadAfter(wpReady);
   end;
 end;
