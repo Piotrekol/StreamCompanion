@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +42,8 @@ namespace BrowserOverlay
         private BrowserOverlaySettings _browserOverlaySettings;
 
         private string GetFilesFolder => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", "Dlls");
-        private string GetFullDllLocation() => Path.Combine(GetFilesFolder, "osuBrowserOverlay.dll");
+        private string GetFullDllLocation(ISaver saver) => Path.Combine(GetAssetsLocation(saver), "browserIngameOverlay.dll");
+        private string GetAssetsLocation(ISaver saver) => Path.Combine(saver.SaveDirectory, "BrowserOverlay");
 
         public BrowserOverlay(IContextAwareLogger logger, ISettings settings, ISaver saver, List<Lazy<IHighFrequencyDataConsumer>> dataConsumers, Delegates.Restart restarter)
         {
@@ -107,32 +109,57 @@ namespace BrowserOverlay
                 _restarter($"Browser overlay was toggled. isEnabled:{eventData.Value.Value}");
         }
 
+        private void RemoveOldAssets()
+        {
+            string[] oldFileNames = { "BrowserOverlay.zip" };
+            foreach (var filename in oldFileNames)
+            {
+                var filePath = Path.Combine(_saver.SaveDirectory, filename);
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+            }
+        }
 
         private async Task Initialize()
         {
-            var osuFolderDirectory = _settings.Get<string>(SettingNames.Instance.MainOsuDirectory);
-            if (!Directory.Exists(osuFolderDirectory))
-                return;
-
-            var zipFileLocation = Path.Combine(_saver.SaveDirectory, "BrowserOverlay.zip");
-            //Check one of the files included in overlay assets
-            if (File.Exists(Path.Combine(osuFolderDirectory, "chrome_elf.dll")))
+            RemoveOldAssets();
+            var assetsLocation = GetAssetsLocation(_saver);
+            var zipFileLocation = Path.Combine(_saver.SaveDirectory, "BrowserOverlayAssetsV2.zip");
+            var overlayFilesMissing = true;
+            if (File.Exists(zipFileLocation))
             {
-                //everything seems to be in place - start watching for osu! process
-                _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation())
+                try
                 {
-                    InjectionProgressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug))
-                };
-                _loaderWatchdog.BeforeInjection += async (_, __) => await DownloadAndUnpackOverlay(zipFileLocation, osuFolderDirectory);
-                _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
+                    var files = ZipFile.OpenRead(zipFileLocation).Entries.Where(e => !e.FullName.EndsWith('/')).Select(e => e.FullName);
+                    overlayFilesMissing = files.Any(relativePath => !File.Exists(Path.Combine(assetsLocation, relativePath)));
+                }
+                catch (Exception e)
+                {
+                    _logger.Log("Could not load browser overlay assets zip, redownloading", LogLevel.Warning);
+                    _logger.Log(e, LogLevel.Debug);
+                    File.Delete(zipFileLocation);
+                }
+            }
+
+            if (overlayFilesMissing)
+            {
+                if (await DownloadAndUnpackOverlay(zipFileLocation, assetsLocation))
+                    _restarter("browser overlay installation/update finished");
+
                 return;
             }
 
-            if (await DownloadAndUnpackOverlay(zipFileLocation, osuFolderDirectory))
-                _restarter("browser overlay installation/update finished");
+            //Check one of the files included in overlay assets
+            _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(_saver))
+            {
+                InjectionProgressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug))
+            };
+            //_loaderWatchdog.BeforeInjection += async (_, __) => await DownloadAndUnpackOverlay(zipFileLocation, assetsLocation);
+            _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
+            return;
         }
 
-        private async Task<bool> DownloadAndUnpackOverlay(string zipFileLocation, string osuFolderDirectory)
+        private async Task<bool> DownloadAndUnpackOverlay(string zipFileLocation, string assetsLocation)
         {
             _overlayDownloadForm = new OverlayDownload();
             _overlayDownloadForm.Show();
@@ -163,14 +190,15 @@ namespace BrowserOverlay
             }
 
             _overlayDownloadForm.SetStatus("unpacking files...");
-            ZipFile.ExtractToDirectory(zipFileLocation, osuFolderDirectory, true);
+            Directory.CreateDirectory(assetsLocation);
+            ZipFile.ExtractToDirectory(zipFileLocation, assetsLocation, true);
             _overlayDownloadForm.Close();
             return true;
         }
 
         private async Task DownloadOverlay(string destination)
         {
-            const string browserOverlayUrl = @"https://pioo.space/StreamCompanion/BrowserOverlayAssets.zip";
+            const string browserOverlayUrl = @"https://pioo.space/StreamCompanion/BrowserOverlayAssetsV2.zip";
 #pragma warning disable SYSLIB0014 // WebClient is deprecated, use HttpClient instead
             using var client = new WebClient();
 #pragma warning restore SYSLIB0014
