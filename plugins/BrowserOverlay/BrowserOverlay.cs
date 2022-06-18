@@ -102,7 +102,7 @@ namespace BrowserOverlay
         {
             _settings.Add(BrowserOverlayConfigurationConfigEntry.Name, JsonConvert.SerializeObject(_browserOverlayConfiguration));
             SendConfiguration();
-            
+
             if (eventData != null && eventData.Value.SettingName == "enable")
                 _restarter($"Browser overlay was toggled. isEnabled:{eventData.Value.Value}");
         }
@@ -171,7 +171,9 @@ namespace BrowserOverlay
         private async Task DownloadOverlay(string destination)
         {
             const string browserOverlayUrl = @"https://pioo.space/StreamCompanion/BrowserOverlayAssets.zip";
+#pragma warning disable SYSLIB0014 // WebClient is deprecated, use HttpClient instead
             using var client = new WebClient();
+#pragma warning restore SYSLIB0014
             client.DownloadProgressChanged += ClientOnDownloadProgressChanged;
             await client.DownloadFileTaskAsync(browserOverlayUrl, destination);
         }

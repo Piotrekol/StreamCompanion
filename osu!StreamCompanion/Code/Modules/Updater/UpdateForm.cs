@@ -38,7 +38,10 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             var fullTempSavePath = saveDirectory + tempFileName;
             if (File.Exists(fullTempSavePath))
                 File.Delete(fullTempSavePath);
+
+#pragma warning disable SYSLIB0014 // WebClient is deprecated, use HttpClient instead
             using (WebClient wc = new WebClient())
+#pragma warning restore SYSLIB0014 // WebClient is deprecated, use HttpClient instead
             {
                 wc.DownloadProgressChanged += WcOnDownloadProgressChanged;
                 wc.DownloadFileCompleted += WcOnDownloadFileCompleted;

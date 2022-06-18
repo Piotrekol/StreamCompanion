@@ -2,8 +2,7 @@
 
 ## Prerequisites
 
-* [.NET 5.0.x __x86__ Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/5.0/runtime)
-  * [not sure which one to download?](../images/guide/netRuntimeDownload.png)
+* [.NET 6.0.x __x64__ Desktop Runtime](https://aka.ms/dotnet/6.0/windowsdesktop-runtime-win-x64.exe)
 
 ## Installation steps
 

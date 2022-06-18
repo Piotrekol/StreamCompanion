@@ -59,7 +59,7 @@ For more understanding when these methods are executed proceed to next section.
 
 In order to create user interface for settings, we will have to do few small modifications to the project. Namely:
 
-* Use net5.0-windows instead of net standard
+* Use net6.0-windows instead of net standard
 * Specify that we want to use winForms, which is current way of adding settings GUI
 
 @[code xml{3,6}](./apiExamples/plugin/4.csproj)

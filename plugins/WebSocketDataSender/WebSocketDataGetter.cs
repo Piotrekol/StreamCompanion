@@ -172,6 +172,13 @@ namespace WebSocketDataSender
                     return;
                 }
 
+                if(!OperatingSystem.IsWindows())
+                {
+                    context.Response.StatusCode = 409;
+                    await context.SendStringAsync("Image processing is supported only on windows", "text", Encoding.UTF8);
+                    return;
+                }
+
                 int.TryParse(context.Request.QueryString["width"], out var desiredWidth);
                 int.TryParse(context.Request.QueryString["height"], out var desiredHeight);
 
