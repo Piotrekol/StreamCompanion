@@ -44,7 +44,7 @@ Source: {#FilesRoot}*; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 [InstallDelete]
 Type: files; Name: "{app}\Plugins\osuOverlayPlugin.dll"
 [CustomMessages]
-IDP_DownloadFailed=Download of VCRedist failed. VCRedist is required to run StreamCompanion browser overlay.
+IDP_DownloadFailed=Download of VCRedist failed. VCRedist is required to run StreamCompanion text overlay.
 IDP_RetryCancel=Click 'Retry' to try downloading the files again, or click 'Cancel' to terminate setup.
 InstallingVCRedist=Installing VCRedist. This might take a few minutes...
 VCRedistFailedToLaunch=Failed to launch VCRedist Installer with error "%1". Please fix the error then run this installer again.
