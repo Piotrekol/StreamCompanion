@@ -56,7 +56,6 @@ namespace osuOverlay
 
             if (_settings.Get<bool>(EnableIngameOverlay))
             {
-                CopyFreeType();
                 progressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug));
                 Task.Run(() => WatchForProcessStart(cancellationToken.Token), cancellationToken.Token);
             }
@@ -98,8 +97,7 @@ namespace osuOverlay
         {
             try
             {
-                return await loader.Inject(GetFullDllLocation(), progressReporter,
-                    cancellationToken.Token);
+                return await loader.Inject(GetFullDllLocation(), progressReporter, cancellationToken.Token);
             }
             catch (TaskCanceledException)
             {
@@ -204,18 +202,6 @@ namespace osuOverlay
             }
         }
 
-        private void CopyFreeType()
-        {
-            var osuFolderDirectory = _settings.Get<string>(SettingNames.Instance.MainOsuDirectory);
-            if (Directory.Exists(osuFolderDirectory))
-            {
-                var newFreeTypeLocation = Path.Combine(osuFolderDirectory, "FreeType.dll");
-                if (File.Exists(newFreeTypeLocation))
-                    return;
-
-                File.Copy(GetFullFreeTypeLocation(), newFreeTypeLocation);
-            }
-        }
         public bool SafeHasExited(Process process)
         {
 
