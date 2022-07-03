@@ -16,7 +16,7 @@ namespace osuOverlay.Loader
                DllInjector.LoadedResult.Loaded;
 
         public async Task<InjectionResult> Inject(string dllLocation, IProgress<string> progress,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken, Action beforeInjection = null)
         {
             while (GetOsuProcess() != null)
             {
@@ -38,6 +38,7 @@ namespace osuOverlay.Loader
             progress?.Report("Injecting");
 
             DllInjector dllInjector = DllInjector.GetInstance;
+            beforeInjection?.Invoke();
             var result = dllInjector.Inject("osu!", dllLocation);
 
             return new InjectionResult(result.InjectionResult, result.errorCode, result.Win32Error, "_");

@@ -25,13 +25,13 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Include="Dlls\X32ProcessOverlayHelper.exe">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

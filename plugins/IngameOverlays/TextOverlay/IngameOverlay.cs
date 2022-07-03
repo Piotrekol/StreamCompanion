@@ -99,7 +99,7 @@ namespace osuOverlay
             try
             {
                 return await loader.Inject(GetFullDllLocation(), progressReporter,
-                    cancellationToken.Token);
+                    cancellationToken.Token,()=>CopyFreeType());
             }
             catch (TaskCanceledException)
             {
