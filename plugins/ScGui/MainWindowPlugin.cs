@@ -137,6 +137,7 @@ namespace ScGui
                 };
                 _mainWindow.OnUpdateClicked += (sender, args) => _mainWindowModel.UpdateTextClicked(sender, args);
                 _mainWindow.OnPpClicked += (_, __) => ProcessExt.OpenUrl(BaseAddress(_settings));
+                _mainWindow.OnWikiClicked += (_, __) => ProcessExt.OpenUrl("https://piotrekol.github.io/StreamCompanion/");
                 _mainWindow.Show();
 
             }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
@@ -19,6 +19,7 @@ namespace ScGui
         public event EventHandler OnOpenInfoClicked;
         public event EventHandler OnUpdateClicked;
         public event EventHandler OnPpClicked;
+        public event EventHandler OnWikiClicked;
 
         public MainWindow(IMainWindowModel data, ISettings settings)
         {
@@ -75,6 +76,11 @@ namespace ScGui
         private void LabelUpdate_OnClick(object sender, RoutedEventArgs e)
         {
             OnUpdateClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ButtonWiki_OnClick(object sender, RoutedEventArgs e)
+        {
+            OnWikiClicked?.Invoke(this, EventArgs.Empty);
         }
 
         #region Disable Maximize button
