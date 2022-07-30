@@ -53,6 +53,8 @@ VCRedistFailedToLaunch=Failed to launch VCRedist Installer with error "%1". Plea
 VCRedistFailedOther=The VCRedist installer exited with an unexpected status code "%1". Please review any other messages shown by the installer to determine whether the installation completed successfully, and abort this installation and fix the problem if it did not.
 
 [Code]
+var
+  requiresRestart: boolean;
 
 function InitializeSetup(): Boolean;
 begin
@@ -117,6 +119,9 @@ begin
         0: begin
           // Successful
         end;
+        3010: begin
+          requiresRestart := True;
+        end;
         else begin
           MsgBox(FmtMessage(CustomMessage('VCRedistFailedOther'), [IntToStr(resultCode)]), mbError, MB_OK);
         end;
@@ -128,6 +133,11 @@ begin
     
     DeleteFile(ExpandConstant('{tmp}\vc_redist.x86.exe'));
   end;
+end;
+
+function NeedRestart(): Boolean;
+begin
+  Result := requiresRestart;
 end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;
