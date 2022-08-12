@@ -27,7 +27,7 @@ namespace PpCalculator
     public class ProcessorWorkingBeatmap : WorkingBeatmap
     {
         private readonly Beatmap beatmap;
-        public int RulesetID => beatmap.BeatmapInfo.RulesetID;
+        public int RulesetID => beatmap.BeatmapInfo.OnlineID;
         public double Length
         {
             get
@@ -56,10 +56,10 @@ namespace PpCalculator
         {
             this.beatmap = beatmap;
 
-            beatmap.BeatmapInfo.Ruleset = GetRulesetFromLegacyID(beatmap.BeatmapInfo.RulesetID).RulesetInfo;
+            beatmap.BeatmapInfo.Ruleset = GetRulesetFromLegacyID(beatmap.BeatmapInfo.Ruleset.OnlineID).RulesetInfo;
 
             if (beatmapId.HasValue)
-                beatmap.BeatmapInfo.OnlineBeatmapID = beatmapId;
+                beatmap.BeatmapInfo.OnlineID = beatmapId ?? 0;
         }
 
         private static Beatmap readFromFile(string filename, int retryCount = 0)

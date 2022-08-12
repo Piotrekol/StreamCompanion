@@ -23,7 +23,7 @@ namespace PpCalculator
     public abstract class PpCalculator : IPpCalculator, ICloneable
     {
         public ProcessorWorkingBeatmap WorkingBeatmap { get; protected set; }
-        public IBeatmap PlayableBeatmap { get; set; }
+        public IBeatmap PlayableBeatmap { get; protected set; }
         protected abstract Ruleset Ruleset { get; }
 
         public virtual double Accuracy { get; set; } = 100;
@@ -60,7 +60,7 @@ namespace PpCalculator
         protected PerformanceCalculator PerformanceCalculator { get; set; }
         protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
 
-        public int RulesetId => Ruleset.RulesetInfo.ID ?? 0;
+        public int RulesetId => Ruleset.RulesetInfo.OnlineID;
         public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
 
         public double ScoreMultiplier => scoreMultiplier.Value;
@@ -83,7 +83,8 @@ namespace PpCalculator
             if (PerformanceCalculator != null)
             {
                 ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.DeepClone()).ToArray();
-                ppCalculator.PerformanceCalculator = Ruleset.CreatePerformanceCalculator(TimedDifficultyAttributes.Last().Attributes, ppCalculator.ScoreInfo);
+
+                ppCalculator.PerformanceCalculator = Ruleset.CreatePerformanceCalculator();
                 ppCalculator.TimedDifficultyAttributes = TimedDifficultyAttributes;
                 ppCalculator.ResetPerformanceCalculator = false;
             }
@@ -159,8 +160,8 @@ namespace PpCalculator
                     {
                         return new OsuDifficultyAttributes(osuAttributes.StarRating, osuAttributes.MaxCombo)
                         {
-                            AimStrain = osuAttributes.AimStrain,
-                            SpeedStrain = osuAttributes.SpeedStrain,
+                            AimStrain = osuAttributes.AimDifficulty,
+                            SpeedStrain = osuAttributes.SpeedDifficulty,
                             ApproachRate = osuAttributes.ApproachRate,
                             OverallDifficulty = osuAttributes.OverallDifficulty,
                             HitCircleCount = osuAttributes.HitCircleCount,
@@ -226,8 +227,8 @@ namespace PpCalculator
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
                 mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).ToArray();
-                //TODO: cancellation token support
-                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, TimeSpan.FromSeconds(20));
+                using var cts = new CancellationTokenSource(20_000);
+                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, cts.Token);
 
 
                 LastMods = newMods;
@@ -255,18 +256,22 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                (PerformanceCalculator, TimedDifficultyAttributes) = ruleset.CreatePerformanceCalculator(WorkingBeatmap, PlayableBeatmap, ScoreInfo, cancellationToken);
+                var difficultyCalculator = ruleset.CreateDifficultyCalculator(WorkingBeatmap);
+                ScoreInfo.Mods = LegacyHelper.ConvertToLegacyDifficultyAdjustmentMods(ruleset, difficultyCalculator, ScoreInfo.Mods).Select(m => m.CreateInstance()).ToArray();
+                TimedDifficultyAttributes = difficultyCalculator.CalculateTimed(ScoreInfo.Mods, cancellationToken).ToList();
+                PerformanceCalculator = ruleset.CreatePerformanceCalculator();
                 ResetPerformanceCalculator = false;
             }
 
             try
             {
                 if (endTime.HasValue)
-                    return PerformanceCalculator.Calculate(endTime.Value,
-                        TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ??
-                        TimedDifficultyAttributes.First().Attributes, categoryAttribs);
+                {
+                    return PerformanceCalculator.Calculate(ScoreInfo,
+                    TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ?? TimedDifficultyAttributes.First().Attributes).Total;
+                }
 
-                return PerformanceCalculator.Calculate(categoryAttribs);
+                return PerformanceCalculator.Calculate(ScoreInfo, TimedDifficultyAttributes.Last().Attributes).Total;
             }
             catch (InvalidOperationException)
             {
