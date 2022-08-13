@@ -68,7 +68,7 @@ namespace OsuSongsFolderWatcher
             ppCalculator.Calculate(cancellationToken);
             var noModMapAttributes = ppCalculator.AttributesAt(double.MaxValue);
             var scBeatmap = ConvertToSCBeatmap(ppCalculator.PlayableBeatmap, noModMapAttributes, osuFilePath, Mods.Omod);
-            scBeatmap.ModPpStars[(PlayMode)ppCalculator.PlayableBeatmap.BeatmapInfo.OnlineID].Add((int)(mods.Mods & Mods.MapChanging), moddedMapAttributes?.StarRating ?? 0d);
+            scBeatmap.ModPpStars[(PlayMode)ppCalculator.PlayableBeatmap.BeatmapInfo.Ruleset.OnlineID].Add((int)(mods.Mods & Mods.MapChanging), moddedMapAttributes?.StarRating ?? 0d);
 
             return (scBeatmap, createPpCalculatorTask);
         }
