@@ -56,8 +56,6 @@ namespace PpCalculator
         {
             this.beatmap = beatmap;
 
-            beatmap.BeatmapInfo.Ruleset = GetRulesetFromLegacyID(beatmap.BeatmapInfo.Ruleset.OnlineID).RulesetInfo;
-
             if (beatmapId.HasValue)
                 beatmap.BeatmapInfo.OnlineID = beatmapId ?? 0;
         }
