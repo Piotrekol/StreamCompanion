@@ -227,13 +227,11 @@ namespace PpCalculator
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
                 mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).ToArray();
-                using var cts = new CancellationTokenSource(20_000);
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                cts.CancelAfter(20_000);
                 PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, cts.Token);
-
-
                 LastMods = newMods;
                 ScoreInfo.Mods = mods;
-
                 createPerformanceCalculator = true;
             }
 
