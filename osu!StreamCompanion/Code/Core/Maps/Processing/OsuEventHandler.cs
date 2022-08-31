@@ -29,8 +29,8 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private Task WorkerTask;
         private CancellationTokenSource workerCancellationTokenSource = new CancellationTokenSource();
-        private ConcurrentStack<IMapSearchArgs> TasksMsn = new ConcurrentStack<IMapSearchArgs>();
-        private ConcurrentStack<IMapSearchArgs> TasksMemory = new ConcurrentStack<IMapSearchArgs>();
+        private ConcurrentStack<IMapSearchArgs> LegacyOsuTasks = new ConcurrentStack<IMapSearchArgs>();
+        private ConcurrentStack<IMapSearchArgs> OsuTasks = new ConcurrentStack<IMapSearchArgs>();
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly WorkerState _workerState = new WorkerState();
@@ -65,18 +65,18 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }.ToString();
 
             _logger.Log($"Received event: {eventData}", LogLevel.Debug);
-            if (mapSearchArgs.SourceName.Contains("OsuMemory"))
+            if (mapSearchArgs.SourceName.Contains("Legacy"))
             {
-                _cancellationTokenSource.TryCancel();
-                TasksMemory.Clear();
-                _logger.SetContextData("OsuMemory_event", eventData);
-
-                TasksMemory.Push(mapSearchArgs);
+                LegacyOsuTasks.Clear();
+                LegacyOsuTasks.Push(mapSearchArgs);
                 return;
             }
 
-            TasksMsn.Clear();
-            TasksMsn.Push(mapSearchArgs);
+            _cancellationTokenSource.TryCancel();
+            OsuTasks.Clear();
+            _logger.SetContextData("Osu_event", eventData);
+
+            OsuTasks.Push(mapSearchArgs);
         }
 
         private async Task OsuEventWorkerLoop()
@@ -119,14 +119,14 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             IMapSearchArgs mapSearchArgs;
 
-            if (!_workerState.MemorySearchFailed)
+            if (!_workerState.MapSearchFailed)
             {
-                TasksMemory.TryPop(out mapSearchArgs);
+                OsuTasks.TryPop(out mapSearchArgs);
                 return mapSearchArgs;
             }
 
-            _workerState.MemorySearchFailed = false;
-            TasksMsn.TryPop(out mapSearchArgs);
+            _workerState.MapSearchFailed = false;
+            LegacyOsuTasks.TryPop(out mapSearchArgs);
             return mapSearchArgs;
         }
 
@@ -145,9 +145,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             if (mapSearchResult == null)
                 return;
 
-            if (!mapSearchResult.BeatmapsFound.Any() && mapSearchArgs.SourceName.Contains("OsuMemory"))
+            if (!mapSearchResult.BeatmapsFound.Any() && !mapSearchArgs.SourceName.Contains("Legacy"))
             {
-                _workerState.MemorySearchFailed = true;
+                _workerState.MapSearchFailed = true;
                 return;
             }
 
@@ -157,7 +157,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private async Task<IMapSearchResult> FindBeatmaps(IMapSearchArgs mapSearchArgs, CancellationToken token)
         {
-            if (mapSearchArgs.MapId == 0 && string.IsNullOrEmpty(mapSearchArgs.MapHash) && string.IsNullOrEmpty(mapSearchArgs.Raw))
+            if (mapSearchArgs.MapId <= 0 && string.IsNullOrEmpty(mapSearchArgs.MapHash) && string.IsNullOrEmpty(mapSearchArgs.Raw))
                 return null;
 
             var performMapSearch = true;
@@ -225,7 +225,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private class WorkerState
         {
-            public bool MemorySearchFailed { get; set; }
+            public bool MapSearchFailed { get; set; }
             public IMapSearchResult LastMapSearchResult { get; set; }
             public bool LastProcessingCancelled { get; set; }
         }

@@ -505,6 +505,9 @@ namespace OsuMemoryEventSource
 
         public async Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
+            if (OsuMemoryData == null)
+                return;
+
             if (IsMainProcessor)
                 SetSkinTokens();
 

@@ -103,7 +103,7 @@ namespace MSNEventSource
                 }
                 _logger?.Log(result, LogLevel.Information);
 
-                var searchArgs = new MapSearchArgs("Msn", OsuEventType.MapChange)
+                var searchArgs = new MapSearchArgs("LegacyMsn", OsuEventType.MapChange)
                 {
                     Artist = osuStatus["artist"] ?? "",
                     Title = osuStatus["title"] ?? "",
