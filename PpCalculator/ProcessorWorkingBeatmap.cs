@@ -27,7 +27,6 @@ namespace PpCalculator
     public class ProcessorWorkingBeatmap : WorkingBeatmap
     {
         private readonly Beatmap beatmap;
-        public int RulesetID => beatmap.BeatmapInfo.OnlineID;
         public double Length
         {
             get

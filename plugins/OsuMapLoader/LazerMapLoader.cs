@@ -113,7 +113,7 @@ namespace OsuSongsFolderWatcher
             lazerBeatmap.BeatmapInfo.StarRating = difficultyAttributes?.StarRating ?? 0;
             return new Beatmap
             {
-                PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.OnlineID,
+                PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.Ruleset.OnlineID,
                 ArtistRoman = lazerBeatmap.Metadata.Artist ?? string.Empty,
                 ArtistUnicode = lazerBeatmap.Metadata.ArtistUnicode ?? string.Empty,
                 TitleRoman = lazerBeatmap.Metadata.Title ?? string.Empty,
