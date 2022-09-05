@@ -106,7 +106,7 @@ namespace Overlay.Common.Loader
         {
             try
             {
-                return await _loader.Inject(DllLocation, new Progress<string>(), token);
+                return await _loader.Inject(DllLocation, _injectionProgressReporter, token);
             }
             catch (TaskCanceledException)
             {
