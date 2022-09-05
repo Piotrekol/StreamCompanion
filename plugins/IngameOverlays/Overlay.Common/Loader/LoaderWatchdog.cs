@@ -18,6 +18,9 @@ namespace Overlay.Common.Loader
         private readonly Loader _loader = new Loader();
         private Process? _currentOsuProcess;
         private IProgress<string> _injectionProgressReporter;
+        private List<string> _lastUnknownModules = new();
+        private List<string> _lastTroublesomeModules = new();
+        private DateTime LastInjectionAppCrashTreshold = DateTime.MinValue;
         public event EventHandler BeforeInjection
         {
             add => _loader.BeforeInjection += value;
@@ -37,15 +40,15 @@ namespace Overlay.Common.Loader
         private void OnBeforeInjection(object sender, EventArgs e)
         {
             var moduleList = _loader.ListModules().Select(m => m.ToLowerInvariant()).ToList();
-            var unknownModules = moduleList.Except(KnownOsuModules.Modules).ToList();
-            var troublesomeModules = KnownOsuModules.TroubleMakers.Select(m => m.Key).Intersect(moduleList).ToList();
-            if (unknownModules.Any())
-                _logger.Log($"This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{Environment.NewLine}{string.Join(Environment.NewLine, unknownModules)}", LogLevel.Debug);
+            _lastUnknownModules = moduleList.Except(KnownOsuModules.Modules).ToList();
+            _lastTroublesomeModules = KnownOsuModules.TroubleMakers.Select(m => m.Key).Intersect(moduleList).ToList();
+            if (_lastUnknownModules.Any())
+                _logger.Log($"This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{Environment.NewLine}{string.Join(Environment.NewLine, _lastUnknownModules)}", LogLevel.Debug);
             else
                 _logger.Log("osu! module list is clean", LogLevel.Debug);
 
-            if (troublesomeModules.Any())
-                _logger.Log($"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, troublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}", LogLevel.Warning);
+            if (_lastTroublesomeModules.Any())
+                _logger.Log($"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}", LogLevel.Warning);
         }
 
         public async Task WatchForProcessStart(CancellationToken token)
@@ -68,6 +71,25 @@ namespace Overlay.Common.Loader
                         }
                         else
                         {
+                            if (DateTime.UtcNow < LastInjectionAppCrashTreshold)
+                            {
+                                const string oops = "Looks like osu! crashed after starting overlay!";
+                                if (_lastTroublesomeModules.Any())
+                                {
+                                    _statusReporter.Report(new(ReportType.Error, $"{oops}{Environment.NewLine}StreamCompanion has found following known conflicting applications:{Environment.NewLine}{Environment.NewLine}" +
+                                    string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))));
+                                }
+                                else if (_lastUnknownModules.Any())
+                                {
+                                    _statusReporter.Report(new(ReportType.Error, $"{oops}{Environment.NewLine}StreamCompanion has found that following unknown modules were loaded in osu! during startup:{Environment.NewLine}{Environment.NewLine}" +
+                                            string.Join(", ", _lastUnknownModules)+$"{Environment.NewLine}These can be used to pinpoint exact application causing this conflict."));
+                                }
+                                else
+                                {
+                                    _statusReporter.Report(new(ReportType.Error, $"{oops}{Environment.NewLine}StreamCompanion didn't find any additional modules during startup to help with troubleshooting..."));
+                                }
+                            }
+
                             if (_currentOsuProcess == null && GetProcess() != null && lastResult != DllInjectionResult.Timeout)
                             {
                                 _ = Task.Run(() => _statusReporter.Report(new(ReportType.Information, "In order to load ingame overlay you need to restart your osu!")));
@@ -156,6 +178,7 @@ namespace Overlay.Common.Loader
                     return;
                 case DllInjectionResult.Success:
                     _logger.Log("Injection success.", LogLevel.Information);
+                    LastInjectionAppCrashTreshold = DateTime.UtcNow.AddSeconds(5);
                     return;
             }
 
