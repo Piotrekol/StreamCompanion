@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Dlls\X32ProcessOverlayHelper.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Dlls\X32ProcessOverlayHelper.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

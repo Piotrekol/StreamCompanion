@@ -3,11 +3,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 
-namespace BrowserOverlay.Loader
+namespace Overlay.Common.Loader
 {
     public class LoaderWatchdog
     {
@@ -16,18 +15,19 @@ namespace BrowserOverlay.Loader
         public string DllLocation { get; set; }
         public Progress<string> InjectionProgressReporter;
         private readonly Loader _loader = new Loader();
-        private Process _currentOsuProcess;
+        private Process? _currentOsuProcess;
         public event EventHandler BeforeInjection
         {
             add => _loader.BeforeInjection += value;
             remove => _loader.BeforeInjection -= value;
         }
 
-        public LoaderWatchdog(ILogger logger, string dllLocation, string processName = "osu!")
+        public LoaderWatchdog(ILogger logger, string dllLocation, Progress<string> injectionProgressReporter, string processName = "osu!")
         {
             _logger = logger;
             _processName = processName;
             DllLocation = dllLocation;
+            InjectionProgressReporter = injectionProgressReporter;
             BeforeInjection += OnBeforeInjection;
         }
 
@@ -41,7 +41,7 @@ namespace BrowserOverlay.Loader
                 _logger.Log("osu! module list is clean", LogLevel.Debug);
         }
 
-        public async Task WatchForProcessStart(CancellationToken token)
+        public async Task WatchForProcessStart(CancellationToken token, IProgress<OverlayReport> overlayStatusReporter)
         {
             try
             {
@@ -63,12 +63,7 @@ namespace BrowserOverlay.Loader
                         {
                             if (_currentOsuProcess == null && GetProcess() != null && lastResult != DllInjectionResult.Timeout)
                             {
-                                _ = Task.Run(() =>
-                                {
-                                    MessageBox.Show(
-                                        "In order to load browser overlay you need to restart your osu!",
-                                        "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                });
+                                _ = Task.Run(() => overlayStatusReporter.Report(new(ReportType.Information, "In order to load ingame overlay you need to restart your osu!")));
                             }
                             _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Information);
 
@@ -76,7 +71,7 @@ namespace BrowserOverlay.Loader
                             resultCode = result.ResultCode;
                             if (token.IsCancellationRequested)
                                 return;
-                            HandleInjectionResult(result, true);
+                            HandleInjectionResult(result, overlayStatusReporter, true);
                             lastResult = result.ResultCode;
                         }
 
@@ -126,26 +121,26 @@ namespace BrowserOverlay.Loader
             return null;
         }
 
-        private void HandleInjectionResult(InjectionResult helperProcessResult, bool showErrors = false)
+        private void HandleInjectionResult(InjectionResult helperProcessResult, IProgress<OverlayReport> overlayStatusReporter, bool showErrors = false)
         {
             string message = null;
             switch (helperProcessResult.ResultCode)
             {
                 case DllInjectionResult.DllNotFound:
                     message =
-                        "Could not find browser overlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
+                        "Could not find overlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
                     break;
                 case DllInjectionResult.HelperProcessFailed:
                 case DllInjectionResult.InjectionFailed:
                     {
                         //ERROR_ACCESS_DENIED
-                        if (helperProcessResult.Win32ErrorCode == 5 || (helperProcessResult.Win32ErrorCode == 0 && helperProcessResult.ErrorCode == -2))
+                        if (helperProcessResult.Win32ErrorCode == 5 || helperProcessResult.Win32ErrorCode == 0 && helperProcessResult.ErrorCode == -2)
                         {
-                            message = $"Your antivirus has blocked an attempt to add browser overlay to osu!. Adding an antivirus exception to SC folder & installing browser overlay again might help.";
+                            message = $"Your antivirus has blocked an attempt to add overlay to osu!. Adding an antivirus exception to SC folder & installing overlay again might help.";
                         }
                         else
                         {
-                            message = "Could not add browser overlay to osu!. Most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
+                            message = "Could not add overlay to osu!. Most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
                         }
                         break;
                     }
@@ -162,7 +157,7 @@ namespace BrowserOverlay.Loader
             _logger.Log($"{helperProcessResult}", LogLevel.Debug);
             if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound)
             {
-                MessageBox.Show(message + Environment.NewLine + $"Raw error data: {helperProcessResult}", "StreamCompanion - browser overlay Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                overlayStatusReporter.Report(new(ReportType.Error, message + Environment.NewLine + $"Raw error data: {helperProcessResult}"));
             }
         }
 

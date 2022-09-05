@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BrowserOverlay.Loader
+namespace Overlay.Common.Loader
 {
     internal static class KnownOsuModules
     {

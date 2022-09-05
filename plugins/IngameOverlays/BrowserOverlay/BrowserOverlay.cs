@@ -7,10 +7,10 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BrowserOverlay.Loader;
 using Newtonsoft.Json;
+using Overlay.Common;
+using Overlay.Common.Loader;
 using StreamCompanion.Common;
-using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -149,14 +149,23 @@ namespace BrowserOverlay
                 return;
             }
 
-            //Check one of the files included in overlay assets
-            _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(_saver))
-            {
-                InjectionProgressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug))
-            };
-            //_loaderWatchdog.BeforeInjection += async (_, __) => await DownloadAndUnpackOverlay(zipFileLocation, assetsLocation);
-            _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
+            _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(_saver), new Progress<string>(s => _logger.Log(s, LogLevel.Debug)));
+            _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None, new Progress<OverlayReport>(HandleOverlayReport)).HandleExceptions();
             return;
+        }
+
+        private void HandleOverlayReport(OverlayReport report)
+        {
+            const string messageBoxTitle = "StreamCompanion - Browser overlay";
+            switch (report.ReportType)
+            {
+                case ReportType.Information:
+                    MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case ReportType.Error:
+                    MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }
         }
 
         private async Task<bool> DownloadAndUnpackOverlay(string zipFileLocation, string assetsLocation)

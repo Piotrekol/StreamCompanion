@@ -1,6 +1,6 @@
-﻿namespace osuOverlay
+﻿namespace TextOverlay
 {
-    partial class IngameOverlaySettings
+    partial class TextOverlaySettings
     {
         /// <summary> 
         /// Required designer variable.
