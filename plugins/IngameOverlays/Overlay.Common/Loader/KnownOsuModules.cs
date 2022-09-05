@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Overlay.Common.Loader
 {
@@ -177,6 +177,27 @@ namespace Overlay.Common.Loader
             "ws2_32.dll",
             "wtsapi32.dll",
             "xinput1_4.dll",
+            "wow64.dll",
+            "wow64win.dll",
+            "wow64cpu.dll",
+            "srvcli.dll",
+            "drvstore.dll",
+            "nvspcap.dll",
+            "sxs.dll",
+            "msvcp140.dll",
+            "vcruntime140.dll",
+            "dsrole.dll",
+            "vulkan-1.dll",
+            "dsreg.dll",
+            "msvcp110_win.dll",
+            "vk_swiftshader.dll",
+            "msvcr90.dll",
+            "msvcp90.dll",
+            "graphics-hook32.dll",
+            "textoverlay.dll",
+            "freetype.dll",
+            "browseringameoverlay.dll",
+        };
         };
 
         public static IReadOnlyList<string> Modules { get; } = _modules.AsReadOnly();
