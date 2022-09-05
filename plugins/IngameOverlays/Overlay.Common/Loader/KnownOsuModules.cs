@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Overlay.Common.Loader
 {
@@ -198,8 +198,15 @@ namespace Overlay.Common.Loader
             "freetype.dll",
             "browseringameoverlay.dll",
         };
-        };
+
+        private static Dictionary<string, string> _troubleMakers = new()
+        {
+            { "guard32.dll", "Comodo antivirus is known to block SC from properly injecting overlay (resulting in osu! crashes)" },
+            { "rtsshooks.dll", "RivaTuner OSD / MSI Afterburner OSD - Enable \"Stealth mode\" in RivaTuner settings or disable completely" },
+            { "rtssvklayer32.dll", "RivaTuner OSD / MSI Afterburner OSD - Enable \"Stealth mode\" in RivaTuner settings or disable completely" },
+        }; 
 
         public static IReadOnlyList<string> Modules { get; } = _modules.AsReadOnly();
+        public static IReadOnlyDictionary<string, string> TroubleMakers { get; } = _troubleMakers;
     }
 }

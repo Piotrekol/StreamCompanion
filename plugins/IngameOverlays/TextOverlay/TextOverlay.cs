@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
@@ -41,8 +39,8 @@ namespace TextOverlay
 
             if (_settings.Get<bool>(EnableIngameOverlay))
             {
-                _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(), new Progress<string>(s => _logger.Log(s, LogLevel.Debug)));
-                _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None, new Progress<OverlayReport>(HandleOverlayReport)).HandleExceptions();
+                _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(), new Progress<OverlayReport>(HandleOverlayReport));
+                _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
             }
         }
 
@@ -56,6 +54,9 @@ namespace TextOverlay
                     break;
                 case ReportType.Error:
                     MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case ReportType.Log:
+                    _logger.Log(report.Message, LogLevel.Information);
                     break;
             }
         }

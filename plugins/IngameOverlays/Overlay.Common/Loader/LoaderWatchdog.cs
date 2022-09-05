@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -13,35 +14,41 @@ namespace Overlay.Common.Loader
         private readonly ILogger _logger;
         private readonly string _processName;
         public string DllLocation { get; set; }
-        public Progress<string> InjectionProgressReporter;
+        private IProgress<OverlayReport> _statusReporter;
         private readonly Loader _loader = new Loader();
         private Process? _currentOsuProcess;
+        private IProgress<string> _injectionProgressReporter;
         public event EventHandler BeforeInjection
         {
             add => _loader.BeforeInjection += value;
             remove => _loader.BeforeInjection -= value;
         }
 
-        public LoaderWatchdog(ILogger logger, string dllLocation, Progress<string> injectionProgressReporter, string processName = "osu!")
+        public LoaderWatchdog(ILogger logger, string dllLocation, Progress<OverlayReport> statusReporter, string processName = "osu!")
         {
             _logger = logger;
             _processName = processName;
             DllLocation = dllLocation;
-            InjectionProgressReporter = injectionProgressReporter;
+            _statusReporter = statusReporter;
+            _injectionProgressReporter = new Progress<string>(message => _statusReporter.Report(new(ReportType.Log, message)));
             BeforeInjection += OnBeforeInjection;
         }
 
         private void OnBeforeInjection(object sender, EventArgs e)
         {
-            var moduleList = _loader.ListModules();
-            var unknownModules = moduleList.Select(m => m.ToLowerInvariant()).Except(KnownOsuModules.Modules).ToList();
+            var moduleList = _loader.ListModules().Select(m => m.ToLowerInvariant()).ToList();
+            var unknownModules = moduleList.Except(KnownOsuModules.Modules).ToList();
+            var troublesomeModules = KnownOsuModules.TroubleMakers.Select(m => m.Key).Intersect(moduleList).ToList();
             if (unknownModules.Any())
                 _logger.Log($"This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{Environment.NewLine}{string.Join(Environment.NewLine, unknownModules)}", LogLevel.Debug);
             else
                 _logger.Log("osu! module list is clean", LogLevel.Debug);
+
+            if (troublesomeModules.Any())
+                _logger.Log($"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, troublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}", LogLevel.Warning);
         }
 
-        public async Task WatchForProcessStart(CancellationToken token, IProgress<OverlayReport> overlayStatusReporter)
+        public async Task WatchForProcessStart(CancellationToken token)
         {
             try
             {
@@ -63,7 +70,7 @@ namespace Overlay.Common.Loader
                         {
                             if (_currentOsuProcess == null && GetProcess() != null && lastResult != DllInjectionResult.Timeout)
                             {
-                                _ = Task.Run(() => overlayStatusReporter.Report(new(ReportType.Information, "In order to load ingame overlay you need to restart your osu!")));
+                                _ = Task.Run(() => _statusReporter.Report(new(ReportType.Information, "In order to load ingame overlay you need to restart your osu!")));
                             }
                             _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Information);
 
@@ -71,7 +78,7 @@ namespace Overlay.Common.Loader
                             resultCode = result.ResultCode;
                             if (token.IsCancellationRequested)
                                 return;
-                            HandleInjectionResult(result, overlayStatusReporter, true);
+                            HandleInjectionResult(result, true);
                             lastResult = result.ResultCode;
                         }
 
@@ -87,7 +94,7 @@ namespace Overlay.Common.Loader
                     if (_currentOsuProcess != null)
                         await _currentOsuProcess.WaitForExitAsync(token);
 
-                    await Task.Delay(1000, token);
+                    await Task.Delay(500, token);
                 }
             }
             catch (TaskCanceledException)
@@ -99,8 +106,7 @@ namespace Overlay.Common.Loader
         {
             try
             {
-                return await _loader.Inject(DllLocation, InjectionProgressReporter,
-                    token);
+                return await _loader.Inject(DllLocation, new Progress<string>(), token);
             }
             catch (TaskCanceledException)
             {
@@ -121,7 +127,7 @@ namespace Overlay.Common.Loader
             return null;
         }
 
-        private void HandleInjectionResult(InjectionResult helperProcessResult, IProgress<OverlayReport> overlayStatusReporter, bool showErrors = false)
+        private void HandleInjectionResult(InjectionResult helperProcessResult, bool showErrors = false)
         {
             string message = null;
             switch (helperProcessResult.ResultCode)
@@ -157,7 +163,7 @@ namespace Overlay.Common.Loader
             _logger.Log($"{helperProcessResult}", LogLevel.Debug);
             if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound)
             {
-                overlayStatusReporter.Report(new(ReportType.Error, message + Environment.NewLine + $"Raw error data: {helperProcessResult}"));
+                _statusReporter.Report(new(ReportType.Error, message + Environment.NewLine + $"Raw error data: {helperProcessResult}"));
             }
         }
 

@@ -2,6 +2,7 @@
 {
     public enum ReportType
     {
+        Log,
         Information,
         Error
     }
