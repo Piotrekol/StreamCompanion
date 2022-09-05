@@ -55,14 +55,6 @@ namespace BrowserOverlay
             _browserOverlayConfiguration = _settings.GetConfiguration<Configuration>(BrowserOverlayConfigurationConfigEntry);
             _browserOverlayConfiguration.OverlayTabs ??= new List<OverlayTab> { new OverlayTab() };
 
-            if (_browserOverlayConfiguration.Enabled && TextOverlayIsEnabled(_settings))
-            {
-                _browserOverlayConfiguration.Enabled = false;
-                var infoText = $"TextIngameOverlay and BrowserIngameOverlay can't be ran at the same time.{Environment.NewLine} BrowserIngameOverlay was disabled in order to prevent osu! crash.";
-                _logger.Log(infoText, LogLevel.Warning);
-                MessageBox.Show(infoText, "BrowserIngameOverlay Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
             if (_browserOverlayConfiguration.Enabled)
                 Initialize().HandleExceptions();
 
@@ -72,17 +64,6 @@ namespace BrowserOverlay
         public void SendConfiguration()
         {
             _dataConsumers.ForEach(x => x.Value.Handle("Sc-webOverlayConfiguration", JsonConvert.SerializeObject(_browserOverlayConfiguration.OverlayTabs)));
-        }
-
-        public static bool TextOverlayIsEnabled(ISettings settings)
-        {
-            if (settings.SettingsEntries.TryGetValue("EnableIngameOverlay", out var rawTextOverlayEnabled)
-                && bool.TryParse(rawTextOverlayEnabled?.ToString() ?? "", out var textOverlayEnabled))
-            {
-                return textOverlayEnabled;
-            }
-
-            return false;
         }
 
         public void Free()

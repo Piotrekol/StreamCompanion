@@ -38,36 +38,12 @@ namespace TextOverlay
             _logger = logger;
             _settings = settings;
             _restarter = restarter;
-            var enabled = _settings.Get<bool>(EnableIngameOverlay);
-            if (enabled && BrowserOverlayIsEnabled(_settings))
-            {
-                _settings.Add(EnableIngameOverlay.Name, false);
-
-                var infoText =
-                    $"TextIngameOverlay and BrowserIngameOverlay can't be ran at the same time.{Environment.NewLine} TextIngameOverlay was disabled in order to prevent osu! crash.";
-                _logger.Log(infoText, LogLevel.Warning);
-                MessageBox.Show(infoText, "TextIngameOverlay Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
 
             if (_settings.Get<bool>(EnableIngameOverlay))
             {
                 _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(), new Progress<string>(s => _logger.Log(s, LogLevel.Debug)));
                 _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None, new Progress<OverlayReport>(HandleOverlayReport)).HandleExceptions();
             }
-        }
-
-        private bool BrowserOverlayIsEnabled(ISettings settings)
-        {
-            if (settings.SettingsEntries.TryGetValue("BrowserOverlay", out var rawBrowserOverlayConfig))
-            {
-                var config = JsonConvert.DeserializeObject<JObject>(rawBrowserOverlayConfig?.ToString() ?? "");
-                if (config.TryGetValue("Enabled", out var enabledToken) && bool.TryParse(enabledToken?.ToString() ?? "", out var browserOverlayEnabled))
-                {
-                    return browserOverlayEnabled;
-                }
-            }
-
-            return false;
         }
 
         private void HandleOverlayReport(OverlayReport report)
