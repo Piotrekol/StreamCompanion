@@ -1,44 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 
-namespace BrowserOverlay.Loader
+namespace Overlay.Common.Loader
 {
     public class LoaderWatchdog
     {
         private readonly ILogger _logger;
         private readonly string _processName;
         public string DllLocation { get; set; }
-        public Progress<string> InjectionProgressReporter;
+        private IProgress<OverlayReport> _statusReporter;
         private readonly Loader _loader = new Loader();
-        private Process _currentOsuProcess;
+        private Process? _currentOsuProcess;
+        private IProgress<string> _injectionProgressReporter;
+        private List<string> _lastUnknownModules = new();
+        private List<string> _lastTroublesomeModules = new();
+        private DateTime LastInjectionAppCrashTreshold = DateTime.MinValue;
         public event EventHandler BeforeInjection
         {
             add => _loader.BeforeInjection += value;
             remove => _loader.BeforeInjection -= value;
         }
 
-        public LoaderWatchdog(ILogger logger, string dllLocation, string processName = "osu!")
+        public LoaderWatchdog(ILogger logger, string dllLocation, Progress<OverlayReport> statusReporter, string processName = "osu!")
         {
             _logger = logger;
             _processName = processName;
             DllLocation = dllLocation;
+            _statusReporter = statusReporter;
+            _injectionProgressReporter = new Progress<string>(message => _statusReporter.Report(new(ReportType.Log, message)));
             BeforeInjection += OnBeforeInjection;
         }
 
         private void OnBeforeInjection(object sender, EventArgs e)
         {
-            var moduleList = _loader.ListModules();
-            var unknownModules = moduleList.Select(m => m.ToLowerInvariant()).Except(KnownOsuModules.Modules).ToList();
-            if (unknownModules.Any())
-                _logger.Log($"This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{Environment.NewLine}{string.Join(Environment.NewLine, unknownModules)}", LogLevel.Debug);
+            var moduleList = _loader.ListModules().Select(m => m.ToLowerInvariant()).ToList();
+            _lastUnknownModules = moduleList.Except(KnownOsuModules.Modules).ToList();
+            _lastTroublesomeModules = KnownOsuModules.TroubleMakers.Select(m => m.Key).Intersect(moduleList).ToList();
+            if (_lastUnknownModules.Any())
+                _logger.Log($"This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{Environment.NewLine}{string.Join(Environment.NewLine, _lastUnknownModules)}", LogLevel.Debug);
             else
                 _logger.Log("osu! module list is clean", LogLevel.Debug);
+
+            if (_lastTroublesomeModules.Any())
+                _logger.Log($"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}", LogLevel.Warning);
         }
 
         public async Task WatchForProcessStart(CancellationToken token)
@@ -61,14 +71,28 @@ namespace BrowserOverlay.Loader
                         }
                         else
                         {
+                            if (DateTime.UtcNow < LastInjectionAppCrashTreshold)
+                            {
+                                const string oops = "Looks like osu! crashed after starting overlay!";
+                                if (_lastTroublesomeModules.Any())
+                                {
+                                    _statusReporter.Report(new(ReportType.Error, $"{oops}{Environment.NewLine}StreamCompanion has found following known conflicting applications:{Environment.NewLine}{Environment.NewLine}" +
+                                    string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))));
+                                }
+                                else if (_lastUnknownModules.Any())
+                                {
+                                    _statusReporter.Report(new(ReportType.Error, $"{oops}{Environment.NewLine}StreamCompanion has found that following unknown modules were loaded in osu! during startup:{Environment.NewLine}{Environment.NewLine}" +
+                                            string.Join(", ", _lastUnknownModules)+$"{Environment.NewLine}These can be used to pinpoint exact application causing this conflict."));
+                                }
+                                else
+                                {
+                                    _statusReporter.Report(new(ReportType.Error, $"{oops}{Environment.NewLine}StreamCompanion didn't find any additional modules during startup to help with troubleshooting..."));
+                                }
+                            }
+
                             if (_currentOsuProcess == null && GetProcess() != null && lastResult != DllInjectionResult.Timeout)
                             {
-                                _ = Task.Run(() =>
-                                {
-                                    MessageBox.Show(
-                                        "In order to load browser overlay you need to restart your osu!",
-                                        "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                });
+                                _ = Task.Run(() => _statusReporter.Report(new(ReportType.Information, "In order to load ingame overlay you need to restart your osu!")));
                             }
                             _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Information);
 
@@ -92,7 +116,7 @@ namespace BrowserOverlay.Loader
                     if (_currentOsuProcess != null)
                         await _currentOsuProcess.WaitForExitAsync(token);
 
-                    await Task.Delay(1000, token);
+                    await Task.Delay(500, token);
                 }
             }
             catch (TaskCanceledException)
@@ -104,8 +128,7 @@ namespace BrowserOverlay.Loader
         {
             try
             {
-                return await _loader.Inject(DllLocation, InjectionProgressReporter,
-                    token);
+                return await _loader.Inject(DllLocation, _injectionProgressReporter, token);
             }
             catch (TaskCanceledException)
             {
@@ -133,19 +156,19 @@ namespace BrowserOverlay.Loader
             {
                 case DllInjectionResult.DllNotFound:
                     message =
-                        "Could not find browser overlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
+                        "Could not find overlay file to add to osu!... this shouldn't happen, if it does(you see this message) please report this.";
                     break;
                 case DllInjectionResult.HelperProcessFailed:
                 case DllInjectionResult.InjectionFailed:
                     {
                         //ERROR_ACCESS_DENIED
-                        if (helperProcessResult.Win32ErrorCode == 5 || (helperProcessResult.Win32ErrorCode == 0 && helperProcessResult.ErrorCode == -2))
+                        if (helperProcessResult.Win32ErrorCode == 5 || helperProcessResult.Win32ErrorCode == 0 && helperProcessResult.ErrorCode == -2)
                         {
-                            message = $"Your antivirus has blocked an attempt to add browser overlay to osu!. Adding an antivirus exception to SC folder & installing browser overlay again might help.";
+                            message = $"Your antivirus has blocked an attempt to add overlay to osu!. Adding an antivirus exception to SC folder & installing overlay again might help.";
                         }
                         else
                         {
-                            message = "Could not add browser overlay to osu!. Most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
+                            message = "Could not add overlay to osu!. Most likely SC doesn't have enough premissions - restart SC as administrator and try again. If that doesn't solve it - please report ";
                         }
                         break;
                     }
@@ -155,6 +178,7 @@ namespace BrowserOverlay.Loader
                     return;
                 case DllInjectionResult.Success:
                     _logger.Log("Injection success.", LogLevel.Information);
+                    LastInjectionAppCrashTreshold = DateTime.UtcNow.AddSeconds(5);
                     return;
             }
 
@@ -162,7 +186,7 @@ namespace BrowserOverlay.Loader
             _logger.Log($"{helperProcessResult}", LogLevel.Debug);
             if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound)
             {
-                MessageBox.Show(message + Environment.NewLine + $"Raw error data: {helperProcessResult}", "StreamCompanion - browser overlay Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _statusReporter.Report(new(ReportType.Error, message + Environment.NewLine + $"Raw error data: {helperProcessResult}"));
             }
         }
 

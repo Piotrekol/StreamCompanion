@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace BrowserOverlay.Loader
+namespace Overlay.Common.Loader
 {
     static class ProcessExtensions
     {
@@ -33,7 +33,7 @@ namespace BrowserOverlay.Loader
             All = 0x0000001F
         }
 
-        [StructLayoutAttribute(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         public struct MODULEENTRY32
         {
             public uint dwSize;

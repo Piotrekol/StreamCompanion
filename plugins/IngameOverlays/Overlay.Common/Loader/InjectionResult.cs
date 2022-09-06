@@ -1,4 +1,4 @@
-﻿namespace osuOverlay.Loader
+﻿namespace Overlay.Common.Loader
 {
     public class InjectionResult
     {
@@ -9,7 +9,7 @@
 
         public InjectionResult(DllInjectionResult resultCode, int ErrorCode, int Win32ErrorCode, string Result)
         {
-            this.ResultCode = resultCode;
+            ResultCode = resultCode;
             this.ErrorCode = ErrorCode;
             this.Win32ErrorCode = Win32ErrorCode;
             this.Result = Result;

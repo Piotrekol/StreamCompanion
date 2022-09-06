@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace osuOverlay.Loader
+namespace Overlay.Common.Loader
 {
     public class DllInjector
     {
@@ -43,10 +43,10 @@ namespace osuOverlay.Loader
             IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
-        const UInt32 WAIT_ABANDONED = 0x00000080;
-        const UInt32 WAIT_OBJECT_0 = 0x00000000;
-        const UInt32 WAIT_TIMEOUT = 0x00000102;
+        static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
+        const uint WAIT_ABANDONED = 0x00000080;
+        const uint WAIT_OBJECT_0 = 0x00000000;
+        const uint WAIT_TIMEOUT = 0x00000102;
 
         static DllInjector _instance;
 
@@ -157,7 +157,7 @@ namespace osuOverlay.Loader
 
         protected virtual (bool Success, int ErrorCode) BInject(uint pToBeInjected, string sDllPath, IntPtr? LoadLibraryAAddress = null)
         {
-            IntPtr hndProc = OpenProcess((0x2 | 0x8 | 0x10 | 0x20 | 0x400), 1, pToBeInjected);
+            IntPtr hndProc = OpenProcess(0x2 | 0x8 | 0x10 | 0x20 | 0x400, 1, pToBeInjected);
 
             if (hndProc == INTPTR_ZERO)
             {
@@ -171,7 +171,7 @@ namespace osuOverlay.Loader
                 return (false, 4);
             }
 
-            IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, (0x1000 | 0x2000), 0X40);
+            IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, 0x1000 | 0x2000, 0X40);
 
             if (lpAddress == INTPTR_ZERO)
             {

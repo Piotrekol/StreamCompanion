@@ -3,25 +3,25 @@ using System.Windows.Forms;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Interfaces.Services;
 
-namespace osuOverlay
+namespace TextOverlay
 {
-    public partial class IngameOverlaySettings : UserControl
+    public partial class TextOverlaySettings : UserControl
     {
 
         private readonly ISettings _settings;
         public event EventHandler<bool> OverlayToggled;
-        public IngameOverlaySettings(ISettings settings)
+        public TextOverlaySettings(ISettings settings)
         {
             _settings = settings;
             InitializeComponent();
 
-            checkBox_ingameOverlay.Checked = _settings.Get<bool>(IngameOverlay.EnableIngameOverlay);
+            checkBox_ingameOverlay.Checked = _settings.Get<bool>(TextOverlay.EnableIngameOverlay);
             checkBox_ingameOverlay.CheckedChanged += CheckBoxIngameOverlayOnCheckedChanged;
         }
 
         private void CheckBoxIngameOverlayOnCheckedChanged(object sender, EventArgs eventArgs)
         {
-            _settings.Add(IngameOverlay.EnableIngameOverlay.Name, checkBox_ingameOverlay.Checked);
+            _settings.Add(TextOverlay.EnableIngameOverlay.Name, checkBox_ingameOverlay.Checked);
             OnOverlayToggled(checkBox_ingameOverlay.Checked);
         }
 

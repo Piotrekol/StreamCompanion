@@ -1,4 +1,4 @@
-﻿namespace osuOverlay.Loader
+﻿namespace Overlay.Common.Loader
 {
     public enum DllInjectionResult
     {

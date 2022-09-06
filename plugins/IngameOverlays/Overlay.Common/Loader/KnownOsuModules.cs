@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BrowserOverlay.Loader
+namespace Overlay.Common.Loader
 {
     internal static class KnownOsuModules
     {
@@ -177,8 +177,36 @@ namespace BrowserOverlay.Loader
             "ws2_32.dll",
             "wtsapi32.dll",
             "xinput1_4.dll",
+            "wow64.dll",
+            "wow64win.dll",
+            "wow64cpu.dll",
+            "srvcli.dll",
+            "drvstore.dll",
+            "nvspcap.dll",
+            "sxs.dll",
+            "msvcp140.dll",
+            "vcruntime140.dll",
+            "dsrole.dll",
+            "vulkan-1.dll",
+            "dsreg.dll",
+            "msvcp110_win.dll",
+            "vk_swiftshader.dll",
+            "msvcr90.dll",
+            "msvcp90.dll",
+            "graphics-hook32.dll",
+            "textoverlay.dll",
+            "freetype.dll",
+            "browseringameoverlay.dll",
         };
 
+        private static Dictionary<string, string> _troubleMakers = new()
+        {
+            { "guard32.dll", "Comodo antivirus is known to block SC from properly injecting overlay (resulting in osu! crashes)" },
+            { "rtsshooks.dll", "RivaTuner OSD / MSI Afterburner OSD - Enable \"Stealth mode\" in RivaTuner settings or disable completely" },
+            { "rtssvklayer32.dll", "RivaTuner OSD / MSI Afterburner OSD - Enable \"Stealth mode\" in RivaTuner settings or disable completely" },
+        }; 
+
         public static IReadOnlyList<string> Modules { get; } = _modules.AsReadOnly();
+        public static IReadOnlyDictionary<string, string> TroubleMakers { get; } = _troubleMakers;
     }
 }

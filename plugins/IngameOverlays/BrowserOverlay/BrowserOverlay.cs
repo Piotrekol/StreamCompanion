@@ -7,10 +7,10 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BrowserOverlay.Loader;
 using Newtonsoft.Json;
+using Overlay.Common;
+using Overlay.Common.Loader;
 using StreamCompanion.Common;
-using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -55,14 +55,6 @@ namespace BrowserOverlay
             _browserOverlayConfiguration = _settings.GetConfiguration<Configuration>(BrowserOverlayConfigurationConfigEntry);
             _browserOverlayConfiguration.OverlayTabs ??= new List<OverlayTab> { new OverlayTab() };
 
-            if (_browserOverlayConfiguration.Enabled && TextOverlayIsEnabled(_settings))
-            {
-                _browserOverlayConfiguration.Enabled = false;
-                var infoText = $"TextIngameOverlay and BrowserIngameOverlay can't be ran at the same time.{Environment.NewLine} BrowserIngameOverlay was disabled in order to prevent osu! crash.";
-                _logger.Log(infoText, LogLevel.Warning);
-                MessageBox.Show(infoText, "BrowserIngameOverlay Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
             if (_browserOverlayConfiguration.Enabled)
                 Initialize().HandleExceptions();
 
@@ -72,17 +64,6 @@ namespace BrowserOverlay
         public void SendConfiguration()
         {
             _dataConsumers.ForEach(x => x.Value.Handle("Sc-webOverlayConfiguration", JsonConvert.SerializeObject(_browserOverlayConfiguration.OverlayTabs)));
-        }
-
-        public static bool TextOverlayIsEnabled(ISettings settings)
-        {
-            if (settings.SettingsEntries.TryGetValue("EnableIngameOverlay", out var rawTextOverlayEnabled)
-                && bool.TryParse(rawTextOverlayEnabled?.ToString() ?? "", out var textOverlayEnabled))
-            {
-                return textOverlayEnabled;
-            }
-
-            return false;
         }
 
         public void Free()
@@ -149,14 +130,26 @@ namespace BrowserOverlay
                 return;
             }
 
-            //Check one of the files included in overlay assets
-            _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(_saver))
-            {
-                InjectionProgressReporter = new Progress<string>(s => _logger.Log(s, LogLevel.Debug))
-            };
-            //_loaderWatchdog.BeforeInjection += async (_, __) => await DownloadAndUnpackOverlay(zipFileLocation, assetsLocation);
+            _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(_saver), new Progress<OverlayReport>(HandleOverlayReport));
             _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
             return;
+        }
+
+        private void HandleOverlayReport(OverlayReport report)
+        {
+            const string messageBoxTitle = "StreamCompanion - Browser overlay";
+            switch (report.ReportType)
+            {
+                case ReportType.Information:
+                    MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case ReportType.Error:
+                    MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case ReportType.Log:
+                    _logger.Log(report.Message, LogLevel.Debug);
+                    break;
+            }
         }
 
         private async Task<bool> DownloadAndUnpackOverlay(string zipFileLocation, string assetsLocation)
