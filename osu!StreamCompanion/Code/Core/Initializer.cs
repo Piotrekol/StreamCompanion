@@ -1,23 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using Grace.DependencyInjection;
 using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
 using osu_StreamCompanion.Code.Misc;
-using osu_StreamCompanion.Code.Modules.FirstRun;
 using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
 using osu_StreamCompanion.Code.Modules.Updater;
 using StreamCompanionTypes;
-using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
-using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
+using osu_StreamCompanion.Code.Modules;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -76,7 +72,7 @@ namespace osu_StreamCompanion.Code.Core
             _logger.Log($"Running as { (Environment.Is64BitProcess ? "x64" : "x86")} process on .NET {Environment.Version}", LogLevel.Information);
 
             DiContainer.Container.Locate<Updater>();
-            DiContainer.Container.Locate<FirstRun>();
+            DiContainer.Container.Locate<AdministratorChecker>();
 
             DiContainer.Container.Locate<OsuPathResolver>();
             DiContainer.Container.Locate<OsuFallbackDetector>();
