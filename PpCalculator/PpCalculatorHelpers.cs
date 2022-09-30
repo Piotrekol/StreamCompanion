@@ -71,8 +71,8 @@ namespace PpCalculator
             {
                 workingBeatmap ??= new ProcessorWorkingBeatmap(file);
                 //Check if picked ruleset is valid for loaded beatmap
-                if (GetRulesetId(workingBeatmap.RulesetID, rulesetId) != rulesetId)
-                    return InternalGetPpCalculator(workingBeatmap.RulesetID, file, ppCalculator, retryCount, workingBeatmap);
+                if (GetRulesetId(workingBeatmap.BeatmapInfo.Ruleset.OnlineID, rulesetId) != rulesetId)
+                    return InternalGetPpCalculator(workingBeatmap.BeatmapInfo.Ruleset.OnlineID, file, ppCalculator, retryCount, workingBeatmap);
 
                 ppCalculator?.PreProcess(workingBeatmap);
             }

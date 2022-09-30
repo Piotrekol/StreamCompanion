@@ -68,7 +68,7 @@ namespace OsuSongsFolderWatcher
             ppCalculator.Calculate(cancellationToken);
             var noModMapAttributes = ppCalculator.AttributesAt(double.MaxValue);
             var scBeatmap = ConvertToSCBeatmap(ppCalculator.PlayableBeatmap, noModMapAttributes, osuFilePath, Mods.Omod);
-            scBeatmap.ModPpStars[(PlayMode)ppCalculator.PlayableBeatmap.BeatmapInfo.RulesetID].Add((int)(mods.Mods & Mods.MapChanging), moddedMapAttributes?.StarRating ?? 0d);
+            scBeatmap.ModPpStars[(PlayMode)ppCalculator.PlayableBeatmap.BeatmapInfo.Ruleset.OnlineID].Add((int)(mods.Mods & Mods.MapChanging), moddedMapAttributes?.StarRating ?? 0d);
 
             return (scBeatmap, createPpCalculatorTask);
         }
@@ -113,27 +113,27 @@ namespace OsuSongsFolderWatcher
             lazerBeatmap.BeatmapInfo.StarRating = difficultyAttributes?.StarRating ?? 0;
             return new Beatmap
             {
-                PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID,
+                PlayMode = (PlayMode)lazerBeatmap.BeatmapInfo.Ruleset.OnlineID,
                 ArtistRoman = lazerBeatmap.Metadata.Artist ?? string.Empty,
                 ArtistUnicode = lazerBeatmap.Metadata.ArtistUnicode ?? string.Empty,
                 TitleRoman = lazerBeatmap.Metadata.Title ?? string.Empty,
                 TitleUnicode = lazerBeatmap.Metadata.TitleUnicode ?? string.Empty,
                 DiffName = lazerBeatmap.BeatmapInfo.DifficultyName ?? string.Empty,
                 Md5 = lazerBeatmap.BeatmapInfo.MD5Hash,
-                MapId = lazerBeatmap.BeatmapInfo.OnlineBeatmapID ?? 0,
-                ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.RulesetID, new StarRating { { (int)(mods & Mods.MapChanging), lazerBeatmap.BeatmapInfo.StarRating } } } },
+                MapId = lazerBeatmap.BeatmapInfo.OnlineID,
+                ModPpStars = new PlayModeStars { { (PlayMode)lazerBeatmap.BeatmapInfo.Ruleset.OnlineID, new StarRating { { (int)(mods & Mods.MapChanging), lazerBeatmap.BeatmapInfo.StarRating } } } },
                 MainBpm = Math.Round(60000 / lazerBeatmap.GetMostCommonBeatLength()),
                 MinBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMinimum),
                 MaxBpm = Math.Round(lazerBeatmap.ControlPointInfo.BPMMaximum),
-                Creator = lazerBeatmap.Metadata.AuthorString ?? string.Empty,
-                ApproachRate = lazerBeatmap.BeatmapInfo.BaseDifficulty.ApproachRate,
-                CircleSize = lazerBeatmap.BeatmapInfo.BaseDifficulty.CircleSize,
-                SliderVelocity = lazerBeatmap.BeatmapInfo.BaseDifficulty.SliderMultiplier,
-                OverallDifficulty = lazerBeatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty,
-                HpDrainRate = lazerBeatmap.BeatmapInfo.BaseDifficulty.DrainRate,
+                Creator = lazerBeatmap.Metadata.Author?.Username ?? string.Empty,
+                ApproachRate = lazerBeatmap.BeatmapInfo.Difficulty.ApproachRate,
+                CircleSize = lazerBeatmap.BeatmapInfo.Difficulty.CircleSize,
+                SliderVelocity = lazerBeatmap.BeatmapInfo.Difficulty.SliderMultiplier,
+                OverallDifficulty = lazerBeatmap.BeatmapInfo.Difficulty.OverallDifficulty,
+                HpDrainRate = lazerBeatmap.BeatmapInfo.Difficulty.DrainRate,
                 Circles = circles,
                 Dir = string.IsNullOrEmpty(fullFilePath) ? null : Path.GetFileName(Path.GetDirectoryName(fullFilePath)),
-                MapSetId = lazerBeatmap.BeatmapInfo.BeatmapSet?.OnlineBeatmapSetID ?? 0,
+                MapSetId = lazerBeatmap.BeatmapInfo.BeatmapSet?.OnlineID ?? 0,
                 Mp3Name = lazerBeatmap.Metadata.AudioFile,
                 PreviewTime = Convert.ToInt32(lazerBeatmap.BeatmapInfo.Metadata.PreviewTime),
                 Sliders = sliders,
@@ -162,8 +162,8 @@ namespace OsuSongsFolderWatcher
                 throw new LazerNullReferenceException("lazerBeatmap.BeatmapInfo");
             if (lazerBeatmap.ControlPointInfo == null)
                 throw new LazerNullReferenceException("lazerBeatmap.ControlPointInfo");
-            if (lazerBeatmap.BeatmapInfo.BaseDifficulty == null)
-                throw new LazerNullReferenceException("lazerBeatmap.BeatmapInfo.BaseDifficulty");
+            if (lazerBeatmap.BeatmapInfo.Difficulty == null)
+                throw new LazerNullReferenceException("lazerBeatmap.BeatmapInfo.Difficulty");
             if (lazerBeatmap.BeatmapInfo.Metadata == null)
                 throw new LazerNullReferenceException("lazerBeatmap.BeatmapInfo.Metadata");
         }
