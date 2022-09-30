@@ -11,6 +11,7 @@ namespace PpCalculator.Tests
         [TestCase(6.1415d, 2486881)]
         [TestCase(2.4288d, 123)]
         [TestCase(2.068d, 1254)]
+        [TestCase(6.02512d, 1228616)]
         public void CalculateStarRating(double expectedSR, int mapId)
             => CalculateTest(expectedSR, mapId, new OsuCalculator());
 

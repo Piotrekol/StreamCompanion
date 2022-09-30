@@ -13,20 +13,21 @@ namespace PpCalculator.Tests
         private const string base_url = "https://osu.ppy.sh";
 
         [Test]
-        [TestCase(5, 0, 0, 595, "HD,DT", 636.205, 1185330)]
-        [TestCase(9, 0, 0, 858, "HD,DT", 727.011, 2333273)]
-        [TestCase(25, 0, 2, 1631, "HD,DT,HR", 1199.786, 2486881)]
-        [TestCase(14, 0, 0, 1434, "HD,DT", 413.637, 812010)]
-        [TestCase(8, 0, 0, 1573, "", 436.058, 1154766)]
-        [TestCase(25, 6, 2, 2784, "HR", 442.889, 1228616)]
-        [TestCase(60, 0, 6, 1015, "", 272.961, 3267957)]
-        [TestCase(2, 0, 0, 1947, "HD,HR", 471.664, 2956396)]
+        [TestCase(5, 0, 0, 595, "HD,DT", 636.042, 1185330)]
+        [TestCase(9, 0, 0, 858, "HD,DT", 726.989, 2333273)]
+        [TestCase(25, 0, 2, 1631, "HD,DT,HR", 1199.535, 2486881)]
+        [TestCase(14, 0, 0, 1434, "HD,DT", 413.584, 812010)]
+        [TestCase(8, 0, 0, 1573, "", 435.998, 1154766)]
+        [TestCase(25, 6, 2, 2784, "HR", 442.877, 1228616)]
+        [TestCase(60, 0, 6, 1015, "", 272.848, 3267957)]
+        [TestCase(2, 0, 0, 1947, "HD,HR", 471.647, 2956396)]
+        
         public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
 
         [Test]
-        [TestCase(76, 0, 2, 1679, "HD,DT", 828.648, 1251239)]
-        [TestCase(36, 0, 0, 2110, "HD,DT", 657.633, 2495119)]
+        [TestCase(76, 0, 2, 1679, "HD,DT", 802.415, 1251239)]
+        [TestCase(36, 0, 0, 2110, "HD,DT", 605.876, 2495119)]
         public void CalculateTaikoTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new TaikoCalculator());
 
@@ -37,8 +38,8 @@ namespace PpCalculator.Tests
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new CtbCalculator());
 
         [Test]
-        [TestCase(1, 0, 0, 2782, "", 654.971, 1270895, 993209)]
-        [TestCase(6, 2, 4, 1830, "", 923.528, 2513195, 948258)]
+        [TestCase(1, 0, 0, 2782, "", 671.780, 1270895, 993209)]
+        [TestCase(6, 2, 4, 1830, "", 941.637, 2513195, 948258)]
         public void CalculateManiaTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, int score)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), score);
 
