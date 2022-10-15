@@ -10,7 +10,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
     public class SentryLogger : IContextAwareLogger
     {
         public static string SentryDsn =
-            "https://3187b2a91f23411ab7ec5f85ad7d80b8@sentry.pioo.space/2";
+            "https://61b0ba522c24450a87fba347918f6364@glitchtip.pioo.space/1";
         public static SentryClient SentryClient { get; } = new SentryClient(new SentryOptions
         {
             Dsn = SentryDsn,
