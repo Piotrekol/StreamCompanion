@@ -22,12 +22,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Dlls\freetype.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Dlls\textOverlay.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+	<None Remove="Dlls\freetype.dll" />
+	<None Remove="Dlls\textOverlay.dll" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="StreamCompanionTypes" version="8.0.0">
@@ -41,6 +37,6 @@
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\TextIngameOverlay.*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\Overlay.Common.*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\Dlls\*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;&#xD;&#xA;if $(ConfigurationName) == Debug (&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;&#xD;&#xA;) ELSE (&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\Release_unsafe\Plugins\Dlls&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\Release_unsafe\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\Release_unsafe\Plugins\Dlls\&quot;&#xD;&#xA;)" />
+		<Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\TextIngameOverlay.*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\Overlay.Common.*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(ProjectDir)\Dlls\*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(SolutionDir)plugins\IngameOverlays\Overlay.Common\Dlls\*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;&#xD;&#xA;if $(ConfigurationName) == Debug (&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;&#xD;&#xA;) ELSE (&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\Release_unsafe\Plugins\Dlls&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\Release_unsafe\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\Release_unsafe\Plugins\Dlls\&quot;&#xD;&#xA;)" />
 	</Target>
 </Project>

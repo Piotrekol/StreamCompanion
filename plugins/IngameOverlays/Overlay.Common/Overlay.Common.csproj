@@ -10,12 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Dlls\X32ProcessOverlayHelper.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
   </ItemGroup>
 
