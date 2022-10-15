@@ -15,7 +15,7 @@ namespace BackgroundImageProvider
 {
     public class BackgroundImageProviderPlugin : IPlugin, ITokensSource
     {
-        public string Description { get; } = "Provides current beatmap background image both as token and local file on disk";
+        public string Description { get; } = "Provides current beatmap background image as local file on disk";
         public string Name { get; } = nameof(BackgroundImageProviderPlugin);
         public string Author { get; } = "Piotrekol";
         public string Url { get; }
@@ -25,7 +25,6 @@ namespace BackgroundImageProvider
         private readonly ISettings _settings;
         private readonly IContextAwareLogger _logger;
         private Tokens.TokenSetter _tokenSetter;
-        private IToken _imageToken;
         private IToken _imageNameToken;
         private IToken _imageLocationToken;
         private string _saveLocation;
@@ -41,7 +40,6 @@ namespace BackgroundImageProvider
             var initialValue = settings.Get<bool>(EnableImageToken)
                 ? null
                 : $"Disabled, enable it in configuration manually under {EnableImageToken.Name}";
-            _imageToken = _tokenSetter("backgroundImage", initialValue);
             _imageLocationToken = _tokenSetter("backgroundImageLocation", string.Empty);
             _imageNameToken = _tokenSetter("backgroundImageFileName", string.Empty);
         }
@@ -65,8 +63,6 @@ namespace BackgroundImageProvider
                                     File.Delete(_saveLocation);
 
                                 File.Copy(imageLocation, _saveLocation);
-                                if (_settings.Get<bool>(EnableImageToken))
-                                    _imageToken.Value = $"data:image/png;base64, {ImageToBase64(imageLocation)}";
                             }
                         }
 
@@ -77,7 +73,6 @@ namespace BackgroundImageProvider
                 if (_settings.Get<bool>(EnableImageToken) && File.Exists(_saveLocation))
                     File.Delete(_saveLocation);
 
-                _imageToken.Value = null;
                 _lastCopiedFileLocation = null;
                 _imageLocationToken.Value = string.Empty;
             }
@@ -96,31 +91,6 @@ namespace BackgroundImageProvider
         public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)
         {
             return InternalCreateTokens(map, cancellationToken, 0);
-        }
-
-        private string ImageToBase64(string imageLocation)
-        {
-            try
-            {
-                using (System.Drawing.Image image = System.Drawing.Image.FromFile(imageLocation))
-                {
-                    using (MemoryStream m = new MemoryStream())
-                    {
-                        image.Save(m, image.RawFormat);
-                        byte[] imageBytes = m.ToArray();
-                        return Convert.ToBase64String(imageBytes);
-                    }
-                }
-            }
-            catch (ExternalException ex)
-            {
-                var fileInfo = new FileInfo(imageLocation);
-                _logger.SetContextData("backgroundImageFilename", fileInfo.Name);
-                _logger.SetContextData("backgroundImageSize", fileInfo.Length.ToString());
-                _logger.SetContextData("backgroundImageExternalExceptionCode", ex.ErrorCode.ToString());
-                _logger.Log(ex, LogLevel.Debug);
-                return string.Empty;
-            }
         }
     }
 }
