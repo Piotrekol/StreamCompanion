@@ -40,8 +40,7 @@ namespace ScGui
         public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "General";
 
-        private static string BaseAddress(ISettings settings) => BindAddress(settings).Replace("*", "localhost");
-        private static string BindAddress(ISettings settings) => $"{settings.GetRaw("httpServerAddress", "")}:{settings.GetRaw("httpServerPort", "20727")}";
+        private static string BaseAddress(ISettings settings) => $"http://localhost:{settings.GetRaw("httpServerPort", "20727")}/";
 
         private NotifyIcon CreateNotifyIcon()
         {
