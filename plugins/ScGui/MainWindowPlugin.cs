@@ -31,6 +31,7 @@ namespace ScGui
 
         private IMainWindowModel _mainWindowModel;
         private readonly Delegates.Exit _exitAction;
+        private readonly ILogger _logger;
         private List<Lazy<ISettingsSource>> _settingsList;
 
         public string Description { get; } = "";
@@ -78,12 +79,13 @@ namespace ScGui
             return notifyIcon;
         }
 
-        public MainWindowPlugin(ISettings settings, IMainWindowModel mainWindowModel, List<Lazy<ISettingsSource>> settingsSources, Delegates.Exit exitAction)
+        public MainWindowPlugin(ISettings settings, IMainWindowModel mainWindowModel, List<Lazy<ISettingsSource>> settingsSources, Delegates.Exit exitAction, ILogger logger)
         {
             _settings = settings;
             _settings.SettingUpdated += SettingUpdated;
             _mainWindowModel = mainWindowModel;
             _exitAction = exitAction;
+            _logger = logger;
             _settingsList = settingsSources;
             _settingsList.Add(new Lazy<ISettingsSource>(this));
 
@@ -124,7 +126,21 @@ namespace ScGui
                         _settingsForm.Focus();
                         return;
                     }
-                    _settingsForm = new SettingsForm(_settingsList.Select(x => x.Value).ToList());
+
+                    List<ISettingsSource> settingsSources = new();
+                    foreach (var settingSource in _settingsList)
+                    {
+                        try
+                        {
+                            settingsSources.Add(settingSource.Value);
+                        }
+                        catch (Exception)
+                        {
+                            _logger.Log($"Failed to load settings for one of setting tabs, this is most likely accompanied by plugin load error at startup.", LogLevel.Error);
+                        }
+                    }
+                    
+                    _settingsForm = new SettingsForm(settingsSources);
                     _settingsForm.Closed += SettingsFormOnClosed;
                     _settingsForm.Show();
                 };
