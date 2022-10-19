@@ -244,7 +244,7 @@ namespace PpCalculator
 
             var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
             var statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katsus);
-            var score = Score;
+            var score = (int)Math.Round(Score * ScoreMultiplier);
             var accuracy = GetAccuracy(statistics);
 
             ScoreInfo.Accuracy = accuracy;
@@ -332,6 +332,10 @@ namespace PpCalculator
             double scoreMultiplier = 1.0;
             IEnumerable<Mod> scoreIncreaseMods = Ruleset.GetModsFor(ModType.DifficultyIncrease);
             foreach (var m in mods.Where(m => !scoreIncreaseMods.Contains(m)))
+                scoreMultiplier *= m.CreateInstance().ScoreMultiplier;
+
+            IEnumerable<Mod> scoreDecreaseMods = Ruleset.GetModsFor(ModType.DifficultyReduction);
+            foreach (var m in mods.Where(m => !scoreDecreaseMods.Contains(m)))
                 scoreMultiplier *= m.CreateInstance().ScoreMultiplier;
 
             return scoreMultiplier;
