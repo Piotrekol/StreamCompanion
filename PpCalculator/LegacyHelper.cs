@@ -22,10 +22,6 @@ namespace PpCalculator
                                       .Distinct()
                                       .ToHashSet();
 
-            // Special case to allow either DT or NC.
-            if (mods.Any(m => m.Acronym == "DT"))
-                allowedModAcronyms.Add(allMods.Single(m => m.Acronym == "NC").Acronym);
-
             var result = new List<IMod>();
             var classicMod = allMods.SingleOrDefault(m => m.Acronym == "CL");
             if (classicMod != null)

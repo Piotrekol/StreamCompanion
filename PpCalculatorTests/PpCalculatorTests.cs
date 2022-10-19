@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
@@ -58,6 +58,25 @@ namespace PpCalculator.Tests
             //pp values match 1:1 values on osu! side, but osu!api values that we are comparing against are provided with 3 decimal points(rounded).
             Assert.That(calculatedPp, Is.EqualTo(expectedPp).Within(0.002));
         }
+
+        [Test]
+        [TestCase(812010)]
+        public void HasSamePpForDTAndDTNCScore(int mapId)
+        {
+            var dtPpCalculator = new OsuCalculator();
+            dtPpCalculator.PreProcess(GetMapPath(mapId));
+            dtPpCalculator.Mods = new[] { "DT" };
+
+            var ncdtPpCalculator = new OsuCalculator();
+            ncdtPpCalculator.PreProcess(GetMapPath(mapId));
+            ncdtPpCalculator.Mods = new[] { "DT", "NC" };
+
+            var dtPp = dtPpCalculator.Calculate();
+            var ncdtPp = ncdtPpCalculator.Calculate();
+
+            Assert.That(ncdtPp, Is.EqualTo(dtPp));
+        }
+
 
         [Test]
         [TestCase(2462439, "", 500)]
