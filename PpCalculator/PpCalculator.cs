@@ -25,15 +25,10 @@ namespace PpCalculator
         public ProcessorWorkingBeatmap WorkingBeatmap { get; protected set; }
         public IBeatmap PlayableBeatmap { get; protected set; }
         protected abstract Ruleset Ruleset { get; }
-
         public virtual double Accuracy { get; set; } = 100;
-
         public virtual int? Combo { get; set; }
-
         public virtual double PercentCombo { get; set; } = 100;
-
         public virtual int Score { get; set; }
-
         private string[] _Mods { get; set; }
         public virtual string[] Mods
         {
@@ -49,23 +44,20 @@ namespace PpCalculator
         }
 
         public virtual int Misses { get; set; }
-
         public virtual int? Mehs { get; set; }
-
         public virtual int? Goods { get; set; }
         public int? Katsus { get; set; }
 
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
-
         protected PerformanceCalculator PerformanceCalculator { get; set; }
         protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
+        protected string LastMods { get; set; } = null;
+        protected bool ResetPerformanceCalculator { get; set; }
 
         public int RulesetId => Ruleset.RulesetInfo.OnlineID;
         public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
-
-        public double ScoreMultiplier => scoreMultiplier.Value;
         private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
-
+        public double ScoreMultiplier => scoreMultiplier.Value;
         static PpCalculator()
         {
             //Required for <=v4 maps
@@ -100,35 +92,6 @@ namespace PpCalculator
         }
         public void PreProcess(string file) => PreProcess(new ProcessorWorkingBeatmap(file));
 
-        protected string LastMods { get; set; } = null;
-        protected bool ResetPerformanceCalculator { get; set; }
-
-        public double Calculate(double startTime, double endTime = double.NaN, Dictionary<string, double> categoryAttribs = null)
-        {
-            if (double.IsNaN(startTime) || startTime <= 0d)
-            {
-                return Calculate(endTime, categoryAttribs);
-            }
-
-            var orginalWorkingBeatmap = WorkingBeatmap;
-            var tempMap = new Beatmap();
-            tempMap.HitObjects.AddRange(WorkingBeatmap.Beatmap.HitObjects.Where(h => h.StartTime >= startTime && h.StartTime <= endTime));
-            if (tempMap.HitObjects.Count <= 1)
-                return -1;
-            tempMap.ControlPointInfo = WorkingBeatmap.Beatmap.ControlPointInfo;
-            tempMap.BeatmapInfo = WorkingBeatmap.BeatmapInfo;
-
-            WorkingBeatmap = new ProcessorWorkingBeatmap(tempMap);
-
-            ResetPerformanceCalculator = true;
-            var result = Calculate(null, categoryAttribs);
-
-            WorkingBeatmap = orginalWorkingBeatmap;
-
-            ResetPerformanceCalculator = true;
-
-            return result;
-        }
 
         public bool IsBreakTime(double time)
         {
@@ -148,74 +111,32 @@ namespace PpCalculator
             return PlayableBeatmap?.ControlPointInfo?.TimingPoints.Select(tp => new TimingPoint(tp.Time, Math.Round(tp.BPM, 5), Math.Round(tp.BeatLength, 5))) ?? Enumerable.Empty<TimingPoint>();
         }
 
-        public DifficultyAttributes AttributesAt(double time)
+        public DifficultyAttributes DifficultyAttributesAt(double time)
         {
             var attributes = TimedDifficultyAttributes?.LastOrDefault(x => x.Time <= time)?.Attributes;
             if (attributes == null)
                 return null;
 
-            switch (attributes)
-            {
-                case osu.Game.Rulesets.Osu.Difficulty.OsuDifficultyAttributes osuAttributes:
-                    {
-                        return new OsuDifficultyAttributes(osuAttributes.StarRating, osuAttributes.MaxCombo)
-                        {
-                            AimStrain = osuAttributes.AimDifficulty,
-                            SpeedStrain = osuAttributes.SpeedDifficulty,
-                            ApproachRate = osuAttributes.ApproachRate,
-                            OverallDifficulty = osuAttributes.OverallDifficulty,
-                            HitCircleCount = osuAttributes.HitCircleCount,
-                            SliderCount = osuAttributes.SliderCount,
-                            SpinnerCount = osuAttributes.SpinnerCount
-                        };
-                    }
-                case osu.Game.Rulesets.Mania.Difficulty.ManiaDifficultyAttributes maniaAttributes:
-                    return new ManiaDifficultyAttributes(maniaAttributes.StarRating, maniaAttributes.MaxCombo)
-                    {
-                        NoteCount = PlayableBeatmap.HitObjects.Count(h => h is Note),
-                        HoldNoteCount = PlayableBeatmap.HitObjects.Count(h => h is HoldNote),
-                        GreatHitWindow = maniaAttributes.GreatHitWindow
-                    };
-                case osu.Game.Rulesets.Taiko.Difficulty.TaikoDifficultyAttributes taikoAttributes:
-                    return new TaikoDifficultyAttributes(taikoAttributes.StarRating, taikoAttributes.MaxCombo)
-                    {
-                        HitCount = PlayableBeatmap.HitObjects.Count(h => h is Hit),
-                        DrumRollCount = PlayableBeatmap.HitObjects.Count(h => h is DrumRoll),
-                        SwellCount = PlayableBeatmap.HitObjects.Count(h => h is Swell),
-                        GreatHitWindow = taikoAttributes.GreatHitWindow
-                    };
-                case osu.Game.Rulesets.Catch.Difficulty.CatchDifficultyAttributes ctbAttributes:
-                    return new CatchDifficultyAttributes(ctbAttributes.StarRating, ctbAttributes.MaxCombo)
-                    {
-                        FruitCount = PlayableBeatmap.HitObjects.Count(h => h is Fruit),
-                        JuiceStreamCount = PlayableBeatmap.HitObjects.Count(h => h is JuiceStream),
-                        BananaShowerCount = PlayableBeatmap.HitObjects.Count(h => h is BananaShower),
-                    };
-                default:
-                    return new DifficultyAttributes(attributes.StarRating, attributes.MaxCombo);
-            }
+            return attributes.ConvertToSCAttributes(PlayableBeatmap.HitObjects);
         }
 
-        public double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null)
-            => Calculate(CancellationToken.None, endTime, categoryAttribs);
-
-        public double Calculate(CancellationToken cancellationToken, double? endTime = null,
-            Dictionary<string, double> categoryAttribs = null)
+        public PpCalculatorTypes.PerformanceAttributes Calculate(CancellationToken cancellationToken, double? startTime = null, double? endTime = null)
         {
             try
             {
-                return InternalCalculate(cancellationToken, endTime, categoryAttribs);
+                return InternalCalculate(cancellationToken, startTime, endTime)
+                    ?? new PpCalculatorTypes.PerformanceAttributes { Total = -1 };
             }
             catch (TimeoutException)
             {
-                return -2;
+                return new PpCalculatorTypes.PerformanceAttributes { Total = -2 };
             }
         }
 
-        private double InternalCalculate(CancellationToken cancellationToken, double? endTime = null, Dictionary<string, double> categoryAttribs = null)
+        private PpCalculatorTypes.PerformanceAttributes InternalCalculate(CancellationToken cancellationToken, double? startTime = null, double? endTime = null)
         {
             if (WorkingBeatmap == null)
-                return -1d;
+                return null;
 
             //huge performance gains by reusing existing performance calculator when possible
             var createPerformanceCalculator = PerformanceCalculator == null || ResetPerformanceCalculator;
@@ -235,22 +156,21 @@ namespace PpCalculator
                 createPerformanceCalculator = true;
             }
 
-            IReadOnlyList<HitObject> hitObjects = endTime.HasValue
-                ? PlayableBeatmap.HitObjects.Where(h => h.StartTime <= endTime).ToList()
-                : PlayableBeatmap.HitObjects;
+            IReadOnlyList<HitObject> hitObjects = startTime.HasValue && endTime.HasValue
+                ? PlayableBeatmap.HitObjects.Where(h => h.StartTime >= startTime && h.StartTime <= endTime).ToList()
+                : endTime.HasValue
+                    ? PlayableBeatmap.HitObjects.Where(h => h.StartTime <= endTime).ToList()
+                    : startTime.HasValue
+                        ? PlayableBeatmap.HitObjects.Where(h => h.StartTime >= startTime).ToList()
+                        : PlayableBeatmap.HitObjects;
 
             if (!hitObjects.Any())
-                return 0d;
+                return null;
 
-            var maxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
-            var statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katsus);
-            var score = (int)Math.Round(Score * ScoreMultiplier);
-            var accuracy = GetAccuracy(statistics);
-
-            ScoreInfo.Accuracy = accuracy;
-            ScoreInfo.MaxCombo = maxCombo;
-            ScoreInfo.Statistics = statistics;
-            ScoreInfo.TotalScore = score;
+            ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katsus);
+            ScoreInfo.Accuracy = GetAccuracy(ScoreInfo.Statistics);
+            ScoreInfo.MaxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
+            ScoreInfo.TotalScore = (int)Math.Round(Score * ScoreMultiplier);
 
             if (createPerformanceCalculator)
             {
@@ -265,18 +185,18 @@ namespace PpCalculator
             {
                 if (endTime.HasValue)
                 {
-                    return PerformanceCalculator.Calculate(ScoreInfo,
-                    TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ?? TimedDifficultyAttributes.First().Attributes).Total;
+                    var difficultyAttributes = TimedDifficultyAttributes.LastOrDefault(a => endTime.Value >= a.Time)?.Attributes ?? TimedDifficultyAttributes.First().Attributes;
+                    return PerformanceCalculator.Calculate(ScoreInfo, difficultyAttributes).ConvertToSCAttributes();
                 }
 
-                return PerformanceCalculator.Calculate(ScoreInfo, TimedDifficultyAttributes.Last().Attributes).Total;
+                var performanceAttributes = PerformanceCalculator.Calculate(ScoreInfo, TimedDifficultyAttributes.Last().Attributes);
+                return performanceAttributes.ConvertToSCAttributes();
             }
             catch (InvalidOperationException)
             {
-                return -1;
+                return null;
             }
         }
-
 
         private List<IMod> GetOsuMods(Ruleset ruleset)
         {

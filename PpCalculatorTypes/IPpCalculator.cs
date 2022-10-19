@@ -18,10 +18,8 @@ namespace PpCalculatorTypes
         int RulesetId { get; }
         double BeatmapLength { get; }
         void PreProcess(string file);
-        double Calculate(double startTime, double endTime = double.NaN, Dictionary<string, double> categoryAttribs = null);
-        DifficultyAttributes AttributesAt(double time);
-        double Calculate(double? endTime = null, Dictionary<string, double> categoryAttribs = null);
-        double Calculate(CancellationToken cancellationToken, double? endTime = null, Dictionary<string, double> categoryAttribs = null);
+        DifficultyAttributes DifficultyAttributesAt(double time);
+        PerformanceAttributes Calculate(CancellationToken cancellationToken, double? startTime = null, double? endTime = null);
         int GetMaxCombo(int? fromTime = null);
         bool IsBreakTime(double time);
         double FirstHitObjectTime();

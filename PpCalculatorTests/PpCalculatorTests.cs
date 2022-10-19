@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using NUnit.Framework;
 using osu.Framework.IO.Network;
 
@@ -53,7 +54,7 @@ namespace PpCalculator.Tests
             ppCalculator.Score = score;
             ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            var calculatedPp = ppCalculator.Calculate();
+            var calculatedPp = ppCalculator.Calculate(CancellationToken.None).Total;
 
             //pp values match 1:1 values on osu! side, but osu!api values that we are comparing against are provided with 3 decimal points(rounded).
             Assert.That(calculatedPp, Is.EqualTo(expectedPp).Within(0.002));
@@ -71,12 +72,11 @@ namespace PpCalculator.Tests
             ncdtPpCalculator.PreProcess(GetMapPath(mapId));
             ncdtPpCalculator.Mods = new[] { "DT", "NC" };
 
-            var dtPp = dtPpCalculator.Calculate();
-            var ncdtPp = ncdtPpCalculator.Calculate();
+            var dtPp = dtPpCalculator.Calculate(CancellationToken.None).Total;
+            var ncdtPp = ncdtPpCalculator.Calculate(CancellationToken.None).Total;
 
             Assert.That(ncdtPp, Is.EqualTo(dtPp));
         }
-
 
         [Test]
         [TestCase(2462439, "", 500)]
@@ -88,8 +88,8 @@ namespace PpCalculator.Tests
             ppCalculator.PreProcess(GetMapPath(mapId));
             ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            var ssPp = ppCalculator.Calculate();
-            var endPerfectPp = ppCalculator.Calculate(ppCalculator.WorkingBeatmap.Length + lengthCorrection, new Dictionary<string, double>());
+            var ssPp = ppCalculator.Calculate(CancellationToken.None).Total;
+            var endPerfectPp = ppCalculator.Calculate(CancellationToken.None, endTime: ppCalculator.WorkingBeatmap.Length + lengthCorrection).Total;
 
             Assert.AreEqual(ssPp, endPerfectPp);
         }
@@ -107,13 +107,14 @@ namespace PpCalculator.Tests
             var ppCalculator1 = new OsuCalculator();
             ppCalculator1.PreProcess($@".\cache\{mapId}_cut.osu");
             ppCalculator1.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            var cutPp = ppCalculator1.Calculate();
+            var cutPp = ppCalculator1.Calculate(CancellationToken.None).Total;
 
             var ppCalculator2 = new OsuCalculator();
             ppCalculator2.PreProcess(GetMapPath(mapId));
             ppCalculator2.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            var fullPp = ppCalculator2.Calculate();
-            var timedPp = ppCalculator2.Calculate(cutTime, new Dictionary<string, double>());
+
+            var fullPp = ppCalculator2.Calculate(CancellationToken.None).Total;
+            var timedPp = ppCalculator2.Calculate(CancellationToken.None, endTime: cutTime).Total;
 
             Assert.That(cutPp, Is.EqualTo(timedPp).Within(0.001), () => $"Mods: {mods}");
             Assert.AreNotEqual(fullPp, timedPp, $"fullPp has same value! Mods: {mods}");

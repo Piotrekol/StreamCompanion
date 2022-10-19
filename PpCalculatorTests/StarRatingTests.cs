@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Threading;
 
 namespace PpCalculator.Tests
 {
@@ -20,8 +21,8 @@ namespace PpCalculator.Tests
             ppCalculator.PreProcess(PpCalculatorTests.GetMapPath(mapId));
 
             //Necessary to fill map attributes
-            ppCalculator.Calculate();
-            var calculatedSR = ppCalculator.AttributesAt(double.MaxValue).StarRating;
+            ppCalculator.Calculate(CancellationToken.None);
+            var calculatedSR = ppCalculator.DifficultyAttributesAt(double.MaxValue).StarRating;
 
             Assert.That(calculatedSR, Is.EqualTo(expectedSR).Within(0.002));
         }

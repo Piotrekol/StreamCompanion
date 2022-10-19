@@ -29,19 +29,17 @@ namespace StreamCompanion.Common
                 //var strainsAmount = (mapLength - strainLength / 2d) / interval;
             }
 
-            var a = new Dictionary<string, double>();
             while (time + strainLength / 2 < mapLength)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var strain = ppCalculator.Calculate(time, time + strainLength, a);
-                if (double.IsNaN(strain) || strain < 0)
-                    strain = 0;
-                else if (strain > 2000)
-                    strain = 2000; //lets not freeze everything with aspire/fancy 100* maps
+                var ppValue = ppCalculator.Calculate(cancellationToken, time, time + strainLength).Total;
+                if (double.IsNaN(ppValue) || ppValue < 0)
+                    ppValue = 0;
+                else if (ppValue > 2000)
+                    ppValue = 2000; //lets not freeze everything with aspire/fancy 100* maps
 
-                strains.Add(time, strain);
+                strains.Add(time, ppValue);
                 time += interval;
-                a.Clear();
             }
 
             return strains;
