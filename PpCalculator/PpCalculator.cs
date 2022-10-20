@@ -12,10 +12,6 @@ using System.Threading;
 using osu.Game.Rulesets.Osu.Objects;
 using PpCalculatorTypes;
 using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
-using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
-using osu.Game.Rulesets.Mania.Objects;
-using osu.Game.Rulesets.Taiko.Objects;
-using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Beatmaps.Formats;
 
 namespace PpCalculator
@@ -30,6 +26,7 @@ namespace PpCalculator
         public virtual double PercentCombo { get; set; } = 100;
         public virtual int Score { get; set; }
         private string[] _Mods { get; set; }
+        private static string[] NCModArray = new[] { "NC" };
         public virtual string[] Mods
         {
             get => _Mods;
@@ -38,7 +35,11 @@ namespace PpCalculator
                 if (_Mods == value || (value != null && _Mods != null && _Mods.SequenceEqual(value)))
                     return;
 
-                _Mods = value;
+                if (value != null && value.Contains("NC"))
+                    _Mods = value.AsEnumerable().Except(NCModArray).ToArray();
+                else
+                    _Mods = value;
+
                 scoreMultiplier = new Lazy<double>(CalculateScoreMultiplier);
             }
         }
@@ -147,7 +148,8 @@ namespace PpCalculator
             var newMods = _Mods != null ? string.Concat(_Mods) : "";
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
-                mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).ToArray();
+                mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).Append(ruleset.AllMods.First(m => m.Acronym == "CL").CreateInstance()).ToArray();
+
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
                 cts.CancelAfter(20_000);
                 PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, cts.Token);
@@ -175,7 +177,6 @@ namespace PpCalculator
             if (createPerformanceCalculator)
             {
                 var difficultyCalculator = ruleset.CreateDifficultyCalculator(WorkingBeatmap);
-                ScoreInfo.Mods = LegacyHelper.ConvertToLegacyDifficultyAdjustmentMods(ruleset, difficultyCalculator, ScoreInfo.Mods).Select(m => m.CreateInstance()).ToArray();
                 TimedDifficultyAttributes = difficultyCalculator.CalculateTimed(ScoreInfo.Mods, cancellationToken).ToList();
                 PerformanceCalculator = ruleset.CreatePerformanceCalculator();
                 ResetPerformanceCalculator = false;

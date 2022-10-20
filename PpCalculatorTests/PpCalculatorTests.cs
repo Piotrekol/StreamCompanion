@@ -27,8 +27,7 @@ namespace PpCalculator.Tests
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
 
         [Test]
-        [TestCase(76, 0, 2, 1679, "HD,DT", 802.415, 1251239)]
-        [TestCase(36, 0, 0, 2110, "HD,DT", 605.876, 2495119)]
+        [TestCase(11, 0, 0, 1233, "HD,DT", 743.635, 3716953)]
         public void CalculateTaikoTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new TaikoCalculator());
 
