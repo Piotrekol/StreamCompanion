@@ -22,31 +22,33 @@ namespace PpCalculator.Tests
         [TestCase(25, 6, 2, 2784, "HR", 442.877, 1228616)]
         [TestCase(60, 0, 6, 1015, "", 272.848, 3267957)]
         [TestCase(2, 0, 0, 1947, "HD,HR", 471.647, 2956396)]
-        
+
         public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
 
         [Test]
-        [TestCase(76, 0, 2, 1679, "HD,DT", 802.415, 1251239)]
-        [TestCase(36, 0, 0, 2110, "HD,DT", 605.876, 2495119)]
+        [TestCase(11, 0, 0, 1233, "HD,DT", 743.635, 3716953)]
         public void CalculateTaikoTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new TaikoCalculator());
 
         [Test]
-        [TestCase(73, 79, 0, 1241, "HR", 822.357, 1972148)]
-        [TestCase(25, 216, 0, 567, "HD,HR", 360.103, 2424031)]
-        public void CalculateCtbTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
-            => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new CtbCalculator());
+        [TestCase(73, 0, 79, 0, 1241, "HR", 822.357, 1972148)]
+        [TestCase(165, 4, 397, 1, 1467, "HD,HR", 417.887, 2264827, Ignore = "looks like osu lazer side bug - DifficultyCalculator.CalculateTimed is unable to calculate correct max combo for ctb attributes (including final max combo)")]
+        public void CalculateCtbTest(int c100, int cKatu, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
+            => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new CtbCalculator(), cKatu: cKatu);
 
         [Test]
-        [TestCase(1, 0, 0, 2782, "", 671.780, 1270895, 993209)]
-        [TestCase(6, 2, 4, 1830, "", 941.637, 2513195, 948258)]
-        public void CalculateManiaTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, int score)
-            => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), score);
+        //mania score consists of: Geki(c300P, auto calculated),c300,Katu(c200),c100,c50,cMiss
+        [TestCase(673, 20, 0, 0, 0, 3835, "", 901.925, 3563179, 990307)]
+        [TestCase(1486, 131, 13, 11, 28, 1256, "", 795.277, 3449261, 913494)]
+        public void CalculateManiaTest(int c300, int cKatu, int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, int score)
+            => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), score, c300, cKatu);
 
-        public void CalculateTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, PpCalculator ppCalculator, int score = 0)
+        public void CalculateTest(int c100, int? c50, int cMiss, int combo, string mods, double expectedPp, int mapId, PpCalculator ppCalculator, int score = 0, int c300 = 0, int cKatu = 0)
         {
             ppCalculator.PreProcess(GetMapPath(mapId));
+            ppCalculator.Hit300 = c300;
+            ppCalculator.Katus = cKatu;
             ppCalculator.Goods = c100;
             ppCalculator.Mehs = c50;
             ppCalculator.Misses = cMiss;
@@ -96,28 +98,36 @@ namespace PpCalculator.Tests
 
         [Test]
         [TestCase(2462439, 59_936)]
-        public void HasSamePpAtSpecificMapTimeWithTimedAndCutMap(int mapId, double cutTime)
+        public void HasSamePpAtSpecificMapTimeWithTimedAndCutMap(int mapId, double cutTime, string cutOsuFileName = "", int rulesetId = -1)
         {
-            foreach (var mods in new[] { "", "DT", "HT" })
-                _HasSamePpAtSpecificMapTimeWithTimedAndCutMap(mapId, mods, cutTime);
-        }
+            if (string.IsNullOrEmpty(cutOsuFileName))
+                cutOsuFileName = $"{mapId}_cut.osu";
 
-        private void _HasSamePpAtSpecificMapTimeWithTimedAndCutMap(int mapId, string mods, double cutTime)
-        {
-            var ppCalculator1 = new OsuCalculator();
-            ppCalculator1.PreProcess($@".\cache\{mapId}_cut.osu");
-            ppCalculator1.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            var cutPp = ppCalculator1.Calculate(CancellationToken.None).Total;
+            PpCalculator[] ppCalculators =
+                rulesetId < 0
+                ? new PpCalculator[] { new OsuCalculator(), new TaikoCalculator(), new CtbCalculator(), new ManiaCalculator() }
+                : new PpCalculator[] { PpCalculatorHelpers.GetPpCalculator(rulesetId) };
 
-            var ppCalculator2 = new OsuCalculator();
-            ppCalculator2.PreProcess(GetMapPath(mapId));
-            ppCalculator2.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var ppCalculator in ppCalculators)
+            {
+                foreach (var mods in new[] { "", "DT", "HT" })
+                {
+                    var ppCalculator1 = (PpCalculator)ppCalculator.Clone();
+                    ppCalculator1.PreProcess($@".\cache\{cutOsuFileName}");
+                    ppCalculator1.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                    var cutPp = ppCalculator1.Calculate(CancellationToken.None).Total;
 
-            var fullPp = ppCalculator2.Calculate(CancellationToken.None).Total;
-            var timedPp = ppCalculator2.Calculate(CancellationToken.None, endTime: cutTime).Total;
+                    var ppCalculator2 = (PpCalculator)ppCalculator.Clone();
+                    ppCalculator2.PreProcess(GetMapPath(mapId));
+                    ppCalculator2.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            Assert.That(cutPp, Is.EqualTo(timedPp).Within(0.001), () => $"Mods: {mods}");
-            Assert.AreNotEqual(fullPp, timedPp, $"fullPp has same value! Mods: {mods}");
+                    var fullPp = ppCalculator2.Calculate(CancellationToken.None).Total;
+                    var timedPp = ppCalculator2.Calculate(CancellationToken.None, endTime: cutTime).Total;
+
+                    Assert.That(cutPp, Is.EqualTo(timedPp).Within(0.001), () => $"ModeId: {ppCalculator.RulesetId} Mods: {mods}");
+                    Assert.AreNotEqual(fullPp, timedPp, $"fullPp has same value! ModeId: {ppCalculator.RulesetId} Mods: {mods}");
+                }
+            }
         }
 
         public static string GetMapPath(int mapId)

@@ -12,10 +12,6 @@ using System.Threading;
 using osu.Game.Rulesets.Osu.Objects;
 using PpCalculatorTypes;
 using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
-using OsuDifficultyAttributes = PpCalculatorTypes.OsuDifficultyAttributes;
-using osu.Game.Rulesets.Mania.Objects;
-using osu.Game.Rulesets.Taiko.Objects;
-using osu.Game.Rulesets.Catch.Objects;
 using osu.Game.Beatmaps.Formats;
 
 namespace PpCalculator
@@ -30,6 +26,7 @@ namespace PpCalculator
         public virtual double PercentCombo { get; set; } = 100;
         public virtual int Score { get; set; }
         private string[] _Mods { get; set; }
+        private static string[] NCModArray = new[] { "NC" };
         public virtual string[] Mods
         {
             get => _Mods;
@@ -38,7 +35,11 @@ namespace PpCalculator
                 if (_Mods == value || (value != null && _Mods != null && _Mods.SequenceEqual(value)))
                     return;
 
-                _Mods = value;
+                if (value != null && value.Contains("NC"))
+                    _Mods = value.AsEnumerable().Except(NCModArray).ToArray();
+                else
+                    _Mods = value;
+
                 scoreMultiplier = new Lazy<double>(CalculateScoreMultiplier);
             }
         }
@@ -46,7 +47,8 @@ namespace PpCalculator
         public virtual int Misses { get; set; }
         public virtual int? Mehs { get; set; }
         public virtual int? Goods { get; set; }
-        public int? Katsus { get; set; }
+        public int? Katus { get; set; }
+        public int? Hit300 { get; set; }
 
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
         protected PerformanceCalculator PerformanceCalculator { get; set; }
@@ -58,6 +60,7 @@ namespace PpCalculator
         public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
         private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
         public double ScoreMultiplier => scoreMultiplier.Value;
+        public bool UseScoreMultiplier { get; set; } = true;
         static PpCalculator()
         {
             //Required for <=v4 maps
@@ -72,6 +75,7 @@ namespace PpCalculator
             ppCalculator._Mods = _Mods;
             ppCalculator.LastMods = LastMods;
             ppCalculator.scoreMultiplier = scoreMultiplier;
+            ppCalculator.UseScoreMultiplier = UseScoreMultiplier;
             if (PerformanceCalculator != null)
             {
                 ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.DeepClone()).ToArray();
@@ -147,7 +151,8 @@ namespace PpCalculator
             var newMods = _Mods != null ? string.Concat(_Mods) : "";
             if (LastMods != newMods || ResetPerformanceCalculator)
             {
-                mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).ToArray();
+                mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).Append(ruleset.AllMods.First(m => m.Acronym == "CL").CreateInstance()).ToArray();
+
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
                 cts.CancelAfter(20_000);
                 PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, cts.Token);
@@ -167,15 +172,16 @@ namespace PpCalculator
             if (!hitObjects.Any())
                 return null;
 
-            ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katsus);
+            ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katus, Hit300);
             ScoreInfo.Accuracy = GetAccuracy(ScoreInfo.Statistics);
             ScoreInfo.MaxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
-            ScoreInfo.TotalScore = (int)Math.Round(Score * ScoreMultiplier);
+            ScoreInfo.TotalScore = UseScoreMultiplier ? 
+                (int)Math.Round(Score * ScoreMultiplier) 
+                : Score;
 
             if (createPerformanceCalculator)
             {
                 var difficultyCalculator = ruleset.CreateDifficultyCalculator(WorkingBeatmap);
-                ScoreInfo.Mods = LegacyHelper.ConvertToLegacyDifficultyAdjustmentMods(ruleset, difficultyCalculator, ScoreInfo.Mods).Select(m => m.CreateInstance()).ToArray();
                 TimedDifficultyAttributes = difficultyCalculator.CalculateTimed(ScoreInfo.Mods, cancellationToken).ToList();
                 PerformanceCalculator = ruleset.CreatePerformanceCalculator();
                 ResetPerformanceCalculator = false;
@@ -266,7 +272,7 @@ namespace PpCalculator
 
         protected abstract int GetMaxCombo(IReadOnlyList<HitObject> hitObjects);
 
-        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatsu = null);
+        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatu = null, int? hit300 = null);
 
         protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 

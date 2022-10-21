@@ -12,19 +12,28 @@ namespace PpCalculator
 
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) => 0;
 
-        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatsu = null)
+        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatu = null, int? hit300 = null)
         {
-            var totalHits = hitObjects.Count;
+            if (!(countMeh.HasValue && countGood.HasValue && countKatu.HasValue && hit300.HasValue))
+                return new Dictionary<HitResult, int>
+                {
+                    { HitResult.Perfect, hitObjects.Count },
+                    { HitResult.Great, 0 },
+                    { HitResult.Ok, 0 },
+                    { HitResult.Good, 0 },
+                    { HitResult.Meh, 0 },
+                    { HitResult.Miss, 0 }
+                };
 
-            // Only total number of hits is considered currently, so specifics don't matter
+            var otherCounts = countMiss + countMeh.Value + countGood.Value + countKatu.Value + hit300.Value;
             return new Dictionary<HitResult, int>
             {
-                { HitResult.Perfect, totalHits },
-                { HitResult.Great, 0 },
-                { HitResult.Ok, 0 },
-                { HitResult.Good, 0 },
-                { HitResult.Meh, 0 },
-                { HitResult.Miss, 0 }
+                { HitResult.Perfect, hitObjects.Count - otherCounts },
+                { HitResult.Great, hit300.Value },
+                { HitResult.Ok, countGood.Value },
+                { HitResult.Good, countKatu.Value },
+                { HitResult.Meh, countMeh.Value },
+                { HitResult.Miss, countMiss }
             };
         }
 
