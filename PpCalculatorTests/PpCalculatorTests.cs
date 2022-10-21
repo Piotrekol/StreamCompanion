@@ -98,7 +98,6 @@ namespace PpCalculator.Tests
 
         [Test]
         [TestCase(2462439, 59_936)]
-        [TestCase(2264827, 10_000, "2264827_cut_ctb.osu", 2, Ignore = "looks like osu lazer side bug - DifficultyCalculator.CalculateTimed is unable to calculate correct max combo for ctb attributes (including final max combo)")]
         public void HasSamePpAtSpecificMapTimeWithTimedAndCutMap(int mapId, double cutTime, string cutOsuFileName = "", int rulesetId = -1)
         {
             if (string.IsNullOrEmpty(cutOsuFileName))

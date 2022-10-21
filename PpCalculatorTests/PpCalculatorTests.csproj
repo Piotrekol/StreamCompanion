@@ -25,9 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="cache\2264827_cut_ctb.osu">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="cache\2462439_cut.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
