@@ -60,6 +60,7 @@ namespace PpCalculator
         public double BeatmapLength => WorkingBeatmap?.Length ?? 0;
         private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
         public double ScoreMultiplier => scoreMultiplier.Value;
+        public bool UseScoreMultiplier { get; set; } = true;
         static PpCalculator()
         {
             //Required for <=v4 maps
@@ -74,6 +75,7 @@ namespace PpCalculator
             ppCalculator._Mods = _Mods;
             ppCalculator.LastMods = LastMods;
             ppCalculator.scoreMultiplier = scoreMultiplier;
+            ppCalculator.UseScoreMultiplier = UseScoreMultiplier;
             if (PerformanceCalculator != null)
             {
                 ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.DeepClone()).ToArray();
@@ -173,8 +175,9 @@ namespace PpCalculator
             ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katus, Hit300);
             ScoreInfo.Accuracy = GetAccuracy(ScoreInfo.Statistics);
             ScoreInfo.MaxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
-            //TODO: bug - score will get applied twice on top when provided score is read from memory
-            ScoreInfo.TotalScore = (int)Math.Round(Score * ScoreMultiplier);
+            ScoreInfo.TotalScore = UseScoreMultiplier ? 
+                (int)Math.Round(Score * ScoreMultiplier) 
+                : Score;
 
             if (createPerformanceCalculator)
             {

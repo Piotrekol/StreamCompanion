@@ -44,7 +44,10 @@ namespace OsuMemoryEventSource
         private IPpCalculator GetPpCalculator([CallerMemberName] string name = "")
         {
             if (!ppCalculators.TryGetValue(name, out var ppCalculator))
+            {
                 ppCalculators[name] = ppCalculator = (IPpCalculator)PpCalculator?.Clone();
+                ppCalculator.UseScoreMultiplier = false;
+            }
 
             return ppCalculator;
         }

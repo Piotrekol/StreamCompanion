@@ -18,6 +18,7 @@ namespace PpCalculatorTypes
         int? Hit300 { get; set; }
         int RulesetId { get; }
         double BeatmapLength { get; }
+        bool UseScoreMultiplier { get; set; }
         void PreProcess(string file);
         DifficultyAttributes DifficultyAttributesAt(double time);
         PerformanceAttributes Calculate(CancellationToken cancellationToken, double? startTime = null, double? endTime = null);
