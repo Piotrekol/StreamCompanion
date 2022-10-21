@@ -38,14 +38,17 @@ namespace PpCalculator.Tests
             => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new CtbCalculator());
 
         [Test]
-        [TestCase(1, 0, 0, 2782, "", 671.780, 1270895, 993209)]
-        [TestCase(6, 2, 4, 1830, "", 941.637, 2513195, 948258)]
-        public void CalculateManiaTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, int score)
-            => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), score);
+        //mania score consists of: Geki(c300P, auto calculated),c300,Katu(c200),c100,c50,cMiss
+        [TestCase(673, 20, 0, 0, 0, 3835, "", 901.925, 3563179, 990307)]
+        [TestCase(1486, 131, 13, 11, 28, 1256, "", 795.277, 3449261, 913494)]
+        public void CalculateManiaTest(int c300, int cKatu, int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, int score)
+            => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), score, c300, cKatu);
 
-        public void CalculateTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, PpCalculator ppCalculator, int score = 0)
+        public void CalculateTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, PpCalculator ppCalculator, int score = 0, int c300 = 0, int cKatu = 0)
         {
             ppCalculator.PreProcess(GetMapPath(mapId));
+            ppCalculator.Hit300 = c300;
+            ppCalculator.Katus = cKatu;
             ppCalculator.Goods = c100;
             ppCalculator.Mehs = c50;
             ppCalculator.Misses = cMiss;

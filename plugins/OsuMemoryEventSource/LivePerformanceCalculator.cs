@@ -154,7 +154,8 @@ namespace OsuMemoryEventSource
             ppCalculator.Goods = play.Hit100;
             ppCalculator.Mehs = play.Hit50;
             ppCalculator.Misses = play.HitMiss;
-            ppCalculator.Katsus = Play.HitKatu;
+            ppCalculator.Katus = Play.HitKatu;
+            ppCalculator.Hit300 = Play.Hit300;
             ppCalculator.Combo = play.MaxCombo;
             ppCalculator.Score = play.Score;
         }

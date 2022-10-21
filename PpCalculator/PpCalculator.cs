@@ -47,7 +47,8 @@ namespace PpCalculator
         public virtual int Misses { get; set; }
         public virtual int? Mehs { get; set; }
         public virtual int? Goods { get; set; }
-        public int? Katsus { get; set; }
+        public int? Katus { get; set; }
+        public int? Hit300 { get; set; }
 
         protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
         protected PerformanceCalculator PerformanceCalculator { get; set; }
@@ -169,9 +170,10 @@ namespace PpCalculator
             if (!hitObjects.Any())
                 return null;
 
-            ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katsus);
+            ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katus, Hit300);
             ScoreInfo.Accuracy = GetAccuracy(ScoreInfo.Statistics);
             ScoreInfo.MaxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
+            //TODO: bug - score will get applied twice on top when provided score is read from memory
             ScoreInfo.TotalScore = (int)Math.Round(Score * ScoreMultiplier);
 
             if (createPerformanceCalculator)
@@ -267,7 +269,7 @@ namespace PpCalculator
 
         protected abstract int GetMaxCombo(IReadOnlyList<HitObject> hitObjects);
 
-        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatsu = null);
+        protected abstract Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatu = null, int? hit300 = null);
 
         protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 

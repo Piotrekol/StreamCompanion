@@ -19,7 +19,7 @@ namespace PpCalculator
             hitObjects.Count(h => h is Fruit)
             + hitObjects.OfType<JuiceStream>().SelectMany(j => j.NestedHitObjects).Count(h => !(h is TinyDroplet));
 
-        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatsu = null)
+        protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatu = null, int? hit300 = null)
         {
             var maxCombo = GetMaxCombo(hitObjects);
             int maxTinyDroplets = hitObjects.OfType<JuiceStream>().Sum(s => s.NestedHitObjects.OfType<TinyDroplet>().Count());
@@ -37,7 +37,7 @@ namespace PpCalculator
             int countTinyDroplets = countMeh ?? (int)Math.Round(accuracy * (maxCombo + maxTinyDroplets)) - countFruits - countDroplets;
 
             // Whatever droplets are left
-            int countTinyMisses = countKatsu ?? maxTinyDroplets - countTinyDroplets;
+            int countTinyMisses = countKatu ?? maxTinyDroplets - countTinyDroplets;
 
             return new Dictionary<HitResult, int>
             {

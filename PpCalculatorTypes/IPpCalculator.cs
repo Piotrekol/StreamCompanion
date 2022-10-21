@@ -14,7 +14,8 @@ namespace PpCalculatorTypes
         int Misses { get; set; }
         int? Mehs { get; set; }
         int? Goods { get; set; }
-        int? Katsus { get; set; }
+        int? Katus { get; set; }
+        int? Hit300 { get; set; }
         int RulesetId { get; }
         double BeatmapLength { get; }
         void PreProcess(string file);
