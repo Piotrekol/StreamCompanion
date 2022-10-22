@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CollectionManager.Enums;
 using PpCalculatorTypes;
 using StreamCompanion.Common;
@@ -42,7 +43,7 @@ namespace OsuSongsFolderWatcher
             try
             {
                 result = await LazerMapLoader.LoadLazerBeatmapWithPerformanceCalculator(args.OsuFilePath, args.PlayMode,
-                    _modParser.GetModsFromEnum((int) args.Mods), _logger, cancellationToken);
+                    _modParser.GetModsFromEnum((int)args.Mods), _logger, cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -53,6 +54,9 @@ namespace OsuSongsFolderWatcher
                 ex.Data["PreventedCrash"] = 1;
                 ex.Data["location"] = args.OsuFilePath;
                 _logger.Log(ex, LogLevel.Critical);
+                if (ex is MissingMethodException)
+                    throw;
+
                 return null;
             }
 

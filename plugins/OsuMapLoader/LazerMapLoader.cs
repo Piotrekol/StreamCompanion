@@ -35,6 +35,10 @@ namespace OsuSongsFolderWatcher
                 {
                     throw;
                 }
+                catch (MissingMethodException)
+                {
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     if (retryCount >= retryLimit)

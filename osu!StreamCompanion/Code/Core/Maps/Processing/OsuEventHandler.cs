@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -22,6 +23,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
 
         private readonly SettingNames _names = SettingNames.Instance;
         private IContextAwareLogger _logger;
+        private readonly Delegates.Exit _exiter;
         private readonly MainMapDataGetter _mainMapDataGetter;
         private ISettings _settings;
 
@@ -33,7 +35,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly WorkerState _workerState = new WorkerState();
 
-        public OsuEventHandler(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettings settings, IContextAwareLogger logger)
+        public OsuEventHandler(MainMapDataGetter mainMapDataGetter, List<IOsuEventSource> osuEventSources, ISettings settings, IContextAwareLogger logger, Delegates.Exit exiter)
         {
             _settings = settings;
             _mainMapDataGetter = mainMapDataGetter;
@@ -43,6 +45,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
             }
 
             _logger = logger;
+            _exiter = exiter;
             WorkerTask = Task.Run(OsuEventWorkerLoop);
         }
 
@@ -93,6 +96,12 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 catch (OperationCanceledException)
                 {
                     _workerState.LastProcessingCancelled = true;
+                }
+                catch (MissingMethodException ex)
+                {
+                    _logger.Log(ex, LogLevel.Critical);
+                    MessageBox.Show($"Looks like one or more files required to run StreamCompanion is corrupted. Run StreamCompanion setup again to repair. Closing now.", "StreamCompanion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _exiter("MissingMethodException");
                 }
                 catch (Exception ex)
                 {
