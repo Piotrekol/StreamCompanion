@@ -99,8 +99,9 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 }
                 catch (MissingMethodException ex)
                 {
+                    ex.Data["PreventedCrash"] = 1;
                     _logger.Log(ex, LogLevel.Critical);
-                    MessageBox.Show($"Looks like one or more files required to run StreamCompanion is corrupted. Run StreamCompanion setup again to repair. Closing now.", "StreamCompanion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Looks like one or more files required to run StreamCompanion are corrupted. Run StreamCompanion setup again to repair. Closing now.", "StreamCompanion", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     _exiter("MissingMethodException");
                 }
                 catch (Exception ex)
