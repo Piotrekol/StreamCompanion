@@ -17,17 +17,17 @@ namespace BeatmapPpReplacements
     {
         private const string PpFormat = "{0:0.00}";
         private Tokens.TokenSetter _tokenSetter;
-
-        private IPpCalculator _ppCalculator = null;
-
         private ISettings _settings;
+        private IPpCalculator _ppCalculator = null;
+        private readonly IToken _strainsToken;
+        public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
+        private readonly Dictionary<TokenMode, Dictionary<string, PpValue>> ppTokenDefinitions;
 
         public string Description { get; } = "";
         public string Name { get; } = nameof(PpReplacements);
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
-        private readonly Dictionary<TokenMode, Dictionary<string, PpValue>> ppTokenDefinitions;
 
         private delegate double PpValue(CancellationToken cancellationToken, string mods = "");
         enum TokenMode
@@ -40,6 +40,7 @@ namespace BeatmapPpReplacements
         {
             _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter(Name);
+            _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
 
             ppTokenDefinitions = new Dictionary<TokenMode, Dictionary<string, PpValue>>
             {
@@ -111,6 +112,7 @@ namespace BeatmapPpReplacements
                 return;
             }
 
+            _strainsToken.Value = _ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
             var playMode = (PlayMode)_ppCalculator.RulesetId;
             _tokenSetter("gameMode", playMode.ToString());
 

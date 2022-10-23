@@ -30,6 +30,7 @@ namespace OsuMemoryEventSource
         private OsuStatus _lastStatus = OsuStatus.Null;
         private LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
         private OsuBaseAddresses OsuMemoryData;
+        private StructuredOsuMemoryReader _memoryReader;
 
         private ISettings _settings;
         private readonly IContextAwareLogger _logger;
@@ -37,7 +38,6 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<string, BaseLiveToken> _liveTokens = new();
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
-        public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
         public static ConfigEntry MultiplayerLeaderBoardUpdateRate = new ConfigEntry("MultiplayerLeaderBoardUpdateRate", 250);
         public static ConfigEntry SongSelectionScoresUpdateRate = new ConfigEntry("SongSelectionScoresUpdateRate", 250);
         private Mods _mods;
@@ -45,7 +45,6 @@ namespace OsuMemoryEventSource
         private int _hitObjectCount = 0;
         private double _bpmMultiplier = 1;
 
-        private IToken _strainsToken;
         private IToken _firstHitObjectTimeToken;
         private IToken _MapBreaksToken;
         private IToken _MapTimingPointsToken;
@@ -84,7 +83,15 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<InterpolatedValueName, InterpolatedValue> InterpolatedValues = new();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public EventHandler<OsuStatus> TokensUpdated { get; set; }
+        /// <summary>
+        /// Whenever this <see cref="MemoryDataProcessor"/> should be setting map-specific token values (skin, strains, mapId etc...)
+        /// </summary>
         public bool IsMainProcessor { get; private set; }
+        /// <summary>
+        /// Do we have valid osu client available that we can read from
+        /// </summary>
+        public bool IsMemoryReaderActive => _memoryReader != null && _memoryReader.CanRead;
+
         public string TokensPath { get; private set; }
         public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, IModParser modParser,
             bool isMainProcessor,
@@ -103,7 +110,6 @@ namespace OsuMemoryEventSource
             TokensPath = tokensPath;
 
             //TODO: Refactor these out to separate class already..(and make sure these run under isMainProcessor only)
-            _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
             _skinToken = _tokenSetter("skin", string.Empty, TokenType.Normal, null, string.Empty);
             _skinPathToken = _tokenSetter("skinPath", string.Empty, TokenType.Normal, null, string.Empty);
             _firstHitObjectTimeToken = _tokenSetter("firstHitObjectTime", 0d, TokenType.Normal, null, 0d);
@@ -176,10 +182,12 @@ namespace OsuMemoryEventSource
             _notUpdatingMemoryValues.Reset();
             lock (_lockingObject)
             {
+                if (!ReferenceEquals(_memoryReader, reader))
+                    _memoryReader = reader;
+
                 if (!ReferenceEquals(OsuMemoryData, reader.OsuMemoryAddresses))
-                {
                     OsuMemoryData = reader.OsuMemoryAddresses;
-                }
+
                 if ((OsuStatus)_statusToken.Value != status)
                     _statusToken.Value = status;
 
@@ -505,7 +513,7 @@ namespace OsuMemoryEventSource
 
         public async Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
-            if (IsMainProcessor)
+            if (IsMemoryReaderActive && IsMainProcessor)
                 SetSkinTokens();
 
             if (mapSearchResult.SearchArgs.EventType != OsuEventType.MapChange)
@@ -523,10 +531,10 @@ namespace OsuMemoryEventSource
             if (!IsMainProcessor)
                 return;
 
-            _beatmapIdToken.Value = OsuMemoryData.Beatmap.Id;
-            _beatmapSetIdToken.Value = OsuMemoryData.Beatmap.SetId;
-            _beatmapRankedStatusToken.Value = OsuMemoryData.Beatmap.Status;
-            _totalAudioTime.Value = OsuMemoryData.GeneralData.TotalAudioTime;
+            _beatmapIdToken.Value = OsuMemoryData?.Beatmap.Id ?? map.MapId;
+            _beatmapSetIdToken.Value = OsuMemoryData?.Beatmap.SetId ?? map.MapSetId;
+            _beatmapRankedStatusToken.Value = OsuMemoryData?.Beatmap.Status ?? (short)-2; // Unknown
+            _totalAudioTime.Value = OsuMemoryData?.GeneralData.TotalAudioTime ?? Convert.ToDouble(map.TotalTime);
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = _firstHitObjectTime = ppCalculator?.FirstHitObjectTime() ?? 0d;
             _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
@@ -540,8 +548,6 @@ namespace OsuMemoryEventSource
                 mapTimingPoints.Reverse();
                 _reversedMapTimingPoints = mapTimingPoints;
             }
-
-            _strainsToken.Value = ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
         }
 
         private void SetSkinTokens()

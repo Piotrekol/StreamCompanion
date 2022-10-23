@@ -65,7 +65,7 @@ namespace WebSocketDataSender
             return httpContentRoot;
         }
 
-        public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver, Delegates.Restart restarter)
+        public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver, Delegates.Restart restarter, MapStatsModule mapStatsModule)
         {
             _settings = settings;
             _saver = saver;
@@ -84,6 +84,7 @@ namespace WebSocketDataSender
                 ("List of available overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
                 ("All StreamCompanion settings", new ActionModule("/settings",HttpVerbs.Get,GetSettings)),
             };
+            modules.AddRange(mapStatsModule.GetModules());
 
             _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
 
@@ -172,7 +173,7 @@ namespace WebSocketDataSender
                     return;
                 }
 
-                if(!OperatingSystem.IsWindows())
+                if (!OperatingSystem.IsWindows())
                 {
                     context.Response.StatusCode = 409;
                     await context.SendStringAsync("Image processing is supported only on windows", "text", Encoding.UTF8);
