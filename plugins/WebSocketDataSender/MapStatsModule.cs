@@ -106,6 +106,7 @@ namespace WebSocketDataSender
             logger.Log("sending... {0}", LogLevel.Information, filePath);
 
             using var response = context.OpenResponseText();
+            context.Response.ContentType = "application/json";
             response.Write(JsonConvert.SerializeObject(Tokens.AllTokens.Where(t => (t.Value.Type & TokenType.Live) == 0).ToDictionary(k => k.Key, v => v.Value.Value)));
             return Task.CompletedTask;
         }
