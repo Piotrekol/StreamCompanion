@@ -40,8 +40,7 @@ namespace BeatmapPpReplacements
         {
             _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter(Name);
-            _strainsToken = _tokenSetter("mapStrains", new Dictionary<int, double>(), TokenType.Normal, ",", new Dictionary<int, double>());
-
+            _strainsToken = _tokenSetter("mapStrains", new Lazy<object>(() => new Dictionary<int, double>()), TokenType.Normal, ",", new Lazy<object>(() => new Dictionary<int, double>()));
             ppTokenDefinitions = new Dictionary<TokenMode, Dictionary<string, PpValue>>
             {
                 {TokenMode.Osu,new Dictionary<string, PpValue>
@@ -112,7 +111,9 @@ namespace BeatmapPpReplacements
                 return;
             }
 
-            _strainsToken.Value = _ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
+            _strainsToken.Value = new Lazy<object>(() =>
+                    _ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount))
+                );
             var playMode = (PlayMode)_ppCalculator.RulesetId;
             _tokenSetter("gameMode", playMode.ToString());
 
