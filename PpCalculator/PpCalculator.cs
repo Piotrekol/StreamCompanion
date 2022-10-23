@@ -172,16 +172,27 @@ namespace PpCalculator
             if (!hitObjects.Any())
                 return null;
 
+            var workingBeatmap = WorkingBeatmap;
+            if (startTime.HasValue)
+            {
+                createPerformanceCalculator = true;
+                var tempMap = new Beatmap();
+                tempMap.HitObjects.AddRange(hitObjects);
+                tempMap.ControlPointInfo = workingBeatmap.Beatmap.ControlPointInfo;
+                tempMap.BeatmapInfo = workingBeatmap.Beatmap.BeatmapInfo;
+                workingBeatmap = new ProcessorWorkingBeatmap(tempMap);
+            }
+
             ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katus, Hit300);
             ScoreInfo.Accuracy = GetAccuracy(ScoreInfo.Statistics);
             ScoreInfo.MaxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
-            ScoreInfo.TotalScore = UseScoreMultiplier ? 
-                (int)Math.Round(Score * ScoreMultiplier) 
+            ScoreInfo.TotalScore = UseScoreMultiplier ?
+                (int)Math.Round(Score * ScoreMultiplier)
                 : Score;
 
             if (createPerformanceCalculator)
             {
-                var difficultyCalculator = ruleset.CreateDifficultyCalculator(WorkingBeatmap);
+                var difficultyCalculator = ruleset.CreateDifficultyCalculator(workingBeatmap);
                 TimedDifficultyAttributes = difficultyCalculator.CalculateTimed(ScoreInfo.Mods, cancellationToken).ToList();
                 PerformanceCalculator = ruleset.CreatePerformanceCalculator();
                 ResetPerformanceCalculator = false;
