@@ -30,6 +30,7 @@ namespace OsuMemoryEventSource
         private OsuStatus _lastStatus = OsuStatus.Null;
         private LivePerformanceCalculator _rawData = new LivePerformanceCalculator();
         private OsuBaseAddresses OsuMemoryData;
+        private StructuredOsuMemoryReader _memoryReader;
 
         private ISettings _settings;
         private readonly IContextAwareLogger _logger;
@@ -86,6 +87,11 @@ namespace OsuMemoryEventSource
         /// Whenever this <see cref="MemoryDataProcessor"/> should be setting map-specific token values (skin, strains, mapId etc...)
         /// </summary>
         public bool IsMainProcessor { get; private set; }
+        /// <summary>
+        /// Do we have valid osu client available that we can read from
+        /// </summary>
+        public bool IsMemoryReaderActive => _memoryReader != null && _memoryReader.CanRead;
+
         public string TokensPath { get; private set; }
         public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, IModParser modParser,
             bool isMainProcessor,
@@ -176,10 +182,12 @@ namespace OsuMemoryEventSource
             _notUpdatingMemoryValues.Reset();
             lock (_lockingObject)
             {
+                if (!ReferenceEquals(_memoryReader, reader))
+                    _memoryReader = reader;
+
                 if (!ReferenceEquals(OsuMemoryData, reader.OsuMemoryAddresses))
-                {
                     OsuMemoryData = reader.OsuMemoryAddresses;
-                }
+
                 if ((OsuStatus)_statusToken.Value != status)
                     _statusToken.Value = status;
 
@@ -505,14 +513,8 @@ namespace OsuMemoryEventSource
 
         public async Task CreateTokensAsync(IMapSearchResult mapSearchResult, CancellationToken cancellationToken)
         {
-            
-            if (OsuMemoryData == null)
-                return;
-
-            if (IsMainProcessor)
-            { 
-                SetSkinTokens(); 
-            }
+            if (IsMemoryReaderActive && IsMainProcessor)
+                SetSkinTokens();
 
             if (mapSearchResult.SearchArgs.EventType != OsuEventType.MapChange)
                 return;
@@ -529,10 +531,10 @@ namespace OsuMemoryEventSource
             if (!IsMainProcessor)
                 return;
 
-            _beatmapIdToken.Value = OsuMemoryData.Beatmap.Id;
-            _beatmapSetIdToken.Value = OsuMemoryData.Beatmap.SetId;
-            _beatmapRankedStatusToken.Value = OsuMemoryData.Beatmap.Status;
-            _totalAudioTime.Value = OsuMemoryData.GeneralData.TotalAudioTime;
+            _beatmapIdToken.Value = OsuMemoryData?.Beatmap.Id ?? map.MapId;
+            _beatmapSetIdToken.Value = OsuMemoryData?.Beatmap.SetId ?? map.MapSetId;
+            _beatmapRankedStatusToken.Value = OsuMemoryData?.Beatmap.Status ?? (short)-2; // Unknown
+            _totalAudioTime.Value = OsuMemoryData?.GeneralData.TotalAudioTime ?? Convert.ToDouble(map.TotalTime);
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = _firstHitObjectTime = ppCalculator?.FirstHitObjectTime() ?? 0d;
             _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
