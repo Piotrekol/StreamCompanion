@@ -19,7 +19,18 @@ namespace PpCalculator
     public abstract class PpCalculator : IPpCalculator, ICloneable
     {
         public ProcessorWorkingBeatmap WorkingBeatmap { get; protected set; }
-        public IBeatmap PlayableBeatmap { get; protected set; }
+        private IBeatmap _playableBeatmap;
+        public IBeatmap PlayableBeatmap
+        {
+            get
+            {
+                if (_playableBeatmap == null)
+                    PreparePlayableBeatmap(CancellationToken.None);
+
+                return _playableBeatmap;
+            }
+            protected set => _playableBeatmap = value;
+        }
         protected abstract Ruleset Ruleset { get; }
         public virtual double Accuracy { get; set; } = 100;
         public virtual int? Combo { get; set; }
@@ -71,7 +82,7 @@ namespace PpCalculator
         {
             var ppCalculator = CreateInstance();
             ppCalculator.WorkingBeatmap = WorkingBeatmap;
-            ppCalculator.PlayableBeatmap = PlayableBeatmap;
+            ppCalculator._playableBeatmap = _playableBeatmap;
             ppCalculator._Mods = _Mods;
             ppCalculator.LastMods = LastMods;
             ppCalculator.scoreMultiplier = scoreMultiplier;
@@ -137,29 +148,15 @@ namespace PpCalculator
             }
         }
 
+
         private PpCalculatorTypes.PerformanceAttributes InternalCalculate(CancellationToken cancellationToken, double? startTime = null, double? endTime = null)
         {
             if (WorkingBeatmap == null)
                 return null;
 
+            PreparePlayableBeatmap(cancellationToken);
             //huge performance gains by reusing existing performance calculator when possible
             var createPerformanceCalculator = PerformanceCalculator == null || ResetPerformanceCalculator;
-
-            var ruleset = Ruleset;
-
-            Mod[] mods = null;
-            var newMods = _Mods != null ? string.Concat(_Mods) : "";
-            if (LastMods != newMods || ResetPerformanceCalculator)
-            {
-                mods = GetOsuMods(ruleset).Select(m => m.CreateInstance()).Append(ruleset.AllMods.First(m => m.Acronym == "CL").CreateInstance()).ToArray();
-
-                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-                cts.CancelAfter(20_000);
-                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo, mods, cts.Token);
-                LastMods = newMods;
-                ScoreInfo.Mods = mods;
-                createPerformanceCalculator = true;
-            }
 
             IReadOnlyList<HitObject> hitObjects = startTime.HasValue && endTime.HasValue
                 ? PlayableBeatmap.HitObjects.Where(h => h.StartTime >= startTime && h.StartTime <= endTime).ToList()
@@ -192,9 +189,9 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                var difficultyCalculator = ruleset.CreateDifficultyCalculator(workingBeatmap);
+                var difficultyCalculator = Ruleset.CreateDifficultyCalculator(workingBeatmap);
                 TimedDifficultyAttributes = difficultyCalculator.CalculateTimed(ScoreInfo.Mods, cancellationToken).ToList();
-                PerformanceCalculator = ruleset.CreatePerformanceCalculator();
+                PerformanceCalculator = Ruleset.CreatePerformanceCalculator();
                 ResetPerformanceCalculator = false;
             }
 
@@ -261,6 +258,22 @@ namespace PpCalculator
             }
 
             return GetMaxCombo(hitObjects);
+        }
+
+        private void PreparePlayableBeatmap(CancellationToken cancellationToken)
+        {
+            var newMods = _Mods != null ? string.Concat(_Mods) : "";
+            if (LastMods != newMods || ResetPerformanceCalculator)
+            {
+                var mods = GetOsuMods(Ruleset).Select(m => m.CreateInstance()).Append(Ruleset.AllMods.First(m => m.Acronym == "CL").CreateInstance()).ToArray();
+
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                cts.CancelAfter(20_000);
+                PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(Ruleset.RulesetInfo, mods, cts.Token);
+                LastMods = newMods;
+                ScoreInfo.Mods = mods;
+                ResetPerformanceCalculator = true;
+            }
         }
 
         private double CalculateScoreMultiplier()
