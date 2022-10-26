@@ -50,7 +50,7 @@ namespace WebSocketDataSender
         {
             return new List<(string Description, IWebModule module)>
             {
-                ("Calculate token values for given .osu file. Parameters: \"osuFile\" - full .osu file path; \"gamemode\" - gamemode to calculate from 0 to 3, 0(osu!) by default; \"mods\" - mods to calculate with, NM by default", new ActionModule("/mapStats",HttpVerbs.Get,GetMapStats)),
+                ("Calculate token values for given .osu file. Parameters: \"osuFile\" - full .osu file path; \"gamemode\" - gamemode to calculate from 0 to 3, 0(osu!) by default; \"mods\" - mods to calculate with, NM by default; \"tokenNames\" - comma separated list of token names to output, all by default", new ActionModule("/mapStats",HttpVerbs.Get,GetMapStats)),
             };
         }
 
@@ -107,7 +107,16 @@ namespace WebSocketDataSender
 
             using var response = context.OpenResponseText();
             context.Response.ContentType = "application/json";
-            response.Write(JsonConvert.SerializeObject(Tokens.AllTokens.Where(t => (t.Value.Type & TokenType.Live) == 0).ToDictionary(k => k.Key, v => v.Value.Value)));
+
+            if (context.Request.QueryString.ContainsKey("tokenNames"))
+            {
+                var tokenNames = context.Request.QueryString["tokenNames"].Split(",");
+                response.Write(JsonConvert.SerializeObject(Tokens.AllTokens.Where(t => tokenNames.Contains(t.Key)).ToDictionary(k => k.Key, v => v.Value.Value)));
+            }
+            else
+            {
+                response.Write(JsonConvert.SerializeObject(Tokens.AllTokens.Where(t => (t.Value.Type & TokenType.Live) == 0).ToDictionary(k => k.Key, v => v.Value.Value)));
+            }
             return Task.CompletedTask;
         }
 
