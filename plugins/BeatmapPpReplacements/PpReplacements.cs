@@ -112,8 +112,10 @@ namespace BeatmapPpReplacements
             }
 
             _strainsToken.Value = new Lazy<object>(() =>
-                    _ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount))
-                );
+            {
+                var ppcalculator = (IPpCalculator)_ppCalculator?.Clone();
+                return ppcalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
+            });
             var playMode = (PlayMode)_ppCalculator.RulesetId;
             _tokenSetter("gameMode", playMode.ToString());
 
