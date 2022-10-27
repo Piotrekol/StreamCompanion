@@ -37,7 +37,8 @@ namespace PpCalculator
         public virtual double PercentCombo { get; set; } = 100;
         public virtual int Score { get; set; }
         private string[] _Mods { get; set; }
-        private static string[] NCModArray = new[] { "NC" };
+        private static readonly string[] _NCModArray = new[] { "NC" };
+        private static readonly string[] _DTModArray = new[] { "DT" };
         public virtual string[] Mods
         {
             get => _Mods;
@@ -47,7 +48,13 @@ namespace PpCalculator
                     return;
 
                 if (value != null && value.Contains("NC"))
-                    _Mods = value.AsEnumerable().Except(NCModArray).ToArray();
+                {
+                    IEnumerable<string> tempMods = value.AsEnumerable().Except(_NCModArray);
+                    if (!value.Contains("DT"))
+                        tempMods = tempMods.Concat(_DTModArray);
+
+                    _Mods = tempMods.ToArray();
+                }
                 else
                     _Mods = value;
 
