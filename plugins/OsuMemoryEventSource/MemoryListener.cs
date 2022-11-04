@@ -137,7 +137,7 @@ namespace OsuMemoryEventSource
             //"good enough" replay retry detection.
             if (isReplay && _currentStatus == OsuMemoryStatus.Playing && _lastTime > currentTime && DateTime.UtcNow > _nextReplayRetryAllowedAt)
             {
-                osuEventType = OsuEventType.PlayChange;
+                osuEventType = mapIdDiffers || mapHashDiffers || gameModeDiffers || modsDiffer ? OsuEventType.MapChange : OsuEventType.PlayChange;
                 _nextReplayRetryAllowedAt = DateTime.UtcNow.AddMilliseconds(500);
             }
 
