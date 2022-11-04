@@ -71,8 +71,13 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 LegacyOsuTasks.Push(mapSearchArgs);
                 return;
             }
+            
+            //Cancel current event only if we're changing map - otherwise we'll be reusing most of that data anyway
+            if (mapSearchArgs.EventType == OsuEventType.MapChange)
+            {
+                _cancellationTokenSource.TryCancel();
+            }
 
-            _cancellationTokenSource.TryCancel();
             OsuTasks.Clear();
             _logger.SetContextData("Osu_event", eventData);
 
