@@ -45,7 +45,9 @@ namespace Gamma
             _configuration = settings.GetConfiguration<Configuration>(GammaConfiguration);
             _configuration.GammaRanges.Sort((r1, r2) => r1.MinAr.CompareTo(r2.MinAr));
             settings.SaveConfiguration(GammaConfiguration, _configuration);
-            _originalScreenDeviceName = _configuration.ScreenDeviceName ?? Screen.PrimaryScreen.DeviceName;
+            _originalScreenDeviceName = string.IsNullOrWhiteSpace(_configuration.ScreenDeviceName) 
+                ? Screen.PrimaryScreen.DeviceName 
+                : _configuration.ScreenDeviceName;
             _gamma = new Gamma(_originalScreenDeviceName);
         }
 
