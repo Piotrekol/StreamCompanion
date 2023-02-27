@@ -1,0 +1,13 @@
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\SCInstall\Plugins\testplugin.deps.json
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\SCInstall\Plugins\testplugin.dll
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\SCInstall\Plugins\testplugin.pdb
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\obj\Debug\testplugin.csproj.AssemblyReference.cache
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\obj\Debug\testplugin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\obj\Debug\testplugin.AssemblyInfoInputs.cache
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\obj\Debug\testplugin.AssemblyInfo.cs
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\obj\Debug\testplugin.csproj.CoreCompileInputs.cache
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\obj\Debug\testplugin.dll
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\obj\Debug\testplugin.pdb
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\SCinstall\build\Debug\Plugins\testplugin.deps.json
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\SCinstall\build\Debug\Plugins\testplugin.dll
+C:\Users\vojtech.pindur\source\repos\XonarDG\Test\SCinstall\build\Debug\Plugins\testplugin.pdb

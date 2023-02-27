@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/odometr.css">
+</head>
+
+<body>
+    <div id="main">
+        <div id="target">
+            <img src="" id="bg">
+            <div id="bgDark"></div>
+            <div id="title"></div>
+            <div class="text currentPP">
+                <div>
+                    PP: 
+                </div>
+                <div id="currentPP" class="odometer"></div>
+            </div>
+            <div class="text ifFC">
+                <div>
+                    FC: 
+                </div>
+                <div id="ifFC" class="odometer"></div>
+            </div>
+            <div id="mapStatus">
+                <div id="cs" class="status">
+                    <hr>
+                </div>
+                <div id="ar" class="status">
+                    <hr>
+                </div>
+                <div id="od" class="status">
+                    <hr>
+                </div>
+                <div id="hp" class="status">
+                    <hr>
+                </div>
+            </div>
+            <div id="mods">
+            </div>
+        </div>
+        <div id="state">
+            <div class="text">
+                <div id="100" class="odometer"></div>
+                <div>
+                    x100
+                </div>
+            </div>
+            <div class="text">
+                <div id="50" class="odometer"></div>
+                <div>
+                    x50
+                </div>
+            </div>
+            <div class="text">
+                <div id="miss" class="odometer"></div>
+                <div>
+                    xMiss
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="deps/odometr.js"></script>
+    <script src="deps/reconnecting-websocket.min.js"></script>
+<script src="/lib/consts.js"></script><script src="/lib/utils.js"></script><script src="/lib/tokenTransformer.js"></script>
+    <script defer>
+        {
+            let el = document.getElementById('100');
+            od = new Odometer({
+                el: el,
+                format: 'd',
+            });
+        }
+    </script>
+    <script src="index.js"></script>
+
+</body>
+
+</html>

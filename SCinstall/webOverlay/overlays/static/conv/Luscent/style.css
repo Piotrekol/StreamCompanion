@@ -1,0 +1,122 @@
+@font-face {
+    font-family: "Cabin Regular";
+    src: url("fonts/Cabin-Regular.ttf");
+  }
+  
+
+body,html{
+    font-family: "Cabin Regular";
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+#main{
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    height: 1080px;
+    width: 1920px;
+    position: relative;
+}
+#target{
+    position: relative;
+    height: 1080px;
+    width: 1920px;
+    -webkit-mask-image: url(maskWebcam.svg);
+    mask-image: url(maskWebcam.svg);
+}
+#bg{
+    background-color: rgb(71, 83, 109);
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    width: 2000px;
+    object-fit: cover;
+    z-index: -1;
+    filter: blur(10px) saturate(200%) brightness(0.8);
+    transition: ease;
+}
+#bgwparrer{
+    position: absolute;
+    height: 1080px;
+    width: 1920px;
+    -webkit-mask-image: url(maskbg.svg);
+    mask-image: url(maskbg.svg);
+}
+#hud{
+    position: absolute;
+    z-index: 1;
+}
+#bgDark{
+    position: absolute;
+    height: 1080px;
+    width: 1920px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+#title{
+    position: absolute;
+    color: rgba(255, 255, 255, 0.8);
+    z-index: 2;
+    font-weight: 100;
+    font-size: 30px;
+    position: absolute;
+    top: 920px;
+    width: max-content;
+    overflow:hidden;
+    animation: slide 20s linear infinite;
+}
+#textWrapper{
+    position: absolute;
+    z-index: 2;
+    height: 1080px;
+    width: 1920px;
+    -webkit-mask-image: url(masktext.svg);
+    mask-image: url(masktext.svg);
+}
+#bmlink{
+    color: rgba(255, 255, 255, 0.7);
+    left: 390px;
+    top: 885px;
+    font-weight: 100;
+    font-size: 20px;
+    position: absolute;
+    z-index: 2;
+}
+#canvas{
+    position: absolute;
+    bottom: 0;
+    filter: blur(2px);
+}
+#canvasSecond{
+    filter: blur(2px);
+}
+#progress{
+    bottom: 0;
+    position: absolute;
+    width: 1920px;
+    overflow: hidden;
+    transition: ease 600ms;
+}
+#pp{
+    display: flex;
+    border-radius: 100px;
+    padding: 10px 20px 10px 20px;
+    position: absolute;
+    right: 760px;
+    bottom: 100px;
+    color: rgba(199, 199, 199, 0.8);
+    font-size: 25px;
+    transition: ease-in-out 400ms;
+    z-index: -4;
+}
+.ppNum{
+    padding: 0 10px 0 10px;
+}
+.ppText{
+    margin-left: -10px;
+}
+@keyframes slide {
+    0% {transform: translate(990px);}
+    100% { transform: translate(-105%);; }
+}

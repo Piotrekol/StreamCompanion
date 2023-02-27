@@ -1,0 +1,47 @@
+:root {
+  --animation-speed: 1.7s;
+}
+
+* {
+  padding: 0px;
+  margin: 0px;
+  font-family: comfortaa;
+}
+
+.clipPathAnimation {
+  transition: clip-path 0.3s;
+}
+
+.box {
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  transition: padding var(--animation-speed) ease;
+  overflow-y: hidden;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  filter: drop-shadow(0px 0px 5px #000a);
+  width: 100%;
+  margin-top: 10px;
+  z-index: 50;
+}
+
+.app {
+  height: 100vh;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+.hide {
+  display: none;
+  z-index: -1;
+}

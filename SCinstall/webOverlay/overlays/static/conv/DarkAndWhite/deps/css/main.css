@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  color: white;
+  font-size: 50px;
+  background-color: transparent;
+}
+
+.main {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  top: 20px;
+  left: 30px;
+  padding: 20px 40px;
+  background: black;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 4px 20px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.main .line {
+  position: absolute;
+  top: 5px;
+  left: 15px;
+  width: calc(100% - 30px);
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.main .line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--progress);
+  height: 100%;
+  background: white;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.main .hits {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  color: black;
+  width: 480px;
+  background: white;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 6px 0 #ccc;
+          box-shadow: 0 6px 0 #ccc;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+.main .hits .h100,
+.main .hits .h50,
+.main .hits .h0 {
+  font-size: 45px;
+  padding: 0 15px;
+}
+
+.main .hits .h100::after,
+.main .hits .h50::after,
+.main .hits .h0::after {
+  font-size: 30px;
+  opacity: 0.5;
+}
+
+.main .hits .h100::after {
+  content: "x100";
+}
+
+.main .hits .h50::after {
+  content: "x50";
+}
+
+.main .hits .h0::after {
+  content: "x0";
+}
+
+.main .pp {
+  position: relative;
+  text-align: center;
+  margin-right: 40px;
+  width: 180px;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+.main .pp span {
+  white-space: nowrap;
+}
+
+.main .pp span::after {
+  content: "PP";
+}
+
+.songSelect .main .hits {
+  width: 320px;
+}
+
+.songSelect .main .pp {
+  width: 340px;
+}
+
+.songSelect .main .pp span::after {
+  content: "";
+}
+
+.songSelect .main .pp span::before {
+  content: "/b/";
+}
+/*# sourceMappingURL=main.css.map */

@@ -1,0 +1,104 @@
+@font-face {
+    font-family: "Junegull";
+    src: url("../static/Junegull-Regular.ttf");
+    
+  }
+
+body,html{
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+}
+#main{
+    font-family: Junegull;
+    height: 190px;
+    width: 500px;
+    overflow: hidden;
+    color: white;
+}
+#target{
+    position: relative;
+    height: 190px;
+    width: 500px;
+    -webkit-mask-image: url(../static/mask.svg);
+    mask-image: url(../static/mask.svg);
+}
+
+#bg{
+    position: absolute;
+    height: 125px;
+    width: 500px;
+    object-fit: cover;
+    z-index: -1;
+}
+#bgDark{
+    position: absolute;
+    height: 125px;
+    width: 500px;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+#title{
+    position: absolute;
+    font-size: 25px;
+    width: max-content;
+    max-height: 35px;
+    top: 5px;
+    overflow:hidden;
+    animation: slide 15s linear infinite;
+}
+@keyframes slide {
+    0% {transform: translate(510px);}
+    100% { transform: translate(-100%);; }
+}
+#status{
+    height: 65px;
+    width: 500px;
+    background-color: #141414;
+    position: absolute;
+    top:125px;
+    display: flex;
+    justify-content: space-between;
+}
+.pp{
+    width: 200px;
+    height: 65px;
+    display: flex;
+  align-items: center;
+  justify-content: center
+}
+#ppWrapper{
+    font-size: 40px;
+    
+}
+#mistakes{
+    display: flex;
+    margin-top: 6px;
+    margin-bottom: 10px;
+    justify-content: space-around;
+    width: 300px;
+    font-size: 20px;
+    text-align: center !important;
+    color: #7C7879;
+}
+.mistakes{
+    margin-top: 5px;
+    color: white;
+}
+.text{
+    font-family: Junegull !important;
+}
+
+.odometer .odometer-digit .odometer-value {
+    width: 100%;
+}
+#canvas{
+    position: absolute;
+    bottom: 65px;
+}
+#progress{
+    bottom: 65px;
+    position: absolute;
+    width: 500px;
+    overflow: hidden;
+    transition: ease 600ms;
+}

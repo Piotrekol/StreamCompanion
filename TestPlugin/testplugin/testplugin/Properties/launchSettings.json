@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "testplugin": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\vojtech.pindur\\source\\repos\\XonarDG\\Test\\SCinstall\\build\\Debug\\osu!streamcompanion.exe"
+    }
+  }
+}

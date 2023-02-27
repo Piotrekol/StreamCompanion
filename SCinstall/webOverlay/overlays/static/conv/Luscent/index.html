@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="odometr.css">
+    <script src="odometr.js"></script>
+    <script src="deps/Chart.min.js"></script>
+    <script src="deps/smooth.js"></script>
+    <script src="deps/reconnecting-websocket.min.js"></script>
+<script src="/lib/consts.js"></script><script src="/lib/utils.js"></script><script src="/lib/tokenTransformer.js"></script>
+</head>
+
+<body>
+    <div id="main">
+        <div id="target">
+            <div id='bmlink'>https://osu.ppy.sh/b/1658251</div>
+            <div id="bgwparrer">
+                <img src="" id="bg">
+                <div id="bgDark"></div>
+            </div>
+            <img src="main.png" id="hud">
+            <div id='textWrapper'>
+                <div id="title"></div>
+            </div>
+            <div>
+                <canvas id="canvas" width="1920" height="90"></canvas>
+            </div>
+            <div id='progress'>
+                <div>
+                    <canvas id="canvasSecond" width="1920" height="90"></canvas>
+                </div>
+            </div>
+            <div id="pp"><div id="ppCurent" class="odometer ppNum">0</div> --> <div id="ppIfFc" class="odometer ppNum">0</div> <div class="ppText">pp<div></div>
+           
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+
+</html>

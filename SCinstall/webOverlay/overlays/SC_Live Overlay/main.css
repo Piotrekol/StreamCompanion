@@ -1,0 +1,229 @@
+:root {
+    --animation-speed: 1.7s
+}
+* {
+    padding: 0px;
+    margin: 0px;
+    font-family: comfortaa;
+}
+.clipPathAnimation{
+    transition: clip-path .3s;
+}
+.box {
+    height: 100%;
+
+    -webkit-box-shadow: inset 0px 0px 28px 4px #0008;
+    -moz-box-shadow: inset 0px 0px 28px 4px #0008;
+    box-shadow: inset 0px 0px 28px 4px #0008;
+    background-repeat: no-repeat;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    transition: padding var(--animation-speed) ease;
+    overflow-y: hidden;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inner {
+    display: flex;
+    flex-direction: column;
+    filter: drop-shadow(0px 0px 5px #000a);
+    width: 100%;
+    margin-top:10px;
+    z-index: 50;
+    
+}
+.right {
+    text-align: right;
+    margin-left: auto;
+}
+.app {
+    height: 100vh;
+    white-space: nowrap;
+    color: white;
+}
+
+.outer {
+    min-width: 15%;
+    padding: 0px 2%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 15px;
+}
+
+.title {
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: font-size var(--animation-speed) ease;
+    margin: 0 5px;
+}
+
+.mapinfo {
+    font-size: 12px;
+    flex-direction: row;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    transition: margin-top var(--animation-speed) ease,
+                padding var(--animation-speed) ease;
+}
+
+.mapper {
+    padding-right: 15px;
+    flex: 0 1 auto;
+    opacity:1;
+    transition: flex var(--animation-speed) ease,
+                padding var(--animation-speed) ease,
+                opacity var(--animation-speed) ease;
+}
+.box-playing {
+    padding-top:2px;
+}
+.title-playing {
+    font-size: 12px;
+    transition: font-size var(--animation-speed) ease;
+}
+.mapinfo-playing {
+    padding-bottom: 2px;
+    
+    transition: margin var(--animation-speed) ease,
+                padding var(--animation-speed) ease;
+}
+.mapinfo-playing > .mapper {
+    text-align: left;
+    /*opacity:0;*/
+
+    padding-left:5px;
+    transition: flex var(--animation-speed) ease,
+                padding var(--animation-speed) ease,
+                opacity var(--animation-speed) ease;
+}
+.difficulty{
+    transition: padding var(--animation-speed) ease;
+}
+.mapinfo-playing > .difficulty{
+    padding-right:5px;
+    transition: padding var(--animation-speed) ease;
+}
+
+.flexSpacer{
+    flex: 1 1 auto;
+}
+
+
+.ds {
+    filter: drop-shadow(0px 0px 5px #0004);
+}
+
+.hit-100 {
+}
+
+.hit-50 {
+}
+
+.hit-miss {
+}
+
+.hit-text {
+    justify-self: center;
+}
+
+.hit {
+    align-self: center;
+    padding: 5px 9px;
+    font-size: 18px;
+    margin-right: 10px;
+    border-radius: 200px;
+    width:25%;
+}
+
+[v-cloak] { display: none; }
+
+.hide {
+    display: none;
+    z-index: -1;
+}
+
+.bottom {
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+    
+}
+
+  .bottom-content {
+    z-index: 9999;
+  }
+
+.hits {
+    display: flex;
+    flex: 1 1 auto;
+    margin:5px;
+    padding:5px;
+    text-align:center;
+    margin: -5px 5px 5px 5px;
+    font-weight: 600;
+}
+
+.pp {
+    align-self: center;
+    width:25%;
+}
+
+.mapStats{
+    border-radius: 15px;
+    background: rgba(0,0,0,0.4);
+    padding: 10px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    margin-left: auto;
+    width: 60px;
+    margin-right:15px;
+    margin-bottom:25px;
+    text-align: end;
+    position: absolute;
+    right:0;
+    z-index: 99;
+    overflow: hidden;
+}
+.flexEnd{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.mapStats strong{
+    float: left;
+}
+
+mapStat{
+    float: right;
+}
+
+.chart-container{
+    position: relative;
+    margin-right: 5px;
+    margin-left: 1px;
+}
+
+
+@media screen and (max-height: 180px) {
+    .mapStats {
+      display:none;
+    }
+  }

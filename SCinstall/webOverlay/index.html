@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <title>StreamCompanion web overlay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;700&display=swap" rel="stylesheet">
+    <!-- This is a development version of Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="/lib/consts.js"></script>
+
+</head>
+<style>
+    * {
+        padding: 0px;
+        margin: 0px;
+        font-family: comfortaa;
+        color: #13516c
+    }
+
+    body {
+        background-color: #EEE;
+    }
+
+    .notes {
+        line-height: 1.5;
+    }
+
+    .box {
+        padding: 25px;
+        margin: 10px;
+        border-radius: 20px;
+        background-color: #FFF;
+    }
+
+    .preview {
+        padding-top: 10px;
+    }
+
+    a {
+        color: #0072f3;
+        text-decoration: none;
+
+    }
+
+    kbd {
+        display: inline-block;
+        border-radius: 3px;
+        padding: 0px 4px;
+        box-shadow: 1px 1px 1px #777;
+        margin: 2px;
+        font-size: small;
+        vertical-align: text-bottom;
+        background: #eee;
+        color: #555;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="box">
+            <h1>This is preview of all installed overlays in <a href="https://github.com/Piotrekol/StreamCompanion"
+                    target="_blank">StreamCompanion</a>.</h1>
+            <div class="notes">
+                <div>Click on any name to open it in separate page.</div>
+                <div>To edit or create new one navigate to StreamCompanion <kbd>Files/web/overlays/</kbd> folder. Make
+                    sure
+                    to read <kbd>README</kbd> inside of example overlays.</div>
+            </div>
+            <div class="preview" v-for="overlayName in overlays">
+                <h2><a :href="overlayUrl(overlayName)" target="_blank">{{overlayName}}</a></h3>
+                    <h3 v-if="loadedOverlays.indexOf(overlayName)==-1">Loading...</h3>
+                    <iframe :id="overlayName" frameBorder="0" style="overflow:hidden;height:0px;width:100%"
+                        :src="overlayUrl(overlayName)" onload='javascript:autosize(this);'>
+                    </iframe>
+            </div>
+        </div>
+        <div class="box">
+            <h3>Links:</h3>
+            <div><a :href="`${config.getUrl()}/overlays/`" target="_blank">Overlays index</a></div>
+            <div><a :href="`${config.getUrl()}/help`" target="_blank">List of functional endpoints</a></div>
+            <div><a :href="`${config.getUrl()}/json`" target="_blank">All tokens output</a></div>
+            <div><a href="https://discord.gg/N854wYZ" target="_blank">Discord</a></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function autosize(iframe) {
+            setTimeout(() => {
+                if (iframe.contentWindow.document.body.scrollHeight > 0)
+                    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 20 + "px"
+                else
+                    iframe.style.height = '200px'
+                vue.loadedOverlays.push(iframe.id);
+            }, 250);
+        }
+
+        let vue = new Vue({
+            el: '#app',
+            data: ({
+                overlays: [],
+                loadedOverlays: [],
+                config: {}
+            }),
+            methods: {
+                overlayUrl: function (name) {
+                    return `${this.config.getUrl()}/overlays/${name}/`
+                }
+            },
+            created: function () {
+                this.config = window.overlay.config
+                let t = this;
+                fetch(`${t.config.getUrl()}/overlayList`)
+                    .then(response => response.json())
+                    .then(data => t.overlays = data);
+            }
+        })
+    </script>
+</body>
+
+</html>

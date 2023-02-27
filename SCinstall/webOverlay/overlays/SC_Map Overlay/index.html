@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Map Overlay</title>
+  <link href="./main.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap" rel="stylesheet">
+
+  <!-- This is a development version of Vue.js -->
+  <script src="https://unpkg.com/vue@3.2.14/dist/vue.global.js""></script>
+  <script src="/lib/reconnecting-websocket.js"></script>
+  <script src="/lib/consts.js"></script>
+  <script src="/lib/utils.js"></script>
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <div class="box">
+			<Background>
+			</Background>
+			<div class="move">
+				<div :class="['progress', isPlayingOrWatching ? 'pg-enabled' : '']" :style="`width: ${mapProgress}%;background-color:${progressColor}`"></div>
+				<div class="title">{{data.mapArtistTitle}}</div>
+				<div class="diffname">{{data.diffName}}
+					<div v-if="data.mods!=`` && data.mods != null && data.mods != `None`" class="modcolor">{{data.mods.split(",").join("")}}</div>
+				</div>
+			</div>
+			<div class="move2">
+				<div class="attr">
+					<div class="attritem"><div class="attrtitle">AR</div>{{getToken('mAR',1)}}</div>
+					<div class="attritem"><div class="attrtitle">CS</div>{{getToken('mCS',1)}}</div>
+					<div class="attritem"><div class="attrtitle">OD</div>{{getToken('mOD',1)}}</div>
+					<div class="attritem"><div class="attrtitle">HP</div>{{getToken('mHP',1)}}</div>
+					<div class="attritem"><div class="attrtitle">BPM</div>{{getToken('mainBpm',0)}}</div>
+					<div class="attritem"><div class="attrtitle">SR</div>{{getToken('mStars',2)}}</div>
+				</div>
+			</div>
+		</div>
+  </div>
+  <script src="./main.js" type="module"></script>
+</body>
+
+</html>

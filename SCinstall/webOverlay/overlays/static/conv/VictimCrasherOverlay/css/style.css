@@ -1,0 +1,184 @@
+@font-face {
+    font-family: "QTVagaRound-Bold";
+    src: url("../fonts/QTVagaRound-Bold.otf");
+}
+body,html{
+    padding: 0;
+    margin: 0;
+    overflow-y: hidden;
+}
+#main{
+    font-size: 20px;
+    font-family: QTVagaRound-Bold, Helvetica, sans-serif;
+    font-weight: normal;
+    color: white;
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+	text-shadow: 0px 0px 8px black;
+}
+.odometer.odometer-auto-theme{
+    font-size: 24px !important;
+    font-family: "QTVagaRound-Bold", Helvetica, sans-serif !important;
+    font-weight: normal !important;	
+}
+.odometer.odometer-auto-theme .odometer-digit .odometer-digit-inner, .odometer.odometer-theme-default .odometer-digit .odometer-digit-inner {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    margin-left: -5px !important;
+    margin-right: -5px !important;
+}
+#top {
+	position: absolute;
+    width: 1920px;
+    height: 200px;
+	background-image: url('../static/ovup.png');
+	background-repeat: no-repeat;
+    transition: ease-in-out 500ms;
+	z-index: 0;
+}
+#bottom {
+	position: absolute;
+	bottom: 0px;
+    width: 1920px;
+    height: 400px;
+	background-image: url('../static/ovbot.png');
+	background-repeat: no-repeat;	
+    transition: ease-in-out 500ms;
+	z-index: 0;
+}
+#hpbar {
+	position: absolute;
+	left: 270px;
+    width: 1300px;
+    height: 100px;
+	background-image: url('../static/hpbar.png');
+	background-repeat: no-repeat;
+	z-index: -1;
+    transition: ease-in-out 50ms;
+}
+#strainGraph{
+    position: absolute;
+	left: 270px;
+    bottom: 0px;
+	height: 90px;
+	z-index: -1;
+    transition: ease-in-out 500ms;	
+}
+#progress{
+    bottom: 0px;
+    position: absolute;
+    width: 1400px;
+	height: 90px;
+    overflow: hidden;
+    transition: ease 600ms;
+}
+#canvas,#canvasSecond{
+    position: absolute;
+	height: 90px;
+    bottom: 0px;
+}
+#ppCont{
+    font-size: 80px !important;
+    position: absolute;
+    bottom: 5px;
+	right: 70px;
+    max-height: 200px;
+    transition: ease-in-out 500ms;
+}
+#pp{
+	font-size: 80px !important;
+	text-align: right !important;
+}
+#player{
+	position: absolute;
+    top: 15px;
+	left: 20px;
+	font-size: 30px !important;
+}
+#playername{
+	position: absolute;
+    top: 45px;
+	left: 20px;
+	font-size: 50px !important;
+}
+#score{
+	position: absolute;
+    top: 5px;
+	right: 20px;
+	font-size: 60px !important;
+	text-align: right !important;
+}
+#accuracy{
+	position: absolute;
+    top: 75px;
+	right: 60px;
+	font-size: 40px !important;
+	text-align: right !important;
+}
+#percent{
+	position: absolute;
+    top: 75px;
+	right: 20px;
+	font-size: 40px !important;
+	text-align: right !important;
+}
+#combo{
+	position: absolute;
+    bottom: 5px;
+	left: 20px;
+    width: max-content;
+    max-height: 200px;
+	font-size: 80px !important;
+	text-align: right !important;
+}
+#h100,#h50,#h0,#ur{
+	position: absolute;
+	right: 130px;
+    width: max-content;
+    max-height: 200px;
+	font-size: 40px !important;
+	text-align: right !important;	
+}
+#ur {
+	bottom: 145px;
+}
+#h0 {
+	bottom: 195px;
+}
+#h50 {
+	bottom: 245px;
+}
+#h100 {
+	bottom: 295px;
+}
+.over{ 
+    transform: translate(300px);
+    animation: slide 5s linear infinite;
+}
+#mods{
+    position: absolute;
+    top: 120px;
+	right: 10px;
+    width: 500px;
+    margin-top: 60px;
+    display: flex;
+    justify-content: flex-end;
+    transition: ease-in-out 500ms;
+}
+.mod img{
+    position: relative;
+    height: 80px;
+    width: 80px;
+    z-index: 1;
+    margin-right: 10px;
+    object-fit: cover;
+    -webkit-filter: drop-shadow( -5px 5px 5px rgba(0,0,0,0.7));
+    -moz-filter: drop-shadow(-5px 5px 10px rgba(0,0,0,0.7));
+    -ms-filter: drop-shadow(-5px 5px 10px rgba(0,0,0,0.7));
+    -o-filter: drop-shadow(-5px 5px 10px rgba(0,0,0,0.7));
+}
+.text{
+    display: flex;
+    justify-content: center;
+}

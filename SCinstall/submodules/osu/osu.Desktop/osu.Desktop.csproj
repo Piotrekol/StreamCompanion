@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Project">
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>A free-to-win rhythm game. Rhythm is just a *click* away!</Description>
+    <AssemblyName>osu!</AssemblyName>
+    <Title>osu!</Title>
+    <Product>osu!(lazer)</Product>
+    <ApplicationIcon>lazer.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>0.0.0</Version>
+    <FileVersion>0.0.0</FileVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>osu.Desktop.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup Label="Project References">
+    <ProjectReference Include="..\osu.Game.Tournament\osu.Game.Tournament.csproj" />
+    <ProjectReference Include="..\osu.Game\osu.Game.csproj" />
+    <ProjectReference Include="..\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj" />
+    <ProjectReference Include="..\osu.Game.Rulesets.Catch\osu.Game.Rulesets.Catch.csproj" />
+    <ProjectReference Include="..\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj" />
+    <ProjectReference Include="..\osu.Game.Rulesets.Taiko\osu.Game.Rulesets.Taiko.csproj" />
+  </ItemGroup>
+  <ItemGroup Label="Package References">
+    <PackageReference Include="Clowd.Squirrel" Version="2.9.42" />
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Include="System.IO.Packaging" Version="6.0.0" />
+    <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
+  </ItemGroup>
+  <ItemGroup Label="Resources">
+    <EmbeddedResource Include="lazer.ico" />
+  </ItemGroup>
+</Project>

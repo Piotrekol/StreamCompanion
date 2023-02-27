@@ -1,0 +1,79 @@
+.progress {
+    /*background-color: yellow;*/
+    height: 15px;
+    transition: none;
+    margin-bottom: 40px;
+    border-radius: 10px;
+    opacity: 0;
+}
+.pg-enabled {
+    opacity: 1;
+}
+.attr {
+    margin-top: 30px;
+}
+.attritem {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.25);
+    margin: 10px;
+    padding: 10px;
+    border-radius: 0.8rem;
+}
+.attrtitle {
+    display: inline-block;
+    margin-right: 5px;
+    font-weight: bold;
+}
+.box {
+    border-radius: 2rem;
+    overflow: hidden;
+    width: 1000px;
+}
+body { margin: 0 }
+* {
+    transition: all 1s;
+    transition-timing-function: ease;
+    color: white;
+    text-align: center;
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 1), 0px 0px 46px rgba(255, 255, 255, 1), 0px 0px 80px rgba(255, 255, 255, 1);
+    font-family: 'Comfortaa';
+}
+.title {
+    font-size: 35px;
+}
+.diffname {
+    margin-top: 7.5px;
+    font-size: 25px;
+}
+.modcolor {
+    color: #dbdbdb;
+    display: inline-block;
+    text-shadow: 0px 0px 10px #dbdbdb, 0px 0px 46px #dbdbdb, 0px 0px 80px #dbdbdb;
+}
+.background {
+    transition: all .2s;
+    filter: brightness(50%);
+    width: 1000px;
+    height: 300px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.move {
+    position: absolute;
+    top: 0px;
+    width: 1000px;
+    border-radius: 2rem; overflow: hidden;
+    height: 300px;
+}
+.move2 {
+    position: absolute;
+    top: 200px;
+    width: 1000px;
+}
+
+[v-cloak] { display: none; }
+
+.hide {
+    display: none;
+}

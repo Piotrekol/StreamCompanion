@@ -1,0 +1,13 @@
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("deps/Roboto-Bold.ttf");
+  }
+#ur{
+    opacity: 0;
+    font-size: 24px; 
+    transition: 300ms ease-in-out; 
+    color: white; 
+    font-family: "Roboto-Bold";
+    text-align: center; 
+    width: 300px;
+}

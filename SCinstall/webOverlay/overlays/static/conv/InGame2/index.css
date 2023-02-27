@@ -1,0 +1,107 @@
+@font-face {
+    font-family: "Custom-Font";
+    src: url("./resources/MPLUSRounded1c-ExtraBold.ttf"); 
+}
+
+body,html{
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: "Custom-Font";
+}
+
+.ifFcpp{
+    position: absolute;
+    background: linear-gradient(272.81deg, #0F0F0F 0%, #0C0C0C 100%), #0F0F0F;
+    box-shadow: 0px 0px 10px #000000;
+    border-radius: 10px;
+    color: #582A7D;
+    font-size: 18px;
+    padding: 5px;
+    top:10px;
+    left: 325px;
+    transform: translateX(-50%);
+    transition: 300ms ease-in-out;
+    opacity: 0;
+}
+#ifFcpp{
+    color: white;
+}
+
+.base{
+    position: absolute;
+    height: 72px;
+    width: 325px;
+    border-radius: 10px 10px 10px 10px;
+    background: linear-gradient(84.26deg, #0F0F0F 1.44%, #0C0C0C 96.32%);
+    top: 25px;
+}
+
+.pp{
+    position: absolute;
+    color: #582A7D;
+    display: flex;
+    justify-content: center;
+    padding-top: 2px;
+    font-size: 30px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+#pp{
+    color: white;
+}
+.progress{
+    position: absolute;
+    width: 178px;
+    height: 4px;
+    top: 15px;
+    left: 10px;
+    background-color: #272727;
+    border-radius: 4px;
+}
+#progress{
+    height: 4px;
+    width: 50%;
+    border-radius: 4px;
+    background-color: #582A7D;
+    transition: 300ms;
+}
+.hitsLine{
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+    font-size: 20px;
+    width: 178px;
+    margin-left: 10px;
+    bottom: 10px;
+
+}
+.hits{
+    width: 60px;
+    text-align: center;
+}
+
+.hitsUnderline{
+    height: 4px;
+    width: 8px;
+    border-radius: 2px;
+    margin: 0 auto 0 auto;
+}
+
+#hunUnderline{
+    background-color: #2A7D3D;
+    box-shadow: 0 0 10px #2A7D3D;
+}
+
+#fivUnderline{
+    background-color: #2A377D;
+    box-shadow: 0 0 10px #2A377D;
+}
+
+#missUnderline{
+    background-color: #7D2A2A;
+    box-shadow: 0 0 10px #7D2A2A;
+
+}

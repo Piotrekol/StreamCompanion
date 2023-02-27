@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "jetbrains.resharper.globaltools": {
+      "version": "2022.2.3",
+      "commands": [
+        "jb"
+      ]
+    },
+    "nvika": {
+      "version": "2.2.0",
+      "commands": [
+        "nvika"
+      ]
+    },
+    "codefilesanity": {
+      "version": "0.0.36",
+      "commands": [
+        "CodeFileSanity"
+      ]
+    },
+    "ppy.localisationanalyser.tools": {
+      "version": "2022.809.0",
+      "commands": [
+        "localisation"
+      ]
+    }
+  }
+}

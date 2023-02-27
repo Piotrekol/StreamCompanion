@@ -1,0 +1,63 @@
+body,html{
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+#main{
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: white;
+    height: 204px;
+    width: 353px;
+    position: relative;
+}
+
+.ppWrapper{
+    margin-top: 37px;
+    display: flex;
+    justify-content: space-around;
+}
+.pp{
+    background-color: #232323;
+    width: 136px;
+    height: 42px;
+    text-align: center;
+    border-radius: 15px;
+    font-size: 30px;
+    padding-top: 10px;
+}
+
+.mistakesWrapper{
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 30px;
+}
+
+.mistakesWrapper hr{
+    height: 10px;
+    width: 80px;
+    border-radius: 10px;
+    border: none;
+}
+
+#hun hr{
+    background-color: #158713;
+}
+
+#fiv hr{
+    background-color: #132C87;
+}
+
+#miss hr{
+    background-color: #871313;
+}
+
+
+
+
+
+
+

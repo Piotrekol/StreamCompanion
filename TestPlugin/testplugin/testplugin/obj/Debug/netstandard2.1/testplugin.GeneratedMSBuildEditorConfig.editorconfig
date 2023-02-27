@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = testplugin
+build_property.ProjectDir = C:\Users\vojtech.pindur\source\repos\XonarDG\Test\TestPlugin\testplugin\testplugin\

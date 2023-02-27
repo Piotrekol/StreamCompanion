@@ -1,0 +1,271 @@
+:root {
+	--width: 500px;
+	--height: 90px;
+	--border-radius: 10px;
+	--bg: linear-gradient(90deg, #313131, #161616);
+	--accent: rgb(88, 55, 236);
+	--accent2: rgb(48, 29, 131);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+	margin: 10px;
+	padding: 10px;
+	overflow: hidden;
+}
+
+#main {
+	width: 100%;
+	height: 100px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	transition: opacity 300ms ease;
+}
+
+.wrapper {
+	width: var(--width);
+	height: var(--height);
+	position: relative;
+	overflow: hidden;
+}
+
+
+/* Rank Container */
+
+.rank {
+	width: 100px;
+	height: 100px;
+	margin-right: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 75px;
+	letter-spacing: -2px;
+}
+
+
+/* Box Container */
+
+.box {
+	width: var(--width);
+	height: var(--height);
+	position: relative;
+	border-radius: var(--border-radius);
+	background: var(--bg);
+	transition: width 500ms ease;
+}
+
+
+/* Progress Line */
+
+#line {
+	box-shadow: 0px 5px 20px #000;
+	z-index: -1;
+	width: var(--width);
+	height: var(--height);
+	position: absolute;
+	border-radius: var(--border-radius);
+	transform: translate(0px, 2px);
+	overflow: hidden;
+}
+
+#line::before,
+#line::after {
+	position: absolute;
+	content: "";
+	height: 100%;
+	border-radius: var(--border-radius);
+	animation: slide 5s linear infinite alternate;
+}
+
+#line::before {
+	background: linear-gradient(-45deg, var(--accent), var(--accent2));
+	background-size: 200%;
+	width: var(--progress);
+	transition: width 100ms;
+	/* clip-path: polygon(0 0, var(--progress) 0, var(--progress) 100%, 0% 100%); */
+}
+
+#line::after {
+	z-index: -1;
+	width: 100%;
+	background-color: gray;
+}
+
+@keyframes slide {
+	0% {
+		background-position: 0%;
+	}
+	100% {
+		background-position: 100%;
+	}
+}
+
+
+/* Game Container */
+
+#game-container {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	border-radius: var(--border-radius);
+	display: flex;
+	align-self: center;
+	transition: top 500ms ease;
+}
+
+.pp,
+.hits,
+.h100,
+.h50,
+.h0 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+}
+
+
+/* PP */
+
+.pp {
+	position: relative;
+	width: 200px;
+	height: 100%;
+	font-size: 44px;
+	margin-left: 20px;
+}
+
+.accent {
+	font-weight: bold;
+	color: var(--accent);
+	text-shadow: 0 0 10px var(--accent2);
+}
+
+
+/* Hits */
+
+.hits {
+	justify-content: space-evenly;
+	width: 300px;
+}
+
+.h100,
+.h50,
+.h0 {
+	font-size: 36px;
+	flex-direction: column;
+	position: relative;
+	line-height: 50px;
+}
+
+.h100 hr,
+.h50 hr,
+.h0 hr {
+	border: none;
+	border-radius: 10px;
+	width: 10px;
+	height: 5px;
+}
+
+.h100 hr {
+	background-color: greenyellow;
+	box-shadow: 0 0 5px greenyellow;
+}
+
+.h50 hr {
+	background-color: blueviolet;
+	box-shadow: 0 0 5px blueviolet;
+}
+
+.h0 hr {
+	background-color: red;
+	box-shadow: 0 0 5px red;
+}
+
+
+/* Song Container */
+
+#song-container {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	border-radius: var(--border-radius);
+	display: flex;
+	align-self: center;
+	top: 100px;
+	transition: top 500ms ease;
+}
+
+.ss {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	font-size: 40px;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	margin-left: 30px;
+	color: white;
+}
+
+.ss::before {
+	content: "SS: ";
+	margin-right: 10px;
+}
+
+
+/* Sliderbreak */
+
+#sbpp-container {
+	width: var(--width);
+	height: var(--height);
+	position: absolute;
+	display: flex;
+	color: white;
+	font-size: 20px;
+	z-index: 10;
+}
+
+#sb,
+#ppfc {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: max-content;
+	height: 25px;
+	padding: 0 10px 0 10px;
+	border-radius: 10px;
+	transform: scale(1);
+	transition: transform 200ms ease, opacity 300ms ease;
+}
+
+#sb {
+	background: linear-gradient(to right, gray, #313131);
+	box-shadow: 0 2px 5px rgb(77, 77, 77);
+	position: absolute;
+	top: -15px;
+	left: 405px;
+}
+
+#ppfc {
+	background: linear-gradient(to right, var(--accent), var(--accent2));
+	box-shadow: 0 2px 5px var(--accent);
+	position: absolute;
+	top: -15px;
+	left: 70px;
+}
+
+#sb::after {
+	content: "xSB";
+}
+
+#ppfc::after {
+	content: "pp";
+}

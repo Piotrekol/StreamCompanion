@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Map Display Example</title>
+    <link href="./main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;700&display=swap" rel="stylesheet">
+    <!-- This is a development version of Vue.js -->
+    <script src="https://unpkg.com/vue@3.2.14/dist/vue.global.js""></script>
+    <script src="/lib/reconnecting-websocket.js"></script>
+    <script src="/lib/consts.js"></script>
+    <script src="/lib/utils.js"></script>
+</head>
+
+<body>
+    <div id="app" v-cloak class="app">
+        <div class="outer left">
+            <p class="outer-left length">
+                length <strong>{{totalTime}}</strong>
+            </p>
+            <p class="outer-left bpm">
+                bpm <strong>{{getToken('mBpm')}}</strong>
+            </p>
+        </div>
+        <Background class="box">
+            <div class="inner">
+                <div class="title">
+                    <h1 class="title">
+                        {{getToken('mapArtistTitle')}}
+                    </h1>
+                </div>
+                <div class="mapinfo">
+                    <p class="mapper info">
+                        mapper <strong> {{getToken('creator')}}</strong>
+                    </p>
+                    <p class="difficulty info">
+                        difficulty <strong> {{getToken('diffName')}}</strong>
+                    </p>
+                </div>
+            </div>
+        </Background>
+        <div class="outer right">
+            <p class="outer-right info">
+                CS <strong>{{getToken('mCS')}}</strong> / AR <strong>{{getToken('mAR')}}</strong> / OD
+                <strong>{{getToken('mOD')}}</strong>
+            </p>
+            <p class="outer-right star">
+                Star Rating <strong>{{getToken('mStars', 2)}}</strong>
+            </p>
+        </div>
+    </div>
+    <script src="./main.js" type="module"></script>
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+[Variables]
+$var=34
+
+[Events]
+Sprite,Background,TopCentre,"img.jpg",$var56,240

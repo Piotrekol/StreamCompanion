@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <title>MiniCounter</title>
+</head>
+<body>
+  <div class="shape">
+    <div class="info">
+      <div id="artist-title">
+        <span id="title">Song</span><span class="font"> - </span><span id="artist">Artist</span>
+      </div>
+      <div class="map-info">
+          <div class="diff"><span class="secondary-font">difficulty </span><span id="diff">Difficulty</span></div>
+          &nbsp;<div class="mapRank"><span id="mapRank" class="fas"></span></div>&nbsp;
+          <div class="mapper"><span class="secondary-font">mapper </span><span id="mapper">Mapper<span></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="container2">
+        <div class="pp"><span id="pp"></span><span class="Tpp">pp</span></div>
+        <div class="hits">
+          <div class="h100"><span id="h100" class="hr">0</span></div>
+          <div class="h50"><span id="h50" class="hr">0</span></div>
+          <div class="h0"><span id="h0" class="hr">0</span></div>
+        </div>
+        <div class="rank"><span id="rank"></span></div>
+      </div>
+    </div>
+    <img src="" alt="" id="bg">
+    <div class="bgWrapper"></div>
+  </div>
+  <script src="deps/countUp.js"></script>
+  <script src="deps/reconnecting-websocket.min.js"></script>
+<script src="/lib/consts.js"></script><script src="/lib/utils.js"></script><script src="/lib/tokenTransformer.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

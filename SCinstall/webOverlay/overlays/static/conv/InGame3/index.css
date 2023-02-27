@@ -1,0 +1,47 @@
+@font-face {
+    font-family: "Custom-Font";
+    src: url("./resources/MPLUSRounded1c-ExtraBold.ttf"); 
+}
+
+body,html{
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: "Custom-Font";
+}
+
+
+.base{
+    position: absolute;
+    padding: 5px 10px;
+    border-radius: 10px 10px 10px 10px;
+    background: linear-gradient(84.26deg, #0F0F0F 1.44%, #0C0C0C 96.32%);
+}
+
+.pp{
+    color: #582A7D;
+    font-size: 30px;
+    right: 10px;
+}
+
+#pp{
+    color: white;
+}
+
+.ifFcpp{
+    position: absolute;
+    background: linear-gradient(272.81deg, #0F0F0F 0%, #0C0C0C 100%), #0F0F0F;
+    box-shadow: 0px 0px 10px #000000;
+    border-radius: 10px;
+    color: #582A7D;
+    font-size: 18px;
+    padding: 5px;
+    transition: opacity 300ms ease-in-out;
+    opacity: 1;
+    transform: translateX(-50%);
+    left: 110px;
+    top: 35px;
+}
+#ifFcpp{
+    color: white;
+}

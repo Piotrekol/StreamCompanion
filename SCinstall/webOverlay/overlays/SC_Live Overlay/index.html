@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Live Overlay</title>
+    <link href="./main.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;700&display=swap" rel="stylesheet" />
+    <!-- This is a development version of Vue.js -->
+    <script src="https://unpkg.com/vue@3.2.14/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+    <script src="/lib/reconnecting-websocket.js"></script>
+    <script src="/lib/consts.js"></script>
+    <script src="/lib/utils.js"></script>
+  </head>
+
+  <body>
+    <div id="app" class="app" v-cloak>
+      <Background :dimcolor="overlaySettings.imageDimColor" class="box">
+        <div class="inner" :class="{hide: overlaySettings.hideDiffText}">
+          <h1 class="title">{{getToken('mapArtistTitle')}}</h1>
+          <div class="mapinfo">
+            <p class="mapper info">mapper <strong> {{getToken('creator')}}</strong></p>
+            <p class="difficulty info">difficulty <strong> {{getToken('diffName')}}</strong></p>
+          </div>
+        </div>
+
+        <div class="flexSpacer flexEnd" style="width: 100%">
+          <div class="flexSpacer flexEnd" style="width: 100%; position: absolute">
+            <div class="mapStats" :class="{hide: overlaySettings.hideMapStats}">
+              <div><strong>SR</strong>{{getToken('mStars', 2)}}</div>
+              <div><strong>CS</strong>{{getToken('mCS')}}</div>
+              <div><strong>AR</strong>{{getToken('mAR')}}</div>
+              <div><strong>OD</strong>{{getToken('mOD')}}</div>
+              <div><strong>HP</strong>{{getToken('mHP')}}</div>
+            </div>
+            <Linechart :settings="overlaySettings" :style="chartStyle" :points="mapStrains"> </Linechart>
+          </div>
+          <div class="flexSpacer flexEnd clipPathAnimation" style="width: 100%; position: absolute" :style="progressChartStyle">
+            <Linechart :settings="progressChartSettings" :style="chartStyle" :points="mapStrains"> </Linechart>
+          </div>
+        </div>
+        <div class="bottom ds">
+          <div class="bottom-background"></div>
+
+          <div v-if="isMania" class="hits" :style="hitsStyle">
+            <div class="ds hit pp">{{ppValue}}pp</div>
+            <div class="hit hit-p300" v-if="isMania">{{getToken('geki')}}</div>
+            <div class="hit hit-300" v-if="isMania">{{getToken('c300')}}</div>
+            <div class="hit hit-200" v-if="isMania">{{getToken('katsu')}}</div>
+            <div class="hit hit-100">
+              <p class="hit-text">{{getToken('c100')}}</p>
+            </div>
+            <div class="hit hit-50">
+              <p class="hit-text">{{getToken('c50')}}</p>
+            </div>
+            <div class="hit hit-miss">
+              <p class="hit-text">{{getToken('miss')}}</p>
+            </div>
+          </div>
+          <div v-else class="hits" :style="hitsStyle">
+            <div class="ds hit pp">{{ppValue}}pp</div>
+            <div class="hit hit-100">
+              <p class="hit-text">{{getToken('c100')}}</p>
+            </div>
+            <div class="hit hit-50">
+              <p class="hit-text">{{getToken('c50')}}</p>
+            </div>
+            <div class="hit hit-miss">
+              <p class="hit-text">{{getToken('miss')}}</p>
+            </div>
+          </div>
+        </div>
+      </Background>
+    </div>
+    <script src="./main.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>pp Display Example</title>
+    <link href="./main.css" rel="stylesheet" />
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&display=swap" rel="stylesheet" /> -->
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,600,700,800" rel="stylesheet"> 
+    
+
+    <!-- This is a development version of Vue.js -->
+    <script src="https://unpkg.com/vue@3.2.14/dist/vue.global.js""></script>
+    <script src="/lib/reconnecting-websocket.js"></script>
+    <script src="/lib/consts.js"></script>
+    <script src="/lib/utils.js"></script>
+  </head>
+
+  <body>
+    <div id="overlay" v-cloak>
+      <div class="overlay" :class="{'hidden':!isPlayingOrWatching}">
+        <div class="performance" >
+          <div class="performance-group">
+            <span class="text rank">{{osuGrade[getToken('grade')]}}</span>&nbsp;<span class="subtext percentage" >{{getToken('acc',2)}}%</span>
+          </div>
+  
+          <div class="performance-group">
+            <span class="text" class="combo">{{getToken('combo')}}</span>&nbsp;<span class="subtext">Combo</span>
+          </div>
+          <div class="performance-group">
+          
+            <span class="score">{{getToken('ppIfMapEndsNow',0)}}pp<span class="subtext ">/{{getToken('ppIfRestFced',0)}}pp</span></span>
+          </div>
+        </div>
+  
+        <div class="beatmap">
+          <div class="cover">
+            <Background class="image"></Background>
+            
+            <svg width="90" height="90">
+              <rect width="90" height="90" class="darken"></rect>
+              <circle cx="45" cy="45" r="30" class="remaining"></circle>
+              <circle cx="45" cy="45" r="30" class="progress" :style="progressStyle"></circle>
+            </svg>
+  
+            <div>
+              <span class="progress-text">{{mapTime}}</span>
+            </div>
+          </div>
+  
+          <div class="meta">
+            <div class="text">
+              <div class="titles">
+                <span class="title">{{getToken('titleUnicode')}}</span>
+                <span class="subtitle">{{getToken('creator')}}</span>
+              </div>
+  
+              <span class="artist">{{getToken('artistUnicode')}}</span>
+            </div>
+            
+            <div>
+              <span class="difficulty">{{getToken('diffName')}}</span>
+              <span class="bpm">{{getToken('mMainBpm')}} BPM</span>
+              <span class="mods">{{getToken('mods')}}</span>
+            </div>
+          </div>
+      </div>
+			
+			</div>
+		</div>
+    <script src="./main.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+body,html{
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+}
+#main{
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: white;
+    height: 124px;
+    width: 794px;
+    position: relative;
+}
+#target{
+    position: relative;
+    height: 124px;
+    width: 794px;
+    -webkit-mask-image: url(../static/mask.svg);
+    mask-image: url(../static/mask.svg);
+}
+#bg{
+    background-color: rgb(71, 83, 109);
+    position: absolute;
+    height: 124px;
+    width: 794px;
+    object-fit: cover;
+    z-index: -1;
+}
+#bgDark{
+    position: absolute;
+    height: 124px;
+    width: 794px;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+#title{
+    font-size: 30px;
+    position: absolute;
+    top: 15px;
+    width: max-content;
+    max-height: 37px;
+    overflow:hidden;
+    transform: translate(700px);
+    animation: slide 15s linear infinite;
+}
+@keyframes slide {
+    0% {transform: translate(830px);}
+    100% { transform: translate(-100%);; }
+}
+#mapStatus{
+    font-size: 24px;
+    position: absolute;
+    bottom: 5px;
+    display: flex;
+    justify-content: space-around;
+    width: 500px;
+    text-align: center;
+}
+#mapStatus hr{
+    height: 10px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+}
+.status span.odometer-value, .status {
+    line-height: 4px;
+    width: calc(max-content + 100px);
+}
+#cs hr {
+    background-color: #9C9236;
+}
+#ar hr{
+    background-color: #4A9C36;
+}
+#od hr{
+    background-color: #36849C;
+}
+#hp hr{
+    background-color: #9C365B;
+}
+#mods{
+    position: absolute;
+    width: 754px;
+    margin-right: 40px;
+    margin-top: 60px;
+    display: flex;
+    justify-content: flex-end;
+}
+.mod img{
+    position: relative;
+    height: 50px;
+    width: 50px;
+    z-index: 1;
+    object-fit: cover;
+    margin-right: -25px;
+    -webkit-filter: drop-shadow( -5px 5px 5px rgba(0,0,0,0.7));
+    -moz-filter: drop-shadow(-5px 5px 10px rgba(0,0,0,0.7));
+    -ms-filter: drop-shadow(-5px 5px 10px rgba(0,0,0,0.7));
+    -o-filter: drop-shadow(-5px 5px 10px rgba(0,0,0,0.7));
+}
+.text{
+    display: flex;
+    justify-content: center;
+}

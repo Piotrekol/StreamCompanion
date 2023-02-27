@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "dgSpecHash": "5NAY86aKL3RCrr56k0WpOzihqgjhal9u2nyVQ/jEa347BvSd2tElSbYgt0MBdZ9rK3a3Nn/0uhy6yGEAnFWUNw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\vojtech.pindur\\source\\repos\\XonarDG\\Test\\TestPlugin\\testplugin\\testplugin\\testplugin.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\collectionmanager\\1.0.7\\collectionmanager.1.0.7.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\jace\\1.0.0\\jace.1.0.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\sharpcompress\\0.23.0\\sharpcompress.0.23.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\streamcompaniontypes\\8.0.0\\streamcompaniontypes.8.0.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.componentmodel.annotations\\4.7.0\\system.componentmodel.annotations.4.7.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.data.datasetextensions\\4.5.0\\system.data.datasetextensions.4.5.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.memory\\4.5.0\\system.memory.4.5.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.security.accesscontrol\\4.5.0\\system.security.accesscontrol.4.5.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.security.principal.windows\\4.5.0\\system.security.principal.windows.4.5.0.nupkg.sha512",
+    "C:\\Users\\vojtech.pindur\\.nuget\\packages\\system.text.encoding.codepages\\4.5.1\\system.text.encoding.codepages.4.5.1.nupkg.sha512"
+  ],
+  "logs": []
+}
