@@ -9,43 +9,44 @@ namespace Gamma
     {
         private IntPtr createdDC;
         private WinApi.RAMP? _orginalRamp;
-        public float CurrentGamma { get; private set; } = float.NaN;
+        public double CurrentGamma { get; private set; } = double.NaN;
+        public string ScreenDeviceName { get; private set; }
         public Gamma(string screenDeviceName)
         {
+            ScreenDeviceName = screenDeviceName;
             createdDC = WinApi.CreateDC(null, screenDeviceName, null, IntPtr.Zero);
         }
 
-        public bool Set(float gamma)
+        public bool ScreenIsValid()
+            => createdDC != IntPtr.Zero;
+
+        public bool Set(int userGamma)
         {
             if (_orginalRamp == null && !TrySetDefaultRamp())
                 return false;
 
-            if (gamma <= 5 && gamma >= 0)
+            var gamma = UserValueToGamma(userGamma);
+            WinApi.RAMP ramp = new WinApi.RAMP();
+            ramp.Red = new ushort[256];
+            ramp.Green = new ushort[256];
+            ramp.Blue = new ushort[256];
+            for (int i = 1; i < 256; i++)
             {
-                WinApi.RAMP ramp = new WinApi.RAMP();
-                ramp.Red = new ushort[256];
-                ramp.Green = new ushort[256];
-                ramp.Blue = new ushort[256];
-                for (int i = 1; i < 256; i++)
-                {
-                    var iArrayValue = Math.Pow((i + 1) / 256.0, gamma) * 65535 + 0.5;
-                    if (iArrayValue > 65535)
-                        iArrayValue = 65535;
-                    ramp.Red[i] = ramp.Blue[i] = ramp.Green[i] = (ushort)iArrayValue;
-                }
-
-                CurrentGamma = gamma;
-                return WinApi.SetDeviceGammaRamp(createdDC, ref ramp);
+                var iArrayValue = Math.Pow((i + 1) / 256.0, gamma) * 65535 + 0.5;
+                if (iArrayValue > 65535)
+                    iArrayValue = 65535;
+                ramp.Red[i] = ramp.Blue[i] = ramp.Green[i] = (ushort)iArrayValue;
             }
 
-            return false;
+            CurrentGamma = gamma;
+            return WinApi.SetDeviceGammaRamp(createdDC, ref ramp);
         }
 
         public bool Restore()
         {
             if (_orginalRamp == null)
                 return false;
-            
+
             var ramp = _orginalRamp.Value;
             var restored = WinApi.SetDeviceGammaRamp(createdDC, ref ramp);
             if (restored)
@@ -69,8 +70,17 @@ namespace Gamma
 
             _orginalRamp = ramp;
             return true;
-
         }
+
+        private static double Map(double value, double range1Start, double range1End, double range2Start, double range2End)
+        {
+            return (value - range1Start) / (range1End - range1Start) * (range2End - range2Start) + range2Start;
+        }
+
+        //user range 0 - 100
+        //actual gamma range: 0.228 - 4.46
+        public static double UserValueToGamma(int value) => Map(value, 100, 0, 0.228, 4.46);
+        public static int GammaToUserValue(float value) => (int)Map(value, 0.228, 4.46, 100, 0);
 
         private class WinApi
         {

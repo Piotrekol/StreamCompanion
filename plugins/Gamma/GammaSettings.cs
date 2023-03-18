@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gamma.Models;
 
@@ -15,9 +11,11 @@ namespace Gamma
     {
         private readonly Configuration _configuration;
 
-        public EventHandler OnSettingUpdated;
+        public EventHandler SettingUpdated;
         private bool _init = true;
         private BindingList<GammaRange> _gammaRangesBindingList;
+        private GammaRange _currentGammaRange;
+        private Gamma _gamma;
 
         private class ScreenValue
         {
@@ -39,50 +37,21 @@ namespace Gamma
             comboBox_display.SelectedItem = screens.FirstOrDefault(s => s.Screen.DeviceName == _configuration.ScreenDeviceName) ?? screens.First();
 
             _gammaRangesBindingList = new BindingList<GammaRange>(_configuration.GammaRanges);
-            _gammaRangesBindingList.AddingNew += BindingListOnAddingNew;
-            dataGridView.DataSource = _gammaRangesBindingList;
-            dataGridView.DataBindingComplete += DataGridViewOnDataBindingComplete;
-
+            listBox_gammaRanges.DataSource = _gammaRangesBindingList;
             checkBox_enabled.Checked = _configuration.Enabled;
 
             SetEnabled();
-            textBox_description.Text = string.Join(Environment.NewLine,
-                "MinAr - minimum AR to trigger gamma change (0,01-15,00)",
-                "MaxAr - maximum AR to trigger gamma change (0,01-15,00)",
-                "Gamma - gamma value to apply (0,228 ~ 4,46)",
-                "0,228 being really bright and 5 really dark.",
-                "Gamma activates only when playing and both MinAr and MaxAr conditions are satisfied"
-                );
             _init = false;
         }
 
-        private void BindingListOnAddingNew(object sender, AddingNewEventArgs e)
+        public void SetMapAR(double ar)
         {
-            if (dataGridView.Rows.Count == _gammaRangesBindingList.Count)
+            if (InvokeRequired)
             {
-                _gammaRangesBindingList.RemoveAt(_gammaRangesBindingList.Count - 1);
+                Invoke(() => SetMapAR(ar));
+                return;
             }
-        }
-
-        private void DataGridViewOnDataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            Validate("MinAr", 0, 15);
-            Validate("MaxAr", 0, 15);
-            Validate("Gamma", 0.228, 4.46);
-            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void Validate(string columnName, double min, double max)
-        {
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
-            {
-                var cell = dataGridView.Rows[i].Cells[columnName];
-                double value = Convert.ToDouble(cell.Value);
-                if (value < min)
-                    cell.Value = min;
-                if (value > max)
-                    cell.Value = max;
-            }
+            label_mapAR.Text = $"Current map AR: {ar:0.#}";
         }
 
         private void checkBox_enabled_CheckedChanged(object sender, EventArgs e)
@@ -91,7 +60,43 @@ namespace Gamma
                 return;
 
             SetEnabled();
-            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+            OnSettingUpdated();
+        }
+
+        protected virtual void OnSettingUpdated()
+        {
+            SettingUpdated?.Invoke(this, null);
+        }
+
+        private void SetEnabled()
+        {
+            panel_main.Enabled = comboBox_display.Enabled = _configuration.Enabled = checkBox_enabled.Checked;
+        }
+
+        private void SettingValueUpdated()
+        {
+            if (_init || _currentGammaRange == null)
+                return;
+
+            _currentGammaRange.MinAr = Convert.ToDouble(numericUpDown_arMin.Value);
+            _currentGammaRange.MaxAr = Convert.ToDouble(numericUpDown_arMax.Value);
+            _currentGammaRange.UserGamma = trackBar_gamma.Value;
+            _configuration.SortGammaRanges();
+            _gammaRangesBindingList.ResetBindings();
+            if (listBox_gammaRanges.SelectedItem != _currentGammaRange)
+                listBox_gammaRanges.SelectedItem = _currentGammaRange;
+
+            OnSettingUpdated();
+        }
+
+        private void PopulateForm(GammaRange gammaRange)
+        {
+            _init = true;
+            numericUpDown_arMin.Value = Convert.ToDecimal(gammaRange.MinAr);
+            numericUpDown_arMax.Value = Convert.ToDecimal(gammaRange.MaxAr);
+            trackBar_gamma.Value = gammaRange.UserGamma;
+            textBox_gamma.Text = gammaRange.UserGamma.ToString();
+            _init = false;
         }
 
         private void comboBox_display_SelectedIndexChanged(object sender, EventArgs e)
@@ -100,12 +105,75 @@ namespace Gamma
                 return;
 
             _configuration.ScreenDeviceName = ((ScreenValue)comboBox_display.SelectedItem).Screen.DeviceName;
-            OnSettingUpdated?.Invoke(this, EventArgs.Empty);
+            OnSettingUpdated();
         }
 
-        private void SetEnabled()
+        private void listBox_gammaRanges_SelectedIndexChanged(object sender, EventArgs e)
         {
-            dataGridView.Enabled = comboBox_display.Enabled = _configuration.Enabled = checkBox_enabled.Checked;
+            _currentGammaRange = (GammaRange)listBox_gammaRanges.SelectedItem;
+            panel_rangeSettings.Enabled = _currentGammaRange != null;
+            if (panel_rangeSettings.Enabled)
+                PopulateForm(_currentGammaRange);
+        }
+
+        private void button_addRange_Click(object sender, EventArgs e)
+        {
+            var newRange = _gammaRangesBindingList.AddNew();
+            _configuration.SortGammaRanges();
+            _gammaRangesBindingList.ResetBindings();
+            listBox_gammaRanges.SelectedItem = newRange;
+        }
+
+        private void button_remove_Click(object sender, EventArgs e)
+        {
+            if (listBox_gammaRanges.SelectedItem == null)
+                return;
+
+            _gammaRangesBindingList.Remove((GammaRange)listBox_gammaRanges.SelectedItem);
+            SettingUpdated?.Invoke(this, null);
+        }
+
+        private void trackBar_gamma_MouseDown(object sender, MouseEventArgs e)
+        {
+            var selectedDisplayName = ((ScreenValue)comboBox_display.SelectedValue).Screen.DeviceName;
+            if (_gamma == null || _gamma.ScreenDeviceName != selectedDisplayName)
+            {
+                _gamma?.Dispose();
+                _gamma = new(selectedDisplayName);
+            }
+
+            _gamma.Set(trackBar_gamma.Value);
+        }
+
+        private void trackBar_gamma_MouseUp(object sender, MouseEventArgs e)
+        {
+            _gamma?.Dispose();
+            _gamma = null;
+        }
+
+        private void trackBar_gamma_ValueChanged(object sender, EventArgs e)
+        {
+            if (_gamma != null)
+                _gamma.Set(trackBar_gamma.Value);
+
+            textBox_gamma.Text = trackBar_gamma.Value.ToString();
+            SettingValueUpdated();
+        }
+
+        private void numericUpDown_arMin_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDown_arMax.Value < numericUpDown_arMin.Value)
+                numericUpDown_arMax.Value = numericUpDown_arMin.Value;
+
+            SettingValueUpdated();
+        }
+
+        private void numericUpDown_arMax_ValueChanged(object sender, EventArgs e)
+        {
+            if (numericUpDown_arMax.Value < numericUpDown_arMin.Value)
+                numericUpDown_arMin.Value = numericUpDown_arMax.Value;
+
+            SettingValueUpdated();
         }
     }
 }

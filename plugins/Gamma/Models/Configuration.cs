@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Gamma.Models
 {
@@ -10,5 +11,8 @@ namespace Gamma.Models
         };
         public bool Enabled { get; set; } = false;
         public string ScreenDeviceName { get; set; } = string.Empty;
+
+        public void SortGammaRanges()
+            => GammaRanges.Sort((r1, r2) => r1.MinAr.CompareTo(r2.MinAr));
     }
 }
