@@ -66,19 +66,7 @@ namespace BeatmapPpReplacements
                 {TokenMode.Mania,new Dictionary<string,PpValue>
                 {
                     {"mania_1_000_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 1_000_000)},
-                    {"mania_990_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 990_000)},
-                    {"mania_950_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 950_000)},
-                    {"mania_900_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 900_000)},
-                    {"mania_800_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 800_000)},
-                    {"mania_700_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 700_000)},
-                    {"mania_600_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 600_000)},
                     {"mania_m1_000_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 1_000_000)},
-                    {"mania_m990_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 990_000)},
-                    {"mania_m950_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 950_000)},
-                    {"mania_m900_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 900_000)},
-                    {"mania_m800_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 800_000)},
-                    {"mania_m700_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 700_000)},
-                    {"mania_m600_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 600_000)},
                 }
                 }
             };
