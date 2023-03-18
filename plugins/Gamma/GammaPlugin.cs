@@ -31,6 +31,16 @@ namespace Gamma
         private Configuration _configuration;
         private string _originalScreenDeviceName;
         private GammaSettings _gammaSettings;
+        private double? CurrentAR
+        {
+            get
+            {
+                if (!Tokens.AllTokens.TryGetValue("mAR", out var mARToken))
+                    return null;
+
+                return (double)mARToken.Value;
+            }
+        }
 
         public GammaPlugin(ILogger logger, ISettings settings)
         {
@@ -42,20 +52,40 @@ namespace Gamma
 
             _logger = logger;
             _settings = settings;
+
             _configuration = settings.GetConfiguration<Configuration>(GammaConfiguration);
-            _configuration.GammaRanges.Sort((r1, r2) => r1.MinAr.CompareTo(r2.MinAr));
+            ConvertOldGammaValues(_configuration);
+            _configuration.SortGammaRanges();
             settings.SaveConfiguration(GammaConfiguration, _configuration);
-            _originalScreenDeviceName = string.IsNullOrWhiteSpace(_configuration.ScreenDeviceName) 
-                ? Screen.PrimaryScreen.DeviceName 
+
+            _originalScreenDeviceName = string.IsNullOrWhiteSpace(_configuration.ScreenDeviceName)
+                ? Screen.PrimaryScreen.DeviceName
                 : _configuration.ScreenDeviceName;
             _gamma = new Gamma(_originalScreenDeviceName);
         }
 
+        private void ConvertOldGammaValues(Configuration gammaConfig)
+        {
+            foreach (var gamma in gammaConfig.GammaRanges)
+            {
+                if (gamma.Gamma != null)
+                {
+                    gamma.UserGamma = Gamma.GammaToUserValue(gamma.Gamma.Value);
+                    gamma.Gamma = null;
+                }
+            }
+        }
+
         public Task SetNewMapAsync(IMapSearchResult searchResult, CancellationToken cancellationToken)
         {
+            var ar = CurrentAR;
+            if (ar == null)
+                return Task.CompletedTask;
+
+            _gammaSettings?.SetMapAR(ar.Value);
             if (!_configuration.Enabled || !searchResult.BeatmapsFound.Any() || searchResult.Action != OsuStatus.Playing)
             {
-                if (!float.IsNaN(_gamma.CurrentGamma))
+                if (!double.IsNaN(_gamma.CurrentGamma))
                     _gamma.Restore();
 
                 return Task.CompletedTask;
@@ -67,9 +97,7 @@ namespace Gamma
                 _gamma = new Gamma(_originalScreenDeviceName = _configuration.ScreenDeviceName);
             }
 
-            var ar = (double)Tokens.AllTokens["mAR"].Value;
-            var gamma = GetGammaForAr(ar);
-
+            var gamma = GetGammaForAr(ar.Value);
             if (gamma.HasValue)
                 _gamma.Set(gamma.Value);
             else
@@ -78,7 +106,7 @@ namespace Gamma
             return Task.CompletedTask;
         }
 
-        private float? GetGammaForAr(double ar) => _configuration.GammaRanges.FirstOrDefault(x => x.MaxAr >= ar && x.MinAr <= ar)?.Gamma;
+        private int? GetGammaForAr(double ar) => _configuration.GammaRanges.FirstOrDefault(x => x.MaxAr >= ar && x.MinAr <= ar)?.UserGamma;
 
         public void Free()
         {
@@ -90,7 +118,8 @@ namespace Gamma
             if (_gammaSettings == null || _gammaSettings.IsDisposed)
             {
                 _gammaSettings = new GammaSettings(_configuration);
-                _gammaSettings.OnSettingUpdated += OnSettingUpdated;
+                _gammaSettings.SettingUpdated += OnSettingUpdated;
+                _gammaSettings.SetMapAR(CurrentAR ?? 0);
             }
             return _gammaSettings;
         }
