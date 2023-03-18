@@ -137,7 +137,7 @@ namespace BeatmapPpReplacements
         {
             _ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             ppCalculator.Accuracy = acc;
-            ppCalculator.Score = score;
+            ppCalculator.Score = (int)(score * ppCalculator.ScoreMultiplier);
             return Math.Round(ppCalculator.Calculate(cancellationToken).Total, 3);
         }
     }
