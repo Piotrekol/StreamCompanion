@@ -62,6 +62,11 @@ namespace Gamma
                 ? Screen.PrimaryScreen.DeviceName
                 : _configuration.ScreenDeviceName;
             _gamma = new Gamma(_originalScreenDeviceName);
+            if (!_gamma.ScreenIsValid())
+            {
+                _gamma.Dispose();
+                _gamma = new Gamma(Screen.PrimaryScreen.DeviceName);
+            }
         }
 
         private void ConvertOldGammaValues(Configuration gammaConfig)

@@ -10,10 +10,15 @@ namespace Gamma
         private IntPtr createdDC;
         private WinApi.RAMP? _orginalRamp;
         public double CurrentGamma { get; private set; } = double.NaN;
+        public string ScreenDeviceName { get; private set; }
         public Gamma(string screenDeviceName)
         {
+            ScreenDeviceName = screenDeviceName;
             createdDC = WinApi.CreateDC(null, screenDeviceName, null, IntPtr.Zero);
         }
+
+        public bool ScreenIsValid()
+            => createdDC != IntPtr.Zero;
 
         public bool Set(int userGamma)
         {
