@@ -29,7 +29,7 @@ namespace BeatmapPpReplacements
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
 
-        private delegate double PpValue(CancellationToken cancellationToken, string mods = "");
+        private delegate double PpValue(CancellationToken cancellationToken, IPpCalculator ppCalculator, string mods = "");
         enum TokenMode
         {
             Osu,
@@ -45,28 +45,28 @@ namespace BeatmapPpReplacements
             {
                 {TokenMode.Osu,new Dictionary<string, PpValue>
                 {
-                    {"osu_SSPP",(c,mods)=>GetPp(c,_ppCalculator, 100d)},
-                    {"osu_99_9PP",(c,mods)=>GetPp(c,_ppCalculator, 99.9d)},
-                    {"osu_99PP",(c,mods)=>GetPp(c,_ppCalculator, 99d)},
-                    {"osu_98PP",(c,mods)=>GetPp(c,_ppCalculator, 98d)},
-                    {"osu_97PP",(c,mods)=>GetPp(c,_ppCalculator, 97d)},
-                    {"osu_96PP",(c,mods)=>GetPp(c,_ppCalculator, 96d)},
-                    {"osu_95PP",(c,mods)=>GetPp(c,_ppCalculator, 95d)},
-                    {"osu_90PP",(c,mods)=>GetPp(c,_ppCalculator, 90d)},
-                    {"osu_mSSPP",(c,mods)=>GetPp(c,_ppCalculator, 100d, mods)},
-                    {"osu_m99_9PP",(c,mods)=>GetPp(c,_ppCalculator, 99.9d, mods)},
-                    {"osu_m99PP",(c,mods)=>GetPp(c,_ppCalculator, 99d, mods)},
-                    {"osu_m98PP",(c,mods)=>GetPp(c,_ppCalculator, 98d, mods)},
-                    {"osu_m97PP",(c,mods)=>GetPp(c,_ppCalculator, 97d, mods)},
-                    {"osu_m96PP",(c,mods)=>GetPp(c,_ppCalculator, 96d, mods)},
-                    {"osu_m95PP",(c,mods)=>GetPp(c,_ppCalculator, 95d, mods)},
-                    {"osu_m90PP",(c,mods)=>GetPp(c,_ppCalculator, 90d, mods)},
+                    {"osu_SSPP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 100d)},
+                    {"osu_99_9PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 99.9d)},
+                    {"osu_99PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 99d)},
+                    {"osu_98PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 98d)},
+                    {"osu_97PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 97d)},
+                    {"osu_96PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 96d)},
+                    {"osu_95PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 95d)},
+                    {"osu_90PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 90d)},
+                    {"osu_mSSPP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 100d, mods)},
+                    {"osu_m99_9PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 99.9d, mods)},
+                    {"osu_m99PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 99d, mods)},
+                    {"osu_m98PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 98d, mods)},
+                    {"osu_m97PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 97d, mods)},
+                    {"osu_m96PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 96d, mods)},
+                    {"osu_m95PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 95d, mods)},
+                    {"osu_m90PP",(c, ppCalculator, mods)=>GetPp(c,ppCalculator, 90d, mods)},
                 }
                 },
                 {TokenMode.Mania,new Dictionary<string,PpValue>
                 {
-                    {"mania_1_000_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, "", 1_000_000)},
-                    {"mania_m1_000_000PP",(c,mods)=>GetPp(c,_ppCalculator, 0, mods, 1_000_000)},
+                    {"mania_1_000_000PP",(c,ppCalculator,mods)=>GetPp(c,ppCalculator, 0, "", 1_000_000)},
+                    {"mania_m1_000_000PP",(c,ppCalculator,mods)=>GetPp(c,ppCalculator, 0, mods, 1_000_000)},
                 }
                 }
             };
@@ -79,7 +79,7 @@ namespace BeatmapPpReplacements
         {
             foreach (var tokenDefinition in ppTokenDefinitions[tokenMode])
             {
-                _tokenSetter(tokenDefinition.Key, null, format: PpFormat, defaultValue: 0);
+                _tokenSetter(tokenDefinition.Key, new Lazy<object>(() => 0d), format: PpFormat, defaultValue: 0d);
             }
         }
 
@@ -101,10 +101,10 @@ namespace BeatmapPpReplacements
 
             _strainsToken.Value = new Lazy<object>(() =>
             {
-                var ppcalculator = (IPpCalculator)_ppCalculator?.Clone();
+                var ppCalculator = (IPpCalculator)_ppCalculator?.Clone();
                 try
                 {
-                    return ppcalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
+                    return ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
                 }
                 catch (OperationCanceledException)
                 {
@@ -126,7 +126,11 @@ namespace BeatmapPpReplacements
             foreach (var tokenDefinition in ppTokenDefinitions[tokenMode])
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                _tokenSetter(tokenDefinition.Key, tokenDefinition.Value(cancellationToken, mods), format: PpFormat);
+
+                _tokenSetter(tokenDefinition.Key, new Lazy<object>(
+                        () => tokenDefinition.Value(cancellationToken, (IPpCalculator)_ppCalculator?.Clone(), mods)
+                    ), format: PpFormat
+                );
             }
 
             _tokenSetter("maxCombo", _ppCalculator.GetMaxCombo());
