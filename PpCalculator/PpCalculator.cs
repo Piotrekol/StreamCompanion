@@ -79,6 +79,8 @@ namespace PpCalculator
         private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
         public double ScoreMultiplier => scoreMultiplier.Value;
         public bool UseScoreMultiplier { get; set; } = true;
+        public bool HasFullBeatmap { get; private set; } = false;
+
         static PpCalculator()
         {
             //Required for <=v4 maps
@@ -94,6 +96,7 @@ namespace PpCalculator
             ppCalculator.LastMods = LastMods;
             ppCalculator.scoreMultiplier = scoreMultiplier;
             ppCalculator.UseScoreMultiplier = UseScoreMultiplier;
+            ppCalculator.HasFullBeatmap = HasFullBeatmap;
             if (PerformanceCalculator != null)
             {
                 ppCalculator.ScoreInfo.Mods = ScoreInfo.Mods.Select(m => m.DeepClone()).ToArray();
@@ -176,6 +179,7 @@ namespace PpCalculator
             if (!hitObjects.Any())
                 return null;
 
+            HasFullBeatmap = !(startTime.HasValue || endTime.HasValue);
             var workingBeatmap = WorkingBeatmap;
             if (startTime.HasValue)
             {
@@ -217,6 +221,35 @@ namespace PpCalculator
             {
                 return null;
             }
+        }
+
+        public int[] CalculateProgressGraphValues(CancellationToken cancellationToken, int amount = 100)
+        {
+            if (!HasFullBeatmap)
+                Calculate(cancellationToken);
+
+            var hitObjects = PlayableBeatmap.HitObjects;
+            var values = new int[amount];
+            if (!hitObjects.Any())
+                return Array.Empty<int>();
+
+            var firstObjectTime = hitObjects.First().StartTime;
+            var lastObjectTime = hitObjects.Max(o => o.GetEndTime());
+
+            if (lastObjectTime == 0)
+                lastObjectTime = hitObjects.Last().StartTime;
+
+            double interval = (lastObjectTime - firstObjectTime + 1) / amount;
+            foreach (var hitObject in hitObjects)
+            {
+                double endTime = hitObject.GetEndTime();
+                int startRange = (int)((hitObject.StartTime - firstObjectTime) / interval);
+                int endRange = (int)((endTime - firstObjectTime) / interval);
+                for (int i = startRange; i <= endRange; i++)
+                    values[i]++;
+            }
+
+            return values;
         }
 
         private List<IMod> GetOsuMods(Ruleset ruleset)
