@@ -52,12 +52,7 @@ namespace Gamma
 
             _logger = logger;
             _settings = settings;
-
-            _configuration = settings.GetConfiguration<Configuration>(GammaConfiguration);
-            ConvertOldGammaValues(_configuration);
-            _configuration.SortGammaRanges();
-            settings.SaveConfiguration(GammaConfiguration, _configuration);
-
+            LoadGammaValues();
             _originalScreenDeviceName = string.IsNullOrWhiteSpace(_configuration.ScreenDeviceName)
                 ? Screen.PrimaryScreen.DeviceName
                 : _configuration.ScreenDeviceName;
@@ -69,16 +64,22 @@ namespace Gamma
             }
         }
 
-        private void ConvertOldGammaValues(Configuration gammaConfig)
+        private void LoadGammaValues()
         {
-            foreach (var gamma in gammaConfig.GammaRanges)
+            _configuration = _settings.GetConfiguration<Configuration>(GammaConfiguration);
+            foreach (var gamma in _configuration.GammaRanges)
             {
                 if (gamma.Gamma != null)
                 {
                     gamma.UserGamma = Gamma.GammaToUserValue(gamma.Gamma.Value);
                     gamma.Gamma = null;
                 }
+
+                gamma.UserGamma = Math.Clamp(gamma.UserGamma, 0, 100);
             }
+
+            _configuration.SortGammaRanges();
+            _settings.SaveConfiguration(GammaConfiguration, _configuration);
         }
 
         public Task SetNewMapAsync(IMapSearchResult searchResult, CancellationToken cancellationToken)

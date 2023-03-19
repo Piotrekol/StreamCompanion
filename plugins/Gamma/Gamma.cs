@@ -79,8 +79,8 @@ namespace Gamma
 
         //user range 0 - 100
         //actual gamma range: 0.228 - 4.46
-        public static double UserValueToGamma(int value) => Map(value, 100, 0, 0.228, 4.46);
-        public static int GammaToUserValue(float value) => (int)Map(value, 0.228, 4.46, 100, 0);
+        public static double UserValueToGamma(int value) => Math.Clamp(Map(value, 100, 0, 0.228, 4.46), 0.228, 4.46);
+        public static int GammaToUserValue(float value) => Math.Clamp((int)Map(value, 0.228, 4.46, 100, 0), 0, 100);
 
         private class WinApi
         {
