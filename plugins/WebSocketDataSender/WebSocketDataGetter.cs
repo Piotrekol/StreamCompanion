@@ -76,7 +76,7 @@ namespace WebSocketDataSender
             var modules = new List<(string Description, IWebModule Module)>
             {
                 ("WebSocket stream of output patterns, with can be changed at any point by sending message with serialized JArray, containing case sensitive output pattern names", new WebSocketOutputPatternsEndpoint("/outputPatterns", true, OutputPatterns)),
-                ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true, Tokens.AllTokens)),
+                ("WebSocket stream of requested tokens, with can be changed at any point by sending message with serialized JArray, containing case sensitive token names", new WebSocketTokenEndpoint("/tokens", true)),
                 ("All tokens in form of json objects, prefer usage of one of the websocket endpoints above", new ActionModule("/json",HttpVerbs.Get,SendAllTokens)),
                 ("Current beatmap background image, use \"width\" and/or \"height\" query parameters to resize image while keeping its aspect ratio. Set \"crop\" query parameter to true to return image with exact size provided", new ActionModule("/backgroundImage",HttpVerbs.Get,SendCurrentBeatmapImage)),
                 ("View into user osu! Songs folder", CreateSongsModule()),

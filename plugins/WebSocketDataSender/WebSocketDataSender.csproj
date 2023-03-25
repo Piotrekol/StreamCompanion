@@ -8,7 +8,7 @@
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>8</LangVersion>
+    <LangVersion>11</LangVersion>
   </PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
@@ -29,7 +29,7 @@
       <Version>3.4.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="StreamCompanionTypes" version="8.0.0">
+    <PackageReference Include="StreamCompanionTypes" version="8.1.2">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
