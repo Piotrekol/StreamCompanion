@@ -248,14 +248,15 @@ namespace OsuMemoryEventSource
                         ReadLeaderboard = false;
                         _rawData.LeaderBoard = new LeaderBoard();
                         reader.TryRead(OsuMemoryData.Skin);
+                        reader.TryRead(OsuMemoryData.BanchoUser);
                         if (_nextSongSelectionScoresUpdate < DateTime.UtcNow)
                         {
                             reader.TryRead(OsuMemoryData.SongSelectionScores);
                             _nextSongSelectionScoresUpdate = DateTime.UtcNow.AddMilliseconds(_settings.Get<int>(SongSelectionScoresUpdateRate));
                         }
+
                         _lastStatus = status;
                         break;
-
                 }
 
                 _rawData.PlayTime = playTime;
@@ -354,7 +355,7 @@ namespace OsuMemoryEventSource
              });
             CreateLiveToken("combo", _rawData.Play.Combo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.Combo);
             CreateLiveToken("comboLeft", _rawData.ComboLeft, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.ComboLeft);
-            CreateLiveToken("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.ScoreV2.HasValue && _rawData.Play.ScoreV2 > 0 ? _rawData.Play.ScoreV2.Value : _rawData.Play.Score);
+            CreateLiveToken("score", _rawData.Play.Score, TokenType.Live, "{0}", 0, playingWatchingResults, () => _rawData.Play.Score);
             CreateLiveToken("currentMaxCombo", _rawData.Play.MaxCombo, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.MaxCombo);
             CreateLiveToken("playerHp", 0d, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play is Player p ? p.HP : 0d);
             CreateLiveToken("playerHpSmooth", 0d, TokenType.Live, "{0:0.00}", 0d, playingWatchingResults, () => _rawData.Play is Player p ? p.HPSmooth : 0d);
@@ -474,6 +475,11 @@ namespace OsuMemoryEventSource
             CreateLiveToken("songSelectionTotalScores", 0, TokenType.Live, null, 0, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.TotalScores);
             CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores.Convert(_modParser), createJsonSerializerSettings("Failed to serialize songSelection scores.")));
             CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore?.Convert(_modParser), createJsonSerializerSettings("failed to serialize songSelectionMainPlayer score.")));
+
+            CreateLiveToken("banchoUsername", "", TokenType.Live, null, "", OsuStatus.All, () => OsuMemoryData.BanchoUser.Username);
+            CreateLiveToken("banchoId", null, TokenType.Live, null, null, OsuStatus.All, () => OsuMemoryData.BanchoUser.UserId);
+            CreateLiveToken("banchoStatus", null, TokenType.Live, null, null, OsuStatus.All, () => OsuMemoryData.BanchoUser.BanchoStatus);
+            CreateLiveToken("banchoCountry", "", TokenType.Live, null, "", OsuStatus.All, () => OsuMemoryData.BanchoUser.UserCountry);
         }
 
         private void UpdateLiveTokens(OsuStatus status)
