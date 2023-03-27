@@ -62,8 +62,8 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
             }
 
             var notHidden = replacements.Where(x => (x.Value.Type & TokenType.Hidden) == 0).ToList();
-            var normal = notHidden.Where(t => t.Value.Type == TokenType.Normal).ToList();
-            var live = notHidden.Where(t => t.Value.Type == TokenType.Live).ToList();
+            var normal = notHidden.Where(t => t.Value.Type == TokenType.Normal).OrderBy(x => x.Value.Name).ToList();
+            var live = notHidden.Where(t => t.Value.Type == TokenType.Live).OrderBy(x => x.Value.Name).ToList();
 
             DrawingControl.SuspendDrawing(this);
             try
@@ -78,6 +78,8 @@ namespace osu_StreamCompanion.Code.Modules.TokensPreview
                 liveTokens = live;
                 label_ListedNum.Text = notHidden.Count.ToString();
             }
+            catch (OperationCanceledException)
+            { }
             finally
             {
                 DrawingControl.ResumeDrawing(this);
