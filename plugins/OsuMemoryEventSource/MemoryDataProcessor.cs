@@ -476,6 +476,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores.Convert(_modParser), createJsonSerializerSettings("Failed to serialize songSelection scores.")));
             CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore?.Convert(_modParser), createJsonSerializerSettings("failed to serialize songSelectionMainPlayer score.")));
 
+            CreateLiveToken("banchoIsConnected", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.BanchoUser.IsLoggedIn ? 1 : 0);
             CreateLiveToken("banchoUsername", "", TokenType.Live, null, "", OsuStatus.All, () => OsuMemoryData.BanchoUser.Username);
             CreateLiveToken("banchoId", null, TokenType.Live, null, null, OsuStatus.All, () => OsuMemoryData.BanchoUser.UserId);
             CreateLiveToken("banchoStatus", null, TokenType.Live, null, null, OsuStatus.All, () => OsuMemoryData.BanchoUser.BanchoStatus);
