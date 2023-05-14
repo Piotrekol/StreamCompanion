@@ -84,6 +84,9 @@ namespace WebSocketDataSender
             }
             finally
             {
+                foreach (var token in state.WatchedTokens)
+                    token.ValueUpdated -= state.TokenValueUpdated;
+
                 state.Dispose();
                 contextStates.Remove(context.Id);
             }
@@ -106,9 +109,13 @@ namespace WebSocketDataSender
                 return Task.CompletedTask;
 
             var settings = contextStates[context.Id];
-            settings.RequestedTokenNames.Clear();
-            settings.RequestedTokenNames.AddRange(kvNames);
-            UpdateListenedTokens(settings);
+
+            lock (settings)
+            {
+                settings.RequestedTokenNames.Clear();
+                settings.RequestedTokenNames.AddRange(kvNames);
+                UpdateListenedTokens(settings);
+            }
 
             return Task.CompletedTask;
         }
@@ -142,7 +149,7 @@ namespace WebSocketDataSender
             public List<IToken> WatchedTokens { get; set; } = new();
             public List<string> RequestedTokenNames { get; set; } = new();
             public ManualResetEventSlim ManualResetEventSlim { get; set; } = new();
-            public ConcurrentQueue<IToken> TokensPendingUpdate { get; private set; } = new();
+            public LockingQueue<IToken> TokensPendingUpdate { get; private set; } = new();
 
             public void TokenValueUpdated(object _, IToken token)
             {
