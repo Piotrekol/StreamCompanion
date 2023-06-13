@@ -165,6 +165,10 @@ namespace WebSocketDataSender
                 if (!File.Exists(location))
                     return;
 
+                bool.TryParse(context.Request.QueryString.Get("cache"), out var enableCache);
+                if (enableCache)
+                    context.Response.Headers.Add("Cache-Control", "public, max-age=7200");
+
                 await using var fs = new FileStream(location, FileMode.Open, FileAccess.Read);
                 if (!(context.Request.QueryString.ContainsKey("width") ||
                     context.Request.QueryString.ContainsKey("height")))
