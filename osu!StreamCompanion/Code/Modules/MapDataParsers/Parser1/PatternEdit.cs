@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.Enums;
+using osu_StreamCompanion.Code.Helpers;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -145,17 +146,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                 DeletePattern?.Invoke(this, Current);
             }
         }
-
-        private void textBox_FileName_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            foreach (var c in Path.GetInvalidFileNameChars())
-            {
-                textBox_FileName.Text = textBox_FileName.Text.Replace(c.ToString(), "");
-            }
-
-            textBox_FileName.Text = textBox_FileName.Text.RemoveWhitespace();
-        }
-
+        
         private bool longFormat = false;
         public async void textBoxUpdateLoop(Tokens replacements)
         {
@@ -272,6 +263,11 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             panel_ColorPreview.BackColor = label_TestText.ForeColor =
                 Color.FromArgb((int)numericUpDown_colorAlpha.Value, panel_ColorPreview.BackColor);
+        }
+
+        private void textBox_FileName_KeyUp(object sender, KeyEventArgs e)
+        {
+            textBox_FileName.Text = textBox_FileName.Text.RemoveInvalidFileNameChars().RemoveWhitespace();
         }
     }
 }

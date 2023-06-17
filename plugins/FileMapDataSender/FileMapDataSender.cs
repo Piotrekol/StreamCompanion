@@ -6,6 +6,7 @@ using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamCompanionTypes.Interfaces.Consumers;
+using StreamCompanionTypes.Interfaces.Services;
 
 namespace FileMapDataSender
 {
@@ -13,15 +14,18 @@ namespace FileMapDataSender
     public class FileMapDataSender : IPlugin, IMapDataConsumer, IDisposable, IHighFrequencyDataConsumer
     {
         public bool Started { get; set; }
-        private readonly FileMapManager _fileMapManager = new FileMapManager();
+        private readonly FileMapManager _fileMapManager;
 
         public string Description { get; } = "";
         public string Name { get; } = "FileMapDataSender";
         public string Author { get; } = "Piotrekol";
         public string Url { get; } = "";
         public string UpdateUrl { get; } = "";
-        
 
+        public FileMapDataSender(ILogger logger)
+        {
+            _fileMapManager = new FileMapManager(logger);
+        }
         public void Save(string fileName, string content)
         {
             _fileMapManager.Write(fileName, content);

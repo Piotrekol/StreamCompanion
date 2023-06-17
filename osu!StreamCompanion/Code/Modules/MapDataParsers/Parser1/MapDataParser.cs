@@ -14,6 +14,7 @@ using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
+using osu_StreamCompanion.Code.Helpers;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
 {
@@ -194,7 +195,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
                     if (deserializedPatterns != null)
                         foreach (var p in deserializedPatterns)
                         {
-                            p.Name = p.Name.RemoveWhitespace();
+                            p.Name = p.Name.RemoveInvalidFileNameChars().RemoveWhitespace();
                             _patterns.Add(p);
                         }
                 }

@@ -1,15 +1,24 @@
+using StreamCompanionTypes.Interfaces.Services;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
 using System.Runtime.Versioning;
 using System.Text;
+using StreamCompanionTypes.Enums;
 
 namespace FileMapDataSender
 {
     public class FileMapManager
     {
         Dictionary<string, MapContainer> _files = new Dictionary<string, MapContainer>();
+        private ILogger _logger;
         private readonly object _lockingObject = new object();
+
+        public FileMapManager(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         private class MapContainer
         {
             public MemoryMappedFile File { get; set; }
@@ -58,9 +67,15 @@ namespace FileMapDataSender
         [SupportedOSPlatform("windows")]
         public void Write(string name, string value)
         {
-            var file = GetFile(name);
-            file.Write(value);
-
+            try
+            {
+                var file = GetFile(name);
+                file.Write(value);
+            }
+            catch (IOException ex)
+            {
+                _logger.Log(ex, LogLevel.Warning);
+            }
         }
     }
 }

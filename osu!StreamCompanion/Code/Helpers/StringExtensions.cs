@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace osu_StreamCompanion.Code.Helpers
 {
@@ -16,6 +17,17 @@ namespace osu_StreamCompanion.Code.Helpers
                 result = null;
                 return false;
             }
+        }
+
+        public static string RemoveInvalidFileNameChars(this string fileName)
+        {
+            foreach (var c in Path.GetInvalidFileNameChars())
+            {
+                if (fileName.Contains(c))
+                    fileName = fileName.Replace(c.ToString(), "");
+            }
+
+            return fileName;
         }
     }
 }
