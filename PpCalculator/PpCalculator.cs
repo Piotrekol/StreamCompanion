@@ -308,7 +308,7 @@ namespace PpCalculator
                 var mods = GetOsuMods(Ruleset).Select(m => m.CreateInstance()).Append(Ruleset.AllMods.First(m => m.Acronym == "CL").CreateInstance()).ToArray();
 
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-                cts.CancelAfter(20_000);
+                cts.CancelAfter(60_000);
                 PlayableBeatmap = WorkingBeatmap.GetPlayableBeatmap(Ruleset.RulesetInfo, mods, cts.Token);
                 LastMods = newMods;
                 ScoreInfo.Mods = mods;
