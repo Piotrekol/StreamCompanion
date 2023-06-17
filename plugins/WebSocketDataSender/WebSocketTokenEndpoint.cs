@@ -123,7 +123,7 @@ namespace WebSocketDataSender
                 lock (contextTokensState)
                 {
                     contextTokensState.RequestedTokenNames.Clear();
-                    contextTokensState.RequestedTokenNames.AddRange(kvNames);
+                    contextTokensState.RequestedTokenNames.AddRange(kvNames.Where(k => k is not null));
                     UpdateListenedTokens(contextTokensState);
                 }
             }
