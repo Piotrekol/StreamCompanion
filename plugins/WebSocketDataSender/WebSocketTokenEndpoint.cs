@@ -84,11 +84,17 @@ namespace WebSocketDataSender
             }
             finally
             {
-                foreach (var token in state.WatchedTokens)
-                    token.ValueUpdated -= state.TokenValueUpdated;
+                lock (state)
+                {
+                    foreach (var token in state.WatchedTokens)
+                        token.ValueUpdated -= state.TokenValueUpdated;
 
-                state.Dispose();
-                contextStates.Remove(context.Id);
+                    state.Dispose();
+                    lock (contextStates)
+                    {
+                        contextStates.Remove(context.Id);
+                    }
+                }
             }
         }
 
@@ -108,13 +114,18 @@ namespace WebSocketDataSender
             if (kvNames == null)
                 return Task.CompletedTask;
 
-            var settings = contextStates[context.Id];
-
-            lock (settings)
+            ContextTokensState contextTokensState;
+            lock (contextStates)
             {
-                settings.RequestedTokenNames.Clear();
-                settings.RequestedTokenNames.AddRange(kvNames);
-                UpdateListenedTokens(settings);
+                if (!contextStates.TryGetValue(context.Id, out contextTokensState))
+                    return Task.CompletedTask;
+
+                lock (contextTokensState)
+                {
+                    contextTokensState.RequestedTokenNames.Clear();
+                    contextTokensState.RequestedTokenNames.AddRange(kvNames);
+                    UpdateListenedTokens(contextTokensState);
+                }
             }
 
             return Task.CompletedTask;
