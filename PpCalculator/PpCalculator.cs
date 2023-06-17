@@ -303,7 +303,7 @@ namespace PpCalculator
         private void PreparePlayableBeatmap(CancellationToken cancellationToken)
         {
             var newMods = _Mods != null ? string.Concat(_Mods) : "";
-            if (LastMods != newMods || ResetPerformanceCalculator)
+            if (LastMods != newMods || ResetPerformanceCalculator || _playableBeatmap == null)
             {
                 var mods = GetOsuMods(Ruleset).Select(m => m.CreateInstance()).Append(Ruleset.AllMods.First(m => m.Acronym == "CL").CreateInstance()).ToArray();
 
