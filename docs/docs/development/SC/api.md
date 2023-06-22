@@ -50,6 +50,12 @@ Current map background image
 * Base url with no parameters returns map image file as-is without any processing.
 * setting `width` or `height` query parameters ensures that at least one of these will be matched while preserving original image aspect ratio. [check it out](http://localhost:20727/backgroundImage?width=500&height=500)
   * in addition, setting `crop=1` disregards image aspect ratio and returns cropped image with specified dimensions, resizing it beforehand if necessary. [check it out](http://localhost:20727/backgroundImage?width=500&height=500&crop=1)
+* Add `cache=true` to query parameters, and SC will set the [**Cache-Control**](https://developer.mozilla.org/docs/Web/HTTP/Headers/Cache-Control) response header to instruct the browser to cache background images. When images are repeatedly loaded, it will save a lot of loading time.
+  * When using caching, it is necessary to add some query parameters to distinguish requests. If no other parameters are added, it will cause the browser to always use the background image of the first beatmap instead of refreshing it to the background image of other beatmap. For example, you can set the Id of the current Beatmap to the query parameters: 
+    
+    ```
+    /backgroundImage?cache=true&mapId=123456
+    ```
 
 ### [`Songs`](http://localhost:20727/Songs)
 
