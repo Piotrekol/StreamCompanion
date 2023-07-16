@@ -318,8 +318,14 @@ namespace OsuMemoryEventSource
             CreateLiveToken("c100", _rawData.Play.Hit100, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.Hit100);
             CreateLiveToken("c50", _rawData.Play.Hit50, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.Hit50);
             CreateLiveToken("miss", _rawData.Play.HitMiss, TokenType.Live, "{0}", (ushort)0, playingWatchingResults, () => _rawData.Play.HitMiss);
-            CreateLiveToken("grade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults,
-                () => CalculateGrade(_playMode, _mods, _rawData.Play is Player p ? p.Accuracy : 0d, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss));
+            CreateLiveToken("grade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults, () =>
+            {
+                var acc = _rawData.Play is Player p
+                    ? p.Accuracy
+                    : 100 * CalculateAccuracy(_playMode, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss, _rawData.Play.HitGeki, _rawData.Play.HitKatu);
+
+                return CalculateGrade(_playMode, _mods, acc, _rawData.Play.Hit50, _rawData.Play.Hit100, _rawData.Play.Hit300, _rawData.Play.HitMiss);
+            });
             CreateLiveToken("maxGrade", OsuGrade.Null, TokenType.Live, "", OsuGrade.Null, playingWatchingResults, () =>
             {
                 var play = _rawData.Play;
