@@ -149,7 +149,18 @@ namespace WebSocketDataSender
                 return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens), "application/json", Encoding.UTF8);
             }
 
-            return context.SendStringAsync(JsonConvert.SerializeObject(Tokens.AllTokens.ToDictionary(k => k.Key, v => v.Value.Value)), "application/json", Encoding.UTF8);
+            Dictionary<string, object> tokens = null;
+            if (context.Request.QueryString.ContainsKey("token"))
+            {
+                HashSet<string> selectedTokens =context.Request.QueryString.GetValues("token").ToHashSet();
+                tokens = Tokens.AllTokens.Where((token) => { return selectedTokens.Contains(token.Key); }).ToDictionary(k => k.Key, v => v.Value.Value);
+            } 
+            else
+            {
+                tokens = Tokens.AllTokens.ToDictionary(k => k.Key, v => v.Value.Value);
+            }
+
+            return context.SendStringAsync(JsonConvert.SerializeObject(tokens), "application/json", Encoding.UTF8);
         }
 
         private async Task SendCurrentBeatmapImage(IHttpContext context)
