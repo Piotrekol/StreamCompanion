@@ -37,6 +37,14 @@ All tokens available in StreamCompanion in form of json object.
 ::: tip
 This endpoint should be used only as a tokens reference. Use these via [tokens](#tokens) WebSocket endpoint in actual implementations.  
 **Ignoring this will result in unnecessary resource usage**, as live token values are computed only when used.
+
+If you want to obtain tokens at a lower frequency, you can set multiple `token` query strings to indicate the desired token, like this:
+
+`/json?token=ar&token=cs&token=od&token=hp`
+
+This will only obtain four tokens for AR, CS, OD and HP.
+
+After indicating the required tokens, SC will not serialize all tokens, thereby minimizing resource usage (mainly serialization).
 :::
 
 ::: details Example output
