@@ -32,6 +32,7 @@ namespace PpCalculatorTypes
         double FirstHitObjectTime();
         public IEnumerable<BreakPeriod> Breaks();
         public IEnumerable<TimingPoint> TimingPoints();
+        public IEnumerable<KiaiPoint> KiaiPoints();
 
         object Clone();
     }
