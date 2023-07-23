@@ -48,6 +48,7 @@ namespace OsuMemoryEventSource
         private IToken _firstHitObjectTimeToken;
         private IToken _MapBreaksToken;
         private IToken _MapTimingPointsToken;
+        private IToken _MapKiaiPointsToken;
         private IToken _beatmapRankedStatusToken;
         private IToken _skinToken;
         private IToken _skinPathToken;
@@ -115,6 +116,7 @@ namespace OsuMemoryEventSource
             _firstHitObjectTimeToken = _tokenSetter("firstHitObjectTime", 0d, TokenType.Normal, null, 0d);
             _MapBreaksToken = _tokenSetter("mapBreaks", new List<BreakPeriod>(), TokenType.Normal, null, new List<BreakPeriod>());
             _MapTimingPointsToken = _tokenSetter("mapTimingPoints", new List<TimingPoint>(), TokenType.Normal, null, new List<TimingPoint>());
+            _MapKiaiPointsToken = _tokenSetter("mapKiaiPoints", new List<KiaiPoint>(), TokenType.Normal, null, new List<KiaiPoint>());
             _beatmapRankedStatusToken = _tokenSetter("rankedStatus", (short)0, TokenType.Normal, null, (short)0);
             _statusToken = _tokenSetter("status", OsuStatus.Null, TokenType.Normal, "", OsuStatus.Null);
             _rawStatusToken = _tokenSetter("rawStatus", OsuMemoryStatus.NotRunning, TokenType.Normal, "", OsuMemoryStatus.NotRunning);
@@ -551,6 +553,7 @@ namespace OsuMemoryEventSource
             var ppCalculator = await mapSearchResult.GetPpCalculator(cancellationToken);
             _firstHitObjectTimeToken.Value = _firstHitObjectTime = ppCalculator?.FirstHitObjectTime() ?? 0d;
             _MapBreaksToken.Value = ppCalculator?.Breaks().ToList();
+            _MapKiaiPointsToken.Value = ppCalculator?.KiaiPoints().ToList();
             var mapTimingPoints = ppCalculator?.TimingPoints().ToList();
             _MapTimingPointsToken.Value = mapTimingPoints;
             if (mapTimingPoints == null)

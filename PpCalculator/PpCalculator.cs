@@ -13,6 +13,7 @@ using osu.Game.Rulesets.Osu.Objects;
 using PpCalculatorTypes;
 using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
 using osu.Game.Beatmaps.Formats;
+using osu.Game.Beatmaps.ControlPoints;
 
 namespace PpCalculator
 {
@@ -134,6 +135,13 @@ namespace PpCalculator
         public IEnumerable<TimingPoint> TimingPoints()
         {
             return PlayableBeatmap?.ControlPointInfo?.TimingPoints.Select(tp => new TimingPoint(tp.Time, Math.Round(tp.BPM, 5), Math.Round(tp.BeatLength, 5))) ?? Enumerable.Empty<TimingPoint>();
+        }
+        public IEnumerable<KiaiPoint> KiaiPoints()
+        {
+            return PlayableBeatmap?.ControlPointInfo?.EffectPoints.Zip(
+                    PlayableBeatmap.ControlPointInfo.EffectPoints.Skip(1), (first, second) => first.KiaiMode ? new KiaiPoint(first.Time, second.Time - first.Time) : null
+                ).Where(e => e is not null) 
+                ?? Enumerable.Empty<KiaiPoint>();
         }
 
         public DifficultyAttributes DifficultyAttributesAt(double time)
