@@ -24,7 +24,6 @@
     <PackageReference Include="NUnit3TestAdapter">
       <Version>3.15.1</Version>
     </PackageReference>
-    <PackageReference Include="StreamCompanionTypes" version="8.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>

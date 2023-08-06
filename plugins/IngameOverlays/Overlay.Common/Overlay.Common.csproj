@@ -8,9 +8,4 @@
   <ItemGroup>
     <None Remove="Dlls\X32ProcessOverlayHelper.exe" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>

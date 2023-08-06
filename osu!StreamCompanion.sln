@@ -28,6 +28,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VersionControler", "VersionControler\VersionControler.csproj", "{F4BDACA6-F1FC-4A6D-AD1C-33E4D579DC21}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "submodules", "submodules", "{B0951F6C-E0DC-4242-A32E-0B48711AF12D}"
+	ProjectSection(SolutionItems) = preProject
+		submodules\Directory.Packages.props = submodules\Directory.Packages.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{09464784-372D-495F-9FF3-351DA55B4FD9}"
 EndProject
@@ -96,6 +99,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ingameOverlays", "ingameOverlays", "{7BCF111B-5AC0-4E5F-9C97-B0980C32481F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Overlay.Common", "plugins\IngameOverlays\Overlay.Common\Overlay.Common.csproj", "{9AE2BF2B-BA42-4551-B553-D11039644B05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D73F9D3-2B22-45F0-82A1-2F163BEDC97C}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -17,10 +17,6 @@
 		<OutputPath>bin\Release_temp\</OutputPath>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
-  </ItemGroup>
-
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
 	  <ProjectReference Include="..\Overlay.Common\Overlay.Common.csproj" />
