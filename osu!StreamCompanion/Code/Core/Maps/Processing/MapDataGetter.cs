@@ -15,6 +15,7 @@ using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
+using StreamCompanion.Common.Helpers.Tokens;
 
 namespace osu_StreamCompanion.Code.Core.Maps.Processing
 {
@@ -89,6 +90,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
         {
             return Task.Run(async () =>
             {
+                using var tokenBulkUpdateContext = TokensBulkUpdate.StartBulkUpdate(BulkTokenUpdateType.MainPipeline);
                 await CreateTokens(mapSearchResult, cancellationToken);
                 if (cancellationToken.IsCancellationRequested)
                     return;

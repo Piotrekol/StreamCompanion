@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using EmbedIO.Utilities;
 using EmbedIO.WebSockets;
+using StreamCompanion.Common.Helpers.Tokens;
 using StreamCompanionTypes.DataTypes;
 using Swan;
 using Swan.Logging;
@@ -31,13 +33,36 @@ namespace WebSocketDataSender
             }
         }
 
-        protected override Task OnClientConnectedAsync(IWebSocketContext context)
+        protected override async Task OnClientConnectedAsync(IWebSocketContext context)
         {
-            var task = base.OnClientConnectedAsync(context);
+            await base.OnClientConnectedAsync(context);
+            var contextState = new ContextTokensState();
+            var queries = context.RequestUri.Query.TrimStart('?').ToLowerInvariant().Split('&');
+            foreach (var query in queries)
+            {
+                if (query.StartsWith("bulkupdates"))
+                {
+                    var queryParams = query.Split('=')[1].SplitByComma();
+                    var bulkUpdateStates = new List<BulkTokenUpdateState>();
+                    foreach (var queryParam in queryParams)
+                    {
+                        if (!Enum.TryParse(typeof(BulkTokenUpdateType), queryParam, true, out var parsed) || parsed is not BulkTokenUpdateType tokenUpdateType)
+                        {
+                            await SendAsync(context, $"Invalid bulk update type(s) provided. Valid values: {string.Join(", ", Enum.GetNames(typeof(BulkTokenUpdateType)) )}");
+                            _ = context.WebSocket.CloseAsync();
+                            return;
+                        }
+
+                        contextState.MonitoredBulkTokenUpdateStates.Add(TokensBulkUpdate.States[tokenUpdateType]);
+                    }
+                }
+            }
+
             lock (_lockingObject)
-                contextStates.Add(context.Id, new());
-            Task.Run(() => SendLoop(context));
-            return task;
+                contextStates.Add(context.Id, contextState);
+
+            _ = Task.Run(() => SendLoop(context));
+            return;
         }
 
         public async Task SendLoop(IWebSocketContext context)
@@ -51,6 +76,9 @@ namespace WebSocketDataSender
                 {
                     state.ManualResetEventSlim.Wait(context.CancellationToken);
                     state.ManualResetEventSlim.Reset();
+
+                    foreach (var bulkTokenUpdateState in state.MonitoredBulkTokenUpdateStates)
+                        bulkTokenUpdateState.UpdateFinished.Wait(context.CancellationToken);
 
                     while (state.TokensPendingUpdate.TryDequeue(out var token))
                     {
@@ -157,6 +185,7 @@ namespace WebSocketDataSender
 
         private class ContextTokensState : IDisposable
         {
+            public List<BulkTokenUpdateState> MonitoredBulkTokenUpdateStates = new();
             public List<IToken> WatchedTokens { get; set; } = new();
             public List<string> RequestedTokenNames { get; set; } = new();
             public ManualResetEventSlim ManualResetEventSlim { get; set; } = new();

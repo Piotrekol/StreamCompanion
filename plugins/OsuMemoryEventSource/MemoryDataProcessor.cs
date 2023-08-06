@@ -21,6 +21,7 @@ using OsuMemoryEventSource.LiveTokens;
 using PpCalculatorTypes;
 using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 using Mods = CollectionManager.DataTypes.Mods;
+using StreamCompanion.Common.Helpers.Tokens;
 
 namespace OsuMemoryEventSource
 {
@@ -493,6 +494,7 @@ namespace OsuMemoryEventSource
 
         private void UpdateLiveTokens(OsuStatus status)
         {
+            using var tokenBulkUpdateContext = TokensBulkUpdate.StartBulkUpdate(BulkTokenUpdateType.LiveTokens);
             foreach (var liveToken in _liveTokens)
             {
                 try
