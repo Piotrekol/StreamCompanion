@@ -14,9 +14,6 @@
     <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="StreamCompanionTypes" version="8.0.0">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>

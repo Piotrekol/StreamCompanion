@@ -19,10 +19,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="StreamCompanionTypes" Version="8.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
 	</ItemGroup>
 
