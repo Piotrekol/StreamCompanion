@@ -58,17 +58,6 @@ namespace ClickCounter
 
         private delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
         private const int WH_MOUSE_LL = 14;
-        //private const int WH_MOUSE = 7;
-
-        private enum MouseMessages
-        {
-            WM_LBUTTONDOWN = 0x0201,
-            //WM_LBUTTONUP = 0x0202,
-            //WM_MOUSEMOVE = 0x0200,
-            //WM_MOUSEWHEEL = 0x020A,
-            WM_RBUTTONDOWN = 0x0204,
-            //WM_RBUTTONUP = 0x0205
-        }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);

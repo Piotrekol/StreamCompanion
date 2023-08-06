@@ -41,7 +41,7 @@ namespace ScGui
         public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "General";
 
-        private static string BaseAddress(ISettings settings) => $"http://localhost:{settings.GetRaw("httpServerPort", "20727")}/";
+        private static string BaseAddress(ISettings settings) => $"http://localhost:{settings.Get("httpServerPort", "20727")}/";
 
         private NotifyIcon CreateNotifyIcon()
         {
@@ -109,7 +109,7 @@ namespace ScGui
 
         private void UpdateStatusText()
         {
-            var tourneyMode = _settings.GetRaw("TournamentMode").ToLowerInvariant() == "true";
+            var tourneyMode = _settings.Get<bool>("TournamentMode", false);
             _mainWindowModel.BeatmapsLoaded = $"{(tourneyMode ? "In tourney mode! " : "")}{_settings.GetFullOsuLocation()}";
         }
 

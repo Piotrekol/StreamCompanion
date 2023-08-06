@@ -16,7 +16,7 @@ namespace Gamma
 {
     public class GammaPlugin : IPlugin, IMapDataConsumer, ISettingsSource, IDisposable
     {
-        public static ConfigEntry GammaConfiguration = new ConfigEntry("GammaConfiguration", "{}");
+        public static ConfigEntry GammaConfiguration = new ConfigEntry("GammaConfiguration", null);
 
         public string Description { get; } = "Adjusts gamma depending on AR";
         public string Name { get; } = nameof(GammaPlugin);
@@ -53,14 +53,13 @@ namespace Gamma
             _logger = logger;
             _settings = settings;
             LoadGammaValues();
-            _originalScreenDeviceName = string.IsNullOrWhiteSpace(_configuration.ScreenDeviceName)
-                ? Screen.PrimaryScreen.DeviceName
-                : _configuration.ScreenDeviceName;
+            _originalScreenDeviceName = _configuration.ScreenDeviceName;
             _gamma = new Gamma(_originalScreenDeviceName);
             if (!_gamma.ScreenIsValid())
             {
                 _gamma.Dispose();
                 _gamma = new Gamma(Screen.PrimaryScreen.DeviceName);
+                _configuration.ScreenDeviceName = Screen.PrimaryScreen.DeviceName;
             }
         }
 

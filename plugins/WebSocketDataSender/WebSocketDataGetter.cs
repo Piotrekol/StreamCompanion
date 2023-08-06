@@ -22,7 +22,6 @@ using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 
-
 namespace WebSocketDataSender
 {
     public class WebSocketDataGetter : IPlugin, IMapDataConsumer, IDisposable,
@@ -129,7 +128,7 @@ namespace WebSocketDataSender
             }
         }
 
-        private Task GetSettings(IHttpContext context) => context.SendDataAsync(_settings.SettingsEntries);
+        private Task GetSettings(IHttpContext context) => context.SendDataAsync(_settings.SettingEntries);
 
         private Task ListOverlays(IHttpContext context)
         {

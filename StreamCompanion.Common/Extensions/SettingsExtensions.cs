@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime;
 using Newtonsoft.Json;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -28,18 +29,40 @@ namespace StreamCompanion.Common
 
         public static T GetConfiguration<T>(this ISettings settings, ConfigEntry configEntry) where T : new()
         {
-            var rawConfiguration = settings.Get<string>(configEntry);
-            return rawConfiguration == configEntry.Default<string>()
-                ? new T()
-                : JsonConvert.DeserializeObject<T>(rawConfiguration, new JsonSerializerSettings
+            T configValue = default;
+            bool exception = false;
+            try
+            {
+                configValue = settings.Get<T>(configEntry);
+            }
+            catch
+            {
+                exception = true;
+            }
+
+            if (configValue == null || exception)
+            {
+                var rawValue = settings.Get<string>(configEntry);
+                if (!string.IsNullOrWhiteSpace(rawValue))
                 {
-                    ObjectCreationHandling = ObjectCreationHandling.Replace
-                });
+                    configValue = JsonConvert.DeserializeObject<T>(rawValue);
+                    //Replace json string blob with actual json object
+                    if (configValue != null)
+                        settings.Add(configEntry, configValue);
+                }
+            }
+
+            if (configValue == null)
+            {
+                configValue = new T();
+            }
+
+            return configValue;
         }
 
         public static void SaveConfiguration<T>(this ISettings settings, ConfigEntry configEntry, T configuration)
         {
-            settings.Add(configEntry.Name, JsonConvert.SerializeObject(configuration));
+            settings.Add(configEntry.Name, configuration);
         }
     }
 }

@@ -2,34 +2,37 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using osu_StreamCompanion.Code.Helpers;
 using StreamCompanionTypes.DataTypes;
-using StreamCompanionTypes.Interfaces;
-using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace osu_StreamCompanion.Code.Core
 {
 
     public class Settings : ISettings
     {
-        private readonly Dictionary<string, object> _settingsEntries = new Dictionary<string, object>();
-        public IReadOnlyDictionary<string, object> SettingsEntries { get; }
+        private readonly Dictionary<string, JToken> _rawSettingEntries = new Dictionary<string, JToken>();
+        private readonly Dictionary<string, object> _deserializedSettingEntries = new Dictionary<string, object>();
+        public IReadOnlyDictionary<string, object> SettingEntries { get; }
         private ILogger _logger;
-        private readonly List<string> _rawLines = new List<string>();
-        private readonly List<string> _backupRawLines = new List<string>();
         public EventHandler<SettingUpdated> SettingUpdated { get; set; }
         private string _saveLocation = AppDomain.CurrentDomain.BaseDirectory;
-        public string ConfigFileName { get; set; } = "settings.ini";
-        public string FullConfigFilePath { get { return Path.Combine(_saveLocation, ConfigFileName); } }
-        private static readonly object _lockingObject = new object();
+        public string ConfigFileName { get; set; } = "settings.json";
+        public string FullConfigFilePath => Path.Combine(_saveLocation, ConfigFileName);
+        private readonly object _lockingObject = new object();
+
+        private readonly JsonSerializer _defaultJsonSerializer = new JsonSerializer()
+        {
+            ObjectCreationHandling = ObjectCreationHandling.Replace
+        };
+
         public Settings(ILogger logger)
         {
             _logger = logger;
-            SettingsEntries = new ReadOnlyDictionary<string, object>(_settingsEntries);
+            SettingEntries = new ReadOnlyDictionary<string, object>(_deserializedSettingEntries);
         }
+
 
         protected virtual void OnSettingUpdated(string settingName)
         {
@@ -45,101 +48,36 @@ namespace osu_StreamCompanion.Code.Core
         {
             lock (_lockingObject)
             {
-                _settingsEntries[key] = value;
+                _deserializedSettingEntries[key] = value;
+                if (_rawSettingEntries.ContainsKey(key))
+                    _rawSettingEntries.Remove(key);
+
                 if (raiseUpdate)
                     OnSettingUpdated(key);
             }
         }
 
-        public void Add<T>(string key, List<T> valueList, bool raiseUpdate = false)
+
+        public void Add<T>(ConfigEntry entry, T value, bool raiseUpdate = false)
+            => Add<T>(entry.Name, value, raiseUpdate);
+
+        public T Get<T>(string key, T defaultValue)
         {
             lock (_lockingObject)
             {
-                string vals = string.Join("|,~", valueList);
+                if (_deserializedSettingEntries.TryGetValue(key, out var rawSettingValue) && rawSettingValue != null && rawSettingValue is T settingValue)
+                    return settingValue;
 
-                Add<string>(key, vals, raiseUpdate);
-            }
-        }
-
-        public string GetRaw(string key, string defaultValue = "")
-        {
-            int idx = _backupRawLines.AnyStartsWith(key);
-            if (idx > -1)
-            {
-                string[] splited = _backupRawLines[idx].Split(new[] { '=' }, 2);
-                return splited[1].Trim();
-            }
-            return defaultValue;
-
-        }
-        public List<string> Get(string key)
-        {
-            lock (_lockingObject)
-            {
-                string savedValue = Get<string>(key, "");
-                var ret = savedValue.Split(new[] { "|,~" }, StringSplitOptions.None).ToList();
-                if (ret[0] == string.Empty)
-                    ret.RemoveAt(0);
-                return ret;
-            }
-        }
-        public List<int> Geti(string key)
-        {
-            lock (_lockingObject)
-            {
-                string savedValue = Get<string>(key, "");
-                var ret = new List<int>();
-                if (!string.IsNullOrEmpty(savedValue))
-                    ret =
-                        savedValue.Split(new[] { "|,~" }, StringSplitOptions.None)
-                            .ToList().ConvertAll(int.Parse);
-
-
-                return ret;
-            }
-        }
-        private T Get<T>(string key, T defaultValue)
-        {
-            lock (_lockingObject)
-            {
-                var nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(T));
-                if (_settingsEntries.ContainsKey(key))
+                if (_rawSettingEntries.TryGetValue(key, out var rawValue) && (rawValue.HasValues || rawValue.Value<object>() != null))
                 {
-                    if (_settingsEntries[key] is T)
-                    {
-                        return (T)_settingsEntries[key];
-                    }
-                    else
-                    {
-                        try
-                        {
-                            if (nullableUnderlyingType != null && _settingsEntries[key] == null)
-                                return default;
-
-                            return (T)Convert.ChangeType(_settingsEntries[key], typeof(T));
-                        }
-                        catch (InvalidCastException)
-                        {
-                            _logger.Log("Warning: Had to use default value on {0} (InvalidCastException){1}::{2}",
-                                LogLevel.Information, key, _settingsEntries[key].GetType().FullName, typeof(T).FullName);
-                            return default(T);
-                        }
-                    }
-                }
-
-                int idx = _rawLines.AnyStartsWith(key);
-                if (idx > -1)
-                {
-                    string[] splited = _rawLines[idx].Split(new[] { '=' }, 2);
-                    if (nullableUnderlyingType != null && string.IsNullOrWhiteSpace(splited[1].Trim()))
-                        Add(key, default(T));
-                    else
-                        Add(key, Convert.ChangeType(splited[1].Trim(), nullableUnderlyingType ?? typeof(T)));
-                    _rawLines.RemoveAt(idx);
+                    _deserializedSettingEntries[key] = settingValue = rawValue.ToObject<T>(_defaultJsonSerializer);
                 }
                 else
-                    Add(key, defaultValue);
-                return Get(key, defaultValue);
+                {
+                    _deserializedSettingEntries[key] = settingValue = defaultValue;
+                }
+
+                return settingValue;
             }
         }
 
@@ -147,58 +85,80 @@ namespace osu_StreamCompanion.Code.Core
 
         public bool Delete(string key)
         {
-            if (_settingsEntries.ContainsKey(key))
+            var deleted = false;
+            if (_rawSettingEntries.ContainsKey(key))
             {
-                _settingsEntries.Remove(key);
-                return true;
+                _rawSettingEntries.Remove(key);
+                deleted = true;
             }
-            return false;
+            
+            if (_deserializedSettingEntries.ContainsKey(key))
+            {
+                _deserializedSettingEntries.Remove(key);
+                deleted = true;
+            }
+
+            return deleted;
         }
         public void Save()
         {
             lock (_lockingObject)
             {
-                if (_rawLines.Count > 0)
+                var settingsCopy = new Dictionary<string, object>(_deserializedSettingEntries);
+                foreach (var kvPair in _rawSettingEntries)
                 {
-                    foreach (string line in _rawLines)
-                    {
-                        string[] splited = line.Split(new[] { '=' }, 2);
-                        if (splited.Length == 2)
-                            Add(splited[0].Trim(), Convert.ChangeType(splited[1].Trim(), typeof(string)));
-                    }
-                    _rawLines.Clear();
+                    if (settingsCopy.ContainsKey(kvPair.Key))
+                        continue;
+
+                    settingsCopy[kvPair.Key] = kvPair.Value;
                 }
-                StringBuilder stringBuilder = new StringBuilder();
-                foreach (var entry in _settingsEntries)
-                {
-                    stringBuilder.AppendFormat("{0} = {1}{2}", entry.Key, entry.Value, Environment.NewLine);
-                }
-                if (!Directory.Exists(_saveLocation))
-                {
-                    Directory.CreateDirectory(_saveLocation);
-                }
-                using (var fileHandle = new StreamWriter(FullConfigFilePath))
-                {
-                    fileHandle.Write(stringBuilder);
-                }
+
+                var tempFilePath = $"{FullConfigFilePath}.tmp";
+                File.WriteAllText(tempFilePath, JsonConvert.SerializeObject(settingsCopy, Formatting.Indented));
+                File.Move(tempFilePath, FullConfigFilePath, true);
             }
         }
         public void Load()
         {
             lock (_lockingObject)
             {
-                var filePath = FullConfigFilePath;
-                if (File.Exists(filePath))
-                    using (var fileHandle = new StreamReader(filePath, true))
-                    {
-                        while (!fileHandle.EndOfStream)
-                        {
-                            string line = fileHandle.ReadLine();
-                            _rawLines.Add(line);
-                            _backupRawLines.Add(line);
-                        }
-                    }
+                _rawSettingEntries.Clear();
+                if (!File.Exists(FullConfigFilePath))
+                {
+                    ConvertOldSettings();
+                    Load();
+                    return;
+                }
+                else
+                {
+                    var contents = File.ReadAllText(FullConfigFilePath);
+                    var settings = JsonConvert.DeserializeObject<Dictionary<string, JToken>>(contents);
+                    if (settings == null)
+                        return;
+
+                    foreach (var kvPair in settings)
+                        _rawSettingEntries[kvPair.Key] = kvPair.Value;
+                }
             }
+        }
+
+        private void ConvertOldSettings()
+        {
+            var oldSettingsFilePath = Path.Combine(_saveLocation, "settings.ini");
+            if (!File.Exists(oldSettingsFilePath))
+                return;
+
+            var configLines = File.ReadAllLines(oldSettingsFilePath);
+            var jObject = new JObject();
+            foreach (var line in configLines)
+            {
+                var split = line.Split('=', 2, StringSplitOptions.TrimEntries);
+                jObject.Add(split[0], split[1]);
+            }
+
+            File.WriteAllText(FullConfigFilePath, jObject.ToString());
+            var backupOldSettingsFilePath = Path.Combine(_saveLocation, "unused_settings.backup");
+            File.Move(oldSettingsFilePath, backupOldSettingsFilePath, true);
         }
     }
 }

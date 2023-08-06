@@ -104,38 +104,41 @@ namespace LiveVisualizer
 
         private void SaveConfiguration()
         {
-            var serializedConfig = JsonConvert.SerializeObject(VisualizerData.Configuration);
-            Settings.Add(ConfigEntrys.LiveVisualizerConfig.Name, serializedConfig, false);
+            Settings.Add(ConfigEntrys.LiveVisualizerConfig.Name, VisualizerData.Configuration, false);
         }
 
         private void LoadConfiguration(bool reset = false)
         {
-            var rawConfig = Settings.Get<string>(ConfigEntrys.LiveVisualizerConfig);
-
+            VisualizerConfiguration visualizerConfig;
+            
             if (reset)
             {
                 VisualizerData.Configuration.PropertyChanged -= VisualizerConfigurationPropertyChanged;
 
                 //WPF window doesn't update its width when replacing configuration object - workaround
-                var newConfiguration = new VisualizerConfiguration();
-                VisualizerData.Configuration.WindowWidth = newConfiguration.WindowWidth;
-                VisualizerData.Configuration = newConfiguration;
+                visualizerConfig = new VisualizerConfiguration();
+                VisualizerData.Configuration.WindowWidth = visualizerConfig.WindowWidth;
+                VisualizerData.Configuration = visualizerConfig;
                 VisualizerData.Configuration.PropertyChanged += VisualizerConfigurationPropertyChanged;
                 VisualizerConfigurationPropertyChanged(this, new PropertyChangedEventArgs("dummy"));
 
             }
+            else
+            {
+                visualizerConfig = Settings.GetConfiguration<VisualizerConfiguration>(ConfigEntrys.LiveVisualizerConfig);
+                VisualizerData.Configuration = visualizerConfig;
+            }
 
-            if (reset || rawConfig == ConfigEntrys.LiveVisualizerConfig.Default<string>())
+            if (reset || visualizerConfig == null)
             {
                 VisualizerData.Configuration.ChartCutoffsSet = new SortedSet<int>(new[] { 30, 60, 100, 200, 350 });
+                Settings.Add(ConfigEntrys.LiveVisualizerConfig.Name, VisualizerData.Configuration);
                 return;
             }
 
-            var config = JsonConvert.DeserializeObject<VisualizerConfiguration>(rawConfig);
-            config.AxisYStep = 100;
-            config.MaxYValue = 200;
-
-            VisualizerData.Configuration = config;
+            visualizerConfig.AxisYStep = 100;
+            visualizerConfig.MaxYValue = 200;
+            Settings.Add(ConfigEntrys.LiveVisualizerConfig.Name, VisualizerData.Configuration);
         }
 
         protected override void ResetSettings()

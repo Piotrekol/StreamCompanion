@@ -6,7 +6,7 @@ namespace LiveVisualizer
     {
         public const string Prefix = "LiveVisualizer_";
 
-        public static readonly ConfigEntry LiveVisualizerConfig = new ConfigEntry($"{Prefix}Config", "{}");
+        public static readonly ConfigEntry LiveVisualizerConfig = new ConfigEntry($"{Prefix}Config", null);
 
     }
 }

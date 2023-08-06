@@ -15,10 +15,10 @@ namespace WebSocketDataSender.WebOverlay
         private readonly ISettings _settings;
         private readonly ISaver _saver;
         private readonly Delegates.Restart _restarter;
-        public static readonly ConfigEntry WebOverlayConfig = new ConfigEntry($"WebOverlay_Config", "{}");
+        public static readonly ConfigEntry WebOverlayConfig = new ConfigEntry($"WebOverlay_Config", null);
         protected IOverlayConfiguration OverlayConfiguration;
         private WebOverlaySettings _webOverlaySettings;
-        private static ColorConverter colorConverter = new ColorConverter();
+
         public WebOverlay(ISettings settings, ISaver saver, Delegates.Restart restarter)
         {
             _settings = settings;
@@ -43,13 +43,12 @@ namespace WebSocketDataSender.WebOverlay
 
         private void SaveConfiguration()
         {
-            var serializedConfig = JsonConvert.SerializeObject(OverlayConfiguration, Formatting.None, colorConverter);
-            _settings.Add(WebOverlayConfig.Name, serializedConfig, false);
+            _settings.Add(WebOverlayConfig.Name, OverlayConfiguration, false);
         }
 
         private void LoadConfiguration(bool reset = false)
         {
-            var rawConfig = _settings.Get<string>(WebOverlayConfig);
+            var configEntry = _settings.GetConfiguration<OverlayConfiguration>(WebOverlayConfig);
 
             if (reset)
             {
@@ -62,18 +61,17 @@ namespace WebSocketDataSender.WebOverlay
 
             }
 
-            if (reset || rawConfig == WebOverlayConfig.Default<string>())
+            if (reset || configEntry == null)
                 return;
 
-            var config = JsonConvert.DeserializeObject<OverlayConfiguration>(rawConfig, colorConverter);
-
-            OverlayConfiguration = config;
+            OverlayConfiguration = configEntry;
         }
 
         private void OverlayConfigurationPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SaveConfiguration();
         }
+
         public void Free()
         {
             _webOverlaySettings?.Dispose();
@@ -97,26 +95,10 @@ namespace WebSocketDataSender.WebOverlay
 
             return _webOverlaySettings;
         }
+
         protected void ResetSettings()
         {
             LoadConfiguration(true);
-        }
-
-        private class ColorConverter : JsonConverter<Color>
-        {
-            public override void WriteJson(JsonWriter writer, Color value, JsonSerializer serializer)
-            {
-                writer.WriteValue(ColorTranslator.ToHtml(value) + value.A.ToString("X2"));
-            }
-
-            public override Color ReadJson(JsonReader reader, Type objectType, Color existingValue, bool hasExistingValue,
-                JsonSerializer serializer)
-            {
-                var rgbaColor = (string)reader.Value;
-                var alpha = Convert.ToInt32(rgbaColor.Substring(7), 16);
-                var color = ColorTranslator.FromHtml(rgbaColor.Substring(0, 7));
-                return Color.FromArgb(alpha, color);
-            }
         }
     }
 }

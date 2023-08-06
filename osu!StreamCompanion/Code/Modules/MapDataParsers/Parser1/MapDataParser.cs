@@ -164,9 +164,7 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             lock (_lockingObject)
             {
-                var serializedPatterns = JsonConvert.SerializeObject(_patterns);
-
-                _settings.Add(_names.ActualPatterns.Name, serializedPatterns);
+                _settings.Add(_names.ActualPatterns, _patterns);
 
             }
             _settings.Save();
@@ -175,30 +173,13 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             lock (_lockingObject)
             {
-                var legacyConfig = new LegacyParserConfigConverter();
-                var oldPatterns = legacyConfig.Convert(_settings);
-                if (oldPatterns.Count > 0)
-                {
-                    foreach (var p in oldPatterns)
+                var outputPatterns = _settings.GetConfiguration<List<OutputPattern>>(_names.ActualPatterns);
+                if (outputPatterns != null)
+                    foreach (var p in outputPatterns)
                     {
+                        p.Name = p.Name.RemoveInvalidFileNameChars().RemoveWhitespace();
                         _patterns.Add(p);
                     }
-                    MessageBox.Show("There was a big change in how patterns are stored and they needed to be converted." + Environment.NewLine +
-                                    "Go to your pattern settings and make sure that everything is still correct(Especialy save events)", "osu!StreamCompanion - Update message", MessageBoxButtons.OK);
-                }
-                else
-                {
-                    string rawPatterns = _settings.Get<string>(_names.ActualPatterns);
-                    var deserializedPatterns = JsonConvert.DeserializeObject<List<OutputPattern>>(rawPatterns);
-
-
-                    if (deserializedPatterns != null)
-                        foreach (var p in deserializedPatterns)
-                        {
-                            p.Name = p.Name.RemoveInvalidFileNameChars().RemoveWhitespace();
-                            _patterns.Add(p);
-                        }
-                }
             }
         }
 
