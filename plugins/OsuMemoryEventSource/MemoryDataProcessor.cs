@@ -127,6 +127,11 @@ namespace OsuMemoryEventSource
 
             InitLiveTokens();
             Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
+
+            if (isMainProcessor)
+            {
+                TokensExtensions.LiveTokenSetter = CreateLiveToken;
+            }
         }
 
         public async Task TokenThreadWork()
@@ -303,7 +308,17 @@ namespace OsuMemoryEventSource
         private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            _liveTokens[name] = new LazyLiveToken(_liveTokenSetter($"{TokensPath}{name}", new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist), updater);
+            var newToken = _liveTokenSetter($"{TokensPath}{name}", new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist);
+            CreateLiveToken(newToken, updater);
+        }
+
+        private void CreateLiveToken(IToken token, Func<object> updater)
+        {
+            _notUpdatingTokens.WaitOne();
+            if (token is LazyToken<object>)
+                _liveTokens[token.Name] = new LazyLiveToken(token, updater);
+            else
+                _liveTokens[token.Name] = new LiveToken(token, updater);
         }
 
         private void InitLiveTokens()
