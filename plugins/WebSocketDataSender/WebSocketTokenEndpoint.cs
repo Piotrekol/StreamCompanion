@@ -43,7 +43,6 @@ namespace WebSocketDataSender
                 if (query.StartsWith("bulkupdates"))
                 {
                     var queryParams = query.Split('=')[1].SplitByComma();
-                    var bulkUpdateStates = new List<BulkTokenUpdateState>();
                     foreach (var queryParam in queryParams)
                     {
                         if (!Enum.TryParse(typeof(BulkTokenUpdateType), queryParam, true, out var parsed) || parsed is not BulkTokenUpdateType tokenUpdateType)

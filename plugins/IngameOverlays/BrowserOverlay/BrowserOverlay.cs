@@ -22,7 +22,7 @@ namespace BrowserOverlay
 {
     public class BrowserOverlay : IPlugin, ISettingsSource
     {
-        public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", "{}");
+        public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", null);
 
         public string Description { get; } = string.Empty;
         public string Name { get; } = "BrowserIngameOverlay";
@@ -83,7 +83,7 @@ namespace BrowserOverlay
 
         private void OnSettingUpdated(object sender, (string SettingName, object Value)? eventData)
         {
-            _settings.Add(BrowserOverlayConfigurationConfigEntry.Name, JsonConvert.SerializeObject(_browserOverlayConfiguration));
+            _settings.Add(BrowserOverlayConfigurationConfigEntry, _browserOverlayConfiguration);
             SendConfiguration();
 
             if (eventData != null && eventData.Value.SettingName == "enable")

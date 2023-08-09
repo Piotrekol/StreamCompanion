@@ -8,6 +8,7 @@
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <LangVersion>11.0</LangVersion>
     </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 	  <OutputPath>bin\Debug_temp\</OutputPath>

@@ -1,53 +1,22 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Input;
-using StreamCompanionTypes;
-using StreamCompanionTypes.Interfaces;
-using StreamCompanionTypes.Interfaces.Services;
-#pragma warning disable 618 // deprecated
 
 namespace ClickCounter
 {
     public partial class ClickCounterSettings : UserControl
     {
-        private readonly SettingNames _names = SettingNames.Instance;
-        private ISettings _settings;
+        private readonly Configuration _configuration;
         private KeyboardCounterKeyClick keyboardCounterKeyClick;
-        public event EventHandler KeysChanged;
-        public ClickCounterSettings(ISettings settings)
-        {
-            _settings = settings;
-            InitializeComponent();
-            RefreshDataGrid();
-            groupBox_Mouse.Visible = checkBox_enableMouseHook.Checked;
-            checkBox_enableMouseHook.CheckedChanged += CheckBox_enableMouseHook_CheckedChanged;
-        }
-
-        private void CheckBox_enableMouseHook_CheckedChanged(object sender, EventArgs e)
-        {
-            groupBox_Mouse.Visible = checkBox_enableMouseHook.Checked;
-        }
-
-        public void RefreshDataGrid()
-        {
-            this.dataGridView1.Rows.Clear();
-
-            var keys = _settings.Get("keyList");
-            var keysSaves = _settings.Get("keyNames");
-            var keysCounts = _settings.Geti("keyCounts");
-
-            for (int i = 0; i < keys.Count; i++)
-            {
-                if (keys[i] == string.Empty) continue;
-                System.Windows.Input.Key key = KeyInterop.KeyFromVirtualKey(Convert.ToInt32(keys[i]));
-
-                this.dataGridView1.Rows.Add(key, keysCounts[i], keysSaves[i]);
-            }
-        }
-
         private KeyboardListener keyboardListener;
+        public ClickCounterSettings(Configuration configuration)
+        {
+            InitializeComponent();
+            _configuration = configuration;
+            checkBox_enableKeyboardHook.Checked = _configuration.KeyboardEnabled;
+            dataGridView1.DataSource = _configuration.KeyEntries;
+        }
+
         private void button_AddKey_Click(object sender, EventArgs e)
         {
             if (keyboardCounterKeyClick == null)
@@ -65,120 +34,35 @@ namespace ClickCounter
             keyboardListener.KeyDown -= Kb_KeyDown;
         }
 
-        private void Kb_KeyDown(object sender, RawKeyEventArgs args)
+        private void Kb_KeyDown(object sender, RawKeyEventArgs __args)
         {
-            var keys = _settings.Get("keyList");
-
-            bool exists = false;
-            foreach (var key in keys)
+            BeginInvoke((Configuration localConfig, RawKeyEventArgs args) =>
             {
-                if (key.Contains(args.VKCode.ToString()))
+                keyboardCounterKeyClick.Close();
+                keyboardCounterKeyClick.Dispose();
+                keyboardCounterKeyClick = null;
+                var keyExists = localConfig.KeyEntries.Any(k => k.Code == args.VKCode);
+                if (keyExists)
+                    return;
+
+                localConfig.KeyEntries.Add(new KeyEntry
                 {
-                    exists = true;
-                    break;
-                }
-            }
-
-
-            BeginInvoke((MethodInvoker)(() =>
-           {
-               keyboardCounterKeyClick.Close();
-               keyboardCounterKeyClick.Dispose();
-               keyboardCounterKeyClick = null;
-               if (!exists)
-               {
-                   //get file name to save
-                   var filenameFrm = new ClickCounterFileName();
-                   filenameFrm.ShowDialog();
-                   string filename = filenameFrm.textBox_FileName.Text;
-                   filenameFrm.Dispose();
-
-                   //check if filename is valid
-                   string invalidChars = new string(Path.GetInvalidFileNameChars());
-                   foreach (var invalidChar in invalidChars)
-                   {
-                       if (filename.Contains(invalidChar))
-                           return;
-                   }
-
-
-                   if (filename.Trim() != string.Empty)
-                   {
-                       if (!filename.EndsWith(".txt"))
-                           filename += ".txt";
-
-                       if (AddKey(args.VKCode, filename.Trim()))
-                           this.dataGridView1.Rows.Add(args.Key, "0", filename.Trim());
-                       else
-                       {
-                           MessageBox.Show("This filename has been already used!", "Error", MessageBoxButtons.OK,
-                               MessageBoxIcon.Exclamation);
-                       }
-                   }
-               }
-           }));
-        }
-
-        private bool AddKey(int key, string filename)
-        {
-            var currentKeys = _settings.Get("keyList");
-            var currentKeysSaves = _settings.Get("keyNames");
-            var currentKeyCounts = _settings.Geti("keyCounts");
-            if (currentKeysSaves.Any(f => f.ToLower().Equals(filename.ToLower())))
-                return false;
-            currentKeys.Add(key.ToString());
-            currentKeysSaves.Add(filename);
-            currentKeyCounts.Add(0);
-
-            _settings.Add("keyList", currentKeys, true);
-            _settings.Add("keyNames", currentKeysSaves, true);
-            _settings.Add("keyCounts", currentKeyCounts, true);
-
-            OnKeysChanged();
-            return true;
-        }
-
-        private void RemoveKey(int keyIndex)
-        {
-
-            var keys = _settings.Get("keyList");
-            var keysSaves = _settings.Get("keyNames");
-            var keysCounts = _settings.Geti("keyCounts");
-
-            keys.RemoveAt(keyIndex);
-            keysSaves.RemoveAt(keyIndex);
-            keysCounts.RemoveAt(keyIndex);
-
-            _settings.Add("keyList", keys, true);
-            _settings.Add("keyNames", keysSaves, true);
-            _settings.Add("keyCounts", keysCounts, true);
-        }
-        private void OnKeysChanged()
-        {
-            KeysChanged?.Invoke(this, null);
+                    Code = args.VKCode,
+                    Name = args.Key.ToString()
+                });
+            }, _configuration, __args);
         }
 
         private void button_RemoveKey_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow item in this.dataGridView1.SelectedRows)
             {
-                RemoveKey(item.Index);
-                dataGridView1.Rows.RemoveAt(item.Index);
+                var keyEntry = (KeyEntry)item.DataBoundItem;
+                if (keyEntry.Code == (int)MouseMessages.WM_LBUTTONDOWN || keyEntry.Code == (int)MouseMessages.WM_RBUTTONDOWN)
+                    continue;
+
+                _configuration.KeyEntries.RemoveAt(item.Index);
             }
-        }
-
-        public void SetRightMouseCount(long count)
-        {
-            label_MouseRight.Text = count.ToString();
-        }
-        public void SetLeftMouseCount(long count)
-        {
-            label_MouseLeft.Text = count.ToString();
-        }
-
-        private void checkBox_disableDiskSaving_CheckedChanged(object sender, EventArgs e)
-        {
-            _settings.Add(_names.DisableClickCounterWrite.Name, checkBox_disableDiskSaving.Checked);
         }
     }
 }
