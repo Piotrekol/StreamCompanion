@@ -1,5 +1,5 @@
 <Project>
     <ItemGroup>
-        <PackageReference Include="StreamCompanionTypes" version="9.0.0-b1" />
+        <PackageReference Include="StreamCompanionTypes" version="9.0.0-b2" />
 	</ItemGroup>
 </Project>

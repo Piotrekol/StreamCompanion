@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using Grace.DependencyInjection;
 using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Core.Maps.Processing;
 using osu_StreamCompanion.Code.Core.Savers;
@@ -10,10 +8,10 @@ using osu_StreamCompanion.Code.Modules.osuFallbackDetector;
 using osu_StreamCompanion.Code.Modules.osuPathReslover;
 using osu_StreamCompanion.Code.Modules.Updater;
 using StreamCompanionTypes;
-using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using osu_StreamCompanion.Code.Modules;
+using osu_StreamCompanion.Code.Core.Plugins;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -22,7 +20,7 @@ namespace osu_StreamCompanion.Code.Core
         private readonly ILogger _logger;
         private readonly SettingNames _names = SettingNames.Instance;
         public readonly Settings Settings;
-
+        private readonly LocalPluginManager _pluginManager;
         public Initializer(string settingsProfileName)
         {
             new FileChecker();
@@ -62,6 +60,18 @@ namespace osu_StreamCompanion.Code.Core
 #if !DEBUG
             mainLogger.AddLogger(new SentryLogger());
 #endif
+
+            _pluginManager = new LocalPluginManager(Settings, mainLogger);
+            foreach (var moduleType in _pluginManager.GetModules())
+            {
+                di.Configure(x => x.ExportDefault(moduleType));
+            }
+
+            foreach (var pluginType in _pluginManager.GetPlugins())
+            {
+                di.Configure(x => x.ExportDefault(pluginType));
+            }
+
             _logger.Log("Created DI container", LogLevel.Information);
         }
 
@@ -69,7 +79,7 @@ namespace osu_StreamCompanion.Code.Core
         {
             _logger.Log("Booting up...", LogLevel.Information);
             _logger.Log($"Stream Companion Version: {Program.ScVersion}", LogLevel.Information);
-            _logger.Log($"Running as { (Environment.Is64BitProcess ? "x64" : "x86")} process on .NET {Environment.Version}", LogLevel.Information);
+            _logger.Log($"Running as {(Environment.Is64BitProcess ? "x64" : "x86")} process on .NET {Environment.Version}", LogLevel.Information);
 
             DiContainer.Container.Locate<Updater>();
             DiContainer.Container.Locate<AdministratorChecker>();
@@ -77,33 +87,7 @@ namespace osu_StreamCompanion.Code.Core
             DiContainer.Container.Locate<OsuPathResolver>();
             DiContainer.Container.Locate<OsuFallbackDetector>();
 
-            var lazyPluginMetas = DiContainer.Container.Locate<List<Meta<Lazy<IPlugin>>>>();
-            _logger.Log("Initializing {0} plugins", LogLevel.Information, lazyPluginMetas.Count.ToString());
-
-            foreach (var lazyPluginMeta in lazyPluginMetas)
-            {
-                var pluginType = lazyPluginMeta.Metadata.ActivationType;
-                _logger.Log($">loading \"{pluginType.FullName}\" v: {pluginType.Assembly.GetName().Version}", LogLevel.Trace);
-
-                IPlugin plugin = null;
-                try
-                {
-                    plugin = lazyPluginMeta.Value.Value;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Plugin \"{pluginType.FullName}\" could not get initialized. StreamCompanion will most likely continue to work, however some features might be missing." +
-                                    Environment.NewLine + Environment.NewLine + "Errors:" +
-                                    Environment.NewLine +
-                                    ex,
-                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    _logger.Log(ex, LogLevel.Error);
-                }
-
-                if (plugin != null)
-                    _logger.Log(">loaded \"{0}\" by {1} ({2}) v:{3}", LogLevel.Debug, plugin.Name, plugin.Author,
-                        plugin.GetType().FullName, plugin.GetType().Assembly.GetName().Version.ToString());
-            }
+            _pluginManager.StartPlugins(DiContainer.Container);
 
             Settings.Add(_names.FirstRun.Name, false);
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);

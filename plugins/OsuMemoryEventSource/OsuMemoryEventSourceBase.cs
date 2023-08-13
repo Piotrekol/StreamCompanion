@@ -22,6 +22,7 @@ using Timer = System.Threading.Timer;
 
 namespace OsuMemoryEventSource
 {
+    [PluginDependency("ModsHandler", "1.0.0")]
     public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataConsumer,
          IOsuEventSource, ITokensSource
     {
