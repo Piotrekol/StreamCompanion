@@ -103,9 +103,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D73F9D3-2B22-45F0-82A1-2F163BEDC97C}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Packages.props = Directory.Packages.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "plugins\TestPlugin\TestPlugin.csproj", "{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPlugin", "plugins\TestPlugin\TestPlugin.csproj", "{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

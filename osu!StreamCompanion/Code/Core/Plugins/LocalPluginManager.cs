@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Grace.DependencyInjection;
 using Grace.DependencyInjection.Exceptions;
 using osu_StreamCompanion.Code.Core.Loggers;
+using StreamCompanionTypes.Attributes;
 
 namespace osu_StreamCompanion.Code.Core.Plugins
 {
@@ -39,15 +40,15 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             _assemblyLoader = assemblyLoader ?? new AssemblyLoader(logger);
         }
 
-        private void ForceEnablePlugin(string requestorPluginName, string pluginName)
+        private void ForceEnablePlugin(LocalPluginEntry requestorPlugin, string pluginName)
         {
-            var plugin = GetPluginByName(pluginName);
+            var plugin = GetPluginByTypeName(pluginName);
             plugin.EnabledForcefully = plugin.Enabled = true;
-            plugin.EnabledForcefullyByPlugins.Add(requestorPluginName);
+            plugin.EnabledForcefullyByPlugins.Add(requestorPlugin);
         }
 
-        private LocalPluginEntry GetPluginByName(string name)
-            => _configuration.Plugins.First(x => x.Name == name);
+        private LocalPluginEntry GetPluginByTypeName(string typeName)
+            => _configuration.Plugins.First(x => x.TypeName == typeName);
 
         public List<Type> GetModules()
             => _assemblyLoader.GetModules();
@@ -62,12 +63,12 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             for (int i = 0; i < activePlugins.Count; i++)
             {
                 var pluginEntry = activePlugins[i];
-                if (CorePluginNames.Contains(pluginEntry.Name))
+                if (CorePluginNames.Contains(pluginEntry.TypeName))
                 {
-                    ForceEnablePlugin("StreamCompanion", pluginEntry.Name);
+                    ForceEnablePlugin(GetPluginByTypeName(Consts.SCPLUGIN_TYPENAME), pluginEntry.TypeName);
                 }
 
-                if (!GetPluginByName(pluginEntry.Name).Enabled)
+                if (!GetPluginByTypeName(pluginEntry.TypeName).Enabled)
                 {
                     disabledPlugins.Add(pluginEntry);
                     activePlugins[i] = null;
@@ -76,17 +77,17 @@ namespace osu_StreamCompanion.Code.Core.Plugins
 
                 foreach (var requestedDependency in pluginEntry.Dependencies)
                 {
-                    var foundPlugin = activePlugins.FirstOrDefault(pType => pType?.Name == requestedDependency.PluginName);
+                    var foundPlugin = activePlugins.FirstOrDefault(pType => pType?.TypeName == requestedDependency.PluginName);
                     if (foundPlugin == null)
                     {
-                        if (disabledPlugins.FirstOrDefault(pType => pType.Name == requestedDependency.PluginName) != null)
+                        if (disabledPlugins.FirstOrDefault(pType => pType.TypeName == requestedDependency.PluginName) != null)
                         {
-                            ForceEnablePlugin(pluginEntry.Name, requestedDependency.PluginName);
+                            ForceEnablePlugin(pluginEntry, requestedDependency.PluginName);
                             reloadPending = true;
                             continue;
                         }
 
-                        failedPlugins.Add((pluginEntry, $"Plugin \"{pluginEntry.Name}\" failed to resolve required dependency \"{requestedDependency.PluginName}\" - file not found."));
+                        failedPlugins.Add((pluginEntry, $"Plugin \"{pluginEntry.TypeName}\" failed to resolve required dependency \"{requestedDependency.PluginName}\" - file not found."));
                         activePlugins[i] = null;
                         break;
                     }
@@ -94,12 +95,12 @@ namespace osu_StreamCompanion.Code.Core.Plugins
                     var foundPluginVersion = foundPlugin.Type.Assembly.GetName().Version;
                     if (requestedDependency.MinVersion > foundPluginVersion)
                     {
-                        failedPlugins.Add((pluginEntry, $"Plugin \"{pluginEntry.Name}\" failed to resolve required dependency \"{requestedDependency.PluginName}\" - version {foundPluginVersion} does not satisfy requested minimum version {requestedDependency.MinVersion}; \"{requestedDependency.PluginName}\" most likely needs to be updated."));
+                        failedPlugins.Add((pluginEntry, $"Plugin \"{pluginEntry.TypeName}\" failed to resolve required dependency \"{requestedDependency.PluginName}\" - version {foundPluginVersion} does not satisfy requested minimum version {requestedDependency.MinVersion}; \"{requestedDependency.PluginName}\" most likely needs to be updated."));
                         activePlugins[i] = null;
                         break;
                     }
 
-                    ForceEnablePlugin(pluginEntry.Name, requestedDependency.PluginName);
+                    ForceEnablePlugin(pluginEntry, requestedDependency.PluginName);
                 }
             }
 
@@ -122,27 +123,40 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             return activePlugins.Select(p => p?.Type).Where(p => p is not null).ToList();
         }
 
-        private void PopulateConfiguration(List<Type> allPlugins)
+        private void PopulateConfiguration(List<Type> allLoadedPlugins)
         {
-            foreach (var pluginType in allPlugins)
+            foreach (var pluginType in allLoadedPlugins)
             {
-                var name = pluginType.Name;
-                var pluginEntry = _configuration.Plugins.FirstOrDefault(p => p.Name == name);
-                if (pluginEntry != null)
+                var typeName = pluginType.Name;
+                var pluginEntry = _configuration.Plugins.FirstOrDefault(p => p.TypeName == typeName);
+                if (pluginEntry == null)
                 {
-                    pluginEntry.Type = pluginType;
-                    pluginEntry.Dependencies = pluginType.GetCustomAttributes<PluginDependencyAttribute>().ToList();
-                    continue;
+                    _configuration.Plugins.Add(pluginEntry = new LocalPluginEntry
+                    {
+                        TypeName = typeName,
+                    });
                 }
 
+                pluginEntry.Type = pluginType;
+                pluginEntry.Dependencies = pluginType.GetCustomAttributes<SCPluginDependencyAttribute>().ToList();
+                pluginEntry.EnabledForcefully = false;
+                pluginEntry.EnabledForcefullyByPlugins.Clear();
+                pluginEntry.Metadata = pluginType.GetPluginMetadata();
+            }
 
-                _configuration.Plugins.Add(new LocalPluginEntry
+            var dummySCPlugin = _configuration.Plugins.FirstOrDefault(p => p.TypeName == Consts.SCPLUGIN_TYPENAME);
+            if (dummySCPlugin == null)
+            {
+                _configuration.Plugins.Add(dummySCPlugin = new LocalPluginEntry
                 {
-                    Name = name,
-                    Type = pluginType,
-                    Dependencies = pluginType.GetCustomAttributes<PluginDependencyAttribute>().ToList()
+                    TypeName = Consts.SCPLUGIN_TYPENAME,
+                    Enabled = true,
                 });
             }
+
+            dummySCPlugin.Metadata = new PluginMetadata(Consts.SCPLUGIN_NAME, "Base application", Consts.SCPLUGIN_AUTHOR, Consts.SC_BASE_REPO_URL);
+            dummySCPlugin.EnabledForcefully = true;
+            dummySCPlugin.EnabledForcefullyByPlugins.Add(dummySCPlugin);
         }
 
         internal void StartPlugins(DependencyInjectionContainer di)
@@ -191,9 +205,20 @@ namespace osu_StreamCompanion.Code.Core.Plugins
 
                 if (plugin != null)
                 {
-                    _logger.Log(">loaded \"{0}\" by {1} ({2}) v:{3}", LogLevel.Debug, plugin.Name, plugin.Author,
+                    var pluginConfig = GetPluginByTypeName(pluginType.Name);
+                    pluginConfig.Plugin = plugin;
+                    pluginConfig.Metadata ??= plugin.GetPluginMetadata();
+
+                    if (pluginConfig.Metadata == null)
+                    {
+                        _logger.Log("************", LogLevel.Critical);
+                        _logger.Log("plugin \"{0}\" is missing metadata! add {1} on its class.", LogLevel.Critical, plugin.GetType().FullName, nameof(SCPluginAttribute));
+                        _logger.Log("************", LogLevel.Critical);
+                        continue;
+                    }
+
+                    _logger.Log(">loaded \"{0}\" by {1} ({2}) v:{3}", LogLevel.Debug, pluginConfig.Metadata.Name, pluginConfig.Metadata.Authors,
                         plugin.GetType().FullName, plugin.GetType().Assembly.GetName().Version.ToString());
-                    GetPluginByName(pluginType.Name).Plugin = plugin;
                 }
             }
         }

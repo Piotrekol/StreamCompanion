@@ -12,6 +12,7 @@ using OsuMemoryDataProvider;
 using StreamCompanion.Common;
 using StreamCompanion.Common.Extensions;
 using StreamCompanionTypes;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -22,7 +23,7 @@ using Timer = System.Threading.Timer;
 
 namespace OsuMemoryEventSource
 {
-    [PluginDependency("ModsHandler", "1.0.0")]
+    [SCPluginDependency("ModsHandler", "1.0.0")]
     public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataConsumer,
          IOsuEventSource, ITokensSource
     {

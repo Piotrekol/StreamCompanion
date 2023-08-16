@@ -1,4 +1,7 @@
-﻿namespace osu_StreamCompanion.Code.Core.Plugins
+﻿using StreamCompanionTypes.DataTypes;
+using System.Windows.Forms;
+
+namespace osu_StreamCompanion.Code.Core.Plugins
 {
     partial class PluginManagerSettingsUserControl
     {
@@ -29,11 +32,14 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            dataGridView_plugins = new System.Windows.Forms.DataGridView();
-            nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            enabledDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            enabledForcefullyDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            pluginEntryBindingSource = new System.Windows.Forms.BindingSource(components);
+            dataGridView_plugins = new DataGridView();
+            typeNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            enabledDataGridViewCheckBoxColumn = new DataGridViewCheckBoxColumn();
+            metadataDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            typeDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            enabledForcefullyDataGridViewCheckBoxColumn = new DataGridViewCheckBoxColumn();
+            pluginDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            pluginEntryBindingSource = new BindingSource(components);
             pluginEntryUserControl = new PluginEntryUserControl();
             ((System.ComponentModel.ISupportInitialize)dataGridView_plugins).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pluginEntryBindingSource).BeginInit();
@@ -44,28 +50,28 @@
             dataGridView_plugins.AllowUserToAddRows = false;
             dataGridView_plugins.AllowUserToDeleteRows = false;
             dataGridView_plugins.AllowUserToResizeRows = false;
-            dataGridView_plugins.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            dataGridView_plugins.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             dataGridView_plugins.AutoGenerateColumns = false;
-            dataGridView_plugins.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView_plugins.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView_plugins.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridView_plugins.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView_plugins.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { nameDataGridViewTextBoxColumn, enabledDataGridViewCheckBoxColumn, enabledForcefullyDataGridViewCheckBoxColumn });
+            dataGridView_plugins.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView_plugins.Columns.AddRange(new DataGridViewColumn[] { typeNameDataGridViewTextBoxColumn, enabledDataGridViewCheckBoxColumn, metadataDataGridViewTextBoxColumn, typeDataGridViewTextBoxColumn, enabledForcefullyDataGridViewCheckBoxColumn, pluginDataGridViewTextBoxColumn });
             dataGridView_plugins.DataSource = pluginEntryBindingSource;
             dataGridView_plugins.Location = new System.Drawing.Point(4, 0);
-            dataGridView_plugins.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            dataGridView_plugins.Margin = new Padding(4, 3, 4, 3);
             dataGridView_plugins.Name = "dataGridView_plugins";
             dataGridView_plugins.RowHeadersVisible = false;
-            dataGridView_plugins.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            dataGridView_plugins.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView_plugins.ShowEditingIcon = false;
             dataGridView_plugins.Size = new System.Drawing.Size(433, 532);
             dataGridView_plugins.TabIndex = 1;
             // 
-            // nameDataGridViewTextBoxColumn
+            // typeNameDataGridViewTextBoxColumn
             // 
-            nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            nameDataGridViewTextBoxColumn.ReadOnly = true;
+            typeNameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            typeNameDataGridViewTextBoxColumn.HeaderText = "Name";
+            typeNameDataGridViewTextBoxColumn.Name = "typeNameDataGridViewTextBoxColumn";
+            typeNameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // enabledDataGridViewCheckBoxColumn
             // 
@@ -73,13 +79,32 @@
             enabledDataGridViewCheckBoxColumn.HeaderText = "Enabled";
             enabledDataGridViewCheckBoxColumn.Name = "enabledDataGridViewCheckBoxColumn";
             // 
+            // metadataDataGridViewTextBoxColumn
+            // 
+            metadataDataGridViewTextBoxColumn.DataPropertyName = "Metadata";
+            metadataDataGridViewTextBoxColumn.HeaderText = "Metadata";
+            metadataDataGridViewTextBoxColumn.Name = "metadataDataGridViewTextBoxColumn";
+            metadataDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // typeDataGridViewTextBoxColumn
+            // 
+            typeDataGridViewTextBoxColumn.DataPropertyName = "Type";
+            typeDataGridViewTextBoxColumn.HeaderText = "Type";
+            typeDataGridViewTextBoxColumn.Name = "typeDataGridViewTextBoxColumn";
+            typeDataGridViewTextBoxColumn.Visible = false;
+            // 
             // enabledForcefullyDataGridViewCheckBoxColumn
             // 
             enabledForcefullyDataGridViewCheckBoxColumn.DataPropertyName = "EnabledForcefully";
             enabledForcefullyDataGridViewCheckBoxColumn.HeaderText = "EnabledForcefully";
             enabledForcefullyDataGridViewCheckBoxColumn.Name = "enabledForcefullyDataGridViewCheckBoxColumn";
-            enabledForcefullyDataGridViewCheckBoxColumn.ReadOnly = true;
-            enabledForcefullyDataGridViewCheckBoxColumn.Visible = false;
+            // 
+            // pluginDataGridViewTextBoxColumn
+            // 
+            pluginDataGridViewTextBoxColumn.DataPropertyName = "Plugin";
+            pluginDataGridViewTextBoxColumn.HeaderText = "Plugin";
+            pluginDataGridViewTextBoxColumn.Name = "pluginDataGridViewTextBoxColumn";
+            pluginDataGridViewTextBoxColumn.Visible = false;
             // 
             // pluginEntryBindingSource
             // 
@@ -87,16 +112,17 @@
             // 
             // pluginEntryUserControl
             // 
+            pluginEntryUserControl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pluginEntryUserControl.LocalPluginEntry = null;
             pluginEntryUserControl.Location = new System.Drawing.Point(444, 0);
             pluginEntryUserControl.Name = "pluginEntryUserControl";
             pluginEntryUserControl.Size = new System.Drawing.Size(344, 532);
             pluginEntryUserControl.TabIndex = 2;
-            pluginEntryUserControl.LocalPluginEntry = null;
             // 
             // PluginManagerSettingsUserControl
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(pluginEntryUserControl);
             Controls.Add(dataGridView_plugins);
             Name = "PluginManagerSettingsUserControl";
@@ -108,11 +134,14 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView_plugins;
-        private System.Windows.Forms.BindingSource pluginEntryBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn enabledDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn enabledForcefullyDataGridViewCheckBoxColumn;
+        private DataGridView dataGridView_plugins;
         private PluginEntryUserControl pluginEntryUserControl;
+        private BindingSource pluginEntryBindingSource;
+        private DataGridViewTextBoxColumn typeNameDataGridViewTextBoxColumn;
+        private DataGridViewCheckBoxColumn enabledDataGridViewCheckBoxColumn;
+        private DataGridViewTextBoxColumn metadataDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
+        private DataGridViewCheckBoxColumn enabledForcefullyDataGridViewCheckBoxColumn;
+        private DataGridViewTextBoxColumn pluginDataGridViewTextBoxColumn;
     }
 }

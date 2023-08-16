@@ -1,0 +1,11 @@
+<Project>
+  <!-- defaults for all projects -->
+
+  <!-- Keep searching and applying Directory.Build.props files contained in subfirectories above -->
+  <!-- Build will stop searching for these after first is found otherwise -->
+  <!-- <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /> -->
+
+  <PropertyGroup>
+   <!-- <Nullable>enable</Nullable> -->
+  </PropertyGroup>
+</Project>
