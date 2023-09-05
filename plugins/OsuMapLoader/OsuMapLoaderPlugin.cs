@@ -2,8 +2,6 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using CollectionManager.Enums;
 using PpCalculatorTypes;
 using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
@@ -13,15 +11,11 @@ using StreamCompanionTypes.Interfaces.Services;
 
 namespace OsuSongsFolderWatcher
 {
+    [SCPlugin("Osu map loader", "Reads and processes local .osu difficulty files", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class OsuMapLoaderPlugin : IPlugin, IMapDataFinder
     {
         private readonly IContextAwareLogger _logger;
         private readonly IModParser _modParser;
-        public string Description { get; } = "Provides beatmap data by parsing .osu files using osu!lazer";
-        public string Name { get; } = nameof(OsuMapLoaderPlugin);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = string.Empty;
-        public string UpdateUrl { get; } = string.Empty;
 
         public OsuMapLoaderPlugin(IContextAwareLogger logger, IModParser modParser)
         {

@@ -20,15 +20,11 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace BrowserOverlay
 {
+    [SCPluginDependency("FileMapDataSender", "1.0.0")]
+    [SCPlugin("Browser ingame overlay", "Allows for displaying any web overlay in fullscreened osu!. No borderless/windowed shenanigans.", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL, Consts.SCPLUGIN_GUIDE_INGAMEOVERLAYURL)]
     public class BrowserOverlay : IPlugin, ISettingsSource
     {
         public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", null);
-
-        public string Description { get; } = string.Empty;
-        public string Name { get; } = "BrowserIngameOverlay";
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = string.Empty;
-        public string UpdateUrl { get; } = string.Empty;
         public string SettingGroup { get; } = "In-game overlay__Browser overlay";
 
         private readonly IContextAwareLogger _logger;

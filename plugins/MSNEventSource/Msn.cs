@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -10,6 +11,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace MSNEventSource
 {
+    [SCPlugin("MSN", "[Obsolete] Provides beatmap events using osu!'s MSN output", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class Msn : IDisposable, IPlugin, IOsuEventSource, IFirstRunControlProvider
     {
         public static ConfigEntry Enabled = new ConfigEntry("MsnEnabled", false);

@@ -15,6 +15,7 @@ using EmbedIO.Files;
 using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanion.Common;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -24,6 +25,8 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace WebSocketDataSender
 {
+    [SCPluginDependency("OsuMemoryEventSource", "1.0.0")]
+    [SCPlugin("Web server", "Web server hosting web overlays and providing WebSocket access to tokens", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class WebSocketDataGetter : IPlugin, IMapDataConsumer, IDisposable,
         IHighFrequencyDataConsumer, ISettingsSource
     {
@@ -31,13 +34,7 @@ namespace WebSocketDataSender
         private readonly ISaver _saver;
         private readonly Delegates.Restart _restarter;
         private ILogger _logger;
-
-        public string Description { get; } = "Provides beatmap and live map data using websockets";
-        public string Name { get; } = nameof(WebSocketDataGetter);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
-        public string SettingGroup { get; } = "Web overlay";
+        public string SettingGroup { get; } = "Web server";
 
         private Dictionary<string, string> OutputPatterns { get; } = new Dictionary<string, string>();
         private HttpServer _server;
@@ -64,7 +61,7 @@ namespace WebSocketDataSender
             return httpContentRoot;
         }
 
-        public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver, Delegates.Restart restarter, MapStatsModule mapStatsModule)
+        public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver, Delegates.Restart restarter, List<ISCWebModule> additionalWebModules = null)
         {
             _settings = settings;
             _saver = saver;
@@ -83,7 +80,14 @@ namespace WebSocketDataSender
                 ("List of available overlays (folder names)", new ActionModule("/overlayList",HttpVerbs.Get,ListOverlays)),
                 ("All StreamCompanion settings", new ActionModule("/settings",HttpVerbs.Get,GetSettings)),
             };
-            modules.AddRange(mapStatsModule.GetModules());
+
+            if (additionalWebModules != null)
+            {
+                foreach (var scWebModule in additionalWebModules)
+                {
+                    modules.AddRange(scWebModule.GetModules());
+                }
+            }
 
             _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
 

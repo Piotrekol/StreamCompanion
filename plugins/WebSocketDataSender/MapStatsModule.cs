@@ -4,6 +4,8 @@ using EmbedIO;
 using EmbedIO.Actions;
 using EmbedIO.Utilities;
 using Newtonsoft.Json;
+using StreamCompanion.Common;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -15,19 +17,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebSocketDataSender
 {
-    public class MapStatsModule : IPlugin, IOsuEventSource, IMapDataConsumer
+    [SCPluginDependency(nameof(WebSocketDataGetter), "1.0.0")]
+    [SCPlugin("No client map stats", "Adds /mapStats Web endpoint. Allows for processing of events/tokens as if map was changed ingame", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
+    public class MapStatsModule : IPlugin, IOsuEventSource, IMapDataConsumer, ISCWebModule
     {
-        public string Description { get; } = "Map stats web endpoint integration";
-        public string Name { get; } = nameof(MapStatsModule);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
         public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
 
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();

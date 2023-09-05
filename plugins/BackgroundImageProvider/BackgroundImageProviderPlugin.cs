@@ -13,13 +13,10 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace BackgroundImageProvider
 {
+    [SCPlugin(Name, "Extracts background image location from .osu difficulty files", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class BackgroundImageProviderPlugin : IPlugin, ITokensSource
     {
-        public string Description { get; } = "Provides current beatmap background image as local file on disk";
-        public string Name { get; } = nameof(BackgroundImageProviderPlugin);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; }
-        public string UpdateUrl { get; }
+        public const string Name = "Background image provider";
 
         private readonly ISaver _saver;
         private readonly ISettings _settings;
@@ -83,7 +80,7 @@ namespace BackgroundImageProvider
             }
             catch (UnauthorizedAccessException)
             {
-                _logger.Log($"Could not save background image at \"{_saveLocation}\" (UnauthorizedAccessException)",LogLevel.Warning);
+                _logger.Log($"Could not save background image at \"{_saveLocation}\" (UnauthorizedAccessException)", LogLevel.Warning);
             }
 
             return Task.CompletedTask;

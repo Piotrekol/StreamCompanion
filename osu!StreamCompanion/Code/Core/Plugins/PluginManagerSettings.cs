@@ -5,13 +5,10 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osu_StreamCompanion.Code.Core.Plugins
 {
+    [SCPlugin("Plugin manager", "Manage & install plugins", "", "")]
     internal class PluginManagerSettings : IPlugin, ISettingsSource
     {
         public string SettingGroup => "General__Plugins";
-        public string Description => "";
-        public string Name => "";
-        public string Author => "";
-        public string Url => "";
 
         private readonly ISettings _settings;
         private PluginManagerSettingsUserControl _pluginManagerSettingsUserControl;

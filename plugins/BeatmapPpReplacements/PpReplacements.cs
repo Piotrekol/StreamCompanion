@@ -13,8 +13,10 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace BeatmapPpReplacements
 {
+    [SCPlugin(Name, "Calculates performance values for current map with specific accuracies", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class PpReplacements : IPlugin, ITokensSource
     {
+        public const string Name = "PPerformance tokens";
         private const string PpFormat = "{0:0.00}";
         private Tokens.TokenSetter _tokenSetter;
         private ISettings _settings;
@@ -22,12 +24,6 @@ namespace BeatmapPpReplacements
         private readonly IToken _strainsToken;
         public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
         private readonly Dictionary<TokenMode, Dictionary<string, PpValue>> ppTokenDefinitions;
-
-        public string Description { get; } = "";
-        public string Name { get; } = nameof(PpReplacements);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         private delegate double PpValue(CancellationToken cancellationToken, IPpCalculator ppCalculator, string mods = "");
         enum TokenMode

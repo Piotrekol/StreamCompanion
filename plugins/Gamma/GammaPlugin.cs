@@ -14,17 +14,11 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace Gamma
 {
+    [SCPlugin("Gamma", "Dynamically sets monitor gamma during gameplay", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class GammaPlugin : IPlugin, IMapDataConsumer, ISettingsSource, IDisposable
     {
         public static ConfigEntry GammaConfiguration = new ConfigEntry("GammaConfiguration", null);
-
-        public string Description { get; } = "Adjusts gamma depending on AR";
-        public string Name { get; } = nameof(GammaPlugin);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = string.Empty;
-        public string UpdateUrl { get; } = string.Empty;
         public string SettingGroup { get; } = "Gamma";
-
         private readonly ILogger _logger;
         private readonly ISettings _settings;
         private Gamma _gamma;

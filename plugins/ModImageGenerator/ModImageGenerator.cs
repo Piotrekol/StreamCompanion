@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ModImageGenerator.API;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -17,6 +18,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ModImageGenerator
 {
+    [SCPlugin("Mod image generator", "Creates stacked mod images in Files/ModImage.png", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     class ModImageGenerator : IPlugin, ITokensSource, ISettingsSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
@@ -26,13 +28,6 @@ namespace ModImageGenerator
         ImageGenerator _imageGenerator;
         private ModImageGeneratorSettings _modImageGeneratorSettings;
         private ILogger _logger;
-
-
-        public string Description { get; } = "";
-        public string Name { get; } = nameof(ModImageGenerator);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         public ModImageGenerator(ILogger logger, ISaver saver, ISettings settings)
         {

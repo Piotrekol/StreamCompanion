@@ -7,20 +7,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
+using StreamCompanion.Common;
 
 namespace FileMapDataSender
 {
     [SupportedOSPlatform("windows")]
+    [SCPlugin("MMF sender", "Sends data using memory mapped files", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class FileMapDataSender : IPlugin, IMapDataConsumer, IDisposable, IHighFrequencyDataConsumer
     {
-        public bool Started { get; set; }
         private readonly FileMapManager _fileMapManager;
-
-        public string Description { get; } = "";
-        public string Name { get; } = "FileMapDataSender";
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         public FileMapDataSender(ILogger logger)
         {

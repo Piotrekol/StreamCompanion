@@ -24,9 +24,11 @@ using Timer = System.Threading.Timer;
 namespace OsuMemoryEventSource
 {
     [SCPluginDependency("ModsHandler", "1.0.0")]
+    [SCPlugin("Osu memory reader", "Provides accurate data directly from osu! memory", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public abstract class OsuMemoryEventSourceBase : IPlugin, IDisposable, IMapDataConsumer,
          IOsuEventSource, ITokensSource
     {
+        public static readonly string Name = "Osu memory reader";
         public static ConfigEntry SaveLiveTokensOnDisk = new ConfigEntry(nameof(SaveLiveTokensOnDisk), false);
         public static ConfigEntry TourneyMode = new ConfigEntry("TournamentMode", false);
         public static ConfigEntry ClientCount = new ConfigEntry("TournamentClientCount", 4);
@@ -39,13 +41,6 @@ namespace OsuMemoryEventSource
 
         public OsuStatus SearchModes { get; } = OsuStatus.All;
         public string SearcherName { get; } = "Memory";
-        public bool Started { get; set; }
-
-        public string Description { get; } = "Provides accurate data directly from osu! memory";
-        public string Name { get; } = nameof(OsuMemoryEventSource);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         protected List<Lazy<IHighFrequencyDataConsumer>> _highFrequencyDataConsumers;
         protected IModParser _modParser;
@@ -133,8 +128,6 @@ namespace OsuMemoryEventSource
             memoryListener.SetHighFrequencyDataHandlers(_highFrequencyDataConsumers);
 
             MemoryWorkerTask = Task.Run(MemoryWorker, cts.Token).HandleExceptions();
-
-            Started = true;
         }
 
         private void OnInvalidMemoryRead(object sender, (object readObject, string propPath) e)

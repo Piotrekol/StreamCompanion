@@ -20,4 +20,7 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
+  </ItemGroup>
 </Project>

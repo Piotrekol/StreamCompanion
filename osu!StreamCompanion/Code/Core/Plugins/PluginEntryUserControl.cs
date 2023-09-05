@@ -1,6 +1,7 @@
 ﻿using StreamCompanion.Common;
 using StreamCompanionTypes.Interfaces;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -8,6 +9,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
 {
     public partial class PluginEntryUserControl : UserControl
     {
+        private Size _minimumElementSize = new Size(100, 20);
 
         private Button _disableButton = new()
         {
@@ -71,8 +73,8 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             flowLayoutPanel1.Controls.Add(GetLabel($"Name: {pluginMetadata.Name}"));
             flowLayoutPanel1.Controls.Add(GetLabel($"Authors: {pluginMetadata.Authors}"));
             flowLayoutPanel1.Controls.Add(GetLabel($"Description: {pluginMetadata.Description}"));
-            flowLayoutPanel1.Controls.Add(GetLabel($"Project Url: {pluginMetadata.ProjectURL}"));
-            flowLayoutPanel1.Controls.Add(GetLabel($"Wiki Url: {pluginMetadata.WikiUrl}"));
+            flowLayoutPanel1.Controls.Add(GetLinkButton($"Project page", pluginMetadata.ProjectURL));
+            flowLayoutPanel1.Controls.Add(GetLinkButton($"Wiki page", pluginMetadata.WikiUrl));
             if (_pluginEntry.EnabledForcefully)
             {
                 flowLayoutPanel1.Controls.Add(GetLabel($"Required by: {string.Join(", ", _pluginEntry.EnabledForcefullyByPlugins.Select(p => p.Name))}"));
@@ -97,7 +99,30 @@ namespace osu_StreamCompanion.Code.Core.Plugins
 
         private Label GetLabel(string text)
         {
-            return new Label { Text = text, AutoSize = true, UseMnemonic = false };
+            return new Label { Text = text, AutoSize = true, UseMnemonic = false, MinimumSize = _minimumElementSize };
+        }
+
+        private Button GetLinkButton(string text, string url)
+        {
+            var button = new Button { Text = text, AutoSize = true, UseMnemonic = false, MinimumSize = _minimumElementSize, Tag = url };
+            if (url == null)
+            {
+                button.Enabled = false;
+            }
+            else
+            {
+                button.Click += Button_Click;
+            }
+
+            return button;
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            if (((Button)sender).Tag is not string url)
+                return;
+
+            ProcessExt.OpenUrl(url);
         }
     }
 }
