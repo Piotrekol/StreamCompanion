@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Overlay.Common;
 using Overlay.Common.Loader;
 using StreamCompanion.Common;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
