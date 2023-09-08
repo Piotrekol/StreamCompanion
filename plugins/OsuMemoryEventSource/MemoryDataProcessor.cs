@@ -474,7 +474,6 @@ namespace OsuMemoryEventSource
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
             CreateLiveToken("currentBpm", 0d, TokenType.Live, "{0}", 0d, OsuStatus.All, () => (_reversedMapTimingPoints?.FirstOrDefault(t => t.StartTime < _rawData.PlayTime)?.BPM ?? 0d) * _bpmMultiplier);
 
-
             // object lastLeaderBoardObject = null;
             string lastLeaderBoardData = "{}";
             DateTime lastLeaderBoardUpdate = DateTime.MinValue.AddMilliseconds(1);
