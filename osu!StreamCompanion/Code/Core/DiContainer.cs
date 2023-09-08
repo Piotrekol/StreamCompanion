@@ -20,19 +20,13 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
+using System.Diagnostics.CodeAnalysis;
+using osu_StreamCompanion.Code.Core.Plugins;
 
 namespace osu_StreamCompanion.Code.Core
 {
     internal static class DiContainer
     {
-        static DiContainer()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
-
-        private static string PluginsLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
-        private static string AdditionalDllsLocation = Path.Combine(PluginsLocation, "Dlls");
-        private static string[] customProbingPaths = {PluginsLocation, AdditionalDllsLocation};
         public static DependencyInjectionContainer Container => LazyContainer.Value;
         private static Lazy<DependencyInjectionContainer> LazyContainer = new Lazy<DependencyInjectionContainer>(() =>
         {
@@ -89,7 +83,7 @@ namespace osu_StreamCompanion.Code.Core
             di.Configure(x => x.ExportFuncWithContext<Delegates.Restart>((scope, context, arg3) =>
             {
                 var logger = scope.Locate<IContextAwareLogger>();
-                var isModule = context.TargetInfo.InjectionType.GetInterfaces().Contains(typeof(IModule));
+                var isModule = context.TargetInfo.InjectionType == null || context.TargetInfo.InjectionType.GetInterfaces().Contains(typeof(IModule));
                 if (isModule)
                 {
                     return reason =>
@@ -120,134 +114,13 @@ namespace osu_StreamCompanion.Code.Core
                     Program.SafeQuit();
                 };
             }));
-            //Register all IModules from current assembly
-            var modules = GetTypes<IModule>(Assembly.GetExecutingAssembly());
-            foreach (var module in modules)
-            {
-                di.Configure(x => x.ExportDefault(module));
-            }
-
-            RegisterPlugins(di, di.Locate<ILogger>());
-
+            
             return di;
         });
+
         public static void ExportDefault(this IExportRegistrationBlock e, Type type)
         {
             e.Export(type).ByInterfaces().As(type).Lifestyle.Singleton();
-        }
-
-        private static List<Assembly> GetAssemblies(IEnumerable<string> fileList, ILogger logger)
-        {
-            var assemblies = new List<Assembly>();
-            foreach (var file in fileList)
-            {
-                var fileName = Path.GetFileNameWithoutExtension(file);
-                try
-                {
-                    var assemblyName = new AssemblyName(fileName);
-                    assemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName));
-                }
-                catch (BadImageFormatException e)
-                {
-                    e.Data.Add("PluginsLocation", PluginsLocation);
-                    e.Data.Add("file", file);
-                    e.Data.Add("netFramework", GetDotNetVersion.Get45PlusFromRegistry());
-                    logger?.Log(e, LogLevel.Error);
-                }
-                catch (COMException)
-                {
-                    if (file.Contains("osuOverlayPlugin"))
-                    {
-                        var nl = Environment.NewLine;
-                        MessageBox.Show("Since SC version 190426.18, osu! overlay plugin started being falsely detected as virus" + nl + nl
-                                        + "If you don't use it it is advised to just remove it from SC plugins folder (search for osuOverlayPlugin.dll and osuOverlay.dll inside SC folder)." + nl + nl
-                                        + "However if you do use it, add these to your antivirus exceptions." + nl + nl + nl
-
-                                        + "osu! overlay will NOT be loaded until you resolve this manually.", "StreamCompanion - WARNING", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    MessageBox.Show(
-                        "StreamCompanion could not load any of the plugins because of not enough permissions." + Environment.NewLine + Environment.NewLine
-                        + "Please reinstall StreamCompanion.", "StreamCompanion - ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Program.SafeQuit();
-                }
-                catch (FileLoadException e)
-                {
-                    MessageBox.Show($"Plugin \"{fileName}\" could not get loaded. StreamCompanion will continue to work, however, some features might be missing." +
-                                Environment.NewLine + Environment.NewLine + "Error:" +
-                                Environment.NewLine + e,
-                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-
-            return assemblies;
-        }
-
-        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            var name = args.Name.Split(",", StringSplitOptions.TrimEntries)[0];
-
-            foreach (var probingPath in customProbingPaths)
-            {
-                var filePath = Path.Combine(probingPath, $"{name}.dll");
-                if (File.Exists(filePath))
-                {
-                    return Assembly.LoadFrom(filePath);
-                }
-            }
-
-            return null;
-        }
-
-        private static List<Type> GetTypes<T>(Assembly asm)
-        {
-            List<Type> plugins = new List<Type>();
-            List<Type> types = new List<Type>();
-
-            try
-            {
-                types = asm.GetTypes().ToList();
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                var dllName = asm.ManifestModule.Name;
-                MessageBox.Show($"Plugin \"{dllName}\" could not get loaded. StreamCompanion will continue to work, however, some features might be missing." +
-                                Environment.NewLine + Environment.NewLine + "Errors:" +
-                                Environment.NewLine +
-                                string.Join(Environment.NewLine, e.LoaderExceptions.Select(x => $"{x.GetType()}: {x.Message}")),
-                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            foreach (var type in types)
-            {
-                if (type.GetInterfaces().Contains(typeof(T)))
-                {
-                    if (!type.IsAbstract)
-                    {
-                        plugins.Add(type);
-                    }
-                }
-            }
-
-            return plugins;
-        }
-        private static void RegisterPlugins(DependencyInjectionContainer di, ILogger logger)
-        {
-            var pluginAssemblies = GetAssemblies(Directory.GetFiles(PluginsLocation, "*.dll"), logger);
-            foreach (var asm in pluginAssemblies)
-            {
-                var plugins = GetTypes<IPlugin>(asm);
-                foreach (var plugin in plugins)
-                {
-                    di.Configure(x => x.ExportDefault(plugin));
-                }
-            }
         }
     }
 }

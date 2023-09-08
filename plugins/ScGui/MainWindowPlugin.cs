@@ -19,6 +19,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace ScGui
 {
+    [SCPlugin("SC GUI", "StreamCompanion graphical user interface(What you are looking at right now). Mix of WPF & WinForms.", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     class MainWindowPlugin : IPlugin, IMapDataConsumer, ISettingsSource
     {
         private readonly SettingNames _names = SettingNames.Instance;
@@ -34,11 +35,6 @@ namespace ScGui
         private readonly ILogger _logger;
         private List<Lazy<ISettingsSource>> _settingsList;
 
-        public string Description { get; } = "";
-        public string Name { get; } = "StreamCompanion GUI";
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "General";
 
         private static string BaseAddress(ISettings settings) => $"http://localhost:{settings.Get("httpServerPort", "20727")}/";
@@ -139,7 +135,7 @@ namespace ScGui
                             _logger.Log($"Failed to load settings for one of setting tabs, this is most likely accompanied by plugin load error at startup.", LogLevel.Error);
                         }
                     }
-                    
+
                     _settingsForm = new SettingsForm(settingsSources);
                     _settingsForm.Closed += SettingsFormOnClosed;
                     _settingsForm.Show();

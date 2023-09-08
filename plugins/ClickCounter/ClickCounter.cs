@@ -16,8 +16,10 @@ using System.Windows.Media.Animation;
 
 namespace ClickCounter
 {
+    [SCPlugin(Name, "Counts keyboard and/or mouse clicks", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class ClickCounter : ApplicationContext, IPlugin, ISettingsSource, IDisposable, ITokensSource
     {
+        public const string Name = "Click Counter";
         private readonly SettingNames _names = SettingNames.Instance;
         private ISettings _settings;
         private ClickCounterSettings _frmSettings;
@@ -35,12 +37,6 @@ namespace ClickCounter
         private ILogger _logger;
 
         public string SettingGroup { get; } = "Click counter";
-
-        public string Description { get; } = "";
-        public string Name { get; } = "Click Counter";
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         public ClickCounter(ILogger logger, ISaver saver, ISettings settings, List<Lazy<IHighFrequencyDataConsumer>> consumers)
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -11,18 +11,13 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace osuPost
 {
-    public class OsuPost :IPlugin,ISettingsSource, IMapDataConsumer, IDisposable
+    [SCPlugin("Osu Post", "OsuPost integration", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
+    public class OsuPost : IPlugin, ISettingsSource, IMapDataConsumer, IDisposable
     {
         private readonly SettingNames _names = SettingNames.Instance;
 
         private ISettings _settings;
         private OsuPostApi api;
-
-        public string Description { get; } = "";
-        public string Name { get; } = nameof(OsuPost);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         public OsuPost(ILogger logger, ISettings settings)
         {

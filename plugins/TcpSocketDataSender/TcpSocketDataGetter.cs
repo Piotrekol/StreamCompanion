@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using StreamCompanion.Common;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
@@ -13,6 +14,7 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace TcpSocketDataSender
 {
+    [SCPlugin("TCP sockets output", "[Obsolete] Provides Output pattern values as json via TCP sockets. Use WebSockets provided in Web server plugin instead.", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class TcpSocketDataGetter : IPlugin, IMapDataConsumer, ISettingsSource, IDisposable, IHighFrequencyDataConsumer
     {
         private readonly SettingNames _names = SettingNames.Instance;
@@ -23,12 +25,6 @@ namespace TcpSocketDataSender
         private ISettings _settings;
 
         private bool tcpSocketIsEnabled = false;
-        
-        public string Description { get; } = "";
-        public string Name { get; } = nameof(TcpSocketDataGetter);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         public TcpSocketDataGetter(ISettings settings)
         {
@@ -86,7 +82,7 @@ namespace TcpSocketDataSender
 
             return Task.CompletedTask;
         }
-        
+
         public string SettingGroup { get; } = "Output patterns";
         private TcpSocketSettings settingsUserControl = null;
         public void Free()

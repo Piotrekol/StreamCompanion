@@ -8,9 +8,11 @@ using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
+using StreamCompanion.Common;
 
 namespace LiveVisualizer
 {
+    [SCPlugin("Visualizer", "Displays current gameplay info & stats in a separate window", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public abstract class LiveVisualizerPluginBase : IPlugin, IMapDataConsumer, IOutputPatternSource,
         ISettingsSource, IDisposable
     {
@@ -19,12 +21,6 @@ namespace LiveVisualizer
         protected readonly IContextAwareLogger Logger;
         protected IWpfVisualizerData VisualizerData;
         private bool disposed = false;
-
-        public string Description { get; } = "";
-        public string Name { get; } = "LiveVisualizer";
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
         public string SettingGroup { get; } = "Visualizer";
 
         public LiveVisualizerPluginBase(IContextAwareLogger logger, ISettings settings)

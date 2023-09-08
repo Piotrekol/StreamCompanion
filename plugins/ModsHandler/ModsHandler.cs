@@ -9,20 +9,18 @@ using System.Threading.Tasks;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
+using StreamCompanion.Common;
 
 namespace ModsHandler
 {
+    [SCPlugin(Name, "provides basic modded map stats & mods processing utils for other plugins", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class ModsHandler : IPlugin, IModParser, IDifficultyCalculator, ITokensSource, ISettingsSource
     {
+        public const string Name = "Mods handler";
         private readonly ModParser _modParser;
         private readonly DifficultyCalculator _difficultyCalculator = new DifficultyCalculator();
         private Tokens.TokenSetter _tokenSetter;
 
-        public string Description { get; } = "";
-        public string Name { get; } = nameof(ModsHandler);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
         public string SettingGroup => _modParser.SettingGroup;
 
         public ModsHandler(ISettings settings)

@@ -10,9 +10,12 @@ using StreamCompanionTypes.Interfaces.Sources;
 using Overlay.Common.Loader;
 using Overlay.Common;
 using StreamCompanion.Common;
+using StreamCompanionTypes.Attributes;
 
 namespace TextOverlay
 {
+    [SCPluginDependency("FileMapDataSender", "1.0.0")]
+    [SCPlugin("Text ingame overlay", "Basic text based ingame overlay. Data is provided using Output patterns", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL, Consts.SCPLUGIN_GUIDE_INGAMEOVERLAYURL)]
     public class TextOverlay : IPlugin, ISettingsSource, IDisposable
     {
         public static readonly ConfigEntry EnableIngameOverlay = new ConfigEntry("EnableIngameOverlay", true);
@@ -23,12 +26,6 @@ namespace TextOverlay
         private TextOverlaySettings _overlaySettings;
         private ILogger _logger;
         private LoaderWatchdog _loaderWatchdog;
-
-        public string Description { get; } = "";
-        public string Name { get; } = "TextIngameOverlay";
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
         CancellationTokenSource cancellationToken = new CancellationTokenSource();
 
         public TextOverlay(ILogger logger, ISettings settings, Delegates.Restart restarter)

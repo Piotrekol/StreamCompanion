@@ -153,7 +153,8 @@ namespace osu_StreamCompanion.Code.Modules.MapDataParsers.Parser1
         {
             if (_parserSettings == null || _parserSettings.IsDisposed)
             {
-                var inGameOverlayIsAvailable = LoadedPlugins.Value.Any(p => p.Name == "TextIngameOverlay");
+                //TODO: Refactor ingame text overlay settings to separate settings tab, instead of hacking it in here.
+                var inGameOverlayIsAvailable = LoadedPlugins.Value.Any(p => p.GetType().Name == "TextOverlay");
                 _parserSettings = new ParserSettings(_settings, inGameOverlayIsAvailable, ResetPatterns);
                 _parserSettings.SetPatterns(_patterns);
             }

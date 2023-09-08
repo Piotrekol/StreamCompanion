@@ -103,7 +103,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D73F9D3-2B22-45F0-82A1-2F163BEDC97C}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Packages.props = Directory.Packages.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPlugin", "plugins\TestPlugin\TestPlugin.csproj", "{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -373,6 +376,14 @@ Global
 		{9AE2BF2B-BA42-4551-B553-D11039644B05}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9AE2BF2B-BA42-4551-B553-D11039644B05}.Release|x86.ActiveCfg = Release|Any CPU
 		{9AE2BF2B-BA42-4551-B553-D11039644B05}.Release|x86.Build.0 = Release|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -408,6 +419,7 @@ Global
 		{3CA7BE44-68FA-40A9-8809-7BE650EFA335} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{7BCF111B-5AC0-4E5F-9C97-B0980C32481F} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 		{9AE2BF2B-BA42-4551-B553-D11039644B05} = {7BCF111B-5AC0-4E5F-9C97-B0980C32481F}
+		{AD61B097-1BAF-4ADB-8B22-1C40F87C39A6} = {7357CB17-E9D7-493F-BC1B-354F717D7AA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90CD718D-2503-4BBC-867D-E8EF9C9DBC77}

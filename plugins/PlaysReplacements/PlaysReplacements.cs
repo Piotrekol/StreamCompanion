@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -7,16 +8,12 @@ using StreamCompanionTypes.Interfaces.Sources;
 
 namespace PlaysReplacements
 {
+    [SCPlugin(Name, "Session play & retry counter", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
     public class PlaysReplacements : IPlugin, ITokensSource
     {
+        public const string Name = "Play counter";
         private int Plays, Retries;
         private Tokens.TokenSetter _tokenSetter;
-
-        public string Description { get; } = "";
-        public string Name { get; } = nameof(PlaysReplacements);
-        public string Author { get; } = "Piotrekol";
-        public string Url { get; } = "";
-        public string UpdateUrl { get; } = "";
 
         public PlaysReplacements()
         {

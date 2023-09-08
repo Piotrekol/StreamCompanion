@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamCompanionTypes.Enums;
-using OsuMemoryDataProvider.OsuMemoryModels.Abstract;
-using OsuMemoryDataProvider.OsuMemoryModels.Direct;
-using StreamCompanion.Common.Helpers;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
@@ -45,9 +42,6 @@ namespace OsuMemoryEventSource
 
         public Task<IMapSearchResult> FindBeatmap(IMapSearchArgs searchArgs, CancellationToken cancellationToken)
         {
-            if (!Started)
-                return null;
-
             if (searchArgs == null)
                 throw new ArgumentException(nameof(searchArgs));
 

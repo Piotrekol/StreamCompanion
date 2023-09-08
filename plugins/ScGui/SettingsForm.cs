@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using StreamCompanion.Common;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Sources;
 
@@ -26,13 +27,12 @@ namespace ScGui
             InitializeComponent();
             //add predefined tabs
             AddTab("General", "Basic StreamCompanion settings");
-            AddTab("Click counter", "Keyboard and mouse clicks tracker");
 
             //add tabs
             foreach (var settingGroupName in _settingsList.Select(x => new { x, x.SettingGroup }).Distinct())
             {
                 var description = settingGroupName.x is IPlugin plugin
-                    ? plugin.Description
+                    ? plugin.GetPluginMetadata()?.Description ?? string.Empty
                     : string.Empty;
                 if (!_groupControlPostions.ContainsKey(settingGroupName.SettingGroup))
                     AddTab(settingGroupName.SettingGroup, description);
@@ -46,7 +46,8 @@ namespace ScGui
         private void PrepareCurrentTab()
         {
             var groupName = (string)tvSettings.SelectedNode.Tag;
-            foreach (var setting in _settingsList.Where(s => s.SettingGroup == groupName))
+            var settings = _settingsList.Where(s => s.SettingGroup == groupName).ToArray();
+            foreach (var setting in settings)
             {
                 var control = (UserControl)setting.GetUiSettings();
                 if (control == null)
@@ -72,7 +73,7 @@ namespace ScGui
 
                 //change start postion for next control in that group
                 _groupControlPostions[setting.SettingGroup].StartHeight += control.Height;
-                if (setting.SettingGroup == "Tokens Preview")
+                if (setting.SettingGroup == "Tokens Preview" || settings.Length == 1)
                     pSettingTab.Controls[0].Dock = DockStyle.Fill;
 
                 _settingsInUse.Add((setting, control));
