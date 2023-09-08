@@ -36,6 +36,8 @@ namespace OsuMemoryEventSource
         private readonly IContextAwareLogger _logger;
         private readonly IModParser _modParser;
         private readonly Dictionary<string, BaseLiveToken> _liveTokens = new();
+        private readonly Dictionary<string, JsonSerializerSettings> _tokenJsonSerializers = new();
+
         private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public static ConfigEntry MultiplayerLeaderBoardUpdateRate = new ConfigEntry("MultiplayerLeaderBoardUpdateRate", 250);
@@ -316,14 +318,14 @@ namespace OsuMemoryEventSource
         private void CreateLiveToken(IToken token, Func<object> updater)
         {
             try
-        {
-            _notUpdatingTokens.WaitOne();
+            {
+                _notUpdatingTokens.WaitOne();
                 _notAddingNewTokens.Reset();
-            if (token is LazyToken<object>)
-                _liveTokens[token.Name] = new LazyLiveToken(token, updater);
-            else
-                _liveTokens[token.Name] = new LiveToken(token, updater);
-        }
+                if (token is LazyToken<object>)
+                    _liveTokens[token.Name] = new LazyLiveToken(token, updater);
+                else
+                    _liveTokens[token.Name] = new LiveToken(token, updater);
+            }
             finally
             {
                 _notAddingNewTokens.Set();
@@ -472,15 +474,7 @@ namespace OsuMemoryEventSource
             CreateLiveToken("isBreakTime", 0, TokenType.Live, "{0}", 0, OsuStatus.All, () => _rawData.PpCalculator?.IsBreakTime(_rawData.PlayTime) ?? false ? 1 : 0);
             CreateLiveToken("currentBpm", 0d, TokenType.Live, "{0}", 0d, OsuStatus.All, () => (_reversedMapTimingPoints?.FirstOrDefault(t => t.StartTime < _rawData.PlayTime)?.BPM ?? 0d) * _bpmMultiplier);
 
-            JsonSerializerSettings createJsonSerializerSettings(string serializationErrorMessage)
-                => new JsonSerializerSettings
-                {
-                    Error = (sender, args) =>
-                    {
-                        _logger.Log(serializationErrorMessage, LogLevel.Debug);
-                        _logger.Log(args, LogLevel.Trace);
-                    }
-                };
+
             // object lastLeaderBoardObject = null;
             string lastLeaderBoardData = "{}";
             DateTime lastLeaderBoardUpdate = DateTime.MinValue.AddMilliseconds(1);
@@ -496,24 +490,42 @@ namespace OsuMemoryEventSource
                     return lastLeaderBoardData;
 
                 lastLeaderBoardUpdate = nextUpdateAt;
-                return lastLeaderBoardData = JsonConvert.SerializeObject(_rawData.LeaderBoard.Players, createJsonSerializerSettings("Failed to serialize leaderBoardPlayers token data."));
+                return lastLeaderBoardData = JsonConvert.SerializeObject(_rawData.LeaderBoard.Players, createJsonSerializerSettings("leaderBoardPlayers"));
             });
 
-            CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, createJsonSerializerSettings("Failed to serialize leaderBoardMainPlayer token data.")));
-            CreateLiveToken("keyOverlay", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(OsuMemoryData.KeyOverlay, createJsonSerializerSettings("Failed to serialize keyOverlay token data.")));
+            CreateLiveToken("leaderBoardMainPlayer", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(_rawData.LeaderBoard.MainPlayer, createJsonSerializerSettings("leaderBoardMainPlayer")));
+            CreateLiveToken("keyOverlay", "{}", TokenType.Live, "", "{}", playingOrWatching, () => JsonConvert.SerializeObject(OsuMemoryData.KeyOverlay, createJsonSerializerSettings("keyOverlay")));
             CreateLiveToken("chatIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ChatIsExpanded ? 1 : 0);
             CreateLiveToken("ingameInterfaceIsEnabled", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.GeneralData.ShowPlayingInterface ? 1 : 0);
 
             CreateLiveToken("songSelectionRankingType", RankingType.Unknown, TokenType.Live, null, RankingType.Unknown, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.RankingType);
             CreateLiveToken("songSelectionTotalScores", 0, TokenType.Live, null, 0, OsuStatus.Listening, () => OsuMemoryData.SongSelectionScores.TotalScores);
-            CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores.Convert(_modParser), createJsonSerializerSettings("Failed to serialize songSelection scores.")));
-            CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore?.Convert(_modParser), createJsonSerializerSettings("failed to serialize songSelectionMainPlayer score.")));
+            var cachedSongSelectionScores = "[]";
+            CreateLiveToken("songSelectionScores", "[]", TokenType.Live, null, 0, OsuStatus.Listening, () => _lastStatus != OsuStatus.Listening ? cachedSongSelectionScores : JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.Scores.Convert(_modParser), createJsonSerializerSettings("songSelectionScores")));
+            CreateLiveToken("songSelectionMainPlayerScore", "{}", TokenType.Live, null, 0, OsuStatus.Listening, () => JsonConvert.SerializeObject(OsuMemoryData.SongSelectionScores.MainPlayerScore?.Convert(_modParser), createJsonSerializerSettings("songSelectionMainPlayerScore")));
 
             CreateLiveToken("banchoIsConnected", 0, TokenType.Live, null, 0, OsuStatus.All, () => OsuMemoryData.BanchoUser.IsLoggedIn ? 1 : 0);
             CreateLiveToken("banchoUsername", "", TokenType.Live, null, "", OsuStatus.All, () => OsuMemoryData.BanchoUser.Username);
             CreateLiveToken("banchoId", null, TokenType.Live, null, null, OsuStatus.All, () => OsuMemoryData.BanchoUser.UserId);
             CreateLiveToken("banchoStatus", null, TokenType.Live, null, null, OsuStatus.All, () => OsuMemoryData.BanchoUser.BanchoStatus);
             CreateLiveToken("banchoCountry", "", TokenType.Live, null, "", OsuStatus.All, () => OsuMemoryData.BanchoUser.UserCountry);
+        }
+
+        private JsonSerializerSettings createJsonSerializerSettings(string tokenName)
+        {
+            if (_tokenJsonSerializers.TryGetValue(tokenName, out var jsonSerializer))
+            {
+                return jsonSerializer;
+            }
+
+            return _tokenJsonSerializers[tokenName] = new JsonSerializerSettings
+            {
+                Error = (sender, args) =>
+                {
+                    _logger.Log($"Failed to serialize {tokenName} token data.", LogLevel.Debug);
+                    _logger.Log(args, LogLevel.Trace);
+                }
+            };
         }
 
         private void UpdateLiveTokens(OsuStatus status)
