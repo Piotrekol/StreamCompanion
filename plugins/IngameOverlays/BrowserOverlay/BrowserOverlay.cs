@@ -90,7 +90,7 @@ namespace BrowserOverlay
 
         private bool TryRemoveOldAssets()
         {
-            string[] oldFileNames = { "BrowserOverlay.zip" };
+            string[] oldFileNames = { "BrowserOverlay.zip", "BrowserOverlayAssetsV2.zip" };
             foreach (var filename in oldFileNames)
             {
                 var filePath = Path.Combine(_saver.SaveDirectory, filename);
@@ -117,8 +117,8 @@ namespace BrowserOverlay
                     }
 
                     File.Delete(filePath);
+                }
             }
-        }
 
             return true;
         }
@@ -129,7 +129,7 @@ namespace BrowserOverlay
                 return;
 
             var assetsLocation = GetAssetsLocation(_saver);
-            var zipFileLocation = Path.Combine(_saver.SaveDirectory, "BrowserOverlayAssetsV2.zip");
+            var zipFileLocation = Path.Combine(_saver.SaveDirectory, "BrowserOverlayAssetsV3.zip");
             var overlayFilesMissing = true;
             if (File.Exists(zipFileLocation))
             {
@@ -214,7 +214,7 @@ namespace BrowserOverlay
 
         private async Task DownloadOverlay(string destination)
         {
-            const string browserOverlayUrl = @"https://pioo.space/StreamCompanion/BrowserOverlayAssetsV2.zip";
+            const string browserOverlayUrl = @"https://pioo.space/StreamCompanion/BrowserOverlayAssetsV3.zip";
 #pragma warning disable SYSLIB0014 // WebClient is deprecated, use HttpClient instead
             using var client = new WebClient();
 #pragma warning restore SYSLIB0014
