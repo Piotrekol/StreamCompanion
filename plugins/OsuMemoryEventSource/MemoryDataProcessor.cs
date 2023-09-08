@@ -19,7 +19,6 @@ using Newtonsoft.Json;
 using OsuMemoryEventSource.Extensions;
 using OsuMemoryEventSource.LiveTokens;
 using PpCalculatorTypes;
-using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 using Mods = CollectionManager.DataTypes.Mods;
 using StreamCompanion.Common.Helpers.Tokens;
 
@@ -78,6 +77,7 @@ namespace OsuMemoryEventSource
             UnstableRate,
             liveStarRating,
         }
+        private ManualResetEvent _notAddingNewTokens = new ManualResetEvent(true);
         private ManualResetEvent _notUpdatingTokens = new ManualResetEvent(true);
         private ManualResetEvent _notUpdatingMemoryValues = new ManualResetEvent(true);
         private ManualResetEvent _newPlayStarted = new ManualResetEvent(true);
@@ -126,12 +126,13 @@ namespace OsuMemoryEventSource
             _totalAudioTime = _tokenSetter("totalAudioTime", 0d, TokenType.Normal, "{0:0.##}", 0d);
 
             InitLiveTokens();
-            Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
 
             if (isMainProcessor)
             {
                 TokensExtensions.LiveTokenSetter = CreateLiveToken;
             }
+
+            Task.Run(TokenThreadWork, cancellationTokenSource.Token).HandleExceptions();
         }
 
         public async Task TokenThreadWork()
@@ -314,11 +315,19 @@ namespace OsuMemoryEventSource
 
         private void CreateLiveToken(IToken token, Func<object> updater)
         {
+            try
+        {
             _notUpdatingTokens.WaitOne();
+                _notAddingNewTokens.Reset();
             if (token is LazyToken<object>)
                 _liveTokens[token.Name] = new LazyLiveToken(token, updater);
             else
                 _liveTokens[token.Name] = new LiveToken(token, updater);
+        }
+            finally
+            {
+                _notAddingNewTokens.Set();
+            }
         }
 
         private void InitLiveTokens()
@@ -509,6 +518,7 @@ namespace OsuMemoryEventSource
 
         private void UpdateLiveTokens(OsuStatus status)
         {
+            _notAddingNewTokens.WaitOne();
             using var tokenBulkUpdateContext = TokensBulkUpdate.StartBulkUpdate(BulkTokenUpdateType.LiveTokens);
             foreach (var liveToken in _liveTokens)
             {
