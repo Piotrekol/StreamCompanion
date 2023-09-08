@@ -5,7 +5,7 @@ namespace StreamCompanion.Common.Helpers.Tokens
     public class BulkTokenUpdateState
     {
         internal BulkTokenUpdateState() { }
-        public ManualResetEventSlim UpdateFinished { get; set; } = new();
+        public readonly ManualResetEventSlim UpdateFinished = new();
         private bool _inProgress = false;
         public bool InProgress
         {
@@ -13,7 +13,6 @@ namespace StreamCompanion.Common.Helpers.Tokens
             internal set
             {
                 _inProgress = value;
-
                 if (value)
                     UpdateFinished.Reset();
                 else

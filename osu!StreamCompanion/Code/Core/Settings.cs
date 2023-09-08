@@ -6,6 +6,7 @@ using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StreamCompanionTypes.Enums;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -91,7 +92,7 @@ namespace osu_StreamCompanion.Code.Core
                 _rawSettingEntries.Remove(key);
                 deleted = true;
             }
-            
+
             if (_deserializedSettingEntries.ContainsKey(key))
             {
                 _deserializedSettingEntries.Remove(key);
@@ -123,30 +124,27 @@ namespace osu_StreamCompanion.Code.Core
             lock (_lockingObject)
             {
                 _rawSettingEntries.Clear();
-                if (!File.Exists(FullConfigFilePath))
+                if (!File.Exists(FullConfigFilePath) && !TryConvertOldSettings())
                 {
-                    ConvertOldSettings();
-                    Load();
+                    _logger.Log("Failed to convert or load settings, starting from scratch.", LogLevel.Warning);
                     return;
                 }
-                else
-                {
-                    var contents = File.ReadAllText(FullConfigFilePath);
-                    var settings = JsonConvert.DeserializeObject<Dictionary<string, JToken>>(contents);
-                    if (settings == null)
-                        return;
 
-                    foreach (var kvPair in settings)
-                        _rawSettingEntries[kvPair.Key] = kvPair.Value;
-                }
+                var contents = File.ReadAllText(FullConfigFilePath);
+                var settings = JsonConvert.DeserializeObject<Dictionary<string, JToken>>(contents);
+                if (settings == null)
+                    return;
+
+                foreach (var kvPair in settings)
+                    _rawSettingEntries[kvPair.Key] = kvPair.Value;
             }
         }
 
-        private void ConvertOldSettings()
+        private bool TryConvertOldSettings()
         {
             var oldSettingsFilePath = Path.Combine(_saveLocation, "settings.ini");
             if (!File.Exists(oldSettingsFilePath))
-                return;
+                return false;
 
             var configLines = File.ReadAllLines(oldSettingsFilePath);
             var jObject = new JObject();
@@ -159,6 +157,7 @@ namespace osu_StreamCompanion.Code.Core
             File.WriteAllText(FullConfigFilePath, jObject.ToString());
             var backupOldSettingsFilePath = Path.Combine(_saveLocation, "unused_settings.backup");
             File.Move(oldSettingsFilePath, backupOldSettingsFilePath, true);
+            return true;
         }
     }
 }

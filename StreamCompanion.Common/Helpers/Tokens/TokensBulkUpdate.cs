@@ -6,14 +6,14 @@ namespace StreamCompanion.Common.Helpers.Tokens
 {
     public static class TokensBulkUpdate
     {
-        private static Dictionary<BulkTokenUpdateType, BulkTokenUpdateState> _BulkUpdateStates;
-        public static ReadOnlyDictionary<BulkTokenUpdateType, BulkTokenUpdateState> States { get; private set; }
+        private static readonly Dictionary<BulkTokenUpdateType, BulkTokenUpdateState> _BulkUpdateStates;
+        public static readonly ReadOnlyDictionary<BulkTokenUpdateType, BulkTokenUpdateState> States;
 
         static TokensBulkUpdate()
         {
             _BulkUpdateStates = new Dictionary<BulkTokenUpdateType, BulkTokenUpdateState>();
-            foreach (BulkTokenUpdateType state in Enum.GetValues(typeof(BulkTokenUpdateType)))
-                _BulkUpdateStates[state] = new();
+            foreach (BulkTokenUpdateType type in Enum.GetValues(typeof(BulkTokenUpdateType)))
+                _BulkUpdateStates[type] = new();
 
             States = new(_BulkUpdateStates);
         }
