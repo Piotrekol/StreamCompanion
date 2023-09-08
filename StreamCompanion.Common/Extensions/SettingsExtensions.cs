@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Runtime;
 using Newtonsoft.Json;
 using StreamCompanionTypes;
 using StreamCompanionTypes.DataTypes;
@@ -55,6 +54,7 @@ namespace StreamCompanion.Common
             if (configValue == null)
             {
                 configValue = new T();
+                settings.Add(configEntry, configValue);
             }
 
             return configValue;
