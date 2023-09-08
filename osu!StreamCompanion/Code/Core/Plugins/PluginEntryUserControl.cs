@@ -9,6 +9,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
 {
     public partial class PluginEntryUserControl : UserControl
     {
+        public event EventHandler SettingChanged;
         private Size _minimumElementSize = new Size(100, 20);
 
         private Button _disableButton = new()
@@ -48,12 +49,14 @@ namespace osu_StreamCompanion.Code.Core.Plugins
         {
             _pluginEntry.Enabled = true;
             SetButtonStates();
+            OnSettingChanged();
         }
 
         private void _disableButton_Click(object sender, EventArgs e)
         {
             _pluginEntry.Enabled = false;
             SetButtonStates();
+            OnSettingChanged();
         }
 
         private void PopulatePluginDetails(IPluginMetadata pluginMetadata)
@@ -123,6 +126,11 @@ namespace osu_StreamCompanion.Code.Core.Plugins
                 return;
 
             ProcessExt.OpenUrl(url);
+        }
+
+        private void OnSettingChanged()
+        {
+            SettingChanged?.Invoke(this, null);
         }
     }
 }

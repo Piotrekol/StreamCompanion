@@ -41,8 +41,12 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             pluginDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             pluginEntryBindingSource = new BindingSource(components);
             pluginEntryUserControl = new PluginEntryUserControl();
+            panel_restart = new Panel();
+            button_restart = new Button();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView_plugins).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pluginEntryBindingSource).BeginInit();
+            panel_restart.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView_plugins
@@ -63,7 +67,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             dataGridView_plugins.RowHeadersVisible = false;
             dataGridView_plugins.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView_plugins.ShowEditingIcon = false;
-            dataGridView_plugins.Size = new System.Drawing.Size(433, 532);
+            dataGridView_plugins.Size = new System.Drawing.Size(433, 535);
             dataGridView_plugins.TabIndex = 1;
             // 
             // typeNameDataGridViewTextBoxColumn
@@ -78,6 +82,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             enabledDataGridViewCheckBoxColumn.DataPropertyName = "Enabled";
             enabledDataGridViewCheckBoxColumn.HeaderText = "Enabled";
             enabledDataGridViewCheckBoxColumn.Name = "enabledDataGridViewCheckBoxColumn";
+            enabledDataGridViewCheckBoxColumn.ReadOnly = true;
             // 
             // metadataDataGridViewTextBoxColumn
             // 
@@ -98,6 +103,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             enabledForcefullyDataGridViewCheckBoxColumn.DataPropertyName = "EnabledForcefully";
             enabledForcefullyDataGridViewCheckBoxColumn.HeaderText = "EnabledForcefully";
             enabledForcefullyDataGridViewCheckBoxColumn.Name = "enabledForcefullyDataGridViewCheckBoxColumn";
+            enabledForcefullyDataGridViewCheckBoxColumn.Visible = false;
             // 
             // pluginDataGridViewTextBoxColumn
             // 
@@ -116,19 +122,53 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             pluginEntryUserControl.LocalPluginEntry = null;
             pluginEntryUserControl.Location = new System.Drawing.Point(444, 0);
             pluginEntryUserControl.Name = "pluginEntryUserControl";
-            pluginEntryUserControl.Size = new System.Drawing.Size(344, 532);
+            pluginEntryUserControl.Size = new System.Drawing.Size(344, 535);
             pluginEntryUserControl.TabIndex = 2;
+            // 
+            // panel_restart
+            // 
+            panel_restart.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel_restart.Controls.Add(button_restart);
+            panel_restart.Controls.Add(label1);
+            panel_restart.Location = new System.Drawing.Point(444, 479);
+            panel_restart.Name = "panel_restart";
+            panel_restart.Size = new System.Drawing.Size(344, 56);
+            panel_restart.TabIndex = 3;
+            panel_restart.Visible = false;
+            // 
+            // button_restart
+            // 
+            button_restart.Location = new System.Drawing.Point(3, 28);
+            button_restart.Name = "button_restart";
+            button_restart.Size = new System.Drawing.Size(75, 23);
+            button_restart.TabIndex = 1;
+            button_restart.Text = "Restart";
+            button_restart.UseVisualStyleBackColor = true;
+            button_restart.Click += button_restart_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            label1.Location = new System.Drawing.Point(0, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(217, 25);
+            label1.TabIndex = 0;
+            label1.Text = "Restart to apply changes";
             // 
             // PluginManagerSettingsUserControl
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel_restart);
             Controls.Add(pluginEntryUserControl);
             Controls.Add(dataGridView_plugins);
             Name = "PluginManagerSettingsUserControl";
             Size = new System.Drawing.Size(791, 535);
             ((System.ComponentModel.ISupportInitialize)dataGridView_plugins).EndInit();
             ((System.ComponentModel.ISupportInitialize)pluginEntryBindingSource).EndInit();
+            panel_restart.ResumeLayout(false);
+            panel_restart.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -143,5 +183,8 @@ namespace osu_StreamCompanion.Code.Core.Plugins
         private DataGridViewTextBoxColumn typeDataGridViewTextBoxColumn;
         private DataGridViewCheckBoxColumn enabledForcefullyDataGridViewCheckBoxColumn;
         private DataGridViewTextBoxColumn pluginDataGridViewTextBoxColumn;
+        private Panel panel_restart;
+        private Button button_restart;
+        private Label label1;
     }
 }

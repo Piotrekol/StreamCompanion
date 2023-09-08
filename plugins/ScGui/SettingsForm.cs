@@ -38,7 +38,6 @@ namespace ScGui
                     AddTab(settingGroupName.SettingGroup, description);
             }
 
-
             tvSettings.SelectedNode = tvSettings.Nodes[0];
             tvSettings.ExpandAll();
             PrepareCurrentTab();

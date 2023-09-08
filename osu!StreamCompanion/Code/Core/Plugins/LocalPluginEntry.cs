@@ -40,5 +40,4 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             return $"Name: {TypeName}; Enabled: {Enabled}; Type: {Type?.ToString() ?? ""}";
         }
     }
-
 }

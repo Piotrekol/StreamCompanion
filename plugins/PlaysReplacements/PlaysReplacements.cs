@@ -15,7 +15,6 @@ namespace PlaysReplacements
         private int Plays, Retries;
         private Tokens.TokenSetter _tokenSetter;
 
-
         public PlaysReplacements()
         {
             _tokenSetter = Tokens.CreateTokenSetter(Name);

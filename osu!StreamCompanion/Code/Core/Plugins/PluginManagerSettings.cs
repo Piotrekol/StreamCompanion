@@ -11,11 +11,13 @@ namespace osu_StreamCompanion.Code.Core.Plugins
         public string SettingGroup => "General__Plugins";
 
         private readonly ISettings _settings;
+        private readonly Delegates.Restart _restart;
         private PluginManagerSettingsUserControl _pluginManagerSettingsUserControl;
 
-        public PluginManagerSettings(ISettings settings)
+        public PluginManagerSettings(ISettings settings, Delegates.Restart restart)
         {
             _settings = settings;
+            _restart = restart;
         }
 
         public void Free()
@@ -27,7 +29,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
         {
             if (_pluginManagerSettingsUserControl == null || _pluginManagerSettingsUserControl.IsDisposed)
             {
-                return _pluginManagerSettingsUserControl = new PluginManagerSettingsUserControl(_settings.GetConfiguration<PluginManagerConfiguration>(LocalPluginManager.PluginManagerConfigEntry));
+                return _pluginManagerSettingsUserControl = new PluginManagerSettingsUserControl(_settings.GetConfiguration<PluginManagerConfiguration>(LocalPluginManager.PluginManagerConfigEntry), _restart);
             }
 
             return _pluginManagerSettingsUserControl;
