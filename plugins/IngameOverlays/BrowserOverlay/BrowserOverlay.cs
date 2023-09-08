@@ -27,6 +27,7 @@ namespace BrowserOverlay
     {
         public static ConfigEntry BrowserOverlayConfigurationConfigEntry = new ConfigEntry("BrowserOverlay", null);
         public string SettingGroup { get; } = "In-game overlay__Browser overlay";
+        private const string messageBoxTitle = "StreamCompanion - Browser overlay";
 
         private readonly IContextAwareLogger _logger;
         private readonly ISettings _settings;
@@ -87,20 +88,46 @@ namespace BrowserOverlay
                 _restarter($"Browser overlay was toggled. isEnabled:{eventData.Value.Value}");
         }
 
-        private void RemoveOldAssets()
+        private bool TryRemoveOldAssets()
         {
             string[] oldFileNames = { "BrowserOverlay.zip" };
             foreach (var filename in oldFileNames)
             {
                 var filePath = Path.Combine(_saver.SaveDirectory, filename);
                 if (File.Exists(filePath))
+                {
+                    try
+                    {
+                        Directory.Delete(GetAssetsLocation(_saver), true);
+                    }
+                    catch (DirectoryNotFoundException e)
+                    {
+                        //Fresh install or assets directory deleted manually
+                        _logger.Log("Could not find directory to delete", LogLevel.Warning);
+                        _logger.Log(e, LogLevel.Warning);
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+                        //Assets are locked by running osu!
+                        var errorMessage = "Failed to update Browser overlay assets - close osu! and restart SC to try again";
+                        _logger.Log(errorMessage, LogLevel.Error);
+                        _logger.Log(e, LogLevel.Error);
+                        MessageBox.Show(errorMessage, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+
                     File.Delete(filePath);
             }
         }
 
+            return true;
+        }
+
         private async Task Initialize()
         {
-            RemoveOldAssets();
+            if (!TryRemoveOldAssets())
+                return;
+
             var assetsLocation = GetAssetsLocation(_saver);
             var zipFileLocation = Path.Combine(_saver.SaveDirectory, "BrowserOverlayAssetsV2.zip");
             var overlayFilesMissing = true;
@@ -134,7 +161,6 @@ namespace BrowserOverlay
 
         private void HandleOverlayReport(OverlayReport report)
         {
-            const string messageBoxTitle = "StreamCompanion - Browser overlay";
             switch (report.ReportType)
             {
                 case ReportType.Information:
