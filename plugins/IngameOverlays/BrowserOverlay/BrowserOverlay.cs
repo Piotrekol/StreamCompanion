@@ -52,7 +52,7 @@ namespace BrowserOverlay
             _restarter = restarter;
             _browserOverlayConfiguration = _settings.GetConfiguration<Configuration>(BrowserOverlayConfigurationConfigEntry);
             _browserOverlayConfiguration.OverlayTabs ??= new List<OverlayTab> { new OverlayTab() };
-
+            ResetBorders();
             if (_browserOverlayConfiguration.Enabled)
                 Initialize().HandleExceptions();
 
@@ -64,9 +64,19 @@ namespace BrowserOverlay
             _dataConsumers.ForEach(x => x.Value.Handle("Sc-webOverlayConfiguration", JsonConvert.SerializeObject(_browserOverlayConfiguration.OverlayTabs)));
         }
 
+        private void ResetBorders()
+        {
+            foreach (var tab in _browserOverlayConfiguration.OverlayTabs)
+            {
+                tab.Border = false;
+            }
+
+            SendConfiguration();
+        }
         public void Free()
         {
             _browserOverlaySettings?.Dispose();
+            ResetBorders();
         }
 
         public object GetUiSettings()
@@ -242,6 +252,7 @@ namespace BrowserOverlay
         public decimal Scale { get; set; } = 1;
         public Canvas Canvas { get; set; } = new Canvas();
         public Position Position { get; set; } = new Position();
+        public bool Border { get; set; } = false;
         public override string ToString() => $"{Url}, {Canvas}, {Position}, Scale:{Scale:0.###}";
     }
 

@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using StreamCompanionTypes.Interfaces.Services;
 
 namespace BrowserOverlay
 {
@@ -18,6 +12,8 @@ namespace BrowserOverlay
         private bool _init = true;
         private BindingList<OverlayTab> OverlayTabs;
         private OverlayTab CurrentOverlayTab = null;
+        private bool globalBordersEnabled = false;
+
         public BrowserOverlaySettings(Configuration configuration)
         {
             InitializeComponent();
@@ -41,7 +37,6 @@ namespace BrowserOverlay
         {
             SettingValueUpdated();
         }
-
         private void SettingValueUpdated()
         {
             if (_init || CurrentOverlayTab == null)
@@ -53,6 +48,7 @@ namespace BrowserOverlay
             CurrentOverlayTab.Position.Y = Convert.ToInt32(numericUpDown_positionY.Value);
             CurrentOverlayTab.Url = textBox_overlayUrl.Text;
             CurrentOverlayTab.Scale = numericUpDown_scale.Value;
+
             OverlayTabs.ResetBindings();
             OnSettingUpdated();
         }
@@ -83,11 +79,17 @@ namespace BrowserOverlay
 
         private void listBox_tabs_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (CurrentOverlayTab != null)
+                CurrentOverlayTab.Border = false;
+
             CurrentOverlayTab = (OverlayTab)listBox_tabs.SelectedItem;
+            CurrentOverlayTab.Border = true;
+
             panel_form.Enabled = CurrentOverlayTab != null;
             if (panel_form.Enabled)
                 PopulateForm(CurrentOverlayTab);
 
+            OnSettingUpdated();
         }
 
         private void PopulateForm(OverlayTab overlayTab)
@@ -109,6 +111,17 @@ namespace BrowserOverlay
         protected virtual void OnSettingUpdated(string settingName, object value)
         {
             SettingUpdated?.Invoke(this, (settingName, value));
+        }
+
+        private void button_toggleBorders_Click(object sender, EventArgs e)
+        {
+            globalBordersEnabled = !globalBordersEnabled;
+            foreach (var tab in _configuration.OverlayTabs)
+            {
+                tab.Border = globalBordersEnabled;
+            }
+
+            OnSettingUpdated();
         }
     }
 }
