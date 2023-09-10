@@ -15,6 +15,7 @@ using EmbedIO.Files;
 using EmbedIO.Utilities;
 using Newtonsoft.Json;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Configurations;
 using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -40,26 +41,7 @@ namespace WebSocketDataSender
         private HttpServer _server;
         private WebOverlay.WebOverlay _webOverlay;
 
-        public static ConfigEntry HttpServerPort = new ConfigEntry("httpServerPort", 20727);
-        public static ConfigEntry HttpServerAddress = new ConfigEntry("httpServerAddress", "http://localhost");
-
-        public static string BaseAddress(ISettings settings) => BindAddress(settings).Replace("*", "localhost");
-        public static string BindAddress(ISettings settings) => $"{settings.Get<string>(HttpServerAddress)}:{settings.Get<int>(HttpServerPort)}";
-        public static bool RemoteAccessEnabled(ISettings settings) => BindAddress(settings).Contains("://*");
-
-        public static string HttpContentRoot(ISaver saver)
-        {
-            var httpContentRoot = Path.Combine(saver.SaveDirectory, "web");
-            if (!Directory.Exists(httpContentRoot))
-                Directory.CreateDirectory(httpContentRoot);
-#if DEBUG
-            //A little hack to grab overlay files directly from git repository
-            var newRootPath = Path.Combine(httpContentRoot, "..", "..", "..", "..", "webOverlay");
-            if (Directory.Exists(newRootPath))
-                httpContentRoot = newRootPath;
-#endif
-            return httpContentRoot;
-        }
+        private readonly WebSocketConfiguration _webSocketConfiguration;
 
         public WebSocketDataGetter(ISettings settings, ILogger logger, ISaver saver, Delegates.Restart restarter, List<ISCWebModule> additionalWebModules = null)
         {
@@ -67,7 +49,8 @@ namespace WebSocketDataSender
             _saver = saver;
             _restarter = restarter;
             _logger = logger;
-            _webOverlay = new WebOverlay.WebOverlay(settings, saver, restarter);
+            _webSocketConfiguration = WebSocketConfiguration.GetConfiguration(_settings);
+            _webOverlay = new WebOverlay.WebOverlay(settings, saver, restarter, _webSocketConfiguration);
 
             var modules = new List<(string Description, IWebModule Module)>
             {
@@ -89,7 +72,7 @@ namespace WebSocketDataSender
                 }
             }
 
-            _server = new HttpServer(BindAddress(_settings), HttpContentRoot(saver), logger, modules);
+            _server = new HttpServer(_webSocketConfiguration.BindAddress(), _webSocketConfiguration.HttpContentRoot(saver), logger, modules);
 
             Task.Run(RunServer).HandleExceptions();
         }
@@ -104,7 +87,9 @@ namespace WebSocketDataSender
             {
                 if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse || ex.SocketErrorCode == SocketError.AccessDenied)
                 {
-                    var currentPort = _settings.Get<int>(HttpServerPort);
+                    var configuration = new WebSocketConfiguration();
+
+                    var currentPort = _webSocketConfiguration.HttpServerPort;
                     var newPort = currentPort + 1;
                     if (newPort > ushort.MaxValue)
                         newPort = 20000;
@@ -116,7 +101,7 @@ namespace WebSocketDataSender
                         $"You might need to update your overlay URLs in obs/slobs afterwards.", "Stream Companion Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
                     if (userResult == DialogResult.Yes)
                     {
-                        _settings.Add(HttpServerPort.Name, newPort);
+                        _webSocketConfiguration.HttpServerPort = newPort;
 
                         userResult = MessageBox.Show(
                             $"Stream Companion restart is necessary to apply web port changes.{Environment.NewLine}" +
@@ -136,12 +121,8 @@ namespace WebSocketDataSender
 
         private Task ListOverlays(IHttpContext context)
         {
-            var overlaysDir = Path.Combine(HttpContentRoot(_saver), "overlays");
-            var overlayIndexFileName = "index.html";
-            var fullPaths = Directory.GetFiles(overlaysDir, overlayIndexFileName, SearchOption.AllDirectories);
-            var relativePaths = fullPaths.Select(p => p.Substring(overlaysDir.Length + 1, p.Length - overlaysDir.Length - overlayIndexFileName.Length - 2));
             return context.SendStringAsync(
-                JsonConvert.SerializeObject(relativePaths),
+                JsonConvert.SerializeObject(_webSocketConfiguration.GetLocalOverlayRelativePaths(_saver)),
                 "application/json", Encoding.UTF8);
         }
 

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using StreamCompanionTypes.Interfaces.Services;
 using WebSocketDataSender.WebOverlay.Models;
 using Color = System.Drawing.Color;
+using StreamCompanion.Common.Configurations;
 
 namespace WebSocketDataSender.WebOverlay
 {
@@ -10,6 +11,7 @@ namespace WebSocketDataSender.WebOverlay
     {
         private readonly ISettings _settings;
         private readonly IOverlayConfiguration _configuration;
+        private readonly WebSocketConfiguration _webSocketConfiguration;
         public EventHandler ResetSettings;
         public EventHandler OpenFilesFolder;
         public EventHandler OpenWebUrl;
@@ -28,7 +30,7 @@ namespace WebSocketDataSender.WebOverlay
                     var ip = NetExtensions.GetLanAddress();
                     ip = string.IsNullOrEmpty(ip)
                         ? "Could not determine local address"
-                        : $"http://{ip}:{_settings.Get<int>(WebSocketDataGetter.HttpServerPort)}/";
+                        : $"http://{ip}:{_webSocketConfiguration.HttpServerPort}/";
                     textBox_remoteAccessUrl.Text = ip;
                 }
                 else
@@ -37,11 +39,11 @@ namespace WebSocketDataSender.WebOverlay
                 }
             }
         }
-        public WebOverlaySettings(ISettings settings, IOverlayConfiguration configuration)
+        public WebOverlaySettings(ISettings settings, IOverlayConfiguration configuration, WebSocketConfiguration webSocketConfiguration)
         {
             _settings = settings;
             _configuration = configuration;
-
+            _webSocketConfiguration = webSocketConfiguration;
             InitializeComponent();
 
             checkBox_simulatePP.Checked = _configuration.SimulatePPWhenListening;
