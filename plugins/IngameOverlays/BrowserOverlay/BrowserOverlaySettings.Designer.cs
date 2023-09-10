@@ -45,17 +45,23 @@ namespace BrowserOverlay
             label7 = new System.Windows.Forms.Label();
             label8 = new System.Windows.Forms.Label();
             panel_form = new System.Windows.Forms.Panel();
+            groupBox_recommendedSettings = new System.Windows.Forms.GroupBox();
+            label_recommendedSettings = new System.Windows.Forms.Label();
+            label9 = new System.Windows.Forms.Label();
+            comboBox_localOverlays = new System.Windows.Forms.ComboBox();
             button_addTab = new System.Windows.Forms.Button();
             listBox_tabs = new System.Windows.Forms.ListBox();
             button_remove = new System.Windows.Forms.Button();
             panel_content = new System.Windows.Forms.Panel();
             button_toggleBorders = new System.Windows.Forms.Button();
+            button_applyRecommendedSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_CanvasWidth).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_CanvasHeight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_positionY).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_positionX).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_scale).BeginInit();
             panel_form.SuspendLayout();
+            groupBox_recommendedSettings.SuspendLayout();
             panel_content.SuspendLayout();
             SuspendLayout();
             // 
@@ -72,7 +78,7 @@ namespace BrowserOverlay
             // 
             // textBox_overlayUrl
             // 
-            textBox_overlayUrl.Location = new System.Drawing.Point(82, 3);
+            textBox_overlayUrl.Location = new System.Drawing.Point(81, 35);
             textBox_overlayUrl.Name = "textBox_overlayUrl";
             textBox_overlayUrl.Size = new System.Drawing.Size(520, 23);
             textBox_overlayUrl.TabIndex = 1;
@@ -81,7 +87,7 @@ namespace BrowserOverlay
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(2, 6);
+            label2.Location = new System.Drawing.Point(2, 38);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(74, 15);
             label2.TabIndex = 4;
@@ -89,7 +95,7 @@ namespace BrowserOverlay
             // 
             // numericUpDown_CanvasWidth
             // 
-            numericUpDown_CanvasWidth.Location = new System.Drawing.Point(132, 35);
+            numericUpDown_CanvasWidth.Location = new System.Drawing.Point(132, 67);
             numericUpDown_CanvasWidth.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             numericUpDown_CanvasWidth.Name = "numericUpDown_CanvasWidth";
             numericUpDown_CanvasWidth.Size = new System.Drawing.Size(79, 23);
@@ -99,7 +105,7 @@ namespace BrowserOverlay
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(2, 37);
+            label3.Location = new System.Drawing.Point(2, 69);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(70, 15);
             label3.TabIndex = 6;
@@ -107,7 +113,7 @@ namespace BrowserOverlay
             // 
             // numericUpDown_CanvasHeight
             // 
-            numericUpDown_CanvasHeight.Location = new System.Drawing.Point(270, 35);
+            numericUpDown_CanvasHeight.Location = new System.Drawing.Point(270, 67);
             numericUpDown_CanvasHeight.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             numericUpDown_CanvasHeight.Name = "numericUpDown_CanvasHeight";
             numericUpDown_CanvasHeight.Size = new System.Drawing.Size(79, 23);
@@ -116,7 +122,7 @@ namespace BrowserOverlay
             // 
             // numericUpDown_positionY
             // 
-            numericUpDown_positionY.Location = new System.Drawing.Point(270, 67);
+            numericUpDown_positionY.Location = new System.Drawing.Point(270, 99);
             numericUpDown_positionY.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             numericUpDown_positionY.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
             numericUpDown_positionY.Name = "numericUpDown_positionY";
@@ -127,7 +133,7 @@ namespace BrowserOverlay
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new System.Drawing.Point(19, 69);
+            label4.Location = new System.Drawing.Point(19, 101);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(53, 15);
             label4.TabIndex = 9;
@@ -135,7 +141,7 @@ namespace BrowserOverlay
             // 
             // numericUpDown_positionX
             // 
-            numericUpDown_positionX.Location = new System.Drawing.Point(132, 67);
+            numericUpDown_positionX.Location = new System.Drawing.Point(132, 99);
             numericUpDown_positionX.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
             numericUpDown_positionX.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
             numericUpDown_positionX.Name = "numericUpDown_positionX";
@@ -146,7 +152,7 @@ namespace BrowserOverlay
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new System.Drawing.Point(35, 98);
+            label5.Location = new System.Drawing.Point(35, 130);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(37, 15);
             label5.TabIndex = 12;
@@ -156,7 +162,7 @@ namespace BrowserOverlay
             // 
             numericUpDown_scale.DecimalPlaces = 3;
             numericUpDown_scale.Increment = new decimal(new int[] { 1, 0, 0, 196608 });
-            numericUpDown_scale.Location = new System.Drawing.Point(132, 96);
+            numericUpDown_scale.Location = new System.Drawing.Point(132, 128);
             numericUpDown_scale.Name = "numericUpDown_scale";
             numericUpDown_scale.Size = new System.Drawing.Size(79, 23);
             numericUpDown_scale.TabIndex = 11;
@@ -165,7 +171,7 @@ namespace BrowserOverlay
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(84, 37);
+            label1.Location = new System.Drawing.Point(84, 69);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(42, 15);
             label1.TabIndex = 13;
@@ -174,7 +180,7 @@ namespace BrowserOverlay
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new System.Drawing.Point(217, 37);
+            label6.Location = new System.Drawing.Point(217, 69);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(46, 15);
             label6.TabIndex = 14;
@@ -183,7 +189,7 @@ namespace BrowserOverlay
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new System.Drawing.Point(109, 69);
+            label7.Location = new System.Drawing.Point(109, 101);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(17, 15);
             label7.TabIndex = 15;
@@ -192,7 +198,7 @@ namespace BrowserOverlay
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new System.Drawing.Point(246, 69);
+            label8.Location = new System.Drawing.Point(246, 101);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(17, 15);
             label8.TabIndex = 16;
@@ -200,6 +206,9 @@ namespace BrowserOverlay
             // 
             // panel_form
             // 
+            panel_form.Controls.Add(groupBox_recommendedSettings);
+            panel_form.Controls.Add(label9);
+            panel_form.Controls.Add(comboBox_localOverlays);
             panel_form.Controls.Add(label2);
             panel_form.Controls.Add(label8);
             panel_form.Controls.Add(textBox_overlayUrl);
@@ -218,6 +227,45 @@ namespace BrowserOverlay
             panel_form.Name = "panel_form";
             panel_form.Size = new System.Drawing.Size(687, 160);
             panel_form.TabIndex = 17;
+            // 
+            // groupBox_recommendedSettings
+            // 
+            groupBox_recommendedSettings.Controls.Add(button_applyRecommendedSettings);
+            groupBox_recommendedSettings.Controls.Add(label_recommendedSettings);
+            groupBox_recommendedSettings.Location = new System.Drawing.Point(377, 69);
+            groupBox_recommendedSettings.Name = "groupBox_recommendedSettings";
+            groupBox_recommendedSettings.Size = new System.Drawing.Size(225, 88);
+            groupBox_recommendedSettings.TabIndex = 19;
+            groupBox_recommendedSettings.TabStop = false;
+            groupBox_recommendedSettings.Text = "Recommended settings";
+            // 
+            // label_recommendedSettings
+            // 
+            label_recommendedSettings.AutoSize = true;
+            label_recommendedSettings.Location = new System.Drawing.Point(9, 21);
+            label_recommendedSettings.Name = "label_recommendedSettings";
+            label_recommendedSettings.Size = new System.Drawing.Size(22, 15);
+            label_recommendedSettings.TabIndex = 0;
+            label_recommendedSettings.Text = "---";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(26, 9);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(50, 15);
+            label9.TabIndex = 18;
+            label9.Text = "Overlay:";
+            // 
+            // comboBox_localOverlays
+            // 
+            comboBox_localOverlays.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBox_localOverlays.FormattingEnabled = true;
+            comboBox_localOverlays.Location = new System.Drawing.Point(81, 6);
+            comboBox_localOverlays.Name = "comboBox_localOverlays";
+            comboBox_localOverlays.Size = new System.Drawing.Size(520, 23);
+            comboBox_localOverlays.TabIndex = 17;
+            comboBox_localOverlays.SelectedIndexChanged += comboBox_localOverlays_SelectedIndexChanged;
             // 
             // button_addTab
             // 
@@ -271,6 +319,16 @@ namespace BrowserOverlay
             button_toggleBorders.UseVisualStyleBackColor = true;
             button_toggleBorders.Click += button_toggleBorders_Click;
             // 
+            // button_applyRecommendedSettings
+            // 
+            button_applyRecommendedSettings.Location = new System.Drawing.Point(153, 61);
+            button_applyRecommendedSettings.Name = "button_applyRecommendedSettings";
+            button_applyRecommendedSettings.Size = new System.Drawing.Size(66, 23);
+            button_applyRecommendedSettings.TabIndex = 23;
+            button_applyRecommendedSettings.Text = "Apply";
+            button_applyRecommendedSettings.UseVisualStyleBackColor = true;
+            button_applyRecommendedSettings.Click += button_applyRecommendedSettings_Click;
+            // 
             // BrowserOverlaySettings
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -286,6 +344,8 @@ namespace BrowserOverlay
             ((System.ComponentModel.ISupportInitialize)numericUpDown_scale).EndInit();
             panel_form.ResumeLayout(false);
             panel_form.PerformLayout();
+            groupBox_recommendedSettings.ResumeLayout(false);
+            groupBox_recommendedSettings.PerformLayout();
             panel_content.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -314,5 +374,10 @@ namespace BrowserOverlay
         private System.Windows.Forms.Button button_remove;
         private System.Windows.Forms.Panel panel_content;
         private System.Windows.Forms.Button button_toggleBorders;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboBox_localOverlays;
+        private System.Windows.Forms.GroupBox groupBox_recommendedSettings;
+        private System.Windows.Forms.Label label_recommendedSettings;
+        private System.Windows.Forms.Button button_applyRecommendedSettings;
     }
 }

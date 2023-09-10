@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Overlay.Common;
 using Overlay.Common.Loader;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Configurations;
 using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -83,7 +84,7 @@ namespace BrowserOverlay
         {
             if (_browserOverlaySettings == null || _browserOverlaySettings.IsDisposed)
             {
-                _browserOverlaySettings = new BrowserOverlaySettings(_browserOverlayConfiguration);
+                _browserOverlaySettings = new BrowserOverlaySettings(_browserOverlayConfiguration, WebSocketConfiguration.GetConfiguration(_settings).GetLocalOverlays(_saver));
                 _browserOverlaySettings.SettingUpdated += OnSettingUpdated;
             }
             return _browserOverlaySettings;

@@ -87,13 +87,10 @@ namespace WebSocketDataSender
             {
                 if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse || ex.SocketErrorCode == SocketError.AccessDenied)
                 {
-                    var configuration = new WebSocketConfiguration();
-
                     var currentPort = _webSocketConfiguration.HttpServerPort;
                     var newPort = currentPort + 1;
                     if (newPort > ushort.MaxValue)
                         newPort = 20000;
-
 
                     var userResult = MessageBox.Show(
                         $"Web overlay couldn't start because there is something already running on port {currentPort} on your system.{Environment.NewLine}" +
