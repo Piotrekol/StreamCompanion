@@ -57,22 +57,21 @@ Current map background image
   `/backgroundImage?cache=true&mapId=123456`
   :::
 
-### [`Songs`](http://localhost:20727/Songs)
+### [`Songs`](http://localhost:20727/Songs/)
 
 View into user osu! Songs folder
 
-* Use [backgroundImage](#backgroundImage) endpoint for getting current map background instead of navigating to it here.
-* This is provided mainly for cases where there is need for additional .osu file processing.
-::: details dev note
-I would argue this sort of thing should end up as new StreamCompanion plugin or as addition to existing one.
-:::
+- Use [backgroundImage](#backgroundImage) endpoint for getting current map background instead of navigating to it here.
+- This is provided mainly for cases where there is need for additional .osu file processing.
+  ::: details dev note
+  I would argue this sort of thing should end up as new StreamCompanion plugin or as addition to existing one.
+  :::
 
-### [`Skins`](http://localhost:20727/Skins)
+### [`Skins`](http://localhost:20727/Skins/)
 
 View into user osu! Skins folder
 
-* Combine this with `skin` token value to get access to skin assets user is currently using.
-
+- Combine this with `skin` token value to get access to skin assets user is currently using.
 
 ### [`overlayList`](http://localhost:20727/overlayList)
 
