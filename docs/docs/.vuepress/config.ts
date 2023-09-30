@@ -1,5 +1,5 @@
 import { defineUserConfig } from '@vuepress/cli';
-import type { DefaultThemeOptions } from '@vuepress/theme-default';
+import { defaultTheme } from '@vuepress/theme-default'
 import { sidebar } from './configs';
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -7,7 +7,7 @@ const urlBase = isProd ? '/StreamCompanion/' : '/';
 console.log('isProd:', isProd);
 console.log('urlBase:', urlBase);
 
-export default defineUserConfig<DefaultThemeOptions>({
+export default defineUserConfig({
   lang: 'en-US',
   title: 'StreamCompanion',
   description: 'osu! information extractor... on steroids',
@@ -47,7 +47,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     ['meta', { name: 'msapplication-TileColor', content: '#3eaf7c' }],
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
   ],
-  themeConfig: {
+  theme: defaultTheme({
     logo: 'images/logo.svg',
     repo: 'Piotrekol/StreamCompanion',
     docsBranch: 'master',
@@ -64,5 +64,5 @@ export default defineUserConfig<DefaultThemeOptions>({
         editLinkText: 'Edit this page on GitHub',
       },
     },
-  },
+  }),
 });

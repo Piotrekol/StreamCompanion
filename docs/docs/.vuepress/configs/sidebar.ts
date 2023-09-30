@@ -11,8 +11,6 @@ export const en: SidebarConfig = {
         '/guide/in-game-overlays.md',
         '/guide/gamma.md',
         '/guide/tournament-mode.md',
-        
-        '/cookbook/',
         '/development/'
       ],
     },
@@ -41,13 +39,5 @@ export const en: SidebarConfig = {
         },
       ],
     },
-  ],
-  '/cookbook/': [
-    {
-      text: 'Cookbook',
-      children: [
-        '/cookbook/README.md',
-      ],
-    },
-  ],
+  ]
 };

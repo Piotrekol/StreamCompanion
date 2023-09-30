@@ -11,13 +11,16 @@ StreamCompanion has 2 in-game overlay plugins:
 Used to display any web overlay in-game.
 
 * **Step 0:** Install it using latest [`StreamCompanion-browserOverlay.exe`][latestRelease] or unpack it in plugins folder using portable version.
-* **Step 1:** On first startup it will download around 90MB of additional required assets.
-* **Step 2:** Copy url of overlay that you want to use (as described in [here](./configuration.md#web-overlays)).
-* **Step 3:** In settings, under `Browser overlay` tab paste it in url field.
-* **Step 4:** Now, while looking in osu! adjust width/height until whole overlay is visible on the screen.
-* **Step 5:** Adjust position x/y values depending on where you want it located on the screen.
+* **Step 1:** On first startup it will download around 120MB of additional required assets.
+* **Step 2:** In settings, under `Browser overlay` tab select overlay that you want to display from the list
+* **Step 3:** Apply recommended canvas settings
+* **Step 4:** Adjust x/y position values depending on where you want it located on the screen.
 
-Repeat steps 2-5 for as many web overlays you want. Keep in mind however that running too many or too big(canvas size) overlays will result in a noticeable game performance penalty.
+Repeat steps 2-5 for as many web overlays you want. Keep in mind however that running too big(total canvas size) overlay will result in a noticeable game performance penalty.  
+<small>There is an upper limit of 16 ingame overlays.</small>
+::: tip TIP: Increase canvas size if your overlay is not fully visible
+:::
+
 
 ## Text overlay
 
@@ -39,7 +42,9 @@ Known **not working** (either doesn't show anything or crashes osu!):
 Rivatuner OSD, reshade
 :::
 
-First off - try restarting your PC.  
+General checklist:
+- Try restarting your PC.
+- Try running BOTH StreamCompanion and osu! as administrator.
 
 In case overlay still fails to display anything you can check what other applications are trying to interact with osu!. Restart StreamCompanion with logging level set to `Trace` and start osu! in order to create a list of unknown files loaded in osu! in `Files/Logs/`.  
 Googling these files individually will most of the time give you a good idea what application it is from. Try disabling some/all of these, and seeing if that changes anything.
