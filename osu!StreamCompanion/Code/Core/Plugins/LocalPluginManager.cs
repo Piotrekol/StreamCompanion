@@ -12,6 +12,7 @@ using Grace.DependencyInjection;
 using Grace.DependencyInjection.Exceptions;
 using osu_StreamCompanion.Code.Core.Loggers;
 using StreamCompanionTypes.Attributes;
+using System.Threading.Tasks;
 
 namespace osu_StreamCompanion.Code.Core.Plugins
 {
@@ -195,11 +196,12 @@ namespace osu_StreamCompanion.Code.Core.Plugins
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Plugin \"{pluginType.FullName}\" could not get initialized. StreamCompanion will most likely continue to work, however some features might be missing." +
+                    //TODO: handle plugin updates after plugin repository impl.
+                    _ = Task.Run(() => MessageBox.Show($"Plugin \"{pluginType.FullName}\" could not get initialized. StreamCompanion will most likely continue to work, however some features might be missing." +
                                     Environment.NewLine + Environment.NewLine + "Errors:" +
                                     Environment.NewLine +
                                     ex,
-                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning));
                     _logger.Log(ex, LogLevel.Error);
                 }
 
