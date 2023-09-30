@@ -11,6 +11,7 @@ using CollectionManager.DataTypes;
 using StreamCompanion.Common;
 using StreamCompanion.Common.Configurations;
 using StreamCompanionTypes;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;

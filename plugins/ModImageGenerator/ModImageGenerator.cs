@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using StreamCompanionTypes.Attributes;
 using ModImageGenerator.API;
 using StreamCompanion.Common;
 using StreamCompanionTypes;

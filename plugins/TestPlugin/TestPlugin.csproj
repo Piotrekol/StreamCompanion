@@ -12,4 +12,7 @@
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<OutputPath>..\..\build\Release\Plugins\</OutputPath>
 	</PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
+	</ItemGroup>
 </Project>

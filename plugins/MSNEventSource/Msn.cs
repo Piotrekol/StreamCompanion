@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using StreamCompanion.Common;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;

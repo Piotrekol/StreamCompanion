@@ -1,4 +1,5 @@
 ﻿using StreamCompanion.Common;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;

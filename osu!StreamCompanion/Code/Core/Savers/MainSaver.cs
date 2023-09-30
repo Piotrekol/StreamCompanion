@@ -9,12 +9,7 @@ namespace osu_StreamCompanion.Code.Core.Savers
         private ISaver _saver;
         private ILogger _logger;
 
-        public string SaveDirectory
-        {
-            get { return _saver.SaveDirectory; }
-            set { }
-        }
-
+        public string SaveDirectory => _saver.SaveDirectory;
 
         public MainSaver(ILogger logger, TextSaver saver)
         {

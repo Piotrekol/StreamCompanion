@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using StreamCompanion.Common;
 using StreamCompanionTypes;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Consumers;
