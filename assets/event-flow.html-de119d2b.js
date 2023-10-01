@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-6207b474","path":"/development/SC/event-flow.html","title":"Event flow","lang":"en-US","frontmatter":{},"headers":[],"git":{"updatedTime":1696155383000,"contributors":[{"name":"Piotrekol","email":"4990365+Piotrekol@users.noreply.github.com","commits":1}]},"filePathRelative":"development/SC/event-flow.md"}');export{e as data};
