@@ -72,8 +72,8 @@ namespace BrowserOverlay
 
         private void button_addTab_Click(object sender, EventArgs e)
         {
-            OverlayTabs.AddNew();
-            OnSettingUpdated();
+            listBox_tabs.SelectedItem = OverlayTabs.AddNew();
+            listBox_tabs_SelectedIndexChanged(listBox_tabs, null);
         }
 
         private void button_remove_Click(object sender, EventArgs e)
@@ -91,6 +91,9 @@ namespace BrowserOverlay
                 CurrentOverlayTab.Border = false;
 
             CurrentOverlayTab = (OverlayTab)listBox_tabs.SelectedItem;
+            if (CurrentOverlayTab == null)
+                return;
+
             CurrentOverlayTab.Border = true;
 
             panel_form.Enabled = CurrentOverlayTab != null;
