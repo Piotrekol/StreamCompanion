@@ -249,7 +249,7 @@ namespace BrowserOverlay
     }
     public class OverlayTab
     {
-        public string Url { get; set; } = "http://localhost:20727/overlays/SC_PP%20Counter/";
+        public string Url { get; set; } = "http://localhost:20727/overlays/SC_Live Overlay/";
         public decimal Scale { get; set; } = 1;
         public Canvas Canvas { get; set; } = new Canvas();
         public Position Position { get; set; } = new Position();
