@@ -1503,7 +1503,7 @@ vue@^3.3.4:
     "@vue/server-renderer" "3.3.4"
     "@vue/shared" "3.3.4"
 
-vuepress-vite@2.0.0-beta.50-pre.1, vuepress-vite@^2.0.0-beta.67:
+vuepress-vite@2.0.0-beta.67:
   version "2.0.0-beta.67"
   resolved "https://registry.yarnpkg.com/vuepress-vite/-/vuepress-vite-2.0.0-beta.67.tgz#24db0ce1ba96e1a50c14883970329f933b9d6418"
   integrity sha512-oaak2RPKBP0LeaDpDntlsQWLklCBf2vdeceXtPSLV2IzL/wtMHs5DQ/f7zXxCzvku3h/FIstmgoKq/vC0TvHkA==
@@ -1514,12 +1514,12 @@ vuepress-vite@2.0.0-beta.50-pre.1, vuepress-vite@^2.0.0-beta.67:
     "@vuepress/theme-default" "2.0.0-beta.67"
     vue "^3.3.4"
 
-vuepress@^2.0.0-beta.67:
-  version "2.0.0-beta.50-pre.1"
-  resolved "https://registry.yarnpkg.com/vuepress/-/vuepress-2.0.0-beta.50-pre.1.tgz#26eec90444bb37590f29d10dd5923e75c476189f"
-  integrity sha512-4Finc3GDscIqgRFAZFwa4SUm8tIFSVQIxnPIpQPW3kaM37rKylvUDkLrs2lMvoDPTAAE+Kf+v34tAFX+ZMGKUg==
+vuepress@2.0.0-beta.67:
+  version "2.0.0-beta.67"
+  resolved "https://registry.yarnpkg.com/vuepress/-/vuepress-2.0.0-beta.67.tgz#eacf63d6d14f2364bd8043f13eba67234319cd53"
+  integrity sha512-931pKDOph20RKMLZAH5YYlMz+nfx9jcOQio1Gxk0pB7DwuSxAVFxPv2dbIUP4E/4uWOkLppRhLYcrOoxEbVYzA==
   dependencies:
-    vuepress-vite "2.0.0-beta.50-pre.1"
+    vuepress-vite "2.0.0-beta.67"
 
 which@^2.0.1:
   version "2.0.2"
