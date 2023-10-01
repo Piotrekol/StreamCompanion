@@ -22,6 +22,9 @@ Minimal working JavaScript example looks like this:
 if you execute this code and change songs in osu few times, you'll notice that not all tokens are always sent. This is intentional - messages received contain only changed values.  
 To have access to all current token values you need to cache them:
 @[code js{5,7}](./apiExamples/minimalWSpt2.js)
+By default token values are sent as soon as specific plugin updates it, resulting in several messages containing information about single map/state change.  
+As this may be sometimes undesirable, SC can be configured to send token updates once all plugins have completed their work by appending `?bulkUpdates=MainPipeline,LiveTokens` to url:
+@[code js{1}](./apiExamples/minimalWSpt3.js)
 
 ### `outputPatterns`
 
@@ -57,22 +60,21 @@ Current map background image
   `/backgroundImage?cache=true&mapId=123456`
   :::
 
-### [`Songs`](http://localhost:20727/Songs)
+### [`Songs`](http://localhost:20727/Songs/)
 
 View into user osu! Songs folder
 
-* Use [backgroundImage](#backgroundImage) endpoint for getting current map background instead of navigating to it here.
-* This is provided mainly for cases where there is need for additional .osu file processing.
-::: details dev note
-I would argue this sort of thing should end up as new StreamCompanion plugin or as addition to existing one.
-:::
+- Use [backgroundImage](#backgroundImage) endpoint for getting current map background instead of navigating to it here.
+- This is provided mainly for cases where there is need for additional .osu file processing.
+  ::: details dev note
+  I would argue this sort of thing should end up as new StreamCompanion plugin or as addition to existing one.
+  :::
 
-### [`Skins`](http://localhost:20727/Skins)
+### [`Skins`](http://localhost:20727/Skins/)
 
 View into user osu! Skins folder
 
-* Combine this with `skin` token value to get access to skin assets user is currently using.
-
+- Combine this with `skin` token value to get access to skin assets user is currently using.
 
 ### [`overlayList`](http://localhost:20727/overlayList)
 

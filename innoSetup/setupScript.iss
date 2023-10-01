@@ -246,6 +246,8 @@ begin
         MB_YESNO) = IDYES 
     then begin
       DeleteFile(ExpandConstant('{app}')+'\settings.ini');
+      DeleteFile(ExpandConstant('{app}')+'\settings.json');
+      DeleteFile(ExpandConstant('{app}')+'\unused_settings.backup');
     end;
   end;
 end;

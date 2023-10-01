@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;

@@ -45,6 +45,7 @@ namespace osu_StreamCompanion.Code.Core
             lock (_lockingObject)
                 return this.Get<T>(entry.Name, entry.Default<T>());
         }
+
         public void Add<T>(string key, T value, bool raiseUpdate = false)
         {
             lock (_lockingObject)
@@ -57,7 +58,6 @@ namespace osu_StreamCompanion.Code.Core
                     OnSettingUpdated(key);
             }
         }
-
 
         public void Add<T>(ConfigEntry entry, T value, bool raiseUpdate = false)
             => Add<T>(entry.Name, value, raiseUpdate);
@@ -119,6 +119,7 @@ namespace osu_StreamCompanion.Code.Core
                 File.Move(tempFilePath, FullConfigFilePath, true);
             }
         }
+
         public void Load()
         {
             lock (_lockingObject)
@@ -142,7 +143,8 @@ namespace osu_StreamCompanion.Code.Core
 
         private bool TryConvertOldSettings()
         {
-            var oldSettingsFilePath = Path.Combine(_saveLocation, "settings.ini");
+            var iniFileName = ConfigFileName.Replace(".json", ".ini");
+            var oldSettingsFilePath = Path.Combine(_saveLocation, iniFileName);
             if (!File.Exists(oldSettingsFilePath))
                 return false;
 
@@ -155,7 +157,7 @@ namespace osu_StreamCompanion.Code.Core
             }
 
             File.WriteAllText(FullConfigFilePath, jObject.ToString());
-            var backupOldSettingsFilePath = Path.Combine(_saveLocation, "unused_settings.backup");
+            var backupOldSettingsFilePath = Path.Combine(_saveLocation, $"unused_{iniFileName.Replace(".ini", ".backup")}");
             File.Move(oldSettingsFilePath, backupOldSettingsFilePath, true);
             return true;
         }

@@ -9,7 +9,9 @@ using System.Windows;
 using System.Windows.Forms;
 using CollectionManager.DataTypes;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Configurations;
 using StreamCompanionTypes;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
@@ -36,8 +38,6 @@ namespace ScGui
         private List<Lazy<ISettingsSource>> _settingsList;
 
         public string SettingGroup { get; } = "General";
-
-        private static string BaseAddress(ISettings settings) => $"http://localhost:{settings.Get("httpServerPort", "20727")}/";
 
         private NotifyIcon CreateNotifyIcon()
         {
@@ -147,7 +147,7 @@ namespace ScGui
                     aboutFrm.ShowDialog();
                 };
                 _mainWindow.OnUpdateClicked += (sender, args) => _mainWindowModel.UpdateTextClicked(sender, args);
-                _mainWindow.OnPpClicked += (_, __) => ProcessExt.OpenUrl(BaseAddress(_settings));
+                _mainWindow.OnPpClicked += (_, __) => ProcessExt.OpenUrl(WebSocketConfiguration.GetConfiguration(_settings).BaseAddress());
                 _mainWindow.OnWikiClicked += (_, __) => ProcessExt.OpenUrl("https://piotrekol.github.io/StreamCompanion/");
                 _mainWindow.Show();
 

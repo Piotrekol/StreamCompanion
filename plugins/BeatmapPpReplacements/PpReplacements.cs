@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PpCalculatorTypes;
 using StreamCompanion.Common;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;

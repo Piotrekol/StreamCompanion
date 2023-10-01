@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Overlay.Common;
 using Overlay.Common.Loader;
 using StreamCompanion.Common;
+using StreamCompanion.Common.Configurations;
 using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
@@ -52,7 +53,7 @@ namespace BrowserOverlay
             _restarter = restarter;
             _browserOverlayConfiguration = _settings.GetConfiguration<Configuration>(BrowserOverlayConfigurationConfigEntry);
             _browserOverlayConfiguration.OverlayTabs ??= new List<OverlayTab> { new OverlayTab() };
-
+            ResetBorders();
             if (_browserOverlayConfiguration.Enabled)
                 Initialize().HandleExceptions();
 
@@ -64,16 +65,26 @@ namespace BrowserOverlay
             _dataConsumers.ForEach(x => x.Value.Handle("Sc-webOverlayConfiguration", JsonConvert.SerializeObject(_browserOverlayConfiguration.OverlayTabs)));
         }
 
+        private void ResetBorders()
+        {
+            foreach (var tab in _browserOverlayConfiguration.OverlayTabs)
+            {
+                tab.Border = false;
+            }
+
+            SendConfiguration();
+        }
         public void Free()
         {
             _browserOverlaySettings?.Dispose();
+            ResetBorders();
         }
 
         public object GetUiSettings()
         {
             if (_browserOverlaySettings == null || _browserOverlaySettings.IsDisposed)
             {
-                _browserOverlaySettings = new BrowserOverlaySettings(_browserOverlayConfiguration);
+                _browserOverlaySettings = new BrowserOverlaySettings(_browserOverlayConfiguration, WebSocketConfiguration.GetConfiguration(_settings).GetLocalOverlays(_saver));
                 _browserOverlaySettings.SettingUpdated += OnSettingUpdated;
             }
             return _browserOverlaySettings;
@@ -238,10 +249,11 @@ namespace BrowserOverlay
     }
     public class OverlayTab
     {
-        public string Url { get; set; } = "http://localhost:20727/overlays/SC_PP%20Counter/";
+        public string Url { get; set; } = "http://localhost:20727/overlays/SC_Live Overlay/";
         public decimal Scale { get; set; } = 1;
         public Canvas Canvas { get; set; } = new Canvas();
         public Position Position { get; set; } = new Position();
+        public bool Border { get; set; } = false;
         public override string ToString() => $"{Url}, {Canvas}, {Position}, Scale:{Scale:0.###}";
     }
 

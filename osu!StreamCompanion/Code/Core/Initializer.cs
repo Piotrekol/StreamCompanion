@@ -33,7 +33,7 @@ namespace osu_StreamCompanion.Code.Core
 
             if (!string.IsNullOrEmpty(settingsProfileName))
             {
-                Settings.ConfigFileName = Settings.ConfigFileName.Replace(".ini", $".{settingsProfileName}.ini");
+                Settings.ConfigFileName = Settings.ConfigFileName.Replace(".json", $".{settingsProfileName}.json");
             }
 
             Settings.Load();

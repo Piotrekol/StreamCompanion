@@ -29,283 +29,326 @@ namespace BrowserOverlay
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox_enable = new System.Windows.Forms.CheckBox();
-            this.textBox_overlayUrl = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.numericUpDown_CanvasWidth = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDown_CanvasHeight = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown_positionY = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDown_positionX = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDown_scale = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.panel_form = new System.Windows.Forms.Panel();
-            this.button_addTab = new System.Windows.Forms.Button();
-            this.listBox_tabs = new System.Windows.Forms.ListBox();
-            this.button_remove = new System.Windows.Forms.Button();
-            this.panel_content = new System.Windows.Forms.Panel();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_scale)).BeginInit();
-            this.panel_form.SuspendLayout();
-            this.panel_content.SuspendLayout();
-            this.SuspendLayout();
+            checkBox_enable = new System.Windows.Forms.CheckBox();
+            textBox_overlayUrl = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
+            numericUpDown_CanvasWidth = new System.Windows.Forms.NumericUpDown();
+            label3 = new System.Windows.Forms.Label();
+            numericUpDown_CanvasHeight = new System.Windows.Forms.NumericUpDown();
+            numericUpDown_positionY = new System.Windows.Forms.NumericUpDown();
+            label4 = new System.Windows.Forms.Label();
+            numericUpDown_positionX = new System.Windows.Forms.NumericUpDown();
+            label5 = new System.Windows.Forms.Label();
+            numericUpDown_scale = new System.Windows.Forms.NumericUpDown();
+            label1 = new System.Windows.Forms.Label();
+            label6 = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
+            label8 = new System.Windows.Forms.Label();
+            panel_form = new System.Windows.Forms.Panel();
+            groupBox_recommendedSettings = new System.Windows.Forms.GroupBox();
+            label_recommendedSettings = new System.Windows.Forms.Label();
+            label9 = new System.Windows.Forms.Label();
+            comboBox_localOverlays = new System.Windows.Forms.ComboBox();
+            button_addTab = new System.Windows.Forms.Button();
+            listBox_tabs = new System.Windows.Forms.ListBox();
+            button_remove = new System.Windows.Forms.Button();
+            panel_content = new System.Windows.Forms.Panel();
+            button_toggleBorders = new System.Windows.Forms.Button();
+            button_applyRecommendedSettings = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CanvasWidth).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CanvasHeight).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_positionY).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_positionX).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_scale).BeginInit();
+            panel_form.SuspendLayout();
+            groupBox_recommendedSettings.SuspendLayout();
+            panel_content.SuspendLayout();
+            SuspendLayout();
             // 
             // checkBox_enable
             // 
-            this.checkBox_enable.AutoSize = true;
-            this.checkBox_enable.Location = new System.Drawing.Point(17, 12);
-            this.checkBox_enable.Name = "checkBox_enable";
-            this.checkBox_enable.Size = new System.Drawing.Size(299, 19);
-            this.checkBox_enable.TabIndex = 0;
-            this.checkBox_enable.Text = "Enable browser ingame overlay (Requires SC restart)";
-            this.checkBox_enable.UseVisualStyleBackColor = true;
-            this.checkBox_enable.CheckedChanged += new System.EventHandler(this.checkBox_enable_CheckedChanged);
+            checkBox_enable.AutoSize = true;
+            checkBox_enable.Location = new System.Drawing.Point(17, 12);
+            checkBox_enable.Name = "checkBox_enable";
+            checkBox_enable.Size = new System.Drawing.Size(299, 19);
+            checkBox_enable.TabIndex = 0;
+            checkBox_enable.Text = "Enable browser ingame overlay (Requires SC restart)";
+            checkBox_enable.UseVisualStyleBackColor = true;
+            checkBox_enable.CheckedChanged += checkBox_enable_CheckedChanged;
             // 
             // textBox_overlayUrl
             // 
-            this.textBox_overlayUrl.Location = new System.Drawing.Point(82, 3);
-            this.textBox_overlayUrl.Name = "textBox_overlayUrl";
-            this.textBox_overlayUrl.Size = new System.Drawing.Size(520, 23);
-            this.textBox_overlayUrl.TabIndex = 1;
-            this.textBox_overlayUrl.TextChanged += new System.EventHandler(this.textBox_overlayUrl_TextChanged);
+            textBox_overlayUrl.Location = new System.Drawing.Point(81, 35);
+            textBox_overlayUrl.Name = "textBox_overlayUrl";
+            textBox_overlayUrl.Size = new System.Drawing.Size(520, 23);
+            textBox_overlayUrl.TabIndex = 1;
+            textBox_overlayUrl.TextChanged += textBox_overlayUrl_TextChanged;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(2, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 15);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Overlay URL:";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(2, 38);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(74, 15);
+            label2.TabIndex = 4;
+            label2.Text = "Overlay URL:";
             // 
             // numericUpDown_CanvasWidth
             // 
-            this.numericUpDown_CanvasWidth.Location = new System.Drawing.Point(132, 35);
-            this.numericUpDown_CanvasWidth.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown_CanvasWidth.Name = "numericUpDown_CanvasWidth";
-            this.numericUpDown_CanvasWidth.Size = new System.Drawing.Size(79, 23);
-            this.numericUpDown_CanvasWidth.TabIndex = 5;
-            this.numericUpDown_CanvasWidth.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
+            numericUpDown_CanvasWidth.Location = new System.Drawing.Point(132, 67);
+            numericUpDown_CanvasWidth.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown_CanvasWidth.Name = "numericUpDown_CanvasWidth";
+            numericUpDown_CanvasWidth.Size = new System.Drawing.Size(79, 23);
+            numericUpDown_CanvasWidth.TabIndex = 5;
+            numericUpDown_CanvasWidth.ValueChanged += numericUpDown_ValueChanged;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(2, 37);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 15);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Canvas size:";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(2, 69);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(70, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Canvas size:";
             // 
             // numericUpDown_CanvasHeight
             // 
-            this.numericUpDown_CanvasHeight.Location = new System.Drawing.Point(270, 35);
-            this.numericUpDown_CanvasHeight.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown_CanvasHeight.Name = "numericUpDown_CanvasHeight";
-            this.numericUpDown_CanvasHeight.Size = new System.Drawing.Size(79, 23);
-            this.numericUpDown_CanvasHeight.TabIndex = 7;
-            this.numericUpDown_CanvasHeight.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
+            numericUpDown_CanvasHeight.Location = new System.Drawing.Point(270, 67);
+            numericUpDown_CanvasHeight.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown_CanvasHeight.Name = "numericUpDown_CanvasHeight";
+            numericUpDown_CanvasHeight.Size = new System.Drawing.Size(79, 23);
+            numericUpDown_CanvasHeight.TabIndex = 7;
+            numericUpDown_CanvasHeight.ValueChanged += numericUpDown_ValueChanged;
             // 
             // numericUpDown_positionY
             // 
-            this.numericUpDown_positionY.Location = new System.Drawing.Point(270, 67);
-            this.numericUpDown_positionY.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown_positionY.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown_positionY.Name = "numericUpDown_positionY";
-            this.numericUpDown_positionY.Size = new System.Drawing.Size(79, 23);
-            this.numericUpDown_positionY.TabIndex = 10;
-            this.numericUpDown_positionY.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
+            numericUpDown_positionY.Location = new System.Drawing.Point(270, 99);
+            numericUpDown_positionY.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown_positionY.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
+            numericUpDown_positionY.Name = "numericUpDown_positionY";
+            numericUpDown_positionY.Size = new System.Drawing.Size(79, 23);
+            numericUpDown_positionY.TabIndex = 10;
+            numericUpDown_positionY.ValueChanged += numericUpDown_ValueChanged;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(19, 69);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 15);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Position:";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(19, 101);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(53, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Position:";
             // 
             // numericUpDown_positionX
             // 
-            this.numericUpDown_positionX.Location = new System.Drawing.Point(132, 67);
-            this.numericUpDown_positionX.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown_positionX.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown_positionX.Name = "numericUpDown_positionX";
-            this.numericUpDown_positionX.Size = new System.Drawing.Size(79, 23);
-            this.numericUpDown_positionX.TabIndex = 8;
-            this.numericUpDown_positionX.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
+            numericUpDown_positionX.Location = new System.Drawing.Point(132, 99);
+            numericUpDown_positionX.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numericUpDown_positionX.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
+            numericUpDown_positionX.Name = "numericUpDown_positionX";
+            numericUpDown_positionX.Size = new System.Drawing.Size(79, 23);
+            numericUpDown_positionX.TabIndex = 8;
+            numericUpDown_positionX.ValueChanged += numericUpDown_ValueChanged;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(35, 98);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(37, 15);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Scale:";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(35, 130);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(37, 15);
+            label5.TabIndex = 12;
+            label5.Text = "Scale:";
             // 
             // numericUpDown_scale
             // 
-            this.numericUpDown_scale.DecimalPlaces = 3;
-            this.numericUpDown_scale.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            196608});
-            this.numericUpDown_scale.Location = new System.Drawing.Point(132, 96);
-            this.numericUpDown_scale.Name = "numericUpDown_scale";
-            this.numericUpDown_scale.Size = new System.Drawing.Size(79, 23);
-            this.numericUpDown_scale.TabIndex = 11;
-            this.numericUpDown_scale.ValueChanged += new System.EventHandler(this.numericUpDown_ValueChanged);
+            numericUpDown_scale.DecimalPlaces = 3;
+            numericUpDown_scale.Increment = new decimal(new int[] { 1, 0, 0, 196608 });
+            numericUpDown_scale.Location = new System.Drawing.Point(132, 128);
+            numericUpDown_scale.Name = "numericUpDown_scale";
+            numericUpDown_scale.Size = new System.Drawing.Size(79, 23);
+            numericUpDown_scale.TabIndex = 11;
+            numericUpDown_scale.ValueChanged += numericUpDown_ValueChanged;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(84, 37);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 15);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "Width:";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(84, 69);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(42, 15);
+            label1.TabIndex = 13;
+            label1.Text = "Width:";
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(217, 37);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(46, 15);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Height:";
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(217, 69);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(46, 15);
+            label6.TabIndex = 14;
+            label6.Text = "Height:";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(109, 69);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(17, 15);
-            this.label7.TabIndex = 15;
-            this.label7.Text = "X:";
+            label7.AutoSize = true;
+            label7.Location = new System.Drawing.Point(109, 101);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(17, 15);
+            label7.TabIndex = 15;
+            label7.Text = "X:";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(246, 69);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(17, 15);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "Y:";
+            label8.AutoSize = true;
+            label8.Location = new System.Drawing.Point(246, 101);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(17, 15);
+            label8.TabIndex = 16;
+            label8.Text = "Y:";
             // 
             // panel_form
             // 
-            this.panel_form.Controls.Add(this.label2);
-            this.panel_form.Controls.Add(this.label8);
-            this.panel_form.Controls.Add(this.textBox_overlayUrl);
-            this.panel_form.Controls.Add(this.label7);
-            this.panel_form.Controls.Add(this.numericUpDown_CanvasWidth);
-            this.panel_form.Controls.Add(this.label6);
-            this.panel_form.Controls.Add(this.label3);
-            this.panel_form.Controls.Add(this.label1);
-            this.panel_form.Controls.Add(this.numericUpDown_CanvasHeight);
-            this.panel_form.Controls.Add(this.label5);
-            this.panel_form.Controls.Add(this.numericUpDown_positionX);
-            this.panel_form.Controls.Add(this.numericUpDown_scale);
-            this.panel_form.Controls.Add(this.label4);
-            this.panel_form.Controls.Add(this.numericUpDown_positionY);
-            this.panel_form.Location = new System.Drawing.Point(10, 317);
-            this.panel_form.Name = "panel_form";
-            this.panel_form.Size = new System.Drawing.Size(687, 160);
-            this.panel_form.TabIndex = 17;
+            panel_form.Controls.Add(groupBox_recommendedSettings);
+            panel_form.Controls.Add(label9);
+            panel_form.Controls.Add(comboBox_localOverlays);
+            panel_form.Controls.Add(label2);
+            panel_form.Controls.Add(label8);
+            panel_form.Controls.Add(textBox_overlayUrl);
+            panel_form.Controls.Add(label7);
+            panel_form.Controls.Add(numericUpDown_CanvasWidth);
+            panel_form.Controls.Add(label6);
+            panel_form.Controls.Add(label3);
+            panel_form.Controls.Add(label1);
+            panel_form.Controls.Add(numericUpDown_CanvasHeight);
+            panel_form.Controls.Add(label5);
+            panel_form.Controls.Add(numericUpDown_positionX);
+            panel_form.Controls.Add(numericUpDown_scale);
+            panel_form.Controls.Add(label4);
+            panel_form.Controls.Add(numericUpDown_positionY);
+            panel_form.Location = new System.Drawing.Point(10, 317);
+            panel_form.Name = "panel_form";
+            panel_form.Size = new System.Drawing.Size(687, 160);
+            panel_form.TabIndex = 17;
+            // 
+            // groupBox_recommendedSettings
+            // 
+            groupBox_recommendedSettings.Controls.Add(button_applyRecommendedSettings);
+            groupBox_recommendedSettings.Controls.Add(label_recommendedSettings);
+            groupBox_recommendedSettings.Location = new System.Drawing.Point(377, 69);
+            groupBox_recommendedSettings.Name = "groupBox_recommendedSettings";
+            groupBox_recommendedSettings.Size = new System.Drawing.Size(225, 88);
+            groupBox_recommendedSettings.TabIndex = 19;
+            groupBox_recommendedSettings.TabStop = false;
+            groupBox_recommendedSettings.Text = "Recommended settings";
+            // 
+            // label_recommendedSettings
+            // 
+            label_recommendedSettings.AutoSize = true;
+            label_recommendedSettings.Location = new System.Drawing.Point(9, 21);
+            label_recommendedSettings.Name = "label_recommendedSettings";
+            label_recommendedSettings.Size = new System.Drawing.Size(22, 15);
+            label_recommendedSettings.TabIndex = 0;
+            label_recommendedSettings.Text = "---";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(26, 9);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(50, 15);
+            label9.TabIndex = 18;
+            label9.Text = "Overlay:";
+            // 
+            // comboBox_localOverlays
+            // 
+            comboBox_localOverlays.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBox_localOverlays.FormattingEnabled = true;
+            comboBox_localOverlays.Location = new System.Drawing.Point(81, 6);
+            comboBox_localOverlays.Name = "comboBox_localOverlays";
+            comboBox_localOverlays.Size = new System.Drawing.Size(520, 23);
+            comboBox_localOverlays.TabIndex = 17;
+            comboBox_localOverlays.SelectedIndexChanged += comboBox_localOverlays_SelectedIndexChanged;
             // 
             // button_addTab
             // 
-            this.button_addTab.Location = new System.Drawing.Point(10, 276);
-            this.button_addTab.Name = "button_addTab";
-            this.button_addTab.Size = new System.Drawing.Size(75, 23);
-            this.button_addTab.TabIndex = 19;
-            this.button_addTab.Text = "Add tab";
-            this.button_addTab.UseVisualStyleBackColor = true;
-            this.button_addTab.Click += new System.EventHandler(this.button_addTab_Click);
+            button_addTab.Location = new System.Drawing.Point(10, 276);
+            button_addTab.Name = "button_addTab";
+            button_addTab.Size = new System.Drawing.Size(75, 23);
+            button_addTab.TabIndex = 19;
+            button_addTab.Text = "Add tab";
+            button_addTab.UseVisualStyleBackColor = true;
+            button_addTab.Click += button_addTab_Click;
             // 
             // listBox_tabs
             // 
-            this.listBox_tabs.FormattingEnabled = true;
-            this.listBox_tabs.ItemHeight = 15;
-            this.listBox_tabs.Location = new System.Drawing.Point(10, 9);
-            this.listBox_tabs.Name = "listBox_tabs";
-            this.listBox_tabs.Size = new System.Drawing.Size(602, 259);
-            this.listBox_tabs.TabIndex = 20;
-            this.listBox_tabs.SelectedIndexChanged += new System.EventHandler(this.listBox_tabs_SelectedIndexChanged);
+            listBox_tabs.FormattingEnabled = true;
+            listBox_tabs.ItemHeight = 15;
+            listBox_tabs.Location = new System.Drawing.Point(10, 9);
+            listBox_tabs.Name = "listBox_tabs";
+            listBox_tabs.Size = new System.Drawing.Size(602, 259);
+            listBox_tabs.TabIndex = 20;
+            listBox_tabs.SelectedIndexChanged += listBox_tabs_SelectedIndexChanged;
             // 
             // button_remove
             // 
-            this.button_remove.Location = new System.Drawing.Point(91, 276);
-            this.button_remove.Name = "button_remove";
-            this.button_remove.Size = new System.Drawing.Size(130, 23);
-            this.button_remove.TabIndex = 21;
-            this.button_remove.Text = "Remove selected tab";
-            this.button_remove.UseVisualStyleBackColor = true;
-            this.button_remove.Click += new System.EventHandler(this.button_remove_Click);
+            button_remove.Location = new System.Drawing.Point(91, 276);
+            button_remove.Name = "button_remove";
+            button_remove.Size = new System.Drawing.Size(130, 23);
+            button_remove.TabIndex = 21;
+            button_remove.Text = "Remove selected tab";
+            button_remove.UseVisualStyleBackColor = true;
+            button_remove.Click += button_remove_Click;
             // 
             // panel_content
             // 
-            this.panel_content.Controls.Add(this.listBox_tabs);
-            this.panel_content.Controls.Add(this.button_remove);
-            this.panel_content.Controls.Add(this.panel_form);
-            this.panel_content.Controls.Add(this.button_addTab);
-            this.panel_content.Location = new System.Drawing.Point(17, 37);
-            this.panel_content.Name = "panel_content";
-            this.panel_content.Size = new System.Drawing.Size(707, 486);
-            this.panel_content.TabIndex = 22;
+            panel_content.Controls.Add(button_toggleBorders);
+            panel_content.Controls.Add(listBox_tabs);
+            panel_content.Controls.Add(button_remove);
+            panel_content.Controls.Add(panel_form);
+            panel_content.Controls.Add(button_addTab);
+            panel_content.Location = new System.Drawing.Point(17, 37);
+            panel_content.Name = "panel_content";
+            panel_content.Size = new System.Drawing.Size(707, 486);
+            panel_content.TabIndex = 22;
+            // 
+            // button_toggleBorders
+            // 
+            button_toggleBorders.Location = new System.Drawing.Point(466, 276);
+            button_toggleBorders.Name = "button_toggleBorders";
+            button_toggleBorders.Size = new System.Drawing.Size(146, 23);
+            button_toggleBorders.TabIndex = 22;
+            button_toggleBorders.Text = "Toggle all borders";
+            button_toggleBorders.UseVisualStyleBackColor = true;
+            button_toggleBorders.Click += button_toggleBorders_Click;
+            // 
+            // button_applyRecommendedSettings
+            // 
+            button_applyRecommendedSettings.Location = new System.Drawing.Point(153, 61);
+            button_applyRecommendedSettings.Name = "button_applyRecommendedSettings";
+            button_applyRecommendedSettings.Size = new System.Drawing.Size(66, 23);
+            button_applyRecommendedSettings.TabIndex = 23;
+            button_applyRecommendedSettings.Text = "Apply";
+            button_applyRecommendedSettings.UseVisualStyleBackColor = true;
+            button_applyRecommendedSettings.Click += button_applyRecommendedSettings_Click;
             // 
             // BrowserOverlaySettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel_content);
-            this.Controls.Add(this.checkBox_enable);
-            this.Name = "BrowserOverlaySettings";
-            this.Size = new System.Drawing.Size(770, 572);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CanvasHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_positionX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_scale)).EndInit();
-            this.panel_form.ResumeLayout(false);
-            this.panel_form.PerformLayout();
-            this.panel_content.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(panel_content);
+            Controls.Add(checkBox_enable);
+            Name = "BrowserOverlaySettings";
+            Size = new System.Drawing.Size(770, 572);
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CanvasWidth).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CanvasHeight).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_positionY).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_positionX).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_scale).EndInit();
+            panel_form.ResumeLayout(false);
+            panel_form.PerformLayout();
+            groupBox_recommendedSettings.ResumeLayout(false);
+            groupBox_recommendedSettings.PerformLayout();
+            panel_content.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -330,5 +373,11 @@ namespace BrowserOverlay
         private System.Windows.Forms.ListBox listBox_tabs;
         private System.Windows.Forms.Button button_remove;
         private System.Windows.Forms.Panel panel_content;
+        private System.Windows.Forms.Button button_toggleBorders;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboBox_localOverlays;
+        private System.Windows.Forms.GroupBox groupBox_recommendedSettings;
+        private System.Windows.Forms.Label label_recommendedSettings;
+        private System.Windows.Forms.Button button_applyRecommendedSettings;
     }
 }

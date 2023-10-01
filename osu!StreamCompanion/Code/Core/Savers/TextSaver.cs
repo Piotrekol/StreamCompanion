@@ -13,11 +13,7 @@ namespace osu_StreamCompanion.Code.Core.Savers
         public static readonly ConfigEntry SaveDirectoryConfigEntry = new ConfigEntry("FileSaveDirectory", null);
         private string _saveDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Files" + Path.DirectorySeparatorChar);
         private readonly object _lockingObject = new object();
-        public string SaveDirectory
-        {
-            get { return _saveDirectory; }
-            set { }
-        }
+        public string SaveDirectory => _saveDirectory;
 
         public TextSaver(ISettings settings)
         {

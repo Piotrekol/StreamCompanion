@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using StreamCompanionTypes.Attributes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
