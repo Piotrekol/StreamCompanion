@@ -530,7 +530,10 @@ namespace OsuMemoryEventSource
         private void UpdateLiveTokens(OsuStatus status)
         {
             _notAddingNewTokens.WaitOne();
-            using var tokenBulkUpdateContext = TokensBulkUpdate.StartBulkUpdate(BulkTokenUpdateType.LiveTokens);
+            BulkTokenUpdateContext bulkTokenUpdateContext = null;
+            if (IsMainProcessor)
+                bulkTokenUpdateContext = TokensBulkUpdate.StartBulkUpdate(BulkTokenUpdateType.LiveTokens);
+
             foreach (var liveToken in _liveTokens)
             {
                 try
@@ -546,6 +549,7 @@ namespace OsuMemoryEventSource
                 }
             }
             _tokensUpdated();
+            bulkTokenUpdateContext?.Dispose();
         }
 
         public void Dispose()
