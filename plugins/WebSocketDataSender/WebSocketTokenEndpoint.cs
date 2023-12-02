@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using EmbedIO.Utilities;
 using EmbedIO.WebSockets;
 using StreamCompanion.Common.Helpers.Tokens;
@@ -40,20 +41,32 @@ namespace WebSocketDataSender
             var queries = context.RequestUri.Query.TrimStart('?').ToLowerInvariant().Split('&');
             foreach (var query in queries)
             {
-                if (query.StartsWith("bulkupdates"))
+                if (query.StartsWith("bulkupdates="))
                 {
-                    var queryParams = query.Split('=')[1].SplitByComma();
+                    var queryParams = HttpUtility.UrlDecode(query.Split('=')[1]).SplitByComma();
                     foreach (var queryParam in queryParams)
                     {
                         if (!Enum.TryParse(typeof(BulkTokenUpdateType), queryParam, true, out var parsed) || parsed is not BulkTokenUpdateType tokenUpdateType)
                         {
-                            await SendAsync(context, $"Invalid bulk update type(s) provided. Valid values: {string.Join(", ", Enum.GetNames(typeof(BulkTokenUpdateType)) )}");
+                            await SendAsync(context, $"Invalid bulk update type(s) provided. Valid values: {string.Join(", ", Enum.GetNames(typeof(BulkTokenUpdateType)))}");
                             _ = context.WebSocket.CloseAsync();
                             return;
                         }
 
                         contextState.MonitoredBulkTokenUpdateStates.Add(TokensBulkUpdate.States[tokenUpdateType]);
                     }
+                }
+                else if (query.StartsWith("updatespersecond=") || query.StartsWith("ups="))
+                {
+                    var rawUpdateRate = query.Split('=')[1];
+                    if (!int.TryParse(rawUpdateRate, out int updateRate) || updateRate < 1)
+                    {
+                        await SendAsync(context, $"Invalid UpdatesPerSecond value. Positive number expected.");
+                        _ = context.WebSocket.CloseAsync();
+                        return;
+                    }
+
+                    contextState.UpdateSleepDelay = (int)Math.Ceiling(1000f / updateRate);
                 }
             }
 
@@ -69,6 +82,7 @@ namespace WebSocketDataSender
             var keyValuesToSend = new SortedList<string, object>(50);
             Dictionary<string, object> watchedKeyValues = new();
             var state = contextStates[context.Id];
+            Task updateSleepTask = Task.CompletedTask;
             try
             {
                 while (context.WebSocket.State == WebSocketState.Open)
@@ -90,8 +104,14 @@ namespace WebSocketDataSender
                     if (keyValuesToSend.Any())
                     {
                         var payload = Newtonsoft.Json.JsonConvert.SerializeObject(keyValuesToSend);
-                        await SendAsync(context, payload);
+                        await SendAsync(context, payload).ConfigureAwait(false);
                         keyValuesToSend.Clear();
+
+                        if (state.UpdateSleepDelay > 0)
+                        {
+                            await updateSleepTask.ConfigureAwait(false);
+                            updateSleepTask = Task.Delay(state.UpdateSleepDelay, context.CancellationToken);
+                        }
                     }
                 }
             }
@@ -189,6 +209,7 @@ namespace WebSocketDataSender
             public List<string> RequestedTokenNames { get; set; } = new();
             public ManualResetEventSlim ManualResetEventSlim { get; set; } = new();
             public LockingQueue<IToken> TokensPendingUpdate { get; private set; } = new();
+            public int UpdateSleepDelay { get; set; } = -1;
 
             public void TokenValueUpdated(object _, IToken token)
             {

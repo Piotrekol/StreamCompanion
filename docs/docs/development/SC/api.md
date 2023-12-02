@@ -25,6 +25,8 @@ To have access to all current token values you need to cache them:
 By default token values are sent as soon as specific plugin updates it, resulting in several messages containing information about single map/state change.  
 As this may be sometimes undesirable, SC can be configured to send token updates once all plugins have completed their work by appending `?bulkUpdates=MainPipeline,LiveTokens` to url:
 @[code js{1}](./apiExamples/minimalWSpt3.js)
+Maximum amount of messages sent per second by StreamCompanion can be controlled by appending `?updatesPerSecond=15` to url (adjust number as necessary).
+@[code js{1}](./apiExamples/minimalWSpt4.js)
 
 ### `outputPatterns`
 
