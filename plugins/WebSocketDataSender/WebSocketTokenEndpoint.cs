@@ -59,9 +59,9 @@ namespace WebSocketDataSender
                 else if (query.StartsWith("updatespersecond=") || query.StartsWith("ups="))
                 {
                     var rawUpdateRate = query.Split('=')[1];
-                    if (!int.TryParse(rawUpdateRate, out int updateRate))
+                    if (!int.TryParse(rawUpdateRate, out int updateRate) || updateRate < 1)
                     {
-                        await SendAsync(context, $"Invalid UpdatesPerSecond value. Number expected.");
+                        await SendAsync(context, $"Invalid UpdatesPerSecond value. Positive number expected.");
                         _ = context.WebSocket.CloseAsync();
                         return;
                     }
