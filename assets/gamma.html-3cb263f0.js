@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-10123f7e","path":"/guide/gamma.html","title":"Gamma","lang":"en-US","frontmatter":{},"headers":[],"git":{"updatedTime":1701515157000,"contributors":[{"name":"Piotr Partyka","email":"4990365+Piotrekol@users.noreply.github.com","commits":1}]},"filePathRelative":"guide/gamma.md"}');export{e as data};
