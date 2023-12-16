@@ -1,0 +1,1 @@
+import{_ as a,o as t,c,a as e,b as o}from"./app-c88ab080.js";const r={},s=e("h1",{id:"gamma",tabindex:"-1"},[e("a",{class:"header-anchor",href:"#gamma","aria-hidden":"true"},"#"),o(" Gamma")],-1),m=[s];function n(_,d){return t(),c("div",null,m)}const h=a(r,[["render",n],["__file","gamma.html.vue"]]);export{h as default};
