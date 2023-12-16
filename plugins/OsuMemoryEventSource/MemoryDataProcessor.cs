@@ -95,8 +95,9 @@ namespace OsuMemoryEventSource
         /// Do we have valid osu client available that we can read from
         /// </summary>
         public bool IsMemoryReaderActive => _memoryReader != null && _memoryReader.CanRead;
+        private readonly string TokensPath;
+        private HashSet<string> tokenNameCache = new();
 
-        public string TokensPath { get; private set; }
         public MemoryDataProcessor(ISettings settings, IContextAwareLogger logger, IModParser modParser,
             bool isMainProcessor,
             string tokensPath)
@@ -271,7 +272,7 @@ namespace OsuMemoryEventSource
                 }
 
                 _rawData.PlayTime = playTime;
-                _liveTokens["time"].Update();
+                _liveTokens[GetTokenName("time")].Update();
 
                 _lastStatus = status;
             }
@@ -308,10 +309,20 @@ namespace OsuMemoryEventSource
             }
         }
 
+        private string GetTokenName(string baseName)
+        {
+            if (tokenNameCache.TryGetValue(baseName, out var name))
+                return name;
+
+            name = $"{TokensPath}{baseName}";
+            tokenNameCache.Add(name);
+            return name;
+        }
+
         private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
             object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            var newToken = _liveTokenSetter($"{TokensPath}{name}", new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist);
+            var newToken = _liveTokenSetter(GetTokenName(name), new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist);
             CreateLiveToken(newToken, updater);
         }
 
@@ -380,7 +391,7 @@ namespace OsuMemoryEventSource
                  var beatmapLength = _rawData.PpCalculator?.BeatmapLength;
                  if (beatmapLength.HasValue)
                  {
-                     var timeLeft = TimeSpan.FromMilliseconds(beatmapLength.Value) - (TimeSpan)_liveTokens["mapPosition"].Token.Value;
+                     var timeLeft = TimeSpan.FromMilliseconds(beatmapLength.Value) - (TimeSpan)_liveTokens[GetTokenName("mapPosition")].Token.Value;
                      return timeLeft.Ticks <= 0
                          ? TimeSpan.Zero
                          : timeLeft;
@@ -445,7 +456,7 @@ namespace OsuMemoryEventSource
                 return InterpolatedValues[InterpolatedValueName.UnstableRate].Current;
             });
             CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults,
-                () => ConvertedUnstableRate((double)_liveTokens["unstableRate"].Token.Value, _mods));
+                () => ConvertedUnstableRate((double)_liveTokens[GetTokenName("unstableRate")].Token.Value, _mods));
             CreateLiveToken("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults, () => _rawData.Play is Player p ? p.HitErrors : null);
             CreateLiveToken("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All, () => DateTime.UtcNow.ToString("o"));
             CreateLiveToken("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All, () => DateTime.Now.TimeOfDay);
