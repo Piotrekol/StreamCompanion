@@ -66,7 +66,7 @@ namespace WebSocketDataSender
                         return;
                     }
 
-                    contextState.UpdateSleepDelay = (int)Math.Ceiling(1000f / updateRate);
+                    contextState.UpdateSleepDelayMs = (int)Math.Ceiling(1000f / updateRate);
                 }
             }
 
@@ -107,10 +107,10 @@ namespace WebSocketDataSender
                         await SendAsync(context, payload).ConfigureAwait(false);
                         keyValuesToSend.Clear();
 
-                        if (state.UpdateSleepDelay > 0)
+                        if (state.UpdateSleepDelayMs > 0)
                         {
                             await updateSleepTask.ConfigureAwait(false);
-                            updateSleepTask = Task.Delay(state.UpdateSleepDelay, context.CancellationToken);
+                            updateSleepTask = Task.Delay(state.UpdateSleepDelayMs, context.CancellationToken);
                         }
                     }
                 }
@@ -209,7 +209,7 @@ namespace WebSocketDataSender
             public List<string> RequestedTokenNames { get; set; } = new();
             public ManualResetEventSlim ManualResetEventSlim { get; set; } = new();
             public LockingQueue<IToken> TokensPendingUpdate { get; private set; } = new();
-            public int UpdateSleepDelay { get; set; } = -1;
+            public int UpdateSleepDelayMs { get; set; } = 50; //20 messages/s
 
             public void TokenValueUpdated(object _, IToken token)
             {
