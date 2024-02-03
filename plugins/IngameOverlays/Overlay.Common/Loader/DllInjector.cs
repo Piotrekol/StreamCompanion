@@ -191,7 +191,7 @@ namespace Overlay.Common.Loader
                 return (false, 7);
             }
 
-            var objectResult = WaitForSingleObject(threadHandle, 3000);
+            var objectResult = WaitForSingleObject(threadHandle, 10000);
             if (objectResult == WAIT_ABANDONED || objectResult == WAIT_TIMEOUT)
                 return (false, 100 + (int)objectResult);
 
