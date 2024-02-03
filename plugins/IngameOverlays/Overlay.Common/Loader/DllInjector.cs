@@ -158,44 +158,50 @@ namespace Overlay.Common.Loader
         protected virtual (bool Success, int ErrorCode) BInject(uint pToBeInjected, string sDllPath, IntPtr? LoadLibraryAAddress = null)
         {
             IntPtr hndProc = OpenProcess(0x2 | 0x8 | 0x10 | 0x20 | 0x400, 1, pToBeInjected);
-
-            if (hndProc == INTPTR_ZERO)
+            try
             {
-                return (false, 3);
+
+                if (hndProc == INTPTR_ZERO)
+                {
+                    return (false, 3);
+                }
+
+                IntPtr lpLLAddress = LoadLibraryAAddress ?? GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+
+                if (lpLLAddress == INTPTR_ZERO)
+                {
+                    return (false, 4);
+                }
+
+                IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, 0x1000 | 0x2000, 0X40);
+
+                if (lpAddress == INTPTR_ZERO)
+                {
+                    return (false, 5);
+                }
+
+                byte[] bytes = Encoding.ASCII.GetBytes(sDllPath);
+
+                if (WriteProcessMemory(hndProc, lpAddress, bytes, (uint)bytes.Length, 0) == 0)
+                {
+                    return (false, 6);
+                }
+
+                IntPtr threadHandle;
+                if ((threadHandle = CreateRemoteThread(hndProc, (IntPtr)null, INTPTR_ZERO, lpLLAddress, lpAddress, 0, (IntPtr)null)) == INTPTR_ZERO)
+                {
+                    return (false, 7);
+                }
+
+                var objectResult = WaitForSingleObject(threadHandle, 10000);
+                if (objectResult == WAIT_ABANDONED || objectResult == WAIT_TIMEOUT)
+                    return (false, 100 + (int)objectResult);
             }
-
-            IntPtr lpLLAddress = LoadLibraryAAddress ?? GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
-
-            if (lpLLAddress == INTPTR_ZERO)
+            finally
             {
-                return (false, 4);
+                if (hndProc != IntPtr.Zero)
+                    CloseHandle(hndProc);
             }
-
-            IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, 0x1000 | 0x2000, 0X40);
-
-            if (lpAddress == INTPTR_ZERO)
-            {
-                return (false, 5);
-            }
-
-            byte[] bytes = Encoding.ASCII.GetBytes(sDllPath);
-
-            if (WriteProcessMemory(hndProc, lpAddress, bytes, (uint)bytes.Length, 0) == 0)
-            {
-                return (false, 6);
-            }
-
-            IntPtr threadHandle;
-            if ((threadHandle = CreateRemoteThread(hndProc, (IntPtr)null, INTPTR_ZERO, lpLLAddress, lpAddress, 0, (IntPtr)null)) == INTPTR_ZERO)
-            {
-                return (false, 7);
-            }
-
-            var objectResult = WaitForSingleObject(threadHandle, 10000);
-            if (objectResult == WAIT_ABANDONED || objectResult == WAIT_TIMEOUT)
-                return (false, 100 + (int)objectResult);
-
-            CloseHandle(hndProc);
 
             return (true, 0);
         }
