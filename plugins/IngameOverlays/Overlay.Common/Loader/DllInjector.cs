@@ -160,7 +160,6 @@ namespace Overlay.Common.Loader
             IntPtr hndProc = OpenProcess(0x2 | 0x8 | 0x10 | 0x20 | 0x400, 1, pToBeInjected);
             try
             {
-
                 if (hndProc == INTPTR_ZERO)
                 {
                     return (false, 3);
