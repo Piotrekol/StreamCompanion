@@ -148,10 +148,19 @@ namespace Overlay.Common.Loader
         {
             var processes = Process.GetProcessesByName(procName);
             var process = processes.FirstOrDefault(p => p.ProcessName == procName);
-            if (process != null)
+            
+            if (process == null)
             {
-                foreach (var pm in process.X32BitModules())
-                    yield return Path.GetFileName(pm.szExePath);
+                yield break;
+            }
+
+            foreach (var pm in process.X32BitModules())
+            {
+                var fileName = Path.GetFileName(pm.szExePath);
+                if (!string.IsNullOrWhiteSpace(fileName))
+                {
+                    yield return fileName;
+                }
             }
         }
 
