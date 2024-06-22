@@ -48,7 +48,7 @@ namespace Overlay.Common.Loader
                 _logger.Log("osu! module list is clean", LogLevel.Debug);
 
             if (_lastTroublesomeModules.Any())
-                _logger.Log($"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}", LogLevel.Warning);
+                _statusReporter.Report(new OverlayReport(ReportType.Error, $"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}"));
         }
 
         public async Task WatchForProcessStart(CancellationToken token)
@@ -82,7 +82,7 @@ namespace Overlay.Common.Loader
                                 else if (_lastUnknownModules.Any())
                                 {
                                     _statusReporter.Report(new(ReportType.Error, $"{oops}{Environment.NewLine}StreamCompanion has found that following unknown modules were loaded in osu! during startup:{Environment.NewLine}{Environment.NewLine}" +
-                                            string.Join(", ", _lastUnknownModules)+$"{Environment.NewLine}These can be used to pinpoint exact application causing this conflict."));
+                                            string.Join(", ", _lastUnknownModules) + $"{Environment.NewLine}These can be used to pinpoint exact application causing this conflict."));
                                 }
                                 else
                                 {

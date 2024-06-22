@@ -175,9 +175,11 @@ namespace BrowserOverlay
             switch (report.ReportType)
             {
                 case ReportType.Information:
+                    _logger.Log(report.Message, LogLevel.Information);
                     MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case ReportType.Error:
+                    _logger.Log(report.Message, LogLevel.Error);
                     MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ReportType.Log:
