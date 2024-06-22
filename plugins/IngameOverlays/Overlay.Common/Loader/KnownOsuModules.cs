@@ -197,6 +197,11 @@ namespace Overlay.Common.Loader
             "textoverlay.dll",
             "freetype.dll",
             "browseringameoverlay.dll",
+            "wow64base.dll",
+            "wow64con.dll",
+            "aclayers.dll",
+            "accessibility.ni.dll",
+            "bass_fx.dll"
         };
 
         private static Dictionary<string, string> _troubleMakers = new()

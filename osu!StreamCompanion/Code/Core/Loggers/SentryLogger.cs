@@ -15,15 +15,7 @@ namespace osu_StreamCompanion.Code.Core.Loggers
         {
             Dsn = SentryDsn,
             Release = Program.ScVersion,
-            SendDefaultPii = true,
-            BeforeSend = BeforeSend
         });
-
-        private static SentryEvent BeforeSend(SentryEvent arg)
-        {
-            arg.User.IpAddress = null;
-            return arg;
-        }
 
         public static Dictionary<string, string> ContextData { get; } = new Dictionary<string, string>();
         private object _lockingObject = new object();
