@@ -1,21 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" ExcludeAssets="all" />
   </ItemGroup>
