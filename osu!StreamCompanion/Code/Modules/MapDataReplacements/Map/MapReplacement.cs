@@ -11,6 +11,7 @@ using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 using System;
 using System.Globalization;
+using Jace.Tokenizer;
 
 namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
 {
@@ -25,8 +26,17 @@ namespace osu_StreamCompanion.Code.Modules.MapDataReplacements.Map
         {
             _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter("MapReplacements");
-
+            PrepareTokens();
         }
+
+        private void PrepareTokens()
+        {
+            foreach (var token in GetTokens(new Beatmap()))
+            {
+                _ = _tokenSetter(token.Key, token.Value);
+            }
+        }
+
         public void Start(ILogger logger)
         {
             Started = true;
