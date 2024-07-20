@@ -5,69 +5,81 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Overlay.Common.Loader
+namespace Overlay.Common.Loader;
+
+public sealed class Loader
 {
-    public class Loader 
+    private string _lastMessage = string.Empty;
+    public event EventHandler BeforeInjection;
+
+    public bool IsAlreadyInjected(string dllLocation)
+        => DllInjector.GetInstance.IsAlreadyLoaded("osu!", Path.GetFileName(dllLocation)).LoadedResult ==
+           DllInjector.LoadedResult.Loaded;
+
+    public IEnumerable<string> ListModules()
+        => DllInjector.GetInstance.ListModules("osu!");
+
+    public async Task<InjectionResult> Inject(
+        string dllLocation,
+        IProgress<string> progress,
+        bool bypassOsuRunningCheck,
+        CancellationToken cancellationToken)
     {
-        private string _lastMessage = string.Empty;
-        public event EventHandler BeforeInjection;
-
-        public bool IsAlreadyInjected(string dllLocation)
-            => DllInjector.GetInstance.IsAlreadyLoaded("osu!", Path.GetFileName(dllLocation)).LoadedResult ==
-               DllInjector.LoadedResult.Loaded;
-
-        public IEnumerable<string> ListModules()
-            => DllInjector.GetInstance.ListModules("osu!");
-
-        public async Task<InjectionResult> Inject(string dllLocation, IProgress<string> progress,
-            CancellationToken cancellationToken)
+        if (!bypassOsuRunningCheck)
         {
-            while (GetOsuProcess() != null)
+            await WaitForOsuClose(progress, cancellationToken);
+        }
+
+        Process? process;
+        do
+        {
+            await Task.Delay(2000, cancellationToken);
+            Report(progress, "Waiting for osu! process to start");
+        } while (!(
+            (process = GetOsuProcess()) != null
+            && !process.MainWindowTitle.Contains("osu! updater")
+            && !string.IsNullOrEmpty(process.MainWindowTitle))
+        );
+
+        BeforeInjection?.Invoke(this, EventArgs.Empty);
+        progress?.Report("Injecting");
+
+        DllInjector dllInjector = DllInjector.GetInstance;
+        (DllInjectionResult InjectionResult, int errorCode, int Win32Error) result = dllInjector.Inject("osu!", dllLocation);
+
+        return new InjectionResult(result.InjectionResult, result.errorCode, result.Win32Error, "_");
+    }
+
+    private async Task WaitForOsuClose(IProgress<string> progress, CancellationToken cancellationToken)
+    {
+        while (GetOsuProcess() != null)
+        {
+            await Task.Delay(2000, cancellationToken);
+            Report(progress, "Waiting for osu! process to close");
+        }
+    }
+
+    private void Report(IProgress<string> progress, string message)
+    {
+        if (_lastMessage == message)
+        {
+            return;
+        }
+
+        _lastMessage = message;
+        progress?.Report(message);
+    }
+
+    private Process? GetOsuProcess()
+    {
+        foreach (Process process in Process.GetProcesses())
+        {
+            if (process.ProcessName == "osu!")
             {
-                await Task.Delay(2000, cancellationToken);
-                Report(progress, "Waiting for osu! process to close");
+                return process;
             }
-
-            Process process;
-            do
-            {
-                await Task.Delay(2000, cancellationToken);
-                Report(progress, "Waiting for osu! process to start");
-            } while (!(
-                (process = GetOsuProcess()) != null
-                && !process.MainWindowTitle.Contains("osu! updater")
-                && !string.IsNullOrEmpty(process.MainWindowTitle))
-            );
-
-            BeforeInjection?.Invoke(this, EventArgs.Empty);
-            progress?.Report("Injecting");
-
-            DllInjector dllInjector = DllInjector.GetInstance;
-            var result = dllInjector.Inject("osu!", dllLocation);
-
-            return new InjectionResult(result.InjectionResult, result.errorCode, result.Win32Error, "_");
         }
 
-        private void Report(IProgress<string> progress, string message)
-        {
-            if (_lastMessage == message)
-                return;
-
-            _lastMessage = message;
-            progress?.Report(message);
-        }
-
-        private Process GetOsuProcess()
-        {
-            foreach (var process in Process.GetProcesses())
-            {
-                if (process.ProcessName == "osu!")
-                {
-                    return process;
-                }
-            }
-
-            return null;
-        }
+        return null;
     }
 }

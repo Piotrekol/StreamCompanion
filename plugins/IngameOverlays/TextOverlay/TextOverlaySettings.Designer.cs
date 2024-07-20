@@ -28,35 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox_ingameOverlay = new System.Windows.Forms.CheckBox();
-            this.SuspendLayout();
+            checkBox_ingameOverlay = new System.Windows.Forms.CheckBox();
+            checkBox_noOsuRestartCheck = new System.Windows.Forms.CheckBox();
+            SuspendLayout();
             // 
             // checkBox_ingameOverlay
             // 
-            this.checkBox_ingameOverlay.AutoSize = true;
-            this.checkBox_ingameOverlay.Location = new System.Drawing.Point(5, 5);
-            this.checkBox_ingameOverlay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.checkBox_ingameOverlay.Name = "checkBox_ingameOverlay";
-            this.checkBox_ingameOverlay.Size = new System.Drawing.Size(277, 19);
-            this.checkBox_ingameOverlay.TabIndex = 0;
-            this.checkBox_ingameOverlay.Text = "Enable text ingame overlay (Requires SC restart)";
-            this.checkBox_ingameOverlay.UseVisualStyleBackColor = true;
+            checkBox_ingameOverlay.AutoSize = true;
+            checkBox_ingameOverlay.Location = new System.Drawing.Point(9, 10);
+            checkBox_ingameOverlay.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            checkBox_ingameOverlay.Name = "checkBox_ingameOverlay";
+            checkBox_ingameOverlay.Size = new System.Drawing.Size(481, 34);
+            checkBox_ingameOverlay.TabIndex = 0;
+            checkBox_ingameOverlay.Text = "Enable text ingame overlay (Requires SC restart)";
+            checkBox_ingameOverlay.UseVisualStyleBackColor = true;
             // 
-            // IngameOverlaySettings
+            // checkBox_noOsuRestartCheck
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.checkBox_ingameOverlay);
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.Name = "IngameOverlaySettings";
-            this.Size = new System.Drawing.Size(302, 28);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            checkBox_noOsuRestartCheck.AutoSize = true;
+            checkBox_noOsuRestartCheck.Location = new System.Drawing.Point(9, 47);
+            checkBox_noOsuRestartCheck.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            checkBox_noOsuRestartCheck.Name = "checkBox_noOsuRestartCheck";
+            checkBox_noOsuRestartCheck.Size = new System.Drawing.Size(514, 34);
+            checkBox_noOsuRestartCheck.TabIndex = 24;
+            checkBox_noOsuRestartCheck.Text = "Don't require restarting osu! before starting overlay";
+            checkBox_noOsuRestartCheck.UseVisualStyleBackColor = true;
+            // 
+            // TextOverlaySettings
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Controls.Add(checkBox_noOsuRestartCheck);
+            Controls.Add(checkBox_ingameOverlay);
+            Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            Name = "TextOverlaySettings";
+            Size = new System.Drawing.Size(801, 195);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private System.Windows.Forms.CheckBox checkBox_ingameOverlay;
+        private System.Windows.Forms.CheckBox checkBox_noOsuRestartCheck;
     }
 }
