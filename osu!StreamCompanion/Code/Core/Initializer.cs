@@ -12,7 +12,6 @@ using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using osu_StreamCompanion.Code.Modules;
 using osu_StreamCompanion.Code.Core.Plugins;
-using StreamCompanionTypes.DataTypes;
 
 namespace osu_StreamCompanion.Code.Core
 {
@@ -94,22 +93,8 @@ namespace osu_StreamCompanion.Code.Core
             Settings.Add(_names.LastRunVersion.Name, Program.ScVersion);
 
             DiContainer.Container.Locate<OsuEventHandler>();
-            WarmUpTokens();
 
             _logger.Log("Started!", LogLevel.Information);
-        }
-
-        private void WarmUpTokens()
-        {
-            _logger.Log("Warming up tokens.", LogLevel.Debug);
-
-            foreach (var tokenKv in Tokens.AllTokens)
-            {
-                _logger.Log($"Token '{tokenKv.Key}'", LogLevel.Trace);
-                _ = tokenKv.Value.Value;
-            }
-
-            _logger.Log("Warming up tokens finished.", LogLevel.Debug);
         }
 
         public void Exit()
