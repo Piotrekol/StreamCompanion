@@ -69,7 +69,7 @@ namespace PpCalculator
         public int? Katus { get; set; }
         public int? Hit300 { get; set; }
 
-        protected virtual ScoreInfo ScoreInfo { get; set; } = new ScoreInfo();
+        protected virtual ScoreInfo ScoreInfo { get; }
         protected PerformanceCalculator PerformanceCalculator { get; set; }
         protected List<TimedDifficultyAttributes> TimedDifficultyAttributes { get; set; }
         protected string LastMods { get; set; } = null;
@@ -86,6 +86,11 @@ namespace PpCalculator
         {
             //Required for <=v4 maps
             LegacyDifficultyCalculatorBeatmapDecoder.Register();
+        }
+
+        protected PpCalculator()
+        {
+            ScoreInfo = new ScoreInfo(ruleset: Ruleset.RulesetInfo);
         }
 
         public object Clone()
@@ -140,7 +145,7 @@ namespace PpCalculator
         {
             return PlayableBeatmap?.ControlPointInfo?.EffectPoints.Zip(
                     PlayableBeatmap.ControlPointInfo.EffectPoints.Skip(1), (first, second) => first.KiaiMode ? new KiaiPoint(first.Time, second.Time - first.Time) : null
-                ).Where(e => e is not null) 
+                ).Where(e => e is not null)
                 ?? Enumerable.Empty<KiaiPoint>();
         }
 
@@ -199,6 +204,7 @@ namespace PpCalculator
                 workingBeatmap = new ProcessorWorkingBeatmap(tempMap);
             }
 
+            ScoreInfo.BeatmapInfo = workingBeatmap.BeatmapInfo;
             ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katus, Hit300);
             ScoreInfo.Accuracy = GetAccuracy(ScoreInfo.Statistics);
             ScoreInfo.MaxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
