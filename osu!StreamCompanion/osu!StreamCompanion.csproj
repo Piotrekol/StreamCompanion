@@ -92,8 +92,8 @@
     <PackageReference Include="CollectionManager" version="1.0.8" />
     <PackageReference Include="Grace" Version="7.2.0" />
     <PackageReference Include="Jace" Version="1.0.0" />
-    <PackageReference Include="Sentry" Version="4.3.0" />
-    <PackageReference Include="SharpCompress" Version="0.36.0" />
+    <PackageReference Include="Sentry" Version="4.12.1" />
+    <PackageReference Include="SharpCompress" Version="0.38.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
