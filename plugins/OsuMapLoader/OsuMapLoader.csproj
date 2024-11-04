@@ -2,27 +2,27 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.Caching" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" />
+    <PackageReference Include="System.Data.DataSetExtensions" />
+    <PackageReference Include="System.Runtime.Caching" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
-    </ProjectReference>
-    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
+	  <ProjectReference Include="..\..\PpCalculator\PpCalculator.csproj">
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\osuTK.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Framework.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\Realm.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\AutoMapper.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\MessagePack.Annotations.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\nunit.framework.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\ppy.ManagedBass.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMapLoader.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMapLoader.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />

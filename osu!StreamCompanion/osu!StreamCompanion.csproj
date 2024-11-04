@@ -72,32 +72,20 @@
     <EmbeddedResource Include="Resources\logo_256x256.png" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.7.1 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\PpCalculatorTypes\PpCalculatorTypes.csproj" ExcludeAssets="all" />
     <ProjectReference Include="..\PpCalculator\PpCalculator.csproj" ExcludeAssets="all" />
     <ProjectReference Include="..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CollectionManager" version="1.0.8" />
-    <PackageReference Include="Grace" Version="7.2.0" />
-    <PackageReference Include="Jace" Version="1.0.0" />
-    <PackageReference Include="Sentry" Version="4.12.1" />
-    <PackageReference Include="SharpCompress" Version="0.38.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
-    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+	<PackageReference Include="CollectionManager" />
+	<PackageReference Include="Grace" />
+	<PackageReference Include="Jace" />
+	<PackageReference Include="Sentry" />
+	<PackageReference Include="SharpCompress" />
+	<PackageReference Include="Newtonsoft.Json" />
+	<PackageReference Include="System.ComponentModel.Composition" />
+	<PackageReference Include="System.Drawing.Common" />
+	<PackageReference Include="System.Security.AccessControl" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">

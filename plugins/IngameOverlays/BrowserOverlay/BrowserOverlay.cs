@@ -95,8 +95,20 @@ namespace BrowserOverlay
             _settings.Add(BrowserOverlayConfigurationConfigEntry, _browserOverlayConfiguration);
             SendConfiguration();
 
-            if (eventData != null && eventData.Value.SettingName == "enable")
-                _restarter($"Browser overlay was toggled. isEnabled:{eventData.Value.Value}");
+            if (eventData == null)
+            {
+                return;
+            }
+
+            switch (eventData.Value.SettingName)
+            {
+                case "enable":
+                    _restarter($"Browser overlay was toggled. Enabled:{eventData.Value.Value}");
+                    break;
+                case "osuCheck":
+                    _restarter($"Browser overlay osu startup check was toggled. Enabled:{eventData.Value.Value}");
+                    break;
+            }
         }
 
         private bool TryRemoveOldAssets()
@@ -165,7 +177,7 @@ namespace BrowserOverlay
                 return;
             }
 
-            _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(_saver), new Progress<OverlayReport>(HandleOverlayReport));
+            _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(_saver), new Progress<OverlayReport>(HandleOverlayReport), _browserOverlayConfiguration.BypassOsuStartupCheck);
             _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
             return;
         }
@@ -247,6 +259,7 @@ namespace BrowserOverlay
     public class Configuration
     {
         public bool Enabled { get; set; } = true;
+        public bool BypassOsuStartupCheck { get; set; } = false;
         public List<OverlayTab> OverlayTabs { get; set; }
     }
     public class OverlayTab

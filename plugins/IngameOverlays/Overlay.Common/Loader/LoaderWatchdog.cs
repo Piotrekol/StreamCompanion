@@ -15,6 +15,7 @@ namespace Overlay.Common.Loader
         private readonly string _processName;
         public string DllLocation { get; set; }
         private IProgress<OverlayReport> _statusReporter;
+        private readonly bool _bypassOsuRunningCheck;
         private readonly Loader _loader = new Loader();
         private Process? _currentOsuProcess;
         private IProgress<string> _injectionProgressReporter;
@@ -27,12 +28,13 @@ namespace Overlay.Common.Loader
             remove => _loader.BeforeInjection -= value;
         }
 
-        public LoaderWatchdog(ILogger logger, string dllLocation, Progress<OverlayReport> statusReporter, string processName = "osu!")
+        public LoaderWatchdog(ILogger logger, string dllLocation, Progress<OverlayReport> statusReporter, bool bypassOsuRunningCheck, string processName = "osu!")
         {
             _logger = logger;
             _processName = processName;
             DllLocation = dllLocation;
             _statusReporter = statusReporter;
+            _bypassOsuRunningCheck = bypassOsuRunningCheck;
             _injectionProgressReporter = new Progress<string>(message => _statusReporter.Report(new(ReportType.Log, message)));
             BeforeInjection += OnBeforeInjection;
         }
@@ -65,6 +67,7 @@ namespace Overlay.Common.Loader
                     {
                         _logger.Log("Checking osu! overlay injection status.", LogLevel.Debug);
                         var resultCode = DllInjectionResult.Success;
+                        
                         if (_loader.IsAlreadyInjected(DllLocation))
                         {
                             _logger.Log("Already injected & running.", LogLevel.Debug);
@@ -90,16 +93,22 @@ namespace Overlay.Common.Loader
                                 }
                             }
 
-                            if (_currentOsuProcess == null && GetProcess() != null && lastResult != DllInjectionResult.Timeout)
+                            var hasRunningOsuProcess = _currentOsuProcess == null && GetProcess() != null;
+                            
+                            if (!_bypassOsuRunningCheck && hasRunningOsuProcess && lastResult != DllInjectionResult.Timeout)
                             {
                                 _ = Task.Run(() => _statusReporter.Report(new(ReportType.Information, "In order to load ingame overlay you need to restart your osu!")));
                             }
-                            _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Information);
 
+                            _logger.Log("Not injected - waiting for either osu! start or restart.", LogLevel.Information);
                             var result = await Inject(token);
                             resultCode = result.ResultCode;
+                            
                             if (token.IsCancellationRequested)
-                                return;
+                            { 
+                                return; 
+                            }
+
                             HandleInjectionResult(result, true);
                             lastResult = result.ResultCode;
                         }
@@ -128,7 +137,7 @@ namespace Overlay.Common.Loader
         {
             try
             {
-                return await _loader.Inject(DllLocation, _injectionProgressReporter, token);
+                return await _loader.Inject(DllLocation, _injectionProgressReporter, _bypassOsuRunningCheck, token);
             }
             catch (TaskCanceledException)
             {

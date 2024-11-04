@@ -25,9 +25,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EmbedIO">
-      <Version>3.4.3</Version>
-    </PackageReference>
+    <PackageReference Include="EmbedIO" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
