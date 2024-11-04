@@ -145,8 +145,8 @@ var
 begin
   Result := True;
 
-  minimumVersion := '6.0.7';
-  maximumExclusiveVersion := '6.999.999';
+  minimumVersion := '8.0.10';
+  maximumExclusiveVersion := '8.999.999';
   registryKey := 'SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.WindowsDesktop.App';
   if RegGetValueNames(HKLM, registryKey, runtimes) then
   begin
@@ -168,7 +168,7 @@ procedure InitializeWizard;
 begin
   if NetRuntimeIsMissing() then
   begin
-    idpAddFile('https://aka.ms/dotnet/6.0/windowsdesktop-runtime-win-x64.exe', ExpandConstant('{tmp}\NetRuntimeInstaller.exe'));
+    idpAddFile('https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe', ExpandConstant('{tmp}\NetRuntimeInstaller.exe'));
     idpDownloadAfter(wpReady);
   end;
 end;
