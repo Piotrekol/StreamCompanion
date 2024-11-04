@@ -259,7 +259,7 @@ namespace BrowserOverlay
     public class Configuration
     {
         public bool Enabled { get; set; } = true;
-        public bool BypassOsuStartupCheck { get; set; } = false;
+        public bool BypassOsuStartupCheck { get; set; } = true;
         public List<OverlayTab> OverlayTabs { get; set; }
     }
     public class OverlayTab
