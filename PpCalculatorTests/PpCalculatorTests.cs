@@ -35,11 +35,10 @@ public class PpCalculatorTests
     public void CalculateCtbTest(int c100, int cKatu, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new CtbCalculator(), cKatu: cKatu);
 
-    [Ignore("osu-tools doesn't allow providing score, which mania depends on.. waiting for osu-side pp update instead")]
     [Test]
     //mania score consists of: Geki(c300P, auto calculated),c300,Katu(c200),c100,c50,cMiss
-    [TestCase(673, 20, 0, 0, 0, 3835, "", 901.925, 3563179, 990307)]
-    [TestCase(1486, 131, 13, 11, 28, 1256, "", 795.277, 3449261, 913494)]
+    [TestCase(673, 20, 0, 0, 0, 3835, "", 862.3565, 3563179, 990307)]
+    [TestCase(1486, 131, 13, 11, 28, 1256, "", 745.3009, 3449261, 913494)]
     public void CalculateManiaTest(int c300, int cKatu, int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, int score)
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), score, c300, cKatu);
 
