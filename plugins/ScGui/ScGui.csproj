@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    </PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-	  <OutputPath>bin\Debug_temp\</OutputPath>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug_temp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-	  <OutputPath>bin\Release_temp\</OutputPath>
+    <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -28,10 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Comfortaa.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />

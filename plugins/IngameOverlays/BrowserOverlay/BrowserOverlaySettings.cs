@@ -29,6 +29,7 @@ namespace BrowserOverlay
             listBox_tabs.DataSource = OverlayTabs;
 
             panel_content.Enabled = checkBox_enable.Checked = configuration.Enabled;
+            checkBox_noOsuRestartCheck.Checked = configuration.BypassOsuStartupCheck;
             panel_form.Enabled = OverlayTabs.Any();
 
             _init = false;
@@ -179,6 +180,15 @@ namespace BrowserOverlay
             numericUpDown_CanvasHeight.Value = webOverlay.RecommendedSettings.Height;
             numericUpDown_CanvasWidth.Value = webOverlay.RecommendedSettings.Width;
             SettingValueUpdated();
+        }
+
+        private void checkBox_noOsuRestartCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_init)
+                return;
+
+            _configuration.BypassOsuStartupCheck = checkBox_noOsuRestartCheck.Checked;
+            OnSettingUpdated("osuCheck", checkBox_noOsuRestartCheck.Checked);
         }
     }
 }

@@ -1,43 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
-		<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-		<OutputType>Library</OutputType>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<UseWindowsForms>true</UseWindowsForms>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-		<Platforms>x86;AnyCPU</Platforms>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-			</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-		<OutputPath>bin\Debug_temp\</OutputPath>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-		<OutputPath>bin\Release_temp\</OutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<Compile Update="FirstRunMemoryCalibration.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="MemoryDataFinderSettings.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\PpCalculatorTypes\PpCalculatorTypes.csproj" ExcludeAssets="all" />
-		<ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="OsuMemoryDataProvider" Version="0.10.3" />
-		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Catch.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Mania.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Mania.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Osu.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Osu.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Taiko.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Taiko.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osuTK.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\PpCalculator.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\PpCalculator.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Framework.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\Realm.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Catch.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\ProcessMemoryDataFinder.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMemoryDataProvider.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMemoryEventSource.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMemoryEventSource.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />
-	</Target>
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <Platforms>x86;AnyCPU</Platforms>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug_temp\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release_temp\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="FirstRunMemoryCalibration.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="MemoryDataFinderSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\PpCalculatorTypes\PpCalculatorTypes.csproj" ExcludeAssets="all" />
+    <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="OsuMemoryDataProvider" />
+    <PackageReference Include="Newtonsoft.Json" />
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Catch.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Mania.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Mania.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Osu.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Osu.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Taiko.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Taiko.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osuTK.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\PpCalculator.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\PpCalculator.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Framework.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\Realm.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\osu.Game.Rulesets.Catch.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\ProcessMemoryDataFinder.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMemoryDataProvider.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMemoryEventSource.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\OsuMemoryEventSource.pdb&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />
+  </Target>
 </Project>

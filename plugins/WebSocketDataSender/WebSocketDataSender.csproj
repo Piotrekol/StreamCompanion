@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
-	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>11</LangVersion>
   </PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>bin\Debug_temp\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -25,12 +25,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EmbedIO">
-      <Version>3.4.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="EmbedIO" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />

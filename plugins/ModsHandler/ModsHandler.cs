@@ -7,10 +7,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using StreamCompanionTypes.Attributes;
+using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using StreamCompanionTypes.Interfaces.Sources;
 using Beatmap = StreamCompanionTypes.DataTypes.Beatmap;
 using StreamCompanion.Common;
+using System.Collections.Generic;
 
 namespace ModsHandler
 {
@@ -28,6 +30,12 @@ namespace ModsHandler
         {
             _modParser = new ModParser(settings);
             _tokenSetter = Tokens.CreateTokenSetter(Name);
+            var searchResult = new MapSearchResult(new MapSearchArgs("fake", OsuEventType.MapChange) { PlayMode = PlayMode.Osu })
+            { 
+                BeatmapsFound = { new Beatmap() }
+            };
+
+            SetTokenValues(searchResult);
         }
 
         public IModsEx GetModsFromEnum(int modsEnum)
@@ -54,22 +62,7 @@ namespace ModsHandler
         {
             if (map.BeatmapsFound.Any())
             {
-                var foundMap = map.BeatmapsFound[0];
-                var mods = map.Mods?.Mods ?? Mods.Omod;
-                var c = _difficultyCalculator.ApplyMods(foundMap, mods);
-                var bpm = Math.Abs(c["MinBpm"] - c["MaxBpm"]) < float.Epsilon ? c["MinBpm"].ToString("0") : $"{c["MinBpm"]:0}-{c["MaxBpm"]:0} ({c["MainBpm"]:0})";
-
-                _tokenSetter("mods", map.Mods?.ShownMods);
-                _tokenSetter("modsEnum", map.Mods?.Mods);
-                _tokenSetter("mAR", Math.Round(c["AR"], 2), format: "{0:0.##}");
-                _tokenSetter("mCS", Math.Round(c["CS"], 2), format: "{0:0.##}");
-                _tokenSetter("mOD", Math.Round(c["OD"], 2), format: "{0:0.##}");
-                _tokenSetter("mHP", Math.Round(c["HP"], 2), format: "{0:0.##}");
-                _tokenSetter("mStars", Math.Round(foundMap.Stars(map.PlayMode ?? PlayMode.Osu, mods), 3), format: "{0:0.##}");
-                _tokenSetter("mBpm", bpm);
-                _tokenSetter("mMaxBpm", Math.Round(c["MaxBpm"], 2), format: "{0:0}");
-                _tokenSetter("mMinBpm", Math.Round(c["MinBpm"], 2), format: "{0:0}");
-                _tokenSetter("mMainBpm", Math.Round(c["MainBpm"], 2), format: "{0:0}");
+                SetTokenValues(map);
             }
             else
             {
@@ -80,6 +73,28 @@ namespace ModsHandler
             }
 
             return Task.CompletedTask;
+        }
+
+        private void SetTokenValues(IMapSearchResult map)
+        {
+            var foundMap = map.BeatmapsFound[0];
+            var mods = map.Mods?.Mods ?? Mods.Omod;
+            var moddedStats = _difficultyCalculator.ApplyMods(foundMap, mods);
+            var bpm = Math.Abs(moddedStats["MinBpm"] - moddedStats["MaxBpm"]) < float.Epsilon
+                ? moddedStats["MinBpm"].ToString("0")
+                : $"{moddedStats["MinBpm"]:0}-{moddedStats["MaxBpm"]:0} ({moddedStats["MainBpm"]:0})";
+
+            _tokenSetter("mods", map.Mods?.ShownMods);
+            _tokenSetter("modsEnum", map.Mods?.Mods);
+            _tokenSetter("mAR", Math.Round(moddedStats["AR"], 2), format: "{0:0.##}");
+            _tokenSetter("mCS", Math.Round(moddedStats["CS"], 2), format: "{0:0.##}");
+            _tokenSetter("mOD", Math.Round(moddedStats["OD"], 2), format: "{0:0.##}");
+            _tokenSetter("mHP", Math.Round(moddedStats["HP"], 2), format: "{0:0.##}");
+            _tokenSetter("mStars", Math.Round(foundMap.Stars(map.PlayMode ?? PlayMode.Osu, mods), 3), format: "{0:0.##}");
+            _tokenSetter("mBpm", bpm);
+            _tokenSetter("mMaxBpm", Math.Round(moddedStats["MaxBpm"], 2), format: "{0:0}");
+            _tokenSetter("mMinBpm", Math.Round(moddedStats["MinBpm"], 2), format: "{0:0}");
+            _tokenSetter("mMainBpm", Math.Round(moddedStats["MainBpm"], 2), format: "{0:0}");
         }
 
         public void Free()

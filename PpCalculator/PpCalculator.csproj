@@ -1,18 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<OutputType>Library</OutputType>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<LangVersion>11.0</LangVersion>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\PpCalculatorTypes\PpCalculatorTypes.csproj" />
-		<ProjectReference Include="..\submodules\osu\osu.Game\osu.Game.csproj" />
-		<ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Catch\osu.Game.Rulesets.Catch.csproj" />
-		<ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj" />
-		<ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj" />
-		<ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Taiko\osu.Game.Rulesets.Taiko.csproj" />
-	</ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>11.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PpCalculatorTypes\PpCalculatorTypes.csproj" />
+    <ProjectReference Include="..\submodules\osu\osu.Game\osu.Game.csproj" />
+    <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Catch\osu.Game.Rulesets.Catch.csproj" />
+    <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj" />
+    <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj" />
+    <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Taiko\osu.Game.Rulesets.Taiko.csproj" />
+  </ItemGroup>
 </Project>

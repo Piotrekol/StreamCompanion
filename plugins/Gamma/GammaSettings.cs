@@ -51,7 +51,7 @@ namespace Gamma
                 Invoke(() => SetMapAR(ar));
                 return;
             }
-            label_mapAR.Text = $"Current map AR: {ar:0.#}";
+            label_mapAR.Text = $"Current map AR: {ar:0.##}";
         }
 
         private void checkBox_enabled_CheckedChanged(object sender, EventArgs e)

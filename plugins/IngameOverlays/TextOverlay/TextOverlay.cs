@@ -19,6 +19,7 @@ namespace TextOverlay
     public class TextOverlay : IPlugin, ISettingsSource, IDisposable
     {
         public static readonly ConfigEntry EnableIngameOverlay = new ConfigEntry("EnableIngameOverlay", true);
+        public static readonly ConfigEntry BypassOsuRunningCheck = new ConfigEntry("BypassOsuRunningCheck", true);
 
         private ISettings _settings;
         private readonly Delegates.Restart _restarter;
@@ -36,7 +37,7 @@ namespace TextOverlay
 
             if (_settings.Get<bool>(EnableIngameOverlay))
             {
-                _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(), new Progress<OverlayReport>(HandleOverlayReport));
+                _loaderWatchdog = new LoaderWatchdog(_logger, GetFullDllLocation(), new Progress<OverlayReport>(HandleOverlayReport), settings.Get<bool>(BypassOsuRunningCheck));
                 _ = _loaderWatchdog.WatchForProcessStart(CancellationToken.None).HandleExceptions();
             }
         }
@@ -67,7 +68,8 @@ namespace TextOverlay
             if (_overlaySettings == null || _overlaySettings.IsDisposed)
             {
                 _overlaySettings = new TextOverlaySettings(_settings);
-                _overlaySettings.OverlayToggled += (_, value) => _restarter($"Text overlay was toggled. isEnabled:{value}");
+                _overlaySettings.RestartRequested += (_, value) 
+                    => _restarter($"Text overlay requested SC restart.");
             }
             return _overlaySettings;
         }
