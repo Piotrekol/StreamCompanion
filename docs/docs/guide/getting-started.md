@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* [.NET 6.0.x __x64__ Desktop Runtime](https://aka.ms/dotnet/6.0/windowsdesktop-runtime-win-x64.exe)
+* [.NET 8.0.x __x64__ Desktop Runtime](https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe)
 
 ## Installation
 
