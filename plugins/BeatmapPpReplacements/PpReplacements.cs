@@ -62,8 +62,8 @@ namespace BeatmapPpReplacements
                 },
                 {TokenMode.Mania,new Dictionary<string,PpValue>
                 {
-                    {"mania_1_000_000PP",(c,ppCalculator,mods)=>GetPp(c,ppCalculator, 0, "", 1_000_000)},
-                    {"mania_m1_000_000PP",(c,ppCalculator,mods)=>GetPp(c,ppCalculator, 0, mods, 1_000_000)},
+                    {"mania_1_000_000PP",(c,ppCalculator,mods)=>GetPp(c,ppCalculator, 100, "")},
+                    {"mania_m1_000_000PP",(c,ppCalculator,mods)=>GetPp(c,ppCalculator, 100, mods)},
                 }
                 }
             };
@@ -134,11 +134,10 @@ namespace BeatmapPpReplacements
             ResetTokens(tokenMode == TokenMode.Osu ? TokenMode.Mania : TokenMode.Osu);
         }
 
-        private double GetPp(CancellationToken cancellationToken, IPpCalculator ppCalculator, double acc, string mods = "", int score = 0)
+        private double GetPp(CancellationToken cancellationToken, IPpCalculator ppCalculator, double acc, string mods = "")
         {
             ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             ppCalculator.Accuracy = acc;
-            ppCalculator.Score = (int)(score * ppCalculator.ScoreMultiplier);
             return Math.Round(ppCalculator.Calculate(cancellationToken).Total, 3);
         }
     }
