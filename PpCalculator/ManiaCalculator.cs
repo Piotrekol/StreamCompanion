@@ -44,10 +44,10 @@ namespace PpCalculator
             int delta = targetTotal - remainingHits;
 
             // Each great and perfect increases total by 5 (great-meh=5)
-            // There is no difference in accuracy between them, so just halve arbitrarily (favouring perfects for an odd number).
+            // There IS A difference in accuracy between them. Assume all perfect.
             int greatsAndPerfects = Math.Min(delta / 5, remainingHits);
-            int countGreat = greatsAndPerfects / 2;
-            int perfects = greatsAndPerfects - countGreat;
+            int countGreat = 0;
+            int perfects = greatsAndPerfects;
             delta -= (countGreat + perfects) * 5;
             remainingHits -= countGreat + perfects;
 
