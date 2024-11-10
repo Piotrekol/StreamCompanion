@@ -17,9 +17,8 @@ namespace PpCalculator
 
         protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatu = null, int? hit300 = null)
         {
-            // One judgement per normal note. Two judgements per hold note (head + tail).
-            var totalHits = hitObjects.Count + hitObjects.Count(ho => ho is HoldNote);
-
+            var totalHits = hitObjects.Count;
+            
             if (countMeh != null || countKatu != null || countGood != null || hit300 != null)
             {
                 int countPerfect = Gekis ?? totalHits - (countMiss + (countMeh ?? 0) + (countKatu ?? 0) + (countGood ?? 0) + (hit300 ?? 0));

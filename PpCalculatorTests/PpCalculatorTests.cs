@@ -36,13 +36,15 @@ public class PpCalculatorTests
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new CtbCalculator(), cKatu: cKatu);
 
     [Test]
-    //mania score consists of: Geki(c300P, auto calculated),c300,Katu(c200),c100,c50,cMiss
-    [TestCase(673, 20, 0, 0, 0, 3835, "", 862.3565, 3563179, 990307)]
-    [TestCase(1486, 131, 13, 11, 28, 1256, "", 745.3009, 3449261, 913494)]
-    public void CalculateManiaTest(int c300, int cKatu, int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId, int score)
-        => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), score, c300, cKatu);
+    //mania score consists of: Geki(c300P),c300,Katu(c200),c100,c50,cMiss
+    [TestCase(null, 1152, 133, 10, 10, 15, 788, "", 709.0555, 3563179)]
+    [TestCase(2713, 504, 16, 3, 0, 0, 3797, "", 870.3794, 3563179)] // https://osu.ppy.sh/scores/mania/569388665
+    [TestCase(null, 504, 16, 3, 0, 0, 3797, "", 870.3794, 3563179)] // same score as above - tests geki inference
+    [TestCase(null, 1439, 30, 1, 0, 2, 4776, "", 787.2022, 3449261)] // https://osu.ppy.sh/scores/mania/565258177
+    public void CalculateManiaTest(int? geki, int c300, int cKatu, int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
+        => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), c300, cKatu, geki);
 
-    public void CalculateTest(int c100, int? c50, int cMiss, int combo, string mods, double expectedPp, int mapId, BasePpCalculator ppCalculator, int score = 0, int c300 = 0, int cKatu = 0)
+    public void CalculateTest(int c100, int? c50, int cMiss, int combo, string mods, double expectedPp, int mapId, BasePpCalculator ppCalculator, int c300 = 0, int cKatu = 0, int? cGeki = 0)
     {
         ppCalculator.PreProcess(GetMapPath(mapId));
         ppCalculator.Hit300 = c300;
@@ -51,7 +53,7 @@ public class PpCalculatorTests
         ppCalculator.Mehs = c50;
         ppCalculator.Misses = cMiss;
         ppCalculator.Combo = combo;
-        ppCalculator.Score = score;
+        ppCalculator.Gekis = cGeki;
         ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
         double calculatedPp = ppCalculator.Calculate(CancellationToken.None).Total;
