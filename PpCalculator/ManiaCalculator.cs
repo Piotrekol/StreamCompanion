@@ -43,7 +43,7 @@ namespace PpCalculator
             int delta = targetTotal - remainingHits;
 
             // Each great and perfect increases total by 5 (great-meh=5)
-            // There IS A difference in accuracy between them. Assume all perfect.
+            // While there is no difference in accuracy between them, they do differ in context of performance points calculation. Assume all perfect.
             int greatsAndPerfects = Math.Min(delta / 5, remainingHits);
             int countGreat = 0;
             int perfects = greatsAndPerfects;
