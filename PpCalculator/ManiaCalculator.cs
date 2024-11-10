@@ -22,14 +22,14 @@ namespace PpCalculator
 
             if (countMeh != null || countKatu != null || countGood != null || hit300 != null)
             {
-                int countPerfect = totalHits - (countMiss + (countMeh ?? 0) + (countKatu ?? 0) + (countGood ?? 0) + (hit300 ?? 0));
+                int countPerfect = Gekis ?? totalHits - (countMiss + (countMeh ?? 0) + (countKatu ?? 0) + (countGood ?? 0) + (hit300 ?? 0));
 
                 return new Dictionary<HitResult, int>
                 {
                     [HitResult.Perfect] = countPerfect,
                     [HitResult.Great] = hit300 ?? 0,
-                    [HitResult.Good] = countGood ?? 0,
-                    [HitResult.Ok] = countKatu ?? 0,
+                    [HitResult.Good] = countKatu ?? 0,
+                    [HitResult.Ok] = countGood ?? 0,
                     [HitResult.Meh] = countMeh ?? 0,
                     [HitResult.Miss] = countMiss
                 };

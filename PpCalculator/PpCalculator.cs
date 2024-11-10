@@ -68,6 +68,7 @@ namespace PpCalculator
         public virtual int? Goods { get; set; }
         public int? Katus { get; set; }
         public int? Hit300 { get; set; }
+        public int? Gekis { get; set; }
 
         protected virtual ScoreInfo ScoreInfo { get; }
         protected PerformanceCalculator PerformanceCalculator { get; set; }
