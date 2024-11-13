@@ -17,19 +17,18 @@ namespace PpCalculator
 
         protected override Dictionary<HitResult, int> GenerateHitResults(double accuracy, IReadOnlyList<HitObject> hitObjects, int countMiss, int? countMeh, int? countGood, int? countKatu = null, int? hit300 = null)
         {
-            // One judgement per normal note. Two judgements per hold note (head + tail).
-            var totalHits = hitObjects.Count + hitObjects.Count(ho => ho is HoldNote);
-
+            var totalHits = hitObjects.Count;
+            
             if (countMeh != null || countKatu != null || countGood != null || hit300 != null)
             {
-                int countPerfect = totalHits - (countMiss + (countMeh ?? 0) + (countKatu ?? 0) + (countGood ?? 0) + (hit300 ?? 0));
+                int countPerfect = Gekis ?? totalHits - (countMiss + (countMeh ?? 0) + (countKatu ?? 0) + (countGood ?? 0) + (hit300 ?? 0));
 
                 return new Dictionary<HitResult, int>
                 {
                     [HitResult.Perfect] = countPerfect,
                     [HitResult.Great] = hit300 ?? 0,
-                    [HitResult.Good] = countGood ?? 0,
-                    [HitResult.Ok] = countKatu ?? 0,
+                    [HitResult.Good] = countKatu ?? 0,
+                    [HitResult.Ok] = countGood ?? 0,
                     [HitResult.Meh] = countMeh ?? 0,
                     [HitResult.Miss] = countMiss
                 };
@@ -44,10 +43,10 @@ namespace PpCalculator
             int delta = targetTotal - remainingHits;
 
             // Each great and perfect increases total by 5 (great-meh=5)
-            // There is no difference in accuracy between them, so just halve arbitrarily (favouring perfects for an odd number).
+            // While there is no difference in accuracy between them, they do differ in context of performance points calculation. Assume all perfect.
             int greatsAndPerfects = Math.Min(delta / 5, remainingHits);
-            int countGreat = greatsAndPerfects / 2;
-            int perfects = greatsAndPerfects - countGreat;
+            int countGreat = 0;
+            int perfects = greatsAndPerfects;
             delta -= (countGreat + perfects) * 5;
             remainingHits -= countGreat + perfects;
 

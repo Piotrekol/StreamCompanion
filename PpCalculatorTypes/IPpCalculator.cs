@@ -16,6 +16,7 @@ namespace PpCalculatorTypes
         int? Goods { get; set; }
         int? Katus { get; set; }
         int? Hit300 { get; set; }
+        int? Gekis { get; set; }
         int RulesetId { get; }
         double BeatmapLength { get; }
         bool UseScoreMultiplier { get; set; }
