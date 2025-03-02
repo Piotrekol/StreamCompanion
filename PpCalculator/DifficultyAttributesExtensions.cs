@@ -22,8 +22,6 @@ namespace PpCalculator
                         {
                             AimStrain = osuAttributes.AimDifficulty,
                             SpeedStrain = osuAttributes.SpeedDifficulty,
-                            ApproachRate = osuAttributes.ApproachRate,
-                            OverallDifficulty = osuAttributes.OverallDifficulty,
                             HitCircleCount = osuAttributes.HitCircleCount,
                             SliderCount = osuAttributes.SliderCount,
                             SpinnerCount = osuAttributes.SpinnerCount
@@ -34,7 +32,6 @@ namespace PpCalculator
                     {
                         NoteCount = hitObjects.Count(h => h is Note),
                         HoldNoteCount = hitObjects.Count(h => h is HoldNote),
-                        GreatHitWindow = maniaAttributes.GreatHitWindow
                     };
                 case osu.Game.Rulesets.Taiko.Difficulty.TaikoDifficultyAttributes taikoAttributes:
                     return new TaikoDifficultyAttributes(taikoAttributes.StarRating, taikoAttributes.MaxCombo)
@@ -42,7 +39,6 @@ namespace PpCalculator
                         HitCount = hitObjects.Count(h => h is Hit),
                         DrumRollCount = hitObjects.Count(h => h is DrumRoll),
                         SwellCount = hitObjects.Count(h => h is Swell),
-                        GreatHitWindow = taikoAttributes.GreatHitWindow
                     };
                 case osu.Game.Rulesets.Catch.Difficulty.CatchDifficultyAttributes ctbAttributes:
                     return new CatchDifficultyAttributes(ctbAttributes.StarRating, ctbAttributes.MaxCombo)
