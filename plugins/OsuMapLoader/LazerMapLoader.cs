@@ -143,7 +143,7 @@ namespace OsuSongsFolderWatcher
                 Sliders = sliders,
                 Source = lazerBeatmap.Metadata.Source ?? string.Empty,
                 Spinners = spinners,
-                StackLeniency = lazerBeatmap.BeatmapInfo.StackLeniency,
+                StackLeniency = lazerBeatmap.StackLeniency,
                 Tags = lazerBeatmap.Metadata.Tags ?? string.Empty,
                 TotalTime = Convert.ToInt32(CalculateLength(lazerBeatmap)),
                 OsuFileName = string.IsNullOrEmpty(fullFilePath) ? null : Path.GetFileName(fullFilePath),
