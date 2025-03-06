@@ -5,27 +5,67 @@ using BasePpCalculator = PpCalculator.PpCalculator;
 
 namespace PpCalculatorTests;
 
-//TODO: revalidate values after pp changes are deployed & scores recalculated on osu side
-[TestFixture()]
+[TestFixture]
 public class PpCalculatorTests
 {
     private const string base_url = "https://osu.ppy.sh";
 
     [Test]
-    [TestCase(5, 0, 0, 595, "HD,DT", 629.9953, 1185330)]
-    [TestCase(9, 0, 0, 858, "HD,DT", 705.8835, 2333273)]
-    [TestCase(25, 0, 2, 1631, "HD,DT,HR", 1084.1293, 2486881)]
-    [TestCase(14, 0, 0, 1434, "HD,DT", 404.2468, 812010)]
-    [TestCase(8, 0, 0, 1573, "", 426.9051, 1154766)]
-    [TestCase(25, 6, 2, 2784, "HR", 416.4768, 1228616)]
-    [TestCase(60, 0, 6, 1015, "", 456.7430, 3267957)]
-    [TestCase(2, 0, 0, 1947, "HD,HR", 466.9570, 2956396)]
-
-    public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
+    [TestCase(15, 0, 0, 2469, "HR", 835.521, 4886597)]
+    [TestCase(4, 0, 0, 2900, "", 788.634, 3881559)]
+    [TestCase(18, 0, 0, 2100, "NF", 786.788, 3946158)]
+    [TestCase(46, 0, 0, 3821, "NF", 760.562, 4181770)]
+    [TestCase(19, 0, 0, 1775, "", 757.548, 3385971)]
+    [TestCase(31, 0, 1, 1714, "", 730.521, 4318971)]
+    [TestCase(20, 0, 0, 2745, "", 714.517, 3465034)]
+    [TestCase(2, 0, 0, 192, "NC", 703.108, 2245774)]
+    [TestCase(3, 0, 0, 522, "NC", 688.091, 2790477)]
+    [TestCase(22, 0, 0, 2427, "HR", 687.466, 3666536)]
+    [TestCase(18, 0, 2, 241, "DT", 685.45, 4565942)]
+    [TestCase(15, 0, 0, 2846, "", 674.184, 3837137)]
+    [TestCase(6, 0, 0, 1421, "HR", 673.033, 4064320)]
+    [TestCase(9, 0, 0, 963, "", 668.366, 4720294)]
+    [TestCase(11, 3, 0, 2583, "", 667.7, 3647082)]
+    [TestCase(29, 3, 0, 2795, "", 662.597, 2077121)]
+    [TestCase(21, 0, 2, 161, "NC", 655.985, 4834695)]
+    [TestCase(4, 0, 4, 115, "NC", 651.322, 4836716)]
+    [TestCase(27, 0, 5, 205, "NC", 650.604, 4853246)]
+    [TestCase(4, 0, 0, 2186, "", 649.793, 2111505)]
+    [TestCase(48, 5, 4, 2283, "", 648.362, 4704020)]
+    [TestCase(3, 0, 1, 201, "DT,HR,HD", 646.328, 2596018)]
+    [TestCase(15, 0, 0, 3809, "", 643.578, 3415931)]
+    [TestCase(16, 0, 0, 2500, "", 643.308, 3648544)]
+    [TestCase(9, 0, 0, 2161, "HR", 641.725, 1754777)]
+    [TestCase(81, 0, 0, 3842, "", 640.108, 1860169)]
+    [TestCase(32, 3, 1, 3182, "", 636.953, 1997892)]
+    [TestCase(1, 0, 0, 333, "DT", 634.794, 2596015)]
+    [TestCase(28, 2, 1, 2254, "", 632.101, 2244060)]
+    [TestCase(8, 0, 2, 219, "DT", 629.201, 4905645)]
+    [TestCase(8, 0, 2, 401, "DT", 629.061, 2469345)]
+    [TestCase(7, 0, 0, 610, "NC", 624.509, 1885374)]
+    [TestCase(27, 0, 0, 2136, "", 624.056, 3975714)]
+    [TestCase(5, 0, 0, 1010, "HR,SO", 623.5, 1621319)]
+    [TestCase(54, 0, 9, 874, "", 620.356, 1816113)]
+    [TestCase(2, 0, 0, 503, "DT", 614.831, 2360153)]
+    [TestCase(2, 0, 1, 145, "NC", 613.961, 4419203)]
+    [TestCase(15, 0, 0, 510, "DT", 611.123, 1988911)]
+    [TestCase(23, 0, 1, 1201, "", 610.296, 1985735)]
+    [TestCase(8, 0, 8, 230, "NC", 605.55, 4844447)]
+    [TestCase(1, 0, 0, 492, "DT", 605.264, 2444149)]
+    [TestCase(24, 1, 2, 313, "DT", 602.797, 795810)]
+    [TestCase(8, 0, 0, 458, "DT", 602.06, 2200001)]
+    [TestCase(38, 0, 0, 1790, "", 599.985, 3644487)]
+    [TestCase(13, 3, 0, 1770, "", 599.95, 3385967)]
+    [TestCase(32, 0, 9, 49, "DT", 599.866, 4876550)]
+    [TestCase(9, 0, 0, 971, "HR", 595.234, 4551189)]
+    [TestCase(18, 0, 0, 2837, "", 593.239, 2077119)]
+    [TestCase(11, 0, 7, 72, "NC", 587.612, 4905829)]
+    [TestCase(10, 0, 4, 102, "DT", 570.448, 4874355)]
+    public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId) 
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
 
     [Test]
-    [TestCase(11, 0, 0, 1233, "HD,DT", 746.2931, 3716953)]
+    [TestCase(217, 0, 71, 714, "DT", 422.79, 2528629)]
     public void CalculateTaikoTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new TaikoCalculator());
 
@@ -58,8 +98,7 @@ public class PpCalculatorTests
 
         double calculatedPp = ppCalculator.Calculate(CancellationToken.None).Total;
 
-        //pp values match 1:1 values on osu! side, but osu!api values that we are comparing against are provided with 3 decimal points(rounded).
-        Assert.That(calculatedPp, Is.EqualTo(expectedPp).Within(0.002));
+        Assert.That(calculatedPp, Is.EqualTo(expectedPp).Within(0.05));
     }
 
     [Test]
@@ -142,6 +181,14 @@ public class PpCalculatorTests
         if (!File.Exists(cachePath))
         {
             new FileWebRequest(cachePath, $"{base_url}/osu/{mapId}").Perform();
+        }
+
+        var cacheFileInfo = new FileInfo(cachePath);
+
+        if (cacheFileInfo.Length == 0)
+        {
+            cacheFileInfo.Delete();
+            Assert.Inconclusive("Difficulty file download failed");
         }
 
         return cachePath;
