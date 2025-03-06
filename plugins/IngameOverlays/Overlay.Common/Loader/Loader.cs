@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,7 +38,7 @@ public sealed class Loader
             await Task.Delay(2000, cancellationToken);
             Report(progress, "Waiting for osu! process to start");
         } while (!(
-            (process = GetOsuProcess()) != null
+            (process = GetStableOsuProcess()) != null
             && !process.MainWindowTitle.Contains("osu! updater")
             && !string.IsNullOrEmpty(process.MainWindowTitle))
         );
@@ -51,7 +53,7 @@ public sealed class Loader
 
     private async Task WaitForOsuClose(IProgress<string> progress, CancellationToken cancellationToken)
     {
-        while (GetOsuProcess() != null)
+        while (GetStableOsuProcess() != null)
         {
             await Task.Delay(2000, cancellationToken);
             Report(progress, "Waiting for osu! process to close");
@@ -69,16 +71,15 @@ public sealed class Loader
         progress?.Report(message);
     }
 
-    private Process? GetOsuProcess()
+    private static Process? GetStableOsuProcess()
     {
-        foreach (Process process in Process.GetProcesses())
-        {
-            if (process.ProcessName == "osu!")
-            {
-                return process;
-            }
-        }
-
-        return null;
+        return Process.GetProcessesByName("osu!")
+            .FirstOrDefault(process => IsWow64Process(process.SafeHandle, out var isWow64Process) && isWow64Process);
     }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool IsWow64Process(
+        [In] Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid hProcess,
+        [Out, MarshalAs(UnmanagedType.Bool)] out bool wow64Process
+    );
 }
