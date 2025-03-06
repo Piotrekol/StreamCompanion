@@ -45,9 +45,8 @@ public sealed class Loader
         progress?.Report("Injecting");
 
         DllInjector dllInjector = DllInjector.GetInstance;
-        (DllInjectionResult InjectionResult, int errorCode, int Win32Error) result = dllInjector.Inject("osu!", dllLocation);
-
-        return new InjectionResult(result.InjectionResult, result.errorCode, result.Win32Error, "_");
+        
+        return dllInjector.Inject("osu!", dllLocation);
     }
 
     private async Task WaitForOsuClose(IProgress<string> progress, CancellationToken cancellationToken)
