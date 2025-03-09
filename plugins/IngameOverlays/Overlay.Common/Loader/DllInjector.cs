@@ -18,7 +18,6 @@ namespace Overlay.Common.Loader
             NotLoaded,
             Error
         }
-        static readonly IntPtr INTPTR_ZERO = (IntPtr)0;
 
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern IntPtr OpenProcess(uint dwDesiredAccess, int bInheritHandle, uint dwProcessId);
@@ -64,11 +63,11 @@ namespace Overlay.Common.Loader
 
         protected DllInjector() { }
 
-        public (DllInjectionResult InjectionResult, int errorCode, int Win32Error) Inject(string sProcName, string sDllPath)
+        public InjectionResult Inject(string sProcName, string sDllPath)
         {
             if (!File.Exists(sDllPath))
             {
-                return (DllInjectionResult.DllNotFound, 1, 0);
+                return new(DllInjectionResult.DllNotFound, 1, 0, string.Empty);
             }
 
             uint _procId = 0;
@@ -85,30 +84,42 @@ namespace Overlay.Common.Loader
 
             if (_procId == 0)
             {
-                return (DllInjectionResult.GameProcessNotFound, 2, 0);
+                return new(DllInjectionResult.GameProcessNotFound, 2, 0, string.Empty);
             }
 
             var loadedResult = IsAlreadyLoaded(sProcName, Path.GetFileName(sDllPath));
             if (loadedResult.LoadedResult == LoadedResult.Loaded)
-                return (DllInjectionResult.Success, 0, 0);
-
-            if (loadedResult.LoadedResult == LoadedResult.Error)
-                return (DllInjectionResult.InjectionFailed, -1, 0);
-
-            var libAddress = GetLoadLibraryAAddress();
-            if (libAddress == IntPtr.Zero)
-                return (DllInjectionResult.HelperProcessFailed, -2, 0);
-
-            var injectionResult = BInject(_procId, sDllPath, libAddress);
-            if (!injectionResult.Success)
             {
-                return (DllInjectionResult.InjectionFailed, injectionResult.ErrorCode, Marshal.GetLastWin32Error());
+                return new(DllInjectionResult.Success, 0, 0, string.Empty);
             }
 
-            return (DllInjectionResult.Success, 0, 0);
+            if (loadedResult.LoadedResult == LoadedResult.Error)
+            {
+                return new(DllInjectionResult.InjectionFailed, -1, 0, string.Empty);
+            }
+
+            var libAddressProcessResult = GetLoadLibraryAAddress();
+            if (libAddressProcessResult.ExitCode != 0)
+            {
+                return new(DllInjectionResult.HelperProcessFailed, libAddressProcessResult.ExitCode, 0, "Non-zero exit code");
+            }
+
+            if (libAddressProcessResult.Address == IntPtr.Zero)
+            {
+                return new(DllInjectionResult.HelperProcessFailed, libAddressProcessResult.ExitCode, 0, $"Invalid pointer returned");
+            }
+            
+            var injectionResult = BInject(_procId, sDllPath, libAddressProcessResult.Address);
+
+            if (!injectionResult.Success)
+            {
+                return new(DllInjectionResult.InjectionFailed, injectionResult.ErrorCode, Marshal.GetLastWin32Error(), string.Empty);
+            }
+
+            return new(DllInjectionResult.Success, 0, 0, string.Empty);
         }
 
-        private IntPtr GetLoadLibraryAAddress()
+        private (IntPtr Address, int ExitCode) GetLoadLibraryAAddress()
         {
             var file = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Plugins", "Dlls", "X32ProcessOverlayHelper.exe");
             var process = Process.Start(new ProcessStartInfo
@@ -119,12 +130,16 @@ namespace Overlay.Common.Loader
                 FileName = file,
                 Arguments = "proc LoadLibraryA"
             });
-            process.WaitForExit();
+            process.WaitForExit(timeout: TimeSpan.FromSeconds(5));
+
             if (process.ExitCode != 0)
-                return IntPtr.Zero;
+            {
+                return (IntPtr.Zero, process.ExitCode);
+            }
 
             var rawAddress = process.StandardOutput.ReadToEnd().Trim();
-            return new IntPtr(Convert.ToInt32(rawAddress, 16));
+
+            return (new IntPtr(Convert.ToInt32(rawAddress, 16)), process.ExitCode);
         }
 
         public (LoadedResult LoadedResult, int ErrorCode) IsAlreadyLoaded(string procName, string dllName)
@@ -148,7 +163,7 @@ namespace Overlay.Common.Loader
         {
             var processes = Process.GetProcessesByName(procName);
             var process = processes.FirstOrDefault(p => p.ProcessName == procName);
-            
+
             if (process == null)
             {
                 yield break;
@@ -169,21 +184,21 @@ namespace Overlay.Common.Loader
             IntPtr hndProc = OpenProcess(0x2 | 0x8 | 0x10 | 0x20 | 0x400, 1, pToBeInjected);
             try
             {
-                if (hndProc == INTPTR_ZERO)
+                if (hndProc == IntPtr.Zero)
                 {
                     return (false, 3);
                 }
 
                 IntPtr lpLLAddress = LoadLibraryAAddress ?? GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
-                if (lpLLAddress == INTPTR_ZERO)
+                if (lpLLAddress == IntPtr.Zero)
                 {
                     return (false, 4);
                 }
 
                 IntPtr lpAddress = VirtualAllocEx(hndProc, (IntPtr)null, (IntPtr)sDllPath.Length, 0x1000 | 0x2000, 0X40);
 
-                if (lpAddress == INTPTR_ZERO)
+                if (lpAddress == IntPtr.Zero)
                 {
                     return (false, 5);
                 }
@@ -196,7 +211,7 @@ namespace Overlay.Common.Loader
                 }
 
                 IntPtr threadHandle;
-                if ((threadHandle = CreateRemoteThread(hndProc, (IntPtr)null, INTPTR_ZERO, lpLLAddress, lpAddress, 0, (IntPtr)null)) == INTPTR_ZERO)
+                if ((threadHandle = CreateRemoteThread(hndProc, (IntPtr)null, IntPtr.Zero, lpLLAddress, lpAddress, 0, (IntPtr)null)) == IntPtr.Zero)
                 {
                     return (false, 7);
                 }

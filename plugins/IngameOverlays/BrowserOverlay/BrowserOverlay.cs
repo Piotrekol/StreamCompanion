@@ -195,7 +195,7 @@ namespace BrowserOverlay
                     MessageBox.Show(report.Message, messageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ReportType.Log:
-                    _logger.Log(report.Message, LogLevel.Debug);
+                    _logger.Log(report.Message, LogLevel.Information);
                     break;
             }
         }

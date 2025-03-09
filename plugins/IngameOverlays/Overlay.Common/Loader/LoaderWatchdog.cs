@@ -50,7 +50,7 @@ namespace Overlay.Common.Loader
                 _logger.Log("osu! module list is clean", LogLevel.Debug);
 
             if (_lastTroublesomeModules.Any())
-                _statusReporter.Report(new OverlayReport(ReportType.Error, $"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}"));
+                _statusReporter.Report(new OverlayReport(ReportType.Log, $"Detected modules that could potentialy prevent overlay from starting properly:{Environment.NewLine}{string.Join(Environment.NewLine, _lastTroublesomeModules.Select(m => $"{m} - {KnownOsuModules.TroubleMakers[m]}"))}"));
         }
 
         public async Task WatchForProcessStart(CancellationToken token)

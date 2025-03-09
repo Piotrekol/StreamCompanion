@@ -96,8 +96,6 @@ public class OsuCalculator : PpCalculator
             { HitResult.Great, countGreat },
             { HitResult.Ok, countGood ?? 0 },
             { HitResult.Meh, countMeh ?? 0 },
-            { HitResult.LargeTickMiss, 0 },
-            { HitResult.SliderTailHit, hitObjects.Count(x => x is Slider) },
             { HitResult.Miss, countMiss }
         };
     }
