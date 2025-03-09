@@ -29,10 +29,10 @@ namespace OsuMemoryEventSource
          IOsuEventSource, ITokensSource
     {
         public static readonly string Name = "Osu memory reader";
-        public static ConfigEntry SaveLiveTokensOnDisk = new ConfigEntry(nameof(SaveLiveTokensOnDisk), false);
-        public static ConfigEntry TourneyMode = new ConfigEntry("TournamentMode", false);
-        public static ConfigEntry ClientCount = new ConfigEntry("TournamentClientCount", 4);
-        public static ConfigEntry DataClientId = new ConfigEntry("TournamentDataClientId", 0);
+        public static ConfigEntry SaveLiveTokensOnDisk = new(nameof(SaveLiveTokensOnDisk), false);
+        public static ConfigEntry TourneyMode = new("TournamentMode", false);
+        public static ConfigEntry ClientCount = new("TournamentClientCount", 4);
+        public static ConfigEntry DataClientId = new("TournamentDataClientId", 0);
 
         protected SettingNames _names = SettingNames.Instance;
         public EventHandler<IMapSearchArgs> NewOsuEvent { get; set; }
@@ -46,13 +46,13 @@ namespace OsuMemoryEventSource
         protected IModParser _modParser;
         protected ISettings _settings;
         internal static IContextAwareLogger Logger;
-        protected List<StructuredOsuMemoryReader> _clientMemoryReaders = new List<StructuredOsuMemoryReader>();
+        protected List<StructuredOsuMemoryReader> _clientMemoryReaders = new();
         protected StructuredOsuMemoryReader MemoryReader => _clientMemoryReaders[0];
         private readonly MemoryListener memoryListener;
 
-        protected static readonly object _lockingObject = new object();
+        protected static readonly object _lockingObject = new();
         private Task MemoryWorkerTask;
-        private CancellationTokenSource cts = new CancellationTokenSource();
+        private CancellationTokenSource cts = new();
         private int _poolingMsDelay = 33;
 
         [SupportedOSPlatform("windows")]
@@ -90,7 +90,7 @@ namespace OsuMemoryEventSource
                 if (!string.IsNullOrWhiteSpace(exitReason))
                 {
                     Logger.Log(exitReason, LogLevel.Warning);
-                    MessageBox.Show(exitReason, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _ = MessageBox.Show(exitReason, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     exiter(exitReason);
                     return;
                 }
@@ -98,8 +98,7 @@ namespace OsuMemoryEventSource
                 _clientMemoryReaders.AddRange(Enumerable.Range(0, clientCount)
                     .Select(i =>
                     {
-                        var instance = StructuredOsuMemoryReader.Instance.GetInstanceForWindowTitleHint(
-                                $" Tournament Client {i}");
+                        var instance = StructuredOsuMemoryReader.GetInstance(new("osu!", $" Tournament Client {i}"));
                         return instance;
                     }));
 
@@ -167,7 +166,7 @@ namespace OsuMemoryEventSource
                 if (ex.NativeErrorCode == 5)
                 {
                     var nl = Environment.NewLine;
-                    MessageBox.Show("StreamCompanion doesn't have enough permissions to access osu! data." + nl +
+                    _ = MessageBox.Show("StreamCompanion doesn't have enough permissions to access osu! data." + nl +
                                     "Majority of live tokens, pp counts, modded star rating will not work." + nl +
                                     "Reading of live osu! data has been disabled for this StreamCompanion run, restart to try again.",
                         "StreamCompanion - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -186,7 +185,7 @@ namespace OsuMemoryEventSource
             _settings.SettingUpdated -= OnSettingsSettingUpdated;
             lock (_lockingObject)
             {
-                cts?.TryCancel();
+                _ = cts?.TryCancel();
                 memoryListener?.Dispose();
             }
         }

@@ -20,7 +20,7 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NUnit" Version="4.2.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageVersion Include="OsuMemoryDataProvider" Version="0.10.3" />
+    <PackageVersion Include="OsuMemoryDataProvider" Version="0.11.0" />
     <PackageVersion Include="PropertyChanged.Fody" Version="3.3.0" />
     <PackageVersion Include="ScottPlot.WPF" Version="4.0.48" />
     <PackageVersion Include="Sentry" Version="5.1.1" />
