@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using osu.Framework.IO.Network;
 using PpCalculator;
+using PpCalculatorTypes;
 using BasePpCalculator = PpCalculator.PpCalculator;
 
 namespace PpCalculatorTests;
@@ -11,59 +12,59 @@ public class PpCalculatorTests
     private const string base_url = "https://osu.ppy.sh";
 
     [Test]
-    [TestCase(15, 0, 0, 2469, "HR", 818.116, 4886597)]
-    [TestCase(4, 0, 0, 2900, "", 783.819, 3881559)]
-    [TestCase(18, 0, 0, 2100, "NF", 774.808, 3946158)]
-    [TestCase(46, 0, 0, 3821, "NF", 759.175, 4181770)]
-    [TestCase(19, 0, 0, 1775, "", 749.401, 3385971)]
-    [TestCase(31, 0, 1, 1714, "", 720.843, 4318971)]
-    [TestCase(20, 0, 0, 2745, "", 724.107, 3465034)]
-    [TestCase(2, 0, 0, 192, "NC", 706.966, 2245774)]
-    [TestCase(3, 0, 0, 522, "NC", 693.854, 2790477)]
-    [TestCase(22, 0, 0, 2427, "HR", 680.506, 3666536)]
-    [TestCase(18, 0, 2, 241, "DT", 682.051, 4565942)]
-    [TestCase(15, 0, 0, 2846, "", 679.348, 3837137)]
-    [TestCase(6, 0, 0, 1421, "HR", 656.645, 4064320)]
-    [TestCase(9, 0, 0, 963, "", 662.744, 4720294)]
-    [TestCase(11, 3, 0, 2583, "", 660.952, 3647082)]
-    [TestCase(29, 3, 0, 2795, "", 669.863, 2077121)]
-    [TestCase(21, 0, 2, 161, "NC", 616.203, 4834695)]
-    [TestCase(4, 0, 4, 115, "NC", 627.325, 4836716)]
-    [TestCase(27, 0, 5, 205, "NC", 584.004, 4853246)]
-    [TestCase(4, 0, 0, 2186, "", 644.585, 2111505)]
-    [TestCase(48, 5, 4, 2283, "", 637.526, 4704020)]
-    [TestCase(3, 0, 1, 201, "DT,HR,HD", 622.377, 2596018)]
-    [TestCase(15, 0, 0, 3809, "", 646.29, 3415931)]
-    [TestCase(16, 0, 0, 2500, "", 641.134, 3648544)]
-    [TestCase(9, 0, 0, 2161, "HR", 624.684, 1754777)]
-    [TestCase(81, 0, 0, 3842, "", 633.646, 1860169)]
-    [TestCase(32, 3, 1, 3182, "", 630.134, 1997892)]
-    [TestCase(1, 0, 0, 333, "DT", 638.306, 2596015)]
-    [TestCase(28, 2, 1, 2254, "", 648.946, 2244060)]
-    [TestCase(8, 0, 2, 219, "DT", 641.746, 4905645)]
-    [TestCase(8, 0, 2, 401, "DT", 635.268, 2469345)]
-    [TestCase(7, 0, 0, 610, "NC", 636.587, 1885374)]
-    [TestCase(27, 0, 0, 2136, "", 640.028, 3975714)]
-    [TestCase(5, 0, 0, 1010, "HR,SO", 614.671, 1621319)]
-    [TestCase(54, 0, 9, 874, "", 610.188, 1816113)]
-    [TestCase(2, 0, 0, 503, "DT", 619.302, 2360153)]
-    [TestCase(2, 0, 1, 145, "NC", 622.86, 4419203)]
-    [TestCase(15, 0, 0, 510, "DT", 618.056, 1988911)]
-    [TestCase(23, 0, 1, 1201, "", 604.227, 1985735)]
-    [TestCase(8, 0, 8, 230, "NC", 563.604, 4844447)]
-    [TestCase(1, 0, 0, 492, "DT", 611.944, 2444149)]
-    [TestCase(24, 1, 2, 313, "DT", 596.985, 795810)]
-    [TestCase(8, 0, 0, 458, "DT", 609.179, 2200001)]
-    [TestCase(38, 0, 0, 1790, "", 603.353, 3644487)]
-    [TestCase(13, 3, 0, 1770, "", 603.721, 3385967)]
-    [TestCase(32, 0, 9, 49, "DT", 516.28, 4876550)]
-    [TestCase(9, 0, 0, 971, "HR", 591.919, 4551189)]
-    [TestCase(18, 0, 0, 2837, "", 596.582, 2077119)]
-    [TestCase(11, 0, 7, 72, "NC", 530.869, 4905829)]
-    [TestCase(10, 0, 4, 102, "DT", 520.924, 4874355)]
-    [TestCase(31, 0, 7, 1282, "HD", 420.726, 3359653)]
-    public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
-        => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator());
+    //[TestCase({count100}, {count50}, {countMiss}, {maxCombo}, "{enabledMods}", {ppValue}d, {score}, {beatmapId})]
+    [TestCase(11, 0, 0, 543, "DT", 600.66d, 7337969, 5277324)]
+    [TestCase(33, 1, 0, 2705, "HD,HR", 651.96d, 200661520, 3281757)]
+    [TestCase(41, 1, 5, 1920, "", 547.69d, 97392950, 5143698)]
+    [TestCase(9, 0, 0, 1363, "HD,DT", 624.4d, 45705016, 2079130)]
+    [TestCase(5, 0, 0, 643, "HR", 582.83d, 9966935, 5211120)]
+    [TestCase(25, 0, 3, 459, "DT,NC", 536.21d, 3753841, 4978117)]
+    [TestCase(6, 0, 0, 493, "HD,DT", 554.61d, 4561464, 4933095)]
+    [TestCase(35, 0, 0, 2942, "", 759.84d, 206184570, 2235465)]
+    [TestCase(57, 0, 0, 3841, "", 663.35d, 318164760, 1860169)]
+    [TestCase(0, 0, 0, 266, "HD,DT", 600.35d, 1579137, 5287832)]
+    [TestCase(24, 2, 1, 1367, "", 623.03d, 84780530, 5020005)]
+    [TestCase(1, 0, 0, 633, "", 594.72d, 8053454, 5206808)]
+    [TestCase(40, 6, 2, 3109, "", 550.38d, 221069770, 5016427)]
+    [TestCase(1, 0, 0, 267, "HD,DT", 678.83d, 1597198, 5279580)]
+    [TestCase(4, 0, 0, 333, "", 525.55d, 2210430, 5091768)]
+    [TestCase(5, 0, 0, 435, "HD,DT", 569.62d, 3915728, 5328092)]
+    [TestCase(16, 2, 1, 2450, "", 548.86d, 116067726, 4861693)]
+    [TestCase(11, 0, 0, 1070, "HR", 585.45d, 30477495, 4266525)]
+    [TestCase(43, 0, 0, 832, "", 536.14d, 13195874, 4883674)]
+    [TestCase(39, 0, 1, 1074, "HR", 594.92d, 25163123, 4767844)]
+    [TestCase(56, 0, 0, 605, "HD,DT", 1065.53d, 7326847, 5186856)]
+    [TestCase(0, 0, 3, 402, "HD,DT", 529.29d, 3416865, 5315940)]
+    [TestCase(8, 0, 0, 1675, "HR", 574.1d, 52319804, 5119288)]
+    [TestCase(1, 0, 0, 283, "HD,HR,DT,NC", 552.29d, 1693276, 4650478)]
+    [TestCase(57, 0, 4, 1364, "", 712.41d, 43205300, 4155614)]
+    [TestCase(4, 0, 0, 332, "HD,DT", 704.66d, 3112508, 4867588)]
+    [TestCase(0, 0, 0, 263, "HD,DT", 514.19d, 1472613, 5331280)]
+    [TestCase(1, 0, 0, 741, "HD,DT", 556.94d, 11049748, 1462836)]
+    [TestCase(0, 0, 0, 385, "HD,DT", 618.98d, 2817055, 5242138)]
+    [TestCase(3, 0, 0, 417, "HD,DT", 547.39d, 3694568, 5329484)]
+    [TestCase(0, 0, 0, 185, "HD,DT", 524.14d, 779521, 4798302)]
+    [TestCase(5, 0, 1, 407, "HD,DT", 509.35d, 3525994, 5328092)]
+    [TestCase(3, 0, 0, 633, "", 583.77d, 8045598, 5206808)]
+    [TestCase(10, 0, 0, 425, "HD,DT", 529.64d, 3744424, 5328092)]
+    [TestCase(4, 0, 0, 1341, "HD,DT", 544.21d, 38587959, 3863682)]
+    [TestCase(41, 0, 0, 1098, "", 583.66d, 19945870, 3760479)]
+    [TestCase(3, 0, 0, 416, "HD,DT", 528.07d, 3372734, 5329379)]
+    [TestCase(35, 0, 4, 943, "HD,HR", 584.94d, 26433364, 2417422)]
+    [TestCase(21, 0, 0, 903, "HD,DT", 541.77d, 16436428, 140821)]
+    [TestCase(3, 0, 5, 1020, "", 525.93d, 22877870, 4952940)]
+    [TestCase(7, 0, 2, 359, "HD,DT", 504.78d, 2640698, 5327983)]
+    [TestCase(1, 0, 0, 629, "HR", 601.84d, 8395633, 5341644)]
+    [TestCase(7, 0, 1, 370, "HD,DT", 615.18d, 2917136, 5370003)]
+    [TestCase(12, 0, 3, 360, "HD,DT", 517.44d, 2644047, 5370003)]
+    [TestCase(13, 0, 0, 3852, "", 895.44d, 344167630, 5272081)]
+    [TestCase(2, 0, 0, 621, "HD", 502.66d, 8813544, 4883675)]
+    [TestCase(8, 1, 1, 1608, "", 567.96d, 62784690, 4775621)]
+    [TestCase(15, 2, 0, 955, "HD,DT", 643.61d, 15921967, 1828961)]
+    [TestCase(4, 0, 0, 434, "HD,DT", 579d, 3911093, 5328092)]
+    [TestCase(12, 0, 1, 678, "DT", 816.48d, 9168624, 5271748)]
+    public void CalculateOsuTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int score, int mapId)
+        => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator(), score: score);
 
     [Test]
     [TestCase(217, 0, 71, 714, "DT", 377.1038, 2528629)]
@@ -95,7 +96,9 @@ public class PpCalculatorTests
         ppCalculator.Misses = cMiss;
         ppCalculator.Combo = combo;
         ppCalculator.Gekis = cGeki;
+        ppCalculator.Score = score;
         ppCalculator.Mods = mods.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+        ppCalculator.UseScoreMultiplier = false;
 
         double calculatedPp = ppCalculator.Calculate(CancellationToken.None).Total;
 
@@ -184,7 +187,7 @@ public class PpCalculatorTests
             new FileWebRequest(cachePath, $"{base_url}/osu/{mapId}").Perform();
         }
 
-        var cacheFileInfo = new FileInfo(cachePath);
+        FileInfo cacheFileInfo = new(cachePath);
 
         if (cacheFileInfo.Length == 0)
         {

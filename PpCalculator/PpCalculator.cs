@@ -209,9 +209,13 @@ namespace PpCalculator
             ScoreInfo.Statistics = GenerateHitResults(Accuracy / 100, hitObjects, Misses, Mehs, Goods, Katus, Hit300);
             ScoreInfo.Accuracy = GetAccuracy(ScoreInfo.Statistics);
             ScoreInfo.MaxCombo = Combo ?? (int)Math.Round(PercentCombo / 100 * GetMaxCombo(hitObjects));
-            ScoreInfo.TotalScore = UseScoreMultiplier ?
+            ScoreInfo.IsLegacyScore = true;
+            var score = UseScoreMultiplier ?
                 (int)Math.Round(Score * ScoreMultiplier)
                 : Score;
+
+            ScoreInfo.LegacyTotalScore = score;
+            ScoreInfo.TotalScore = score;
 
             if (createPerformanceCalculator)
             {
