@@ -14,6 +14,10 @@ using PpCalculatorTypes;
 using DifficultyAttributes = PpCalculatorTypes.DifficultyAttributes;
 using osu.Game.Beatmaps.Formats;
 using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Rulesets.Osu;
+using osu.Game.Rulesets.Taiko;
+using osu.Game.Rulesets.Catch;
+using osu.Game.Rulesets.Mania;
 
 namespace PpCalculator
 {
@@ -85,8 +89,12 @@ namespace PpCalculator
 
         static PpCalculator()
         {
-            //Required for <=v4 maps
+            // Required for <=v4 maps
             LegacyDifficultyCalculatorBeatmapDecoder.Register();
+
+            // Required for osu.Game.AssemblyRulesetStore to initalize properly during first beatmap decode call.
+            // Fails silently otherwise on RulesetStore.GetRuleset calls during map deserialization, resulting in incorrectly converted maps.
+            _ = new ILegacyRuleset[] { new OsuRuleset(), new TaikoRuleset(), new CatchRuleset(), new ManiaRuleset() };
         }
 
         protected PpCalculator()
