@@ -25,11 +25,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fody">
+    <PackageReference Include="Fody" PrivateAssets="All">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="PropertyChanged.Fody" />
+    <PackageReference Include="PropertyChanged.Fody" PrivateAssets="All"/>
     <PackageReference Include="ScottPlot.WPF" />
   </ItemGroup>
   <ItemGroup>

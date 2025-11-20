@@ -67,26 +67,51 @@ public class PpCalculatorTests
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new OsuCalculator(), score: score);
 
     [Test]
-    [TestCase(217, 0, 71, 714, "DT", 377.1038, 2528629)]
+    //[TestCase({count100}, {count50}, {countMiss}, {maxCombo}, "{enabledMods}", {ppValue}d, {beatmapId})]
+    [TestCase(31, 0, 10, 1616, "", 668.59d, 2438332)]
+    [TestCase(117, 0, 9, 2376, "", 574.15d, 4907360)]
+    [TestCase(0, 0, 0, 769, "SD,PF", 527.98d, 4667676)]
+    [TestCase(69, 0, 2, 1896, "HD,DT,NC", 960.07d, 5023230)]
+    [TestCase(98, 0, 0, 1100, "HR", 528.66d, 3391381)]
+    [TestCase(40, 0, 0, 1444, "DT", 905.09d, 4839683)]
+    [TestCase(144, 0, 10, 2705, "HD,DT,NC", 945.35d, 4433473)]
+    [TestCase(172, 0, 59, 1544, "DT", 639.85d, 5315977)]
+    [TestCase(98, 0, 2, 817, "DT,NC", 880.47d, 2456553)]
+    [TestCase(158, 0, 6, 2852, "DT", 977.39d, 5315977)]
     public void CalculateTaikoTest(int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new TaikoCalculator());
 
     [Test]
-    [TestCase(73, 0, 79, 0, 1241, "HR", 822.3440, 1972148)]
-    [TestCase(165, 4, 397, 1, 1467, "HD,HR", 472.8664, 2264827)]
+    //[TestCase({count100}, {countKatu}, {count50}, {countMiss}, {maxCombo}, "{enabledMods}", {ppValue}d, {beatmapId})]
+    [TestCase(5, 0, 35, 0, 385, "HR", 529.84d, 5064281)]
+    [TestCase(211, 8, 671, 0, 1773, "", 517.91d, 5100805)]
+    [TestCase(95, 0, 99, 13, 1164, "NF", 605.94d, 3504487)]
+    [TestCase(71, 10, 216, 0, 612, "DT", 668.44d, 3128300)]
+    [TestCase(91, 0, 112, 0, 2606, "", 840.47d, 5299790)]
+    [TestCase(8, 2, 52, 6, 430, "HR", 515.5d, 4675222)]
+    [TestCase(6, 2, 94, 0, 808, "HD,HR", 598.95d, 5061628)]
+    [TestCase(188, 0, 238, 0, 1841, "HD", 727.45d, 4877768)]
+    [TestCase(231, 4, 322, 1, 2229, "HD", 774.75d, 5235089)]
+    [TestCase(140, 3, 180, 1, 1351, "", 615.01d, 3578471)]
     public void CalculateCtbTest(int c100, int cKatu, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new CtbCalculator(), cKatu: cKatu);
 
     [Test]
-    //mania score consists of: Geki(c300P),c300,Katu(c200),c100,c50,cMiss
-    [TestCase(null, 1152, 133, 10, 10, 15, 788, "", 709.0555, 3563179)]
-    [TestCase(2713, 504, 16, 3, 0, 0, 3797, "", 870.3794, 3563179)] // https://osu.ppy.sh/scores/mania/569388665
-    [TestCase(null, 504, 16, 3, 0, 0, 3797, "", 870.3794, 3563179)] // same score as above - tests geki inference
-    [TestCase(null, 1439, 30, 1, 0, 2, 4776, "", 787.2022, 3449261)] // https://osu.ppy.sh/scores/mania/565258177
+    //[TestCase({countGeki}, {count300}, {countKatu}, {count100}, {count50}, {countMiss}, {maxCombo}, "{enabledMods}", {ppValue}d, {beatmapId})]
+    [TestCase(2007, 152, 4, 0, 0, 0, 2315, "SD", 587.25d, 5339691)]
+    [TestCase(null, 152, 4, 0, 0, 0, 2315, "SD", 587.25d, 5339691)]
+    [TestCase(null, 2660, 533, 73, 19, 96, 970, "", 610.22d, 4574013)]
+    [TestCase(null, 3699, 440, 55, 30, 42, 1231, "HT", 852.83d, 5074941)]
+    [TestCase(null, 2353, 187, 16, 6, 28, 1232, "", 753.94d, 5153884)]
+    [TestCase(null, 2604, 329, 67, 45, 93, 2127, "", 1040.06d, 5139638)]
+    [TestCase(null, 930, 59, 10, 0, 3, 4697, "", 514.92d, 2769975)]
+    [TestCase(null, 2261, 205, 23, 2, 45, 2107, "", 600.05d, 5048955)]
+    [TestCase(null, 63, 0, 0, 0, 0, 3226, "DT", 717.54d, 5170433)]
+    [TestCase(null, 263, 16, 4, 0, 2, 2249, "DT", 875.86d, 5207902)]
     public void CalculateManiaTest(int? geki, int c300, int cKatu, int c100, int c50, int cMiss, int combo, string mods, double expectedPp, int mapId)
         => CalculateTest(c100, c50, cMiss, combo, mods, expectedPp, mapId, new ManiaCalculator(), c300, cKatu, geki);
 
-    public void CalculateTest(int c100, int? c50, int cMiss, int combo, string mods, double expectedPp, int mapId, BasePpCalculator ppCalculator, int c300 = 0, int cKatu = 0, int? cGeki = 0)
+    public void CalculateTest(int c100, int? c50, int cMiss, int combo, string mods, double expectedPp, int mapId, BasePpCalculator ppCalculator, int c300 = 0, int cKatu = 0, int? cGeki = 0, int score = 0)
     {
         ppCalculator.PreProcess(GetMapPath(mapId));
         ppCalculator.Hit300 = c300;
