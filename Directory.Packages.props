@@ -2,29 +2,29 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
-	<ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
   </PropertyGroup>
   <ItemGroup>
-	  <PackageReference Include="StreamCompanionTypes" />
+    <PackageReference Include="StreamCompanionTypes" />
   </ItemGroup>
   <ItemGroup>
-	<PackageVersion Include="StreamCompanionTypes" version="9.0.0" />
-	<PackageVersion Include="CollectionManager" Version="1.0.8" />
-    <PackageVersion Include="EmbedIO" Version="3.4.3" />
-    <PackageVersion Include="Fody" Version="6.3.0" />
+    <PackageVersion Include="StreamCompanionTypes" version="9.0.0" />
+    <PackageVersion Include="CollectionManager" Version="1.0.8" />
+    <PackageVersion Include="EmbedIO" Version="3.5.2" />
+    <PackageVersion Include="Fody" Version="6.9.1" />
     <PackageVersion Include="Grace" Version="7.2.0" />
     <PackageVersion Include="Jace" Version="1.0.0" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
     <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="NUnit" Version="4.2.2" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="NUnit" Version="4.4.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageVersion Include="OsuMemoryDataProvider" Version="0.11.1" />
     <PackageVersion Include="PropertyChanged.Fody" Version="3.3.0" />
     <PackageVersion Include="ScottPlot.WPF" Version="4.0.48" />
     <PackageVersion Include="Sentry" Version="5.1.1" />
-    <PackageVersion Include="SharpCompress" Version="0.39.0" />
+    <PackageVersion Include="SharpCompress" Version="0.41.0" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="5.0.0" />
     <PackageVersion Include="System.Data.DataSetExtensions" Version="4.5.0" />

@@ -18,24 +18,24 @@ namespace PpCalculator
                         Speed = osuAttribs.Speed,
                         Total = osuAttribs.Total,
                     };
-                case osu.Game.Rulesets.Taiko.Difficulty.TaikoPerformanceAttributes osuAttribs:
+                case osu.Game.Rulesets.Taiko.Difficulty.TaikoPerformanceAttributes taikoAttribs:
                     return new TaikoPerformanceAttributes
                     {
-                        Accuracy = osuAttribs.Accuracy,
-                        Difficulty = osuAttribs.Difficulty,
-                        EffectiveMissCount = osuAttribs.EffectiveMissCount,
-                        Total = osuAttribs.Total,
+                        Accuracy = taikoAttribs.Accuracy,
+                        Difficulty = taikoAttribs.Difficulty,
+                        EstimatedUnstableRate = taikoAttribs.EstimatedUnstableRate,
+                        Total = taikoAttribs.Total,
                     };
-                case osu.Game.Rulesets.Catch.Difficulty.CatchPerformanceAttributes osuAttribs:
+                case osu.Game.Rulesets.Catch.Difficulty.CatchPerformanceAttributes ctbAttribs:
                     return new CatchPerformanceAttributes
                     {
-                        Total = osuAttribs.Total,
+                        Total = ctbAttribs.Total,
                     };
-                case osu.Game.Rulesets.Mania.Difficulty.ManiaPerformanceAttributes osuAttribs:
+                case osu.Game.Rulesets.Mania.Difficulty.ManiaPerformanceAttributes maniaAttribs:
                     return new ManiaPerformanceAttributes
                     {
-                        Difficulty = osuAttribs.Difficulty,
-                        Total = osuAttribs.Total,
+                        Difficulty = maniaAttribs.Difficulty,
+                        Total = maniaAttribs.Total,
                     };
                 default:
                     return null;
