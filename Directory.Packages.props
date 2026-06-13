@@ -24,7 +24,6 @@
     <PackageVersion Include="PropertyChanged.Fody" Version="3.3.0" />
     <PackageVersion Include="ScottPlot.WPF" Version="4.0.48" />
     <PackageVersion Include="Sentry" Version="5.1.1" />
-    <PackageVersion Include="SharpCompress" Version="0.41.0" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="5.0.0" />
     <PackageVersion Include="System.Data.DataSetExtensions" Version="4.5.0" />
