@@ -81,7 +81,6 @@
 	<PackageReference Include="Grace" />
 	<PackageReference Include="Jace" />
 	<PackageReference Include="Sentry" />
-	<PackageReference Include="SharpCompress" />
 	<PackageReference Include="Newtonsoft.Json" />
 	<PackageReference Include="System.ComponentModel.Composition" />
 	<PackageReference Include="System.Drawing.Common" />
