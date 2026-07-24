@@ -345,17 +345,12 @@ namespace PpCalculator
 
         private double CalculateScoreMultiplier()
         {
-            var mods = GetOsuMods(Ruleset).ToArray();
-            double scoreMultiplier = 1.0;
-            IEnumerable<Mod> scoreIncreaseMods = Ruleset.GetModsFor(ModType.DifficultyIncrease);
-            foreach (var m in mods.Where(m => !scoreIncreaseMods.Contains(m)))
-                scoreMultiplier *= m.CreateInstance().ScoreMultiplier;
+            var mods = GetOsuMods(Ruleset).Select(m => m.CreateInstance()).ToArray();
+            if (mods.Length == 0 || WorkingBeatmap == null)
+                return 1.0;
 
-            IEnumerable<Mod> scoreDecreaseMods = Ruleset.GetModsFor(ModType.DifficultyReduction);
-            foreach (var m in mods.Where(m => !scoreDecreaseMods.Contains(m)))
-                scoreMultiplier *= m.CreateInstance().ScoreMultiplier;
-
-            return scoreMultiplier;
+            var context = new ScoreMultiplierContext(WorkingBeatmap.BeatmapInfo.Difficulty);
+            return Ruleset.CreateScoreMultiplierCalculator(context).CalculateFor(mods);
         }
 
         protected int GetComboToTime(IBeatmap beatmap, int toTime) =>
