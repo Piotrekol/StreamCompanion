@@ -33,6 +33,7 @@ namespace osu_StreamCompanion
         [STAThread]
         static void Main(string[] args)
         {
+            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
 #if False
             AllowMultiInstance = true;
 #endif
