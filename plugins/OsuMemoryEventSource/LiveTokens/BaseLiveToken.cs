@@ -11,7 +11,7 @@ namespace OsuMemoryEventSource.LiveTokens
         public BaseLiveToken(IToken token, Func<object> updater)
         {
             Token = token;
-            Updater = updater;
+            Updater = updater ?? throw new ArgumentNullException(nameof(updater));
         }
 
         protected bool CanUpdate(OsuStatus status) => Token.CanSave(status) && Updater != null;
