@@ -9,13 +9,8 @@
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SCDeploySelfPdb>false</SCDeploySelfPdb>
     </PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>bin\Debug_temp\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release_temp\</OutputPath>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Update="ColorPickerWithPreview.cs">
       <SubType>UserControl</SubType>
@@ -34,7 +29,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\LiveVisualizer.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\LiveVisualizer.dll&quot;&#xD;&#xA;copy &quot;$(TargetDir)\ScottPlot.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\ScottPlot.dll&quot;&#xD;&#xA;copy &quot;$(TargetDir)\ScottPlot.WPF.dll&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\ScottPlot.WPF.dll&quot;&#xD;&#xA;&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;" />
-  </Target>
+  <ItemGroup>
+    <SCPluginDeployDll Include="ScottPlot.dll" />
+    <SCPluginDeployDll Include="ScottPlot.WPF.dll" />
+  </ItemGroup>
 </Project>

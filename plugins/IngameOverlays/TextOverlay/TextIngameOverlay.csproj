@@ -8,13 +8,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SCDeploySelfPdb>false</SCDeploySelfPdb>
     <AssemblyName>TextIngameOverlay</AssemblyName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <OutputPath>bin\Debug_temp\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <OutputPath>bin\Release_temp\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="TextOverlaySettings.cs">
@@ -22,14 +17,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Dlls\freetype.dll" />
-    <None Remove="Dlls\textOverlay.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\StreamCompanion.Common\StreamCompanion.Common.csproj" />
     <ProjectReference Include="..\Overlay.Common\Overlay.Common.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir &quot;$(TargetDir)\..\$(ConfigurationName)&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot;&#xD;&#xA;del /Q &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)\TextIngameOverlay.*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\&quot;&#xD;&#xA;copy &quot;$(TargetDir)\Overlay.Common.*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(ProjectDir)\Dlls\*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;copy &quot;$(SolutionDir)plugins\IngameOverlays\Overlay.Common\Dlls\*&quot; &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\&quot;&#xD;&#xA;&#xD;&#xA;if $(ConfigurationName) == Debug (&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\$(ConfigurationName)\Plugins\Dlls\&quot;&#xD;&#xA;) ELSE (&#xD;&#xA;mkdir &quot;$(SolutionDir)\build\Release_unsafe\Plugins\Dlls&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\*&quot; &quot;$(SolutionDir)\build\Release_unsafe\Plugins\&quot;&#xD;&#xA;copy /Y &quot;$(TargetDir)\..\$(ConfigurationName)\Dlls\*&quot; &quot;$(SolutionDir)\build\Release_unsafe\Plugins\Dlls\&quot;&#xD;&#xA;)" />
-  </Target>
+  <PropertyGroup>
+    <SCPluginDeployDir>build\Release_unsafe\</SCPluginDeployDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <SCPluginDeployFile Include="TextIngameOverlay.pdb" />
+    <SCPluginDeployFile Include="TextIngameOverlay.deps.json" />
+    <SCPluginDeployDll Include="Overlay.Common.dll" />
+    <SCPluginDeployDll Include="Overlay.Common.pdb" />
+    <SCPluginDeploySourceDll Include="Dlls\freetype.dll" />
+    <SCPluginDeploySourceDll Include="Dlls\textOverlay.dll" />
+    <SCPluginDeploySourceDll Include="..\Overlay.Common\Dlls\X32ProcessOverlayHelper.exe" />
+  </ItemGroup>
 </Project>
