@@ -78,8 +78,6 @@ namespace OsuMemoryEventSource
             UnstableRate,
             liveStarRating,
         }
-        private ManualResetEvent _notAddingNewTokens = new ManualResetEvent(true);
-        private ManualResetEvent _notUpdatingTokens = new ManualResetEvent(true);
         private ManualResetEvent _notUpdatingMemoryValues = new ManualResetEvent(true);
         private ManualResetEvent _newPlayStarted = new ManualResetEvent(true);
 
@@ -146,9 +144,7 @@ namespace OsuMemoryEventSource
 
                 if (_notUpdatingMemoryValues.WaitOne(0))
                 {
-                    _notUpdatingTokens.Reset();
                     UpdateLiveTokens(_lastStatus);
-                    _notUpdatingTokens.Set();
                 }
 
                 if (_newPlayStarted.WaitOne(0))
@@ -189,7 +185,6 @@ namespace OsuMemoryEventSource
         private DateTime _nextSongSelectionScoresUpdate = DateTime.MinValue;
         public void Tick(OsuStatus status, OsuMemoryStatus rawStatus, StructuredOsuMemoryReader reader)
         {
-            _notUpdatingTokens.WaitOne();
             _notUpdatingMemoryValues.Reset();
             lock (_lockingObject)
             {
@@ -327,15 +322,9 @@ namespace OsuMemoryEventSource
 
         private void CreateLiveToken(IToken token, Func<object> updater)
         {
-            try
+            lock (_lockingObject)
             {
-                _notUpdatingTokens.WaitOne();
-                _notAddingNewTokens.Reset();
                 _liveTokens[token.Name] = new DeferredLiveToken(token, updater);
-            }
-            finally
-            {
-                _notAddingNewTokens.Set();
             }
         }
 
@@ -536,7 +525,6 @@ namespace OsuMemoryEventSource
 
         private void UpdateLiveTokens(OsuStatus status)
         {
-            _notAddingNewTokens.WaitOne();
             BulkTokenUpdateContext bulkTokenUpdateContext = null;
             if (IsMainProcessor)
                 bulkTokenUpdateContext = TokensBulkUpdate.StartBulkUpdate(BulkTokenUpdateType.LiveTokens);
