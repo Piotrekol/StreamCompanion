@@ -8,7 +8,13 @@
 #define MyAppExeName "osu!StreamCompanion.exe"
 
 #define FilesRoot "..\build\Output\"
-#define ApplicationVersion GetFileVersion(FilesRoot +'osu!StreamCompanion.exe')
+#ifdef AppVersion
+  #define ApplicationVersion AppVersion
+  #define BinaryVersion Copy(AppVersion,1,2)+"."+Copy(AppVersion,3,2)+"."+Copy(AppVersion,5,2)+"."+Copy(AppVersion,8,2)
+#else
+  #define ApplicationVersion GetFileVersion(FilesRoot +'osu!StreamCompanion.exe')
+  #define BinaryVersion ApplicationVersion
+#endif
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -17,6 +23,7 @@
 AppId={{F6C83F00-59ED-493E-8310-181BB5B37A03}
 AppName={#MyAppName}
 AppVersion={#ApplicationVersion}
+VersionInfoVersion={#BinaryVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}

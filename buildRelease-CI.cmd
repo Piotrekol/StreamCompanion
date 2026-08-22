@@ -27,14 +27,19 @@ rm ./Output/Plugins/CollectionManager.dll
 rm ./Output/Plugins/System.*
 
 cd ..
+if /i "%~1"=="zips-only" goto :zips
+REM optional version (yyMMdd.HH, e.g. 260724.21) forwarded to InnoSetup as AppVersion
+set "isccVersionArg="
+if not "%~1"=="" set "isccVersionArg=/DAppVersion=%~1"
 REM clean installer folder
 rm ./innoSetup/Output/*
 REM create installer (Inno Setup 6)
-"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\setupScript.iss"
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" %isccVersionArg% ".\innoSetup\setupScript.iss"
 7z a .\build\ingameOverlay.zip .\build\Release_unsafe\*
-"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\osuOverlayScript.iss"
-"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\innoSetup\browserOverlayScript.iss"
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" %isccVersionArg% ".\innoSetup\osuOverlayScript.iss"
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" %isccVersionArg% ".\innoSetup\browserOverlayScript.iss"
 
+:zips
 type nul > .\build\Output\.portableMode
 7z a .\build\StreamCompanion-portable.zip .\build\Output\*
 7z a .\build\StreamCompanion-portable-browserOverlay.zip .\build\Release_browserOverlay\*
