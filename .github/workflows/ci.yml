@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master, dev, 'v2*']
+  push:
+    branches: [master, dev, 'v2*']
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  CONFIGURATION: Release
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    env:
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build "osu!StreamCompanion.sln" --configuration ${{ env.CONFIGURATION }} --no-restore
+
+      - name: Run tests
+        run: dotnet test "osu!StreamCompanion.sln" --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+
+      - name: Package portable zips
+        shell: cmd
+        run: |
+          rem rm/cp used by buildRelease-CI.cmd live in Git's usr/bin
+          set "PATH=C:\Program Files\Git\usr\bin;%PATH%"
+          buildRelease-CI.cmd zips-only
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: portable-zips
+          path: |
+            build/StreamCompanion-portable.zip
+            build/StreamCompanion-portable-browserOverlay.zip
+            build/StreamCompanion-portable-textOverlay.zip
