@@ -19,7 +19,7 @@ namespace OsuSongsFolderWatcher
 {
     public static class LazerMapLoader
     {
-        public static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> LoadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, IContextAwareLogger logger, CancellationToken cancellationToken)
+        public static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> LoadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ITimedAttributesProvider timedAttributesProvider, IContextAwareLogger logger, CancellationToken cancellationToken)
         {
             const int retryLimit = 5;
             var retryCount = 0;
@@ -27,7 +27,7 @@ namespace OsuSongsFolderWatcher
             {
                 try
                 {
-                    var result = await loadLazerBeatmapWithPerformanceCalculator(osuFilePath, desiredPlayMode, mods, logger, cancellationToken);
+                    var result = await loadLazerBeatmapWithPerformanceCalculator(osuFilePath, desiredPlayMode, mods, timedAttributesProvider, logger, cancellationToken);
                     if ((result.Beatmap != null && result.CreatePpCalculatorLazyTask != null) || retryCount >= retryLimit)
                         return result;
                 }
@@ -55,9 +55,9 @@ namespace OsuSongsFolderWatcher
             }
         }
 
-        private static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> loadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ILogger logger, CancellationToken cancellationToken)
+        private static async Task<(Beatmap Beatmap, CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorLazyTask)> loadLazerBeatmapWithPerformanceCalculator(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ITimedAttributesProvider timedAttributesProvider, ILogger logger, CancellationToken cancellationToken)
         {
-            var createPpCalculatorTask = CreatePpCalculatorTask(osuFilePath, desiredPlayMode, mods, logger);
+            var createPpCalculatorTask = CreatePpCalculatorTask(osuFilePath, desiredPlayMode, mods, timedAttributesProvider, logger);
             var iPpCalculator = await createPpCalculatorTask.GetValueAsync(cancellationToken);
             if (iPpCalculator == null)
                 return (null, null);
@@ -187,13 +187,13 @@ namespace OsuSongsFolderWatcher
             return endTime - startTime;
         }
 
-        private static CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorTask(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ILogger logger) =>
+        private static CancelableAsyncLazy<IPpCalculator> CreatePpCalculatorTask(string osuFilePath, PlayMode? desiredPlayMode, IModsEx mods, ITimedAttributesProvider timedAttributesProvider, ILogger logger) =>
             new CancelableAsyncLazy<IPpCalculator>((cancellationToken) =>
             {
                 if (string.IsNullOrEmpty(osuFilePath))
                     return Task.FromResult<IPpCalculator>(null);
 
-                var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)(desiredPlayMode ?? PlayMode.Osu), osuFilePath, null);
+                var ppCalculator = PpCalculatorHelpers.GetPpCalculator((int)(desiredPlayMode ?? PlayMode.Osu), osuFilePath, null, timedAttributesProvider);
                 ppCalculator.Mods = (mods?.WorkingMods ?? "").Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 try
                 {

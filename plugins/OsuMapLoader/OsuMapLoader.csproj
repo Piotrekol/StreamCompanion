@@ -25,6 +25,9 @@
     <SCPluginDeployDll Include="AutoMapper.dll" />
     <SCPluginDeployDll Include="MessagePack.Annotations.dll" />
     <SCPluginDeployDll Include="nunit.framework.dll" />
+    <SCPluginDeployDll Include="Dapper.dll" />
+    <SCPluginDeployDll Include="System.Data.SQLite.dll" />
+    <SCPluginDeployDll Include="runtimes\win-x64\native\SQLite.Interop.dll" />
     <SCPluginDeployDll Include="ppy.ManagedBass.dll" />
   </ItemGroup>
 </Project>

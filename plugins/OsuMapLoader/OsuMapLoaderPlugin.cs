@@ -10,19 +10,32 @@ using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces;
 using StreamCompanionTypes.Interfaces.Services;
 
+using OsuSongsFolderWatcher.Models;
+
 namespace OsuSongsFolderWatcher
 {
     [SCPlugin("Osu map loader", "Reads and processes local .osu difficulty files", Consts.SCPLUGIN_AUTHOR, Consts.SCPLUGIN_BASEURL)]
-    public class OsuMapLoaderPlugin : IPlugin, IMapDataFinder
+    public class OsuMapLoaderPlugin : IPlugin, IMapDataFinder, IDisposable
     {
+        public static readonly ConfigEntry PpCacheConfiguration = new ConfigEntry("PpCacheConfiguration", null);
+
         private readonly IContextAwareLogger _logger;
         private readonly IModParser _modParser;
+        private readonly PpCalculator.CachedTimedAttributesProvider timedAttributesProvider;
+        private readonly Configuration configuration;
 
-        public OsuMapLoaderPlugin(IContextAwareLogger logger, IModParser modParser)
+        public OsuMapLoaderPlugin(IContextAwareLogger logger, IModParser modParser, ISaver saver, ISettings settings)
         {
             _logger = logger;
             _modParser = modParser;
+            configuration = settings.GetConfiguration<Configuration>(PpCacheConfiguration);
+            timedAttributesProvider = new PpCalculator.CachedTimedAttributesProvider(
+                Path.Combine(saver.SaveDirectory, "attributes.sqlite"),
+                configuration.MaxCacheEntries,
+                logger: logger,
+                minimumGenerationMilliseconds: configuration.MinimumGenerationMilliseconds);
         }
+
         public async Task<IMapSearchResult> FindBeatmap(IMapSearchArgs args, CancellationToken cancellationToken)
         {
             if (args == null || string.IsNullOrEmpty(args.OsuFilePath))
@@ -38,7 +51,7 @@ namespace OsuSongsFolderWatcher
             try
             {
                 result = await LazerMapLoader.LoadLazerBeatmapWithPerformanceCalculator(args.OsuFilePath, args.PlayMode,
-                    _modParser.GetModsFromEnum((int)args.Mods), _logger, cancellationToken);
+                    _modParser.GetModsFromEnum((int)args.Mods), timedAttributesProvider, _logger, cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -73,6 +86,8 @@ namespace OsuSongsFolderWatcher
 
         public OsuStatus SearchModes { get; } = OsuStatus.All;
         public string SearcherName { get; } = "osu!lazer";
+
+        public void Dispose() => timedAttributesProvider.Dispose();
         public int Priority { get; set; } = 90;
     }
 }

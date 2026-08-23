@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PpCalculatorTypes\PpCalculatorTypes.csproj" />
@@ -12,5 +12,12 @@
     <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Mania\osu.Game.Rulesets.Mania.csproj" />
     <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Osu\osu.Game.Rulesets.Osu.csproj" />
     <ProjectReference Include="..\submodules\osu\osu.Game.Rulesets.Taiko\osu.Game.Rulesets.Taiko.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="System.Data.SQLite.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="PpCalculatorTests" />
   </ItemGroup>
 </Project>

@@ -24,6 +24,8 @@
     <PackageVersion Include="PropertyChanged.Fody" Version="3.3.0" />
     <PackageVersion Include="ScottPlot.WPF" Version="4.0.48" />
     <PackageVersion Include="Sentry" Version="6.6.0" />
+    <PackageVersion Include="Dapper" Version="2.1.35" />
+    <PackageVersion Include="System.Data.SQLite.Core" Version="1.0.118" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="5.0.0" />
     <PackageVersion Include="System.Data.DataSetExtensions" Version="4.5.0" />
