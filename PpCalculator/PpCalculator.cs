@@ -1,4 +1,4 @@
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
@@ -18,6 +18,7 @@ using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Taiko;
 using osu.Game.Rulesets.Catch;
 using osu.Game.Rulesets.Mania;
+using osu.Game.Rulesets.Osu.Difficulty;
 
 namespace PpCalculator
 {
@@ -282,6 +283,9 @@ namespace PpCalculator
 
             return values;
         }
+
+        public Dictionary<int, double> GetStrainValues(int targetAmount)
+            => StrainValuesCalculator.GetStrains(Ruleset, WorkingBeatmap, ScoreInfo.Mods, targetAmount);
 
         private List<IMod> GetOsuMods(Ruleset ruleset)
         {
