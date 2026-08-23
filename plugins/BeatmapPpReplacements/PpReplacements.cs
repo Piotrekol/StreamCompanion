@@ -1,8 +1,10 @@
-using CollectionManager.Enums;
+﻿using CollectionManager.Enums;
 using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PpCalculatorTypes;
@@ -22,6 +24,7 @@ namespace BeatmapPpReplacements
         private Tokens.TokenSetter _tokenSetter;
         private ISettings _settings;
         private IPpCalculator _ppCalculator = null;
+        private readonly ILogger _logger;
         private readonly IToken _strainsToken;
         public static ConfigEntry StrainsAmount = new ConfigEntry("StrainsAmount", (int?)100);
         private readonly Dictionary<TokenMode, Dictionary<string, PpValue>> ppTokenDefinitions;
@@ -33,8 +36,9 @@ namespace BeatmapPpReplacements
             Mania
         }
 
-        public PpReplacements(ISettings settings)
+        public PpReplacements(ISettings settings, ILogger logger)
         {
+            _logger = logger;
             _settings = settings;
             _tokenSetter = Tokens.CreateTokenSetter(Name);
             _strainsToken = _tokenSetter("mapStrains", new Lazy<object>(() => new Dictionary<int, double>()), TokenType.Normal, ",", new Lazy<object>(() => new Dictionary<int, double>()));
@@ -96,16 +100,19 @@ namespace BeatmapPpReplacements
                 return;
             }
 
-            _strainsToken.Value = new Lazy<object>(() =>
+            _ = Task.Run(() =>
             {
                 var ppCalculator = (IPpCalculator)_ppCalculator?.Clone();
                 try
                 {
-                    return ppCalculator?.CalculateStrains(cancellationToken, _settings.Get<int?>(StrainsAmount));
+                    var strains = SmoothStrains(ppCalculator.GetStrainValues(_settings.Get<int?>(StrainsAmount) ?? 100), 1);
+                    _strainsToken.Value = new Lazy<object>(() => strains);
                 }
-                catch (OperationCanceledException)
+                catch (Exception exception)
                 {
-                    return null;
+                    _logger.Log("mapStrains calculation failed", LogLevel.Warning);
+                    _logger.Log(exception, LogLevel.Warning);
+                    _strainsToken.Value = new Lazy<object>(() => null);
                 }
             });
             var playMode = (PlayMode)_ppCalculator.RulesetId;
@@ -132,6 +139,30 @@ namespace BeatmapPpReplacements
 
             _tokenSetter("maxCombo", _ppCalculator.GetMaxCombo());
             ResetTokens(tokenMode == TokenMode.Osu ? TokenMode.Mania : TokenMode.Osu);
+        }
+
+        private static Dictionary<int, double> SmoothStrains(Dictionary<int, double> strains, int windowRadius)
+        {
+            KeyValuePair<int, double>[] orderedStrains = strains.OrderBy(strain => strain.Key).ToArray();
+            Dictionary<int, double> smoothedStrains = new(orderedStrains.Length);
+            for (int strainIndex = 0; strainIndex < orderedStrains.Length; strainIndex++)
+            {
+                double sum = 0;
+                int count = 0;
+                for (int offset = -windowRadius; offset <= windowRadius; offset++)
+                {
+                    int neighborIndex = strainIndex + offset;
+                    if (neighborIndex < 0 || neighborIndex >= orderedStrains.Length)
+                        continue;
+
+                    sum += orderedStrains[neighborIndex].Value;
+                    count++;
+                }
+
+                smoothedStrains[orderedStrains[strainIndex].Key] = Math.Max(orderedStrains[strainIndex].Value, sum / count);
+            }
+
+            return smoothedStrains;
         }
 
         private double GetPp(CancellationToken cancellationToken, IPpCalculator ppCalculator, double acc, string mods = "")

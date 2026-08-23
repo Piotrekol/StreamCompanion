@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 
 namespace PpCalculatorTypes
@@ -19,6 +19,8 @@ namespace PpCalculatorTypes
         int? Gekis { get; set; }
         int RulesetId { get; }
         double BeatmapLength { get; }
+
+        Dictionary<int, double> GetStrainValues(int targetAmount);
         bool UseScoreMultiplier { get; set; }
         /// <summary>
         /// Whenever last <see cref="Calculate"/> call was used with limited start/end times, therefore affected Difficulty results
