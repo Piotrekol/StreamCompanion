@@ -175,7 +175,7 @@ namespace LiveVisualizer
             )
             {
                 if (!isValidBeatmap)
-                    Logger.Log($"IsValidBeatmap check failed with mapLocation: \"{mapLocation ?? ""}\"", LogLevel.Trace);
+                    Logger.Log("IsValidBeatmap check failed with mapLocation: \"{0}\"", LogLevel.Trace, mapLocation ?? string.Empty);
 
                 if (!mapSearchResult.BeatmapsFound.Any() && VisualizerData != null)
                 {

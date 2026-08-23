@@ -517,7 +517,7 @@ namespace OsuMemoryEventSource
             {
                 Error = (sender, args) =>
                 {
-                    _logger.Log($"Failed to serialize {tokenName} token data.", LogLevel.Debug);
+                    _logger.Log("Failed to serialize {0} token data.", LogLevel.Debug, tokenName);
                     _logger.Log(args, LogLevel.Trace);
                 }
             };

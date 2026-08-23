@@ -44,11 +44,11 @@ namespace OsuSongsFolderWatcher
                     if (retryCount >= retryLimit)
                     {
                         ex.Data["retryCount"] = retryCount;
-                        logger.Log($"Failed to load beatmap located at \"{osuFilePath}\" after {retryLimit} retries", LogLevel.Warning);
+                        logger.Log("Failed to load beatmap located at \"{0}\" after {1} retries", LogLevel.Warning, osuFilePath, retryLimit.ToString());
                         throw;
                     }
 
-                    logger.Log($"Retrying failed beatmap load - retry {retryCount + 1}", LogLevel.Warning);
+                    logger.Log("Retrying failed beatmap load - retry {0}", LogLevel.Warning, (retryCount + 1).ToString());
                 }
 
                 await Task.Delay(150 * ++retryCount);

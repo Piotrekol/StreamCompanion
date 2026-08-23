@@ -103,7 +103,7 @@ namespace OsuMemoryEventSource
                     }));
 
                 //TODO: provide tournament-manager specific data via tokens
-                Logger.Log($"{_clientMemoryReaders.Count} client readers prepared", LogLevel.Information);
+                Logger.Log("{0} client readers prepared", LogLevel.Information, _clientMemoryReaders.Count.ToString());
             }
             else
             {
@@ -131,7 +131,7 @@ namespace OsuMemoryEventSource
 
         private void OnInvalidMemoryRead(object sender, (object readObject, string propPath) e)
         {
-            Logger.Log($"Failed to read \"{e.propPath}\" memory value", LogLevel.Warning);
+                Logger.Log("Failed to read \"{0}\" memory value", LogLevel.Warning, e.propPath);
         }
 
         public Task CreateTokensAsync(IMapSearchResult map, CancellationToken cancellationToken)

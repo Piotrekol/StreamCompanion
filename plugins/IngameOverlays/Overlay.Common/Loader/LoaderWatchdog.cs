@@ -45,7 +45,7 @@ namespace Overlay.Common.Loader
             _lastUnknownModules = moduleList.Except(KnownOsuModules.Modules).ToList();
             _lastTroublesomeModules = KnownOsuModules.TroubleMakers.Select(m => m.Key).Intersect(moduleList).ToList();
             if (_lastUnknownModules.Any())
-                _logger.Log($"This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{Environment.NewLine}{string.Join(Environment.NewLine, _lastUnknownModules)}", LogLevel.Debug);
+                _logger.Log("This is a list of unknown files loaded in osu!. If you are experiencing startup osu! crashes or overlay just not appearing ingame, these will help with finding conflicting application:{0}", LogLevel.Debug, Environment.NewLine + string.Join(Environment.NewLine, _lastUnknownModules));
             else
                 _logger.Log("osu! module list is clean", LogLevel.Debug);
 
@@ -191,8 +191,8 @@ namespace Overlay.Common.Loader
                     return;
             }
 
-            _logger.Log($"Injection failed: {message}", LogLevel.Information);
-            _logger.Log($"{helperProcessResult}", LogLevel.Debug);
+            _logger.Log("Injection failed: {0}", LogLevel.Information, message ?? string.Empty);
+            _logger.Log("{0}", LogLevel.Debug, helperProcessResult.ToString());
             if (showErrors && helperProcessResult.ResultCode != DllInjectionResult.GameProcessNotFound)
             {
                 _statusReporter.Report(new(ReportType.Error, message + Environment.NewLine + $"Raw error data: {helperProcessResult}"));

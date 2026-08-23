@@ -1,10 +1,10 @@
-using StreamCompanionTypes.DataTypes;
 using osu_StreamCompanion.Code.Misc;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Parsing;
 using StreamCompanionTypes;
+using StreamCompanionTypes.DataTypes;
 using StreamCompanionTypes.Enums;
 using StreamCompanionTypes.Interfaces.Services;
 using System;
@@ -192,7 +192,7 @@ internal class MainLogger : IContextAwareLogger
         {
             MessageTemplate parsedTemplate = messageTemplateParser.Parse(messagePrefix + message);
             LogEventProperty[] positionalProperties = new LogEventProperty[vals.Length];
-         
+
             for (int valueIndex = 0; valueIndex < vals.Length; valueIndex++)
             {
                 positionalProperties[valueIndex] = new LogEventProperty(valueIndex.ToString(), new ScalarValue(vals[valueIndex]));
@@ -203,7 +203,7 @@ internal class MainLogger : IContextAwareLogger
         else if (logMessage is Exception exception)
         {
             string text = exception.ToString();
-            
+
             if (!contextData.IsEmpty)
             {
                 text += Environment.NewLine + string.Join(Environment.NewLine,

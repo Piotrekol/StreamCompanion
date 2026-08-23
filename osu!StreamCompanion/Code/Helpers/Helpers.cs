@@ -132,7 +132,7 @@ namespace osu_StreamCompanion.Code.Helpers
         public static void WaitForOsuFileLock(FileInfo file, ILogger logger = null, int Id = 0)
         {
             //If we acquire lock before osu it'll force "soft" beatmap reprocessing(no data loss, but time consuming).
-            logger?.Log($"{Id}: osu release: wait start", LogLevel.Debug);
+            logger?.Log("{0}: osu release: wait start", LogLevel.Debug, Id.ToString());
             var startTime = DateTime.Now;
             var isLocked = ExecWithTimeout(token =>
             {
@@ -145,9 +145,9 @@ namespace osu_StreamCompanion.Code.Helpers
                 return true;
             }, 500, logger);
             var diff = (DateTime.Now - startTime).TotalMilliseconds;
-            logger?.Log($"{Id}: osu release: wait end - {diff}ms", LogLevel.Debug);
+            logger?.Log("{0}: osu release: wait end - {1}ms", LogLevel.Debug, Id.ToString(), diff.ToString());
 
-            logger?.Log($"{Id}: isLocked:{isLocked}", LogLevel.Debug);
+            logger?.Log("{0}: isLocked:{1}", LogLevel.Debug, Id.ToString(), isLocked.ToString());
 
             if (isLocked)
             {
@@ -159,7 +159,7 @@ namespace osu_StreamCompanion.Code.Helpers
                     Thread.Sleep(1);
                 }
                 diff = (DateTime.Now - startTime).TotalMilliseconds;
-                logger?.Log($"{Id}: osu lock: released after {diff}ms, {cycles}loops", LogLevel.Debug);
+                logger?.Log("{0}: osu lock: released after {1}ms, {2}loops", LogLevel.Debug, Id.ToString(), diff.ToString(), cycles.ToString());
 
             }
         }

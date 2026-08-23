@@ -43,7 +43,7 @@ namespace OsuSongsFolderWatcher
 
             if (!File.Exists(args.OsuFilePath))
             {
-                _logger.Log($"Osu file supplied in search args was not found on disk! ({args.OsuFilePath})", LogLevel.Error);
+                _logger.Log("Osu file supplied in search args was not found on disk! ({0})", LogLevel.Error, args.OsuFilePath);
                 return null;
             }
 
@@ -73,7 +73,7 @@ namespace OsuSongsFolderWatcher
                 var ex = new BeatmapLoadFailedException();
                 ex.Data["location"] = args.OsuFilePath;
                 _logger.Log(ex, LogLevel.Critical);
-                _logger.Log($"Failed to load beatmap located at {args.OsuFilePath}", LogLevel.Warning);
+                _logger.Log("Failed to load beatmap located at {0}", LogLevel.Warning, args.OsuFilePath);
                 return null;
             }
 

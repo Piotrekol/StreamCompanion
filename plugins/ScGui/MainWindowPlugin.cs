@@ -132,7 +132,7 @@ namespace ScGui
                         }
                         catch (Exception)
                         {
-                            _logger.Log($"Failed to load settings for one of setting tabs, this is most likely accompanied by plugin load error at startup.", LogLevel.Error);
+                            _logger.Log("Failed to load settings for one of setting tabs, this is most likely accompanied by plugin load error at startup.", LogLevel.Error);
                         }
                     }
 
