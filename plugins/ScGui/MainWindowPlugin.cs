@@ -192,18 +192,15 @@ namespace ScGui
             {
                 var foundMap = map.BeatmapsFound[0];
                 var nowPlaying = string.Format("{0} - {1}", foundMap.ArtistRoman, foundMap.TitleRoman);
-                if (map.Action == OsuStatus.Playing || map.Action == OsuStatus.Watching || map.MapSource != "Msn")
-                {
-                    nowPlaying += $" [{foundMap.DiffName}] {map.Mods?.ShownMods ?? ""}";
-                    nowPlaying += $"{Environment.NewLine}NoMod:{foundMap.StarsNomod:##.###} ";
+                nowPlaying += $" [{foundMap.DiffName}] {map.Mods?.ShownMods ?? ""}";
+                nowPlaying += $"{Environment.NewLine}NoMod:{foundMap.StarsNomod:##.###} ";
 
-                    var mods = map.Mods?.Mods ?? Mods.Omod;
-                    var token = Tokens.AllTokens.FirstOrDefault(t => t.Key.ToLower() == "mstars").Value;
-                    if (mods != Mods.Omod && token != null)
-                        nowPlaying += $"Modded: {token.Value:##.###} ";
+                var mods = map.Mods?.Mods ?? Mods.Omod;
+                var token = Tokens.AllTokens.FirstOrDefault(t => t.Key.ToLower() == "mstars").Value;
+                if (mods != Mods.Omod && token != null)
+                    nowPlaying += $"Modded: {token.Value:##.###} ";
 
-                    nowPlaying += $"{map.Action}";
-                }
+                nowPlaying += $"{map.Action}";
                 _mainWindowModel.NowPlaying = nowPlaying;
             }
             else
