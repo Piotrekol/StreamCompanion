@@ -73,6 +73,8 @@ Type: files; Name: "{app}\Plugins\CollectionManager.dll"
 Type: files; Name: "{app}\Plugins\StreamCompanionTypes.dll"
 Type: files; Name: "{app}\Plugins\WindowDataGetter.dll"
 Type: files; Name: "{app}\Plugins\OsuSongsFolderWatcher.dll"
+Type: files; Name: "{app}\Plugins\MSNEventSource.dll"
+Type: files; Name: "{app}\Plugins\MSNEventSource.pdb"
 
 [UninstallDelete]
 Type: files; Name: "{app}\StreamCompanionCache.db"
