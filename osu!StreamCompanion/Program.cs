@@ -254,7 +254,6 @@ namespace osu_StreamCompanion
                     ex.Data[d.Key] = d.Value;
                 }
 
-                //also reports to sentry if enabled
                 MainLogger.Instance.Log(ex, LogLevel.Critical);
 
                 if (UserCanBeNotified())

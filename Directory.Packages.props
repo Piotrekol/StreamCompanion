@@ -23,6 +23,9 @@
     <PackageVersion Include="OsuMemoryDataProvider" Version="0.12.2" />
     <PackageVersion Include="PropertyChanged.Fody" Version="3.3.0" />
     <PackageVersion Include="ScottPlot.WPF" Version="4.0.48" />
+    <PackageVersion Include="Serilog" Version="4.4.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageVersion Include="Sentry" Version="6.6.0" />
     <PackageVersion Include="Dapper" Version="2.1.35" />
     <PackageVersion Include="System.Data.SQLite.Core" Version="1.0.118" />

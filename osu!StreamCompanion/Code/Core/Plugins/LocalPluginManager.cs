@@ -169,10 +169,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             }
             catch (LocateException)
             {
-                if (MainLogger.Instance.Loggers.All(x => x is not ConsoleLogger) && OperatingSystem.IsWindows())
-                {
-                    MainLogger.Instance.AddLogger(new ConsoleLogger(_settings));
-                }
+                MainLogger.Instance.EnableConsole();
 
                 _logger.Log("************", LogLevel.Critical);
                 _logger.Log("************", LogLevel.Critical);

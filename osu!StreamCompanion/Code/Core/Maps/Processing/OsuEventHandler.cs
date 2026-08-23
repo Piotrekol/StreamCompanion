@@ -104,16 +104,14 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 }
                 catch (MissingMethodException ex)
                 {
-                    ex.Data["PreventedCrash"] = 1;
                     _logger.Log(ex, LogLevel.Critical);
                     MessageBox.Show($"Looks like one or more files required to run StreamCompanion are corrupted. Run StreamCompanion setup again to repair. Closing now.", "StreamCompanion", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     _exiter("MissingMethodException");
                 }
                 catch (Exception ex)
                 {
-                    ex.Data["PreventedCrash"] = 1;
                     _logger.Log(ex, LogLevel.Critical);
-                    _logger.Log("Prevented crash in event worker, token data for last event might be incorrect! This exception has been automatically reported.", LogLevel.Warning);
+                    _logger.Log("Prevented crash in event worker, token data for last event might be incorrect!", LogLevel.Warning);
                 }
 
                 await Task.Delay(5);
