@@ -1,4 +1,4 @@
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Mods;
@@ -18,6 +18,7 @@ using osu.Game.Rulesets.Osu;
 using osu.Game.Rulesets.Taiko;
 using osu.Game.Rulesets.Catch;
 using osu.Game.Rulesets.Mania;
+using osu.Game.Rulesets.Osu.Difficulty;
 
 namespace PpCalculator
 {
@@ -85,6 +86,10 @@ namespace PpCalculator
         private Lazy<double> scoreMultiplier = new Lazy<double>(() => 1d);
         public double ScoreMultiplier => scoreMultiplier.Value;
         public bool UseScoreMultiplier { get; set; } = true;
+
+
+
+        protected ITimedAttributesProvider TimedAttributesProvider { get; set; }
         public bool HasFullBeatmap { get; private set; } = false;
 
         static PpCalculator()
@@ -97,9 +102,10 @@ namespace PpCalculator
             _ = new ILegacyRuleset[] { new OsuRuleset(), new TaikoRuleset(), new CatchRuleset(), new ManiaRuleset() };
         }
 
-        protected PpCalculator()
+        protected PpCalculator(ITimedAttributesProvider timedAttributesProvider = null)
         {
             ScoreInfo = new ScoreInfo(ruleset: Ruleset.RulesetInfo);
+            TimedAttributesProvider = timedAttributesProvider ?? CalculatingTimedAttributesProvider.Instance;
         }
 
         public object Clone()
@@ -109,7 +115,6 @@ namespace PpCalculator
             ppCalculator._playableBeatmap = _playableBeatmap;
             ppCalculator._Mods = _Mods;
             ppCalculator.LastMods = LastMods;
-            ppCalculator.scoreMultiplier = scoreMultiplier;
             ppCalculator.UseScoreMultiplier = UseScoreMultiplier;
             ppCalculator.HasFullBeatmap = HasFullBeatmap;
             if (PerformanceCalculator != null)
@@ -227,8 +232,8 @@ namespace PpCalculator
 
             if (createPerformanceCalculator)
             {
-                var difficultyCalculator = Ruleset.CreateDifficultyCalculator(workingBeatmap);
-                TimedDifficultyAttributes = difficultyCalculator.CalculateTimed(ScoreInfo.Mods, cancellationToken).ToList();
+                TimedDifficultyAttributes = TimedAttributesProvider.GetTimedAttributes(
+                    workingBeatmap, Ruleset, ScoreInfo.Mods, isFullBeatmap: HasFullBeatmap, cancellationToken);
                 PerformanceCalculator = Ruleset.CreatePerformanceCalculator();
                 ResetPerformanceCalculator = false;
             }
@@ -278,6 +283,9 @@ namespace PpCalculator
 
             return values;
         }
+
+        public Dictionary<int, double> GetStrainValues(int targetAmount)
+            => StrainValuesCalculator.GetStrains(Ruleset, WorkingBeatmap, ScoreInfo.Mods, targetAmount);
 
         private List<IMod> GetOsuMods(Ruleset ruleset)
         {
@@ -362,6 +370,6 @@ namespace PpCalculator
 
         protected abstract double GetAccuracy(Dictionary<HitResult, int> statistics);
 
-        protected PpCalculator CreateInstance() => PpCalculatorHelpers.GetPpCalculator(RulesetId);
+        protected PpCalculator CreateInstance() => PpCalculatorHelpers.GetPpCalculator(RulesetId, TimedAttributesProvider);
     }
 }

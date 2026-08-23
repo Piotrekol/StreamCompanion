@@ -11,6 +11,9 @@ namespace PpCalculator;
 public class OsuCalculator : PpCalculator
 {
     protected override Ruleset Ruleset { get; } = new osu.Game.Rulesets.Osu.OsuRuleset();
+    public OsuCalculator() { }
+    public OsuCalculator(ITimedAttributesProvider timedAttributesProvider = null) : base(timedAttributesProvider) { }
+
 
     protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>
         hitObjects.Count + hitObjects.OfType<Slider>().Sum(s => s.NestedHitObjects.Count - 1);

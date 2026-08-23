@@ -169,10 +169,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             }
             catch (LocateException)
             {
-                if (MainLogger.Instance.Loggers.All(x => x is not ConsoleLogger) && OperatingSystem.IsWindows())
-                {
-                    MainLogger.Instance.AddLogger(new ConsoleLogger(_settings));
-                }
+                MainLogger.Instance.EnableConsole();
 
                 _logger.Log("************", LogLevel.Critical);
                 _logger.Log("************", LogLevel.Critical);
@@ -187,7 +184,7 @@ namespace osu_StreamCompanion.Code.Core.Plugins
             foreach (var lazyPluginMeta in lazyPluginMetas)
             {
                 var pluginType = lazyPluginMeta.Metadata.ActivationType;
-                _logger.Log($">loading \"{pluginType.FullName}\" v: {pluginType.Assembly.GetName().Version}", LogLevel.Trace);
+                _logger.Log(">loading \"{0}\" v: {1}", LogLevel.Trace, pluginType.FullName, pluginType.Assembly.GetName().Version.ToString());
 
                 IPlugin plugin = null;
                 try

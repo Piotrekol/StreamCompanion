@@ -1,0 +1,107 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '**'
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  CONFIGURATION: Release
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    env:
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Extract version from tag
+        id: version
+        shell: pwsh
+        run: |
+          # tag v260724.21 -> AssemblyFileVersion 260724.21
+          $fileVersion = "${{ github.ref_name }}" -replace '^v', ''
+          "FILEVERSION=$fileVersion" >> $env:GITHUB_OUTPUT
+          Write-Host "FileVersion: $fileVersion"
+
+      - name: Set assembly file versions from tag
+        shell: pwsh
+        run: |
+          $fileVersion = "${{ steps.version.outputs.FILEVERSION }}"
+          $files = Get-ChildItem -Recurse -Filter AssemblyInfo.cs
+          foreach ($file in $files) {
+            $content = Get-Content $file.FullName -Raw
+            $patched = $content -replace 'AssemblyFileVersion\(".*?"\)', "AssemblyFileVersion(`"$fileVersion`")"
+            if ($patched -ne $content) {
+              Set-Content $file.FullName $patched -NoNewline
+              Write-Host "patched $($file.FullName)"
+            }
+          }
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build "osu!StreamCompanion.sln" --configuration ${{ env.CONFIGURATION }} --no-restore
+
+      - name: Run tests
+        run: dotnet test "osu!StreamCompanion.sln" --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
+
+      - name: Install InnoSetup
+        run: choco install innosetup inno-download-plugin -y
+
+      - name: Package release files
+        shell: cmd
+        env:
+          FILEVERSION: ${{ steps.version.outputs.FILEVERSION }}
+        run: |
+          rem rm/cp used by buildRelease-CI.cmd live in Git's usr/bin
+          set "PATH=C:\Program Files\Git\usr\bin;%PATH%"
+          buildRelease-CI.cmd %FILEVERSION%
+
+      - name: Collect artifacts
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path ./artifacts -Force
+          Move-Item "InnoSetup\Output\StreamCompanion Setup.exe" ./artifacts/
+          Move-Item "InnoSetup\Output\StreamCompanion-textOverlay.exe" ./artifacts/
+          Move-Item "InnoSetup\Output\StreamCompanion-browserOverlay.exe" ./artifacts/
+          Move-Item "build\StreamCompanion-portable.zip" ./artifacts/
+          Move-Item "build\StreamCompanion-portable-browserOverlay.zip" ./artifacts/
+          Move-Item "build\StreamCompanion-portable-textOverlay.zip" ./artifacts/
+          Get-ChildItem ./artifacts
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          # in-app updater matches asset name "StreamCompanion.Setup.exe" (GitHub replaces spaces with dots on upload)
+          files: |
+            artifacts/StreamCompanion Setup.exe
+            artifacts/StreamCompanion-textOverlay.exe
+            artifacts/StreamCompanion-browserOverlay.exe
+            artifacts/StreamCompanion-portable.zip
+            artifacts/StreamCompanion-portable-browserOverlay.zip
+            artifacts/StreamCompanion-portable-textOverlay.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

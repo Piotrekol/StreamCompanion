@@ -19,20 +19,20 @@ namespace PpCalculator
         /// 3 = Mania
         /// </param>
         /// <returns></returns>
-        public static PpCalculator GetPpCalculator(int rulesetId)
+        public static PpCalculator GetPpCalculator(int rulesetId, ITimedAttributesProvider timedAttributesProvider = null)
         {
             switch (rulesetId)
             {
                 default:
                     throw new ArgumentException("Invalid ruleset ID provided.");
                 case 0:
-                    return new OsuCalculator();
+                    return new OsuCalculator(timedAttributesProvider);
                 case 1:
-                    return new TaikoCalculator();
+                    return new TaikoCalculator(timedAttributesProvider);
                 case 2:
-                    return new CtbCalculator();
+                    return new CtbCalculator(timedAttributesProvider);
                 case 3:
-                    return new ManiaCalculator();
+                    return new ManiaCalculator(timedAttributesProvider);
             }
         }
 
@@ -43,12 +43,12 @@ namespace PpCalculator
         /// <param name="rulesetId"></param>
         /// <param name="ppCalculator"></param>
         /// <returns></returns>
-        public static PpCalculator GetPpCalculator(int rulesetId, PpCalculator ppCalculator)
+        public static PpCalculator GetPpCalculator(int rulesetId, PpCalculator ppCalculator, ITimedAttributesProvider timedAttributesProvider = null)
         {
             if (rulesetId == ppCalculator?.RulesetId)
                 return ppCalculator;
 
-            return GetPpCalculator(rulesetId);
+            return GetPpCalculator(rulesetId, timedAttributesProvider);
         }
 
         /// <summary>
@@ -59,20 +59,20 @@ namespace PpCalculator
         /// <param name="file">.osu file to read</param>
         /// <param name="ppCalculator">Existing <see cref="PpCalculator"/> instance, if any.</param>
         /// <returns></returns>
-        public static PpCalculator GetPpCalculator(int rulesetId, string file, PpCalculator ppCalculator)
-            => InternalGetPpCalculator(rulesetId, file, ppCalculator, 0);
+        public static PpCalculator GetPpCalculator(int rulesetId, string file, PpCalculator ppCalculator, ITimedAttributesProvider timedAttributesProvider = null)
+            => InternalGetPpCalculator(rulesetId, file, ppCalculator, 0, timedAttributesProvider: timedAttributesProvider);
 
         private static PpCalculator InternalGetPpCalculator(int rulesetId, string file, PpCalculator ppCalculator,
-            int retryCount, ProcessorWorkingBeatmap workingBeatmap = null)
+            int retryCount, ITimedAttributesProvider timedAttributesProvider = null, ProcessorWorkingBeatmap workingBeatmap = null)
         {
             if (rulesetId != ppCalculator?.RulesetId)
-                ppCalculator = GetPpCalculator(rulesetId);
+                ppCalculator = GetPpCalculator(rulesetId, timedAttributesProvider);
             try
             {
                 workingBeatmap ??= new ProcessorWorkingBeatmap(file);
                 //Check if picked ruleset is valid for loaded beatmap
                 if (GetRulesetId(workingBeatmap.BeatmapInfo.Ruleset.OnlineID, rulesetId) != rulesetId)
-                    return InternalGetPpCalculator(workingBeatmap.BeatmapInfo.Ruleset.OnlineID, file, ppCalculator, retryCount, workingBeatmap);
+                    return InternalGetPpCalculator(workingBeatmap.BeatmapInfo.Ruleset.OnlineID, file, ppCalculator, retryCount, timedAttributesProvider: timedAttributesProvider, workingBeatmap: workingBeatmap);
 
                 ppCalculator?.PreProcess(workingBeatmap);
             }
@@ -80,7 +80,7 @@ namespace PpCalculator
             {
                 //file is being used by another process..
                 if (retryCount < 5)
-                    return InternalGetPpCalculator(rulesetId, file, ppCalculator, ++retryCount);
+                    return InternalGetPpCalculator(rulesetId, file, ppCalculator, ++retryCount, timedAttributesProvider: timedAttributesProvider);
             }
 
             return ppCalculator;

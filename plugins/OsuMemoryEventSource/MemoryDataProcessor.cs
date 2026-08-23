@@ -38,7 +38,6 @@ namespace OsuMemoryEventSource
         private readonly Dictionary<string, BaseLiveToken> _liveTokens = new();
         private readonly Dictionary<string, JsonSerializerSettings> _tokenJsonSerializers = new();
 
-        private Tokens.TokenSetter _liveTokenSetter => OsuMemoryEventSourceBase.LiveTokenSetter;
         private Tokens.TokenSetter _tokenSetter => OsuMemoryEventSourceBase.TokenSetter;
         public static ConfigEntry MultiplayerLeaderBoardUpdateRate = new ConfigEntry("MultiplayerLeaderBoardUpdateRate", 250);
         public static ConfigEntry SongSelectionScoresUpdateRate = new ConfigEntry("SongSelectionScoresUpdateRate", 250);
@@ -79,8 +78,6 @@ namespace OsuMemoryEventSource
             UnstableRate,
             liveStarRating,
         }
-        private ManualResetEvent _notAddingNewTokens = new ManualResetEvent(true);
-        private ManualResetEvent _notUpdatingTokens = new ManualResetEvent(true);
         private ManualResetEvent _notUpdatingMemoryValues = new ManualResetEvent(true);
         private ManualResetEvent _newPlayStarted = new ManualResetEvent(true);
 
@@ -147,9 +144,7 @@ namespace OsuMemoryEventSource
 
                 if (_notUpdatingMemoryValues.WaitOne(0))
                 {
-                    _notUpdatingTokens.Reset();
                     UpdateLiveTokens(_lastStatus);
-                    _notUpdatingTokens.Set();
                 }
 
                 if (_newPlayStarted.WaitOne(0))
@@ -190,7 +185,6 @@ namespace OsuMemoryEventSource
         private DateTime _nextSongSelectionScoresUpdate = DateTime.MinValue;
         public void Tick(OsuStatus status, OsuMemoryStatus rawStatus, StructuredOsuMemoryReader reader)
         {
-            _notUpdatingTokens.WaitOne();
             _notUpdatingMemoryValues.Reset();
             lock (_lockingObject)
             {
@@ -319,27 +313,18 @@ namespace OsuMemoryEventSource
             return name;
         }
 
-        private void CreateLiveToken(string name, object value, TokenType tokenType, string format,
-            object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
+        private void CreateLiveToken(string name, object value, TokenType tokenType, string format, object defaultValue, OsuStatus statusWhitelist, Func<object> updater)
         {
-            var newToken = _liveTokenSetter(GetTokenName(name), new Lazy<object>(() => value), tokenType, format, new Lazy<object>(() => defaultValue), statusWhitelist);
+            IToken newToken = Tokens.CreateDeferredToken(OsuMemoryEventSourceBase.Name, GetTokenName(name), value, tokenType, format, defaultValue, statusWhitelist);
+
             CreateLiveToken(newToken, updater);
         }
 
         private void CreateLiveToken(IToken token, Func<object> updater)
         {
-            try
+            lock (_lockingObject)
             {
-                _notUpdatingTokens.WaitOne();
-                _notAddingNewTokens.Reset();
-                if (token is LazyToken<object>)
-                    _liveTokens[token.Name] = new LazyLiveToken(token, updater);
-                else
-                    _liveTokens[token.Name] = new LiveToken(token, updater);
-            }
-            finally
-            {
-                _notAddingNewTokens.Set();
+                _liveTokens[token.Name] = new DeferredLiveToken(token, updater);
             }
         }
 
@@ -457,7 +442,7 @@ namespace OsuMemoryEventSource
             });
             CreateLiveToken("convertedUnstableRate", InterpolatedValues[InterpolatedValueName.UnstableRate].Current, TokenType.Live, "{0:0.000}", 0d, playingWatchingResults,
                 () => ConvertedUnstableRate((double)_liveTokens[GetTokenName("unstableRate")].Token.Value, _mods));
-            CreateLiveToken("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults, () => _rawData.Play is Player p ? p.HitErrors : null);
+            CreateLiveToken("hitErrors", new List<int>(), TokenType.Live, ",", new List<int>(), playingWatchingResults, () => _rawData.Play is Player p && p.HitErrors != null ? new List<int>(p.HitErrors) : null);
             CreateLiveToken("localTimeISO", DateTime.UtcNow.ToString("o"), TokenType.Live, "", DateTime.UtcNow, OsuStatus.All, () => DateTime.UtcNow.ToString("o"));
             CreateLiveToken("localTime", DateTime.Now.TimeOfDay, TokenType.Live, "{0:hh}:{0:mm}:{0:ss}", DateTime.Now.TimeOfDay, OsuStatus.All, () => DateTime.Now.TimeOfDay);
             CreateLiveToken("sliderBreaks", 0, TokenType.Live, "{0}", 0, playingWatchingResults, () =>
@@ -532,7 +517,7 @@ namespace OsuMemoryEventSource
             {
                 Error = (sender, args) =>
                 {
-                    _logger.Log($"Failed to serialize {tokenName} token data.", LogLevel.Debug);
+                    _logger.Log("Failed to serialize {0} token data.", LogLevel.Debug, tokenName);
                     _logger.Log(args, LogLevel.Trace);
                 }
             };
@@ -540,23 +525,25 @@ namespace OsuMemoryEventSource
 
         private void UpdateLiveTokens(OsuStatus status)
         {
-            _notAddingNewTokens.WaitOne();
             BulkTokenUpdateContext bulkTokenUpdateContext = null;
             if (IsMainProcessor)
                 bulkTokenUpdateContext = TokensBulkUpdate.StartBulkUpdate(BulkTokenUpdateType.LiveTokens);
 
-            foreach (var liveToken in _liveTokens)
+            lock (_lockingObject)
             {
-                try
+                foreach (var liveToken in _liveTokens)
                 {
-                    liveToken.Value.Update(status);
-                }
-                catch (TaskCanceledException) { }
-                catch (OperationCanceledException) { }
-                catch (Exception ex)
-                {
-                    ex.Data["liveTokenName"] = liveToken.Key;
-                    throw;
+                    try
+                    {
+                        liveToken.Value.Update(status);
+                    }
+                    catch (TaskCanceledException) { }
+                    catch (OperationCanceledException) { }
+                    catch (Exception ex)
+                    {
+                        ex.Data["liveTokenName"] = liveToken.Key;
+                        throw;
+                    }
                 }
             }
             _tokensUpdated();

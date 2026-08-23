@@ -47,7 +47,7 @@ namespace osu_StreamCompanion.Code.Modules.Logger
 
         private void ComboBox_logVerbosityOnSelectedIndexChanged(object sender, EventArgs e)
         {
-            settings.Add(_names.LogLevel.Name, LogLevels.First(x => x.Key == comboBox_logVerbosity.SelectedItem.ToString()).Value.GetHashCode());
+            settings.Add(_names.LogLevel.Name, LogLevels.First(x => x.Key == comboBox_logVerbosity.SelectedItem.ToString()).Value.GetHashCode(), true);
         }
     }
 }

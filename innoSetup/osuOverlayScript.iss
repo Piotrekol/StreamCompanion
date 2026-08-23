@@ -8,7 +8,13 @@
 #define AppId "{F6C83F00-59ED-493E-8310-181BB5B37A03}"
 
 #define FilesRoot "..\build\Release_unsafe\"
-#define ApplicationVersion GetFileVersion(FilesRoot +'Plugins\TextIngameOverlay.dll')
+#ifdef AppVersion
+  #define ApplicationVersion AppVersion
+  #define BinaryVersion Copy(AppVersion,1,2)+"."+Copy(AppVersion,3,2)+"."+Copy(AppVersion,5,2)+"."+Copy(AppVersion,8,2)
+#else
+  #define ApplicationVersion GetFileVersion(FilesRoot +'Plugins\TextIngameOverlay.dll')
+  #define BinaryVersion ApplicationVersion
+#endif
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
@@ -16,6 +22,7 @@
 AppId={{#AppId}
 AppName={#MyAppName}
 AppVersion={#ApplicationVersion}
+VersionInfoVersion={#BinaryVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}

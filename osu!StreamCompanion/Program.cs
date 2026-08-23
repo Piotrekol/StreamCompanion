@@ -33,6 +33,7 @@ namespace osu_StreamCompanion
         [STAThread]
         static void Main(string[] args)
         {
+            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
 #if False
             AllowMultiInstance = true;
 #endif
@@ -253,7 +254,6 @@ namespace osu_StreamCompanion
                     ex.Data[d.Key] = d.Value;
                 }
 
-                //also reports to sentry if enabled
                 MainLogger.Instance.Log(ex, LogLevel.Critical);
 
                 if (UserCanBeNotified())

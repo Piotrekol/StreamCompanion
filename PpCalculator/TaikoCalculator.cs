@@ -12,6 +12,9 @@ namespace PpCalculator
     public class TaikoCalculator : PpCalculator
     {
         protected override Ruleset Ruleset { get; } = new TaikoRuleset();
+        public TaikoCalculator() { }
+        public TaikoCalculator(ITimedAttributesProvider timedAttributesProvider = null) : base(timedAttributesProvider) { }
+
 
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>
             hitObjects.OfType<Hit>().Count();

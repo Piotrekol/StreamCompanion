@@ -84,7 +84,7 @@ namespace OsuMemoryEventSource
 
             if (_currentStatus == OsuMemoryStatus.Unknown)
             {
-                _logger.Log($"Unknown memory status: {osuData.GeneralData.RawStatus}", LogLevel.Warning);
+                _logger.Log("Unknown memory status: {0}", LogLevel.Warning, osuData.GeneralData.RawStatus.ToString());
                 return;
             }
 

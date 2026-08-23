@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
+    <SCDeploySelf>false</SCDeploySelf>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Dlls\X32ProcessOverlayHelper.exe" />

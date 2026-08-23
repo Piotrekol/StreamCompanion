@@ -14,6 +14,9 @@ namespace PpCalculator
     public class CtbCalculator : PpCalculator
     {
         protected override Ruleset Ruleset { get; } = new CatchRuleset();
+        public CtbCalculator() { }
+        public CtbCalculator(ITimedAttributesProvider timedAttributesProvider = null) : base(timedAttributesProvider) { }
+
 
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) =>
             hitObjects.Count(h => h is Fruit)
