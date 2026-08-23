@@ -12,6 +12,9 @@ namespace PpCalculator
     public class ManiaCalculator : PpCalculator
     {
         protected override Ruleset Ruleset { get; } = new ManiaRuleset();
+        public ManiaCalculator() { }
+        public ManiaCalculator(ITimedAttributesProvider timedAttributesProvider = null) : base(timedAttributesProvider) { }
+
 
         protected override int GetMaxCombo(IReadOnlyList<HitObject> hitObjects) => 0;
 
