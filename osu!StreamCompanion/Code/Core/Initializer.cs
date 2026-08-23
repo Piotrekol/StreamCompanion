@@ -46,20 +46,7 @@ namespace osu_StreamCompanion.Code.Core
             }
 
             var saver = di.Locate<MainSaver>();
-
-            if (Settings.Get<bool>(_names.Console) && OperatingSystem.IsWindows())
-            {
-                mainLogger.AddLogger(new ConsoleLogger(Settings));
-            }
-            else
-            {
-                mainLogger.AddLogger(new EmptyLogger());
-            }
-
-            mainLogger.AddLogger(new FileLogger(saver, Settings, mainLogger));
-#if !DEBUG
-            mainLogger.AddLogger(new SentryLogger());
-#endif
+            mainLogger.Initialize(Settings, saver);
 
             _pluginManager = new LocalPluginManager(Settings, mainLogger);
             foreach (var moduleType in _pluginManager.GetModules())
@@ -101,6 +88,7 @@ namespace osu_StreamCompanion.Code.Core
         {
             DiContainer.Container.Dispose();
             Settings.Save();
+            MainLogger.Instance.Shutdown();
         }
     }
 }
