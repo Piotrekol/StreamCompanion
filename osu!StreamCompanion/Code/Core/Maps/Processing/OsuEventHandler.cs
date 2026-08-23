@@ -64,7 +64,7 @@ namespace osu_StreamCompanion.Code.Core.Maps.Processing
                 sourceName = mapSearchArgs.SourceName
             }.ToString();
 
-            _logger.Log($"Received event: {eventData}", LogLevel.Debug);
+            _logger.Log("Received event: {0}", LogLevel.Debug, eventData);
             if (mapSearchArgs.SourceName.Contains("Legacy"))
             {
                 LegacyOsuTasks.Clear();

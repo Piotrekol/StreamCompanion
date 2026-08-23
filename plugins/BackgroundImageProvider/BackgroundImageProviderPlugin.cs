@@ -81,7 +81,7 @@ namespace BackgroundImageProvider
             }
             catch (UnauthorizedAccessException)
             {
-                _logger.Log($"Could not save background image at \"{_saveLocation}\" (UnauthorizedAccessException)", LogLevel.Warning);
+                _logger.Log("Could not save background image at \"{0}\" (UnauthorizedAccessException)", LogLevel.Warning, _saveLocation);
             }
 
             return Task.CompletedTask;

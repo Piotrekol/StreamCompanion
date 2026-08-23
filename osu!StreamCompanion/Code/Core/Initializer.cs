@@ -65,8 +65,8 @@ namespace osu_StreamCompanion.Code.Core
         public void Start()
         {
             _logger.Log("Booting up...", LogLevel.Information);
-            _logger.Log($"Stream Companion Version: {Program.ScVersion}", LogLevel.Information);
-            _logger.Log($"Running as {(Environment.Is64BitProcess ? "x64" : "x86")} process on .NET {Environment.Version}", LogLevel.Information);
+            _logger.Log("Stream Companion Version: {0}", LogLevel.Information, Program.ScVersion);
+            _logger.Log("Running as {0} process on .NET {1}", LogLevel.Information, Environment.Is64BitProcess ? "x64" : "x86", Environment.Version.ToString());
 
             DiContainer.Container.Locate<Updater>();
             DiContainer.Container.Locate<AdministratorChecker>();
