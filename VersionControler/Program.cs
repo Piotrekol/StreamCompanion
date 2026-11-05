@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -62,7 +63,8 @@ namespace VersionControler
                 }
 
                 DateTime d = DateTime.Now;
-                string version = d.ToString("yyMMdd.HH");
+                // InvariantCulture keeps the Gregorian calendar; the current culture can be e.g. Thai Buddhist (year 2569 -> "69")
+                string version = d.ToString("yyMMdd.HH", CultureInfo.InvariantCulture);
                 if (!custom)
                 {
                     var splited = lines[lineNumber].Split(new[] { '=' }, 2);
