@@ -80,7 +80,10 @@
 	<PackageReference Include="CollectionManager" />
 	<PackageReference Include="Grace" />
 	<PackageReference Include="Jace" />
-	<PackageReference Include="Sentry" />
+	<PackageReference Include="Serilog" />
+	<PackageReference Include="Serilog.Sinks.File" />
+	<PackageReference Include="Serilog.Sinks.Console" />
+	<PackageReference Include="Sentry" ExcludeAssets="analyzers;build;buildTransitive" />
 	<PackageReference Include="Newtonsoft.Json" />
 	<PackageReference Include="System.ComponentModel.Composition" />
 	<PackageReference Include="System.Drawing.Common" />

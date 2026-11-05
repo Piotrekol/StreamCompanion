@@ -48,7 +48,7 @@ namespace OsuMemoryEventSource
             var result = new MapSearchResult(searchArgs);
             var mods = (int)searchArgs.Mods;
             result.Mods = GetModsEx(mods);
-            Logger?.Log($">Got mods from memory: {result.Mods.ShownMods}({mods})", LogLevel.Debug);
+            Logger?.Log(">Got mods from memory: {0}({1})", LogLevel.Debug, result.Mods.ShownMods, mods.ToString());
 
             Mods eMods = result.Mods?.Mods ?? Mods.Omod;
             if (Helpers.IsInvalidCombination(eMods))

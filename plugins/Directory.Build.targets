@@ -1,0 +1,27 @@
+<Project>
+  <!--
+    SC plugin deployment (consumed by the SCDeployPlugin target below).
+    All properties ($(SolutionDir), $(TargetDir), $(ConfigurationName)) resolve at target run time,
+    so plugins must declare only literal values:
+      SCPluginDeployFile Include="X"        output-relative file -> build\{Cfg}\Plugins\
+      SCPluginDeployDll Include="X"         output-relative file -> build\{Cfg}\Plugins\Dlls\
+      SCPluginDeploySourceDll Include="X"   project-relative file -> build\{Cfg}\Plugins\Dlls\
+      SCPluginDeployDir                     in non-Debug configs deploys under
+                                           $(SolutionDir){value}\ instead of build\{Cfg}\
+  -->
+  <Target Name="SCDeployPlugin" AfterTargets="Build" Condition="'$(SCDeploySelf)' == 'true' Or '@(SCPluginDeployFile)' != '' Or '@(SCPluginDeployDll)' != '' Or '@(SCPluginDeploySourceDll)' != ''">
+    <PropertyGroup>
+      <SCPluginDeployRoot Condition="'$(SCPluginDeployDir)' != '' And '$(ConfigurationName)' != 'Debug'">$(SolutionDir)$(SCPluginDeployDir)</SCPluginDeployRoot>
+      <SCPluginDeployRoot Condition="'$(SCPluginDeployRoot)' == ''">$(SolutionDir)build\$(ConfigurationName)\</SCPluginDeployRoot>
+    </PropertyGroup>
+    <ItemGroup>
+      <SCPluginDeployFileSelf Include="$(TargetPath)" Condition="'$(SCDeploySelf)' == 'true'" />
+      <SCPluginDeployFileSelf Include="$(TargetDir)$(TargetName).pdb" Condition="'$(SCDeploySelf)' == 'true' And '$(SCDeploySelfPdb)' != 'false' And Exists('$(TargetDir)$(TargetName).pdb')" />
+      <SCPluginDeployFileResolved Include="$(TargetDir)%(SCPluginDeployFile.Identity)" Condition="'@(SCPluginDeployFile)' != ''" />
+      <SCPluginDeployDllResolved Include="$(TargetDir)%(SCPluginDeployDll.Identity)" Condition="'@(SCPluginDeployDll)' != ''" />
+      <SCPluginDeployDllResolved Include="$(MSBuildProjectDirectory)\%(SCPluginDeploySourceDll.Identity)" Condition="'@(SCPluginDeploySourceDll)' != ''" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SCPluginDeployFileSelf);@(SCPluginDeployFileResolved)" DestinationFolder="$(SCPluginDeployRoot)Plugins\" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SCPluginDeployDllResolved)" DestinationFolder="$(SCPluginDeployRoot)Plugins\Dlls\" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

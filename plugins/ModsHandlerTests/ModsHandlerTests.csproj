@@ -7,6 +7,7 @@
 
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
+		<SCDeploySelf>false</SCDeploySelf>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using osu_StreamCompanion.Code.Core.Loggers;
 using osu_StreamCompanion.Code.Misc;
 using StreamCompanionTypes;
@@ -27,25 +26,8 @@ namespace osu_StreamCompanion.Code.Modules.Logger
         {
             this.mainLogger = mainLogger;
             this.settings = settings;
-            settings.SettingUpdated+=SettingUpdated;
         }
 
-        private void SettingUpdated(object sender, SettingUpdated e)
-        {
-            if (e.Name == _names.Console.Name && OperatingSystem.IsWindows())
-            {
-                if (settings.Get<bool>(_names.Console))
-                {
-                    mainLogger.AddLogger(new ConsoleLogger(settings));
-                }
-                else
-                {
-                    var logger = mainLogger.Loggers.FirstOrDefault(x => x is ConsoleLogger);
-                    if(logger!=null)
-                        mainLogger.RemoveLogger(logger);
-                }
-            }
-        }
 
         public void Free() => loggerSettingsControl.Dispose();
 

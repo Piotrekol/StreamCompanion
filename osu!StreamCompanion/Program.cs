@@ -33,6 +33,7 @@ namespace osu_StreamCompanion
         [STAThread]
         static void Main(string[] args)
         {
+            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
 #if False
             AllowMultiInstance = true;
 #endif
@@ -213,29 +214,6 @@ namespace osu_StreamCompanion
             Debugger.Break();
         }
 #endif
-        private static (bool SendReport, string Message) GetErrorData()
-        {
-            // ReSharper disable ConditionIsAlwaysTrueOrFalse
-            bool sendReport = false;
-
-#if WITHSENTRY
-            sendReport = true;
-#endif
-
-            if (sendReport)
-                return (true, $"{errorNotificationFormat} {needToExit} {messageWasSent}");
-
-            return (false, $"{errorNotificationFormat} {needToExit} {privateBuildMessageNotSent}");
-
-            // ReSharper restore ConditionIsAlwaysTrueOrFalse
-        }
-
-        private static string errorNotificationFormat = @"There was unhandled problem with a program";
-        private static string needToExit = @"and it needs to exit.";
-
-        private static string messageWasSent = "Error report was sent to Piotrekol.";
-        private static string privateBuildMessageNotSent = "This is private build, so error report WAS NOT SENT.";
-
         public static void HandleException(Exception ex)
         {
             try
@@ -243,7 +221,6 @@ namespace osu_StreamCompanion
 
                 ex.Data.Add("netFramework", GetDotNetVersion.Get45PlusFromRegistry());
 
-                var errorConsensus = GetErrorData();
 #if DEBUG
                 WaitForDebugger(ex);
 #endif
@@ -253,12 +230,11 @@ namespace osu_StreamCompanion
                     ex.Data[d.Key] = d.Value;
                 }
 
-                //also reports to sentry if enabled
                 MainLogger.Instance.Log(ex, LogLevel.Critical);
 
                 if (UserCanBeNotified())
                 {
-                    MessageBox.Show(errorConsensus.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("There was unhandled problem with a program and it needs to exit.", "Stream Companion Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     var form = new Error(errorResult.Text, null);
                     form.ShowDialog();
                 }

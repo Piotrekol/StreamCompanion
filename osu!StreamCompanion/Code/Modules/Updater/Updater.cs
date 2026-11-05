@@ -63,7 +63,7 @@ namespace osu_StreamCompanion.Code.Modules.Updater
             string ret = baseMsg + " ";
             if (exception != null)
                 ret += exception.Message;
-            _logger.Log($"Error: {ret}", LogLevel.Debug);
+            _logger.Log("Error: {0}", LogLevel.Debug, ret);
             await SetStatus(ret);
         }
 
