@@ -115,6 +115,7 @@ namespace PpCalculator
             ppCalculator._playableBeatmap = _playableBeatmap;
             ppCalculator._Mods = _Mods;
             ppCalculator.LastMods = LastMods;
+            ppCalculator.scoreMultiplier = scoreMultiplier;
             ppCalculator.UseScoreMultiplier = UseScoreMultiplier;
             ppCalculator.HasFullBeatmap = HasFullBeatmap;
             if (PerformanceCalculator != null)

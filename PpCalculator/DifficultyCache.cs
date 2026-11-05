@@ -115,27 +115,30 @@ CREATE INDEX IF NOT EXISTS idx_difficulty_cache_last_accessed_at ON difficulty_c
             }
         }
 
-        try
+        lock (databaseSyncRoot)
         {
-            byte[]? blob = connection?.ExecuteScalar<byte[]?>(
-                "SELECT timed_attributes FROM difficulty_cache WHERE beatmap_md5 = @beatmapMd5 AND ruleset_id = @rulesetId AND mods = @mods AND algorithm_version = @algorithmVersion",
-                new { beatmapMd5, rulesetId, mods, algorithmVersion = cacheVersion });
-
-            if (blob != null)
+            try
             {
-                _ = Interlocked.Increment(ref cacheHits);
-                _ = (connection?.Execute(
-                    "UPDATE difficulty_cache SET last_accessed_at = @LastAccessedAt WHERE beatmap_md5 = @beatmapMd5 AND ruleset_id = @rulesetId AND mods = @mods AND algorithm_version = @algorithmVersion",
-                    new { LastAccessedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), beatmapMd5, rulesetId, mods, algorithmVersion = cacheVersion }));
-            }
+                byte[]? blob = connection?.ExecuteScalar<byte[]?>(
+                    "SELECT timed_attributes FROM difficulty_cache WHERE beatmap_md5 = @beatmapMd5 AND ruleset_id = @rulesetId AND mods = @mods AND algorithm_version = @algorithmVersion",
+                    new { beatmapMd5, rulesetId, mods, algorithmVersion = cacheVersion });
 
-            return blob;
-        }
-        catch (Exception exception)
-        {
-            logger?.Log($"difficulty cache read failed for map {beatmapMd5} ruleset {rulesetId} mods [{mods}]", LogLevel.Warning);
-            logger?.Log(exception, LogLevel.Warning);
-            return null;
+                if (blob != null)
+                {
+                    _ = Interlocked.Increment(ref cacheHits);
+                    _ = (connection?.Execute(
+                        "UPDATE difficulty_cache SET last_accessed_at = @LastAccessedAt WHERE beatmap_md5 = @beatmapMd5 AND ruleset_id = @rulesetId AND mods = @mods AND algorithm_version = @algorithmVersion",
+                        new { LastAccessedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), beatmapMd5, rulesetId, mods, algorithmVersion = cacheVersion }));
+                }
+
+                return blob;
+            }
+            catch (Exception exception)
+            {
+                logger?.Log($"difficulty cache read failed for map {beatmapMd5} ruleset {rulesetId} mods [{mods}]", LogLevel.Warning);
+                logger?.Log(exception, LogLevel.Warning);
+                return null;
+            }
         }
     }
 

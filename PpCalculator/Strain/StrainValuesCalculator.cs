@@ -2,6 +2,7 @@
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
+using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
@@ -24,20 +25,15 @@ public static partial class StrainValuesCalculator
             _ => throw new ArgumentException($"No strain graph available for ruleset \"{ruleset.RulesetInfo.OnlineID}\""),
         };
 
-        Func<Skill[]> capturedSkillsProvider = calculator switch
-        {
-            CapturingOsuDifficultyCalculator osuCalculator => () => osuCalculator.CapturedSkills,
-            CapturingTaikoDifficultyCalculator taikoCalculator => () => taikoCalculator.CapturedSkills,
-            CapturingCatchDifficultyCalculator catchCalculator => () => catchCalculator.CapturedSkills,
-            CapturingManiaDifficultyCalculator maniaCalculator => () => maniaCalculator.CapturedSkills,
-            _ => throw new InvalidOperationException("calculator is missing skill capture"),
-        };
+        if (calculator is not ICapturingDifficultyCalculator capturingCalculator)
+            throw new InvalidOperationException("difficulty calculator is missing calculation capture");
 
         _ = calculator.Calculate(mods.ToArray());
-        return BuildStrains(capturedSkillsProvider(), workingBeatmap.Beatmap.HitObjects, targetAmount);
+
+        return BuildStrains(capturingCalculator.CapturedSkills, capturingCalculator.CapturedDifficultyHitObjects, workingBeatmap.Beatmap.HitObjects, targetAmount);
     }
 
-    private static Dictionary<int, double> BuildStrains(Skill[] capturedSkills, IReadOnlyList<HitObject> hitObjects, int targetAmount)
+    private static Dictionary<int, double> BuildStrains(Skill[] capturedSkills, IReadOnlyList<DifficultyHitObject> difficultyHitObjects, IReadOnlyList<HitObject> hitObjects, int targetAmount)
     {
         if (capturedSkills.Length == 0)
         {
@@ -54,11 +50,12 @@ public static partial class StrainValuesCalculator
             return [];
         }
 
-        double[] times = [.. hitObjects.Select(hitObject => hitObject.GetEndTime())];
-        double interval = (times[^1] + 1) / targetAmount;
+        double[] valueTimes = [.. difficultyHitObjects.Select(difficultyHitObject => difficultyHitObject.StartTime)];
+        double clockRate = difficultyHitObjects.Count > 0 ? difficultyHitObjects[^1].ClockRate : 1;
+        double interval = (hitObjects[^1].GetEndTime() / clockRate + 1) / targetAmount;
         double[] bucketSums = new double[targetAmount];
         int[] bucketCounts = new int[targetAmount];
-        int objectCount = Math.Min(times.Length, normalizedSkills.Min(normalizedSkill => normalizedSkill.Length));
+        int objectCount = Math.Min(valueTimes.Length, normalizedSkills.Min(normalizedSkill => normalizedSkill.Length));
 
         for (int objectIndex = 0; objectIndex < objectCount; objectIndex++)
         {
@@ -68,7 +65,7 @@ public static partial class StrainValuesCalculator
                 value = Math.Max(value, normalizedSkill[objectIndex]);
             }
 
-            int bucket = Math.Min(targetAmount - 1, (int)(times[objectIndex] / interval));
+            int bucket = Math.Min(targetAmount - 1, (int)(valueTimes[objectIndex] / interval));
             bucketSums[bucket] += value;
             bucketCounts[bucket]++;
         }

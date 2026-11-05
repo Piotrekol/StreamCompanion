@@ -100,16 +100,23 @@ namespace BeatmapPpReplacements
                 return;
             }
 
+            IPpCalculator strainsCalculator = _ppCalculator;
             _ = Task.Run(() =>
             {
-                var ppCalculator = (IPpCalculator)_ppCalculator?.Clone();
+                var ppCalculator = (IPpCalculator)strainsCalculator?.Clone();
                 try
                 {
                     var strains = SmoothStrains(ppCalculator.GetStrainValues(_settings.Get<int?>(StrainsAmount) ?? 100), 1);
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
+
                     _strainsToken.Value = new Lazy<object>(() => strains);
                 }
                 catch (Exception exception)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
+
                     _logger.Log("mapStrains calculation failed", LogLevel.Warning);
                     _logger.Log(exception, LogLevel.Warning);
                     _strainsToken.Value = new Lazy<object>(() => null);

@@ -116,7 +116,7 @@ public class TimedAttributesCacheTests
         List<TimedDifficultyAttributes> roundtripped = DifficultyCache.Deserialize(firstBlob);
         byte[] secondBlob = DifficultyCache.Serialize(roundtripped);
 
-        Assert.That(secondBlob, Is.EqualTo(firstBlob), "serialize→deserialize→serialize must be byte-identical");
+        Assert.That(secondBlob, Is.EqualTo(firstBlob), "serialize->deserialize->serialize must be byte-identical");
         Assert.That(roundtripped.Last().Attributes.GetType(), Is.EqualTo(computed.Last().Attributes.GetType()), "concrete attributes type must survive the roundtrip");
     }
 

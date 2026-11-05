@@ -39,7 +39,7 @@ namespace PpCalculator
         public List<TimedDifficultyAttributes> GetTimedAttributes(IWorkingBeatmap workingBeatmap, Ruleset ruleset, IReadOnlyList<Mod> mods, bool isFullBeatmap, CancellationToken cancellationToken)
         {
             string? beatmapMd5 = workingBeatmap.BeatmapInfo.MD5Hash;
-            string modsKey = string.Join("|", mods.Select(mod => mod.Acronym));
+            string modsKey = string.Join("|", mods.Select(mod => mod.Acronym).OrderBy(acronym => acronym));
             bool isCachableRequest = isFullBeatmap && cache.Enabled;
 
             if (isCachableRequest && beatmapMd5 != null)
